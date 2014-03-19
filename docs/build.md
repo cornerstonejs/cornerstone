@@ -15,6 +15,10 @@ Common Tasks
 
 Update dependencies (after each pull):
 > npm install
+> bower install
 
 Running the build:
 > grunt
+
+Automatically running the build and unit tests after each source change:
+> grunt watch

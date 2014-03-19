@@ -16,15 +16,15 @@ This is an example of interactive zoom and pan
 <br>
 <br>
 
-In this example, HTML buttons are used to change the zoom on an image and mosue events are used
-to pan the image.  Note that the core cornerstone library does not specify any UI paradigm - it is
-up to the developer (or another layer/component) to provide the UI paradigm on top of this library
-
+In this example, the zoom can be changed via the mouse wheel or the buttons on the screen.
+Panning is done via left mouse click dragging.  Note that the core cornerstone library does
+not specify any interaction paradigm and allows any interaction paradigm to be implemented
+by the developer
 <br>
 <br>
 
 
-<div id="dicomImage" style="width:512px;height:512px;background-color:black;">
+<div id="dicomImage" style="width:512px;height:512px">
 </div>
 
 <button id="zoomIn" type="button" class="btn btn-default">Zoom In</button>
@@ -79,8 +79,20 @@ up to the developer (or another layer/component) to provide the UI paradigm on t
         $('#dicomImage').mouseup(function(e) {
             $('#dicomImage').unbind('mousemove');
         });
+    });
 
-
+    $('#dicomImage').on('mousewheel', function(e) {
+        if(e.originalEvent.detail > 0 || e.originalEvent.wheelDelta < 0) { //alternative options for wheelData: wheelDeltaX & wheelDeltaY
+            var viewport = cornerstone.getViewport(element);
+            viewport.scale -= 0.25;
+            cornerstone.setViewport(element, viewport);
+        } else {
+            var viewport = cornerstone.getViewport(element);
+            viewport.scale += 0.25;
+            cornerstone.setViewport(element, viewport);
+        }
+        //prevent page fom scrolling
+        return false;
     });
 </script>
 </html>

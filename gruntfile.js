@@ -3,18 +3,44 @@ module.exports = function(grunt) {
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        copy: {
+        clean: {
             default: {
-                src : ['src/client/cornerstone.js'],
-                dest: 'dist',
-                expand: true,
-                flatten: true
+                src: [
+                    'dist'
+                ]
             }
-        }
+        },
+        concat: {
+            dist: {
+                src : ['src/client/core/*.js', 'src/client/*.js'],
+                dest: 'dist/cornerstone.js'
+            }
+        },
+        uglify: {
+            my_target: {
+                files: {
+                    'dist/cornerstone.min.js': ['dist/cornerstone.js']
+                }
+            }
+        },
+        qunit: {
+            all: ['test/**/*.html']
+        },
+        watch: {
+            scripts: {
+                files: ['src/client/**/*.js', 'test/**/*.js'],
+                tasks: ['concat', 'qunit']
+            }
+        },
+
     });
 
-    // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks("grunt-contrib-copy");
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-qunit');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
-    grunt.registerTask('default', ['copy']);
+    grunt.registerTask('default', ['clean', 'concat', 'uglify']);
 };

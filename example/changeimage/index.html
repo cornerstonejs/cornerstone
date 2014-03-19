@@ -11,11 +11,12 @@
     changeimage/index.html
 </h1>
 This is an example of changing the image displayed in an element.  This could be used
-to show different key images or a stack of images (e.g. MRI series)
+to show different key images or a stack of images (e.g. MRI series).  Use the mouse wheel
+to change between images or press the buttons below.
 <br>
 <br>
 
-<div id="dicomImage" style="width:512px;height:512px;background-color:black;">
+<div id="dicomImage" style="width:512px;height:512px">
 </div>
 
 <button id="imageButton1" type="button" class="btn btn-default">Image #1</button>
@@ -31,23 +32,46 @@ to show different key images or a stack of images (e.g. MRI series)
 
 <script>
 
+    var imageIds = [
+    '1.3.12.2.1107.5.2.32.35020.2011062208172724415309288',
+    '1.3.12.2.1107.5.2.32.35020.2011062208172724415309289'];
+
+    var currentImageIndex = 0;
+
     // show image #1 initially
+    function updateTheImage(imageIndex) {
+        currentImageIndex = imageIndex;
+        var element = $('#dicomImage').get(0);
+        var studyId = '1.3.12.2.1107.5.2.32.35020.30000011062212111306200000003';
+        cornerstone.showImage(element, studyId, imageIds[currentImageIndex]);
+    };
+
     var element = $('#dicomImage').get(0);
-    var studyId1 = '1.3.12.2.1107.5.2.32.35020.30000011062212111306200000003';
-    var imageId1 = '1.3.12.2.1107.5.2.32.35020.2011062208172724415309288';
-    cornerstone.enable(element, studyId1, imageId1);
+    var studyId = '1.3.12.2.1107.5.2.32.35020.30000011062212111306200000003';
+    cornerstone.enable(element, studyId, imageIds[currentImageIndex]);
+
 
     // Add event handlers to change images
     $('#imageButton1').click(function(e) {
-        var studyId1 = '1.3.12.2.1107.5.2.32.35020.30000011062212111306200000003';
-        var imageId1 = '1.3.12.2.1107.5.2.32.35020.2011062208172724415309288';
-        cornerstone.showImage(element, studyId1, imageId1);
+        updateTheImage(0);
     });
 
     $('#imageButton2').click(function(e) {
-        var studyId2 = '1.3.12.2.1107.5.2.32.35020.30000011062212111306200000003';
-        var imageId2 = '1.3.12.2.1107.5.2.32.35020.2011062208172724415309289';
-        cornerstone.showImage(element, studyId2, imageId2);
+        updateTheImage(1);
+    });
+
+    $('#dicomImage').on('mousewheel', function(e) {
+        if(e.originalEvent.detail > 0 || e.originalEvent.wheelDelta < 0) { //alternative options for wheelData: wheelDeltaX & wheelDeltaY
+            if(currentImageIndex == 0) {
+                updateTheImage(1);
+            }
+        } else {
+            if(currentImageIndex == 1) {
+                updateTheImage(0);
+            }
+        }
+        //prevent page fom scrolling
+        return false;
     });
 
 </script>

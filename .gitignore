@@ -1,2 +1,3 @@
-#ignore webstorm directory
-/.idea
+.idea
+bower_components
+node_modules

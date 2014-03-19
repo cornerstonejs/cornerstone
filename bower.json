@@ -1,0 +1,15 @@
+{
+    "name": "cornerstone",
+    "version": "0.0.1",
+    "description": "HTML5 Medical Image Viewer Component",
+    "private": true,
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test"
+    ],
+    "dependencies": {
+        "qunit": "~1.14.0"
+    }
+}
