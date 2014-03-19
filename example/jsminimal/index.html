@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+
+<h1>
+jsminimal/index.html
+</h1>
+
+This is an example of the minimal use of cornerstone driven by javascript
+
+<br>
+<br>
+
+In this example, javascript is used to image enable a div.
+
+<br>
+<br>
+
+
+<div id="dicomImage" style="width:512px;height:512px;">
+</div>
+
+</div>
+</body>
+<!-- include the cornerstone library -->
+<script src="../../src/cornerstone.js"></script>
+
+<script>
+    var studyId = '1.3.12.2.1107.5.2.32.35020.30000011062212111306200000003';
+    var imageId = '1.3.12.2.1107.5.2.32.35020.2011062208172724415309288';
+    var element = document.getElementById('dicomImage');
+    cornerstone.enable(element, studyId, imageId);
+</script>
+</html>

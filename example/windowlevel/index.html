@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+
+    <h1>
+        windowlevel/index.html
+    </h1>
+
+    This is an example of interactive window/level
+
+    <br>
+    <br>
+
+    In this example, the mousemove is captured and adjusts the window/center.  You can also manually set the window/center
+    by entering the values in the input elements and hitting apply
+
+    <br>
+    <br>
+
+
+    <div id="dicomImage" style="width:512px;height:512px;background-color:black;">
+    </div>
+
+    <label>Window Width</label>
+    <input id="ww" type="text" placeholder="e.g. 1000">
+    <label>Window Center</label>
+    <input id="wc" type="text" placeholder="e.g. 500">
+    <button id="apply" class="btn">Apply</button>
+
+</div>
+</body>
+<!-- include the cornerstone library -->
+<script src="../../src/cornerstone.js"></script>
+
+<!-- jquery - included to make things easier to demo, not needed or used by cornerstone -->
+<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+
+<script>
+
+    // image enable the dicomImage element
+    var studyId = '1.3.12.2.1107.5.2.32.35020.30000011062212111306200000003';
+    var imageId = '1.3.12.2.1107.5.2.32.35020.2011062208172724415309288';
+    var element = $('#dicomImage').get(0);
+    cornerstone.enable(element, studyId, imageId);
+    var viewport = cornerstone.getViewport(element);
+    $('#ww').val(viewport.windowWidth);
+    $('#wc').val(viewport.windowCenter);
+
+    // Add event handler to the ww/wc apply button
+    $('#apply').click(function(e) {
+        var viewport = cornerstone.getViewport(element);
+        viewport.windowWidth = parseFloat($('#ww').val());
+        viewport.windowCenter = parseFloat($('#wc').val());
+        cornerstone.setViewport(element, viewport);
+    });
+
+    // add event handlers to mouse move to adjust window/center
+    $('#dicomImage').mousedown(function(e) {
+        var lastX = e.pageX;
+        var lastY = e.pageY;
+
+        $('#dicomImage').mousemove(function(e) {
+            var deltaX = e.pageX - lastX,
+                    deltaY = e.pageY - lastY ;
+            lastX = e.pageX;
+            lastY = e.pageY;
+
+            var viewport = cornerstone.getViewport(element);
+            viewport.windowWidth += (deltaX / viewport.scale);
+            viewport.windowCenter += (deltaY / viewport.scale);
+            cornerstone.setViewport(element, viewport);
+        });
+
+        $('#dicomImage').mouseup(function(e) {
+            $('#dicomImage').unbind('mousemove');
+        });
+    });
+
+</script>
+</html>

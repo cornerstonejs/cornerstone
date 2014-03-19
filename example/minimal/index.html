@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+</head>
+<body>
+
+<h1>
+minimal/index.html
+</h1>
+
+This is an example of the minimal use of cornerstone
+
+<br>
+<br>
+
+In this example, HTML5 data attributes are used to mark elements that cornerstone should image enable as well
+as the minimum number of required parameters to display the image.  The power of this approach is that images
+can be displayed with markup only without any javascript.
+
+<br>
+<br>
+
+NOTE: Additional data attributes can be added to provide more markup driven functionality for example:
+<ul>
+    <li>data-cornerstoneInteractive - turns on window/level via mouse</li>
+    <li>data-cornerstoneViewportScale - sets the initial viewport scale</li>
+    <li>data-cornerstoneViewportTop - sets the initial viewport top pixel</li>
+    <li>data-cornerstoneViewportLeft - sets the initial viewport left pixel</li>
+</ul>
+
+<br>
+<br>
+
+
+<div id="dicomImage" class="cornerstone"
+     data-cornerstoneEnabled="true"
+     data-cornerstoneStudyId="1.3.12.2.1107.5.2.32.35020.30000011062212111306200000003"
+     data-cornerstoneOmageId="1.3.12.2.1107.5.2.32.35020.2011062208172724415309288"
+     style="width:512px;height:512px;">
+</div>
+
+
+</body>
+
+<!-- include the cornerstone library -->
+<script src="../../src/cornerstone.js"></script>
+
+</html>

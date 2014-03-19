@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+
+<h1>
+    zoompan/index.html
+</h1>
+
+This is an example of interactive zoom and pan
+
+<br>
+<br>
+
+In this example, HTML buttons are used to change the zoom on an image and mosue events are used
+to pan the image.  Note that the core cornerstone library does not specify any UI paradigm - it is
+up to the developer (or another layer/component) to provide the UI paradigm on top of this library
+
+<br>
+<br>
+
+
+<div id="dicomImage" style="width:512px;height:512px;background-color:black;">
+</div>
+
+<button id="zoomIn" type="button" class="btn btn-default">Zoom In</button>
+<button id="zoomOut" type="button" class="btn btn-default">Zoom Out</button>
+
+</div>
+</body>
+<!-- include the cornerstone library -->
+<script src="../../src/cornerstone.js"></script>
+
+<!-- jquery - included to make things easier to demo, not needed or used by cornerstone -->
+<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+
+<script>
+
+    // image enable the dicomImage element
+    var studyId = '1.3.12.2.1107.5.2.32.35020.30000011062212111306200000003';
+    var imageId = '1.3.12.2.1107.5.2.32.35020.2011062208172724415309288';
+    var element = $('#dicomImage').get(0);
+    cornerstone.enable(element, studyId, imageId);
+
+    // Add event handlers to zoom the image in and out
+    $('#zoomIn').click(function(e) {
+        var viewport = cornerstone.getViewport(element);
+        viewport.scale += 0.25;
+        cornerstone.setViewport(element, viewport);
+    });
+    $('#zoomOut').click(function(e) {
+        var viewport = cornerstone.getViewport(element);
+        viewport.scale -= 0.25;
+        cornerstone.setViewport(element, viewport);
+    });
+
+    // add event handlers to pan image on mouse move
+    $('#dicomImage').mousedown(function(e) {
+        var lastX = e.pageX;
+        var lastY = e.pageY;
+
+
+        $('#dicomImage').mousemove(function(e) {
+            var deltaX = e.pageX - lastX,
+                    deltaY = e.pageY - lastY ;
+            lastX = e.pageX;
+            lastY = e.pageY;
+
+            var viewport = cornerstone.getViewport(element);
+            viewport.left += (deltaX / viewport.scale);
+            viewport.top += (deltaY / viewport.scale);
+            cornerstone.setViewport(element, viewport);
+        });
+
+        $('#dicomImage').mouseup(function(e) {
+            $('#dicomImage').unbind('mousemove');
+        });
+
+
+    });
+</script>
+</html>
