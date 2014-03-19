@@ -8,12 +8,12 @@ or medical imaging should not be required
  * Medical images - this includes all DICOM image types as well as non DICOM Image types
  * Interactive - All rendering is done on the client side including window/level, zoom, pan, etc.
 
+[Click here to see live examples](https://rawgithub.com/chafey/cornerstone/master/example/index.html)
+
 This project was initiated based on the following comp.protocols.dicom discussion:
 https://groups.google.com/forum/#!topic/comp.protocols.dicom/_2fMh69GdAM
 
 [Trello](https://trello.com/b/tGTDIyt4/cornerstone)
-
-[Live Examples](https://rawgithub.com/chafey/cornerstone/master/example/index.html)
 
 Vision
 ======
