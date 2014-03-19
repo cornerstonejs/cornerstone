@@ -1,12 +1,34 @@
-var cornerstone = (function (csc) {
-    var cornerstone = {};
+var cornerstone = (function (cornerstone, csc) {
+    if(cornerstone === undefined) {
+        cornerstone = {};
+    }
 
     var enabledElements = [];
 
     var image108 = csc.image();
     var image109 = csc.image();
 
-    csc.readPixelData('../pixels108.raw', function(data) {
+    window.onload = function() {
+        var ab = cornerstone.image108;
+        var index = 0;
+        for(var rows=0; rows < 256; rows++) {
+            for(var columns=0; columns< 256; columns++) {
+                image108.storedPixelData[index] = ab[index++];
+            }
+        }
+        ab = cornerstone.image109;
+        index = 0;
+        for(rows=0; rows < 256; rows++) {
+            for(columns=0; columns< 256; columns++) {
+                image109.storedPixelData[index] = ab[index++];
+            }
+        }
+        updateImage(enabledElements[0].element);
+    };
+
+
+    /*csc.readPixelData('../pixels108.raw', function(data) {
+        var ab = cs.image108;
         var ab = new Uint16Array(data);
         var index = 0;
         for(var rows=0; rows < 256; rows++) {
@@ -27,6 +49,7 @@ var cornerstone = (function (csc) {
         }
         updateImage(enabledElements[0].element);
     });
+    */
 
     function getEnabledElement(element) {
         for(var i=0; i < enabledElements.length; i++) {
@@ -145,4 +168,4 @@ var cornerstone = (function (csc) {
     };
 
     return cornerstone;
-}(cornerstoneCore));
+}(cornerstone, cornerstoneCore));
