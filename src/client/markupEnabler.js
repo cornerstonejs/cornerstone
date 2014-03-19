@@ -32,9 +32,6 @@ var cornerstone = (function (cs, csc) {
         }
     }
 
-    window.onload = function() {
-        enableAllElements();
-    };
 
     cs.enableAllElements = enableAllElements;
 

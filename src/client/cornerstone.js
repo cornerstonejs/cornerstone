@@ -9,6 +9,7 @@ var cornerstone = (function (cornerstone, csc) {
     var image109 = csc.image();
 
     window.onload = function() {
+        cornerstone.enableAllElements();
         var ab = cornerstone.image108;
         var index = 0;
         for(var rows=0; rows < 256; rows++) {
@@ -24,7 +25,9 @@ var cornerstone = (function (cornerstone, csc) {
             }
         }
         updateImage(enabledElements[0].element);
+
     };
+
 
 
     /*csc.readPixelData('../pixels108.raw', function(data) {
