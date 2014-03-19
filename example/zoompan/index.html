@@ -33,7 +33,7 @@ up to the developer (or another layer/component) to provide the UI paradigm on t
 </div>
 </body>
 <!-- include the cornerstone library -->
-<script src="../../src/cornerstone.js"></script>
+<script src="../../src/client/cornerstone.js"></script>
 
 <!-- jquery - included to make things easier to demo, not needed or used by cornerstone -->
 <script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
@@ -71,8 +71,8 @@ up to the developer (or another layer/component) to provide the UI paradigm on t
             lastY = e.pageY;
 
             var viewport = cornerstone.getViewport(element);
-            viewport.left += (deltaX / viewport.scale);
-            viewport.top += (deltaY / viewport.scale);
+            viewport.centerX += (deltaX / viewport.scale);
+            viewport.centerY += (deltaY / viewport.scale);
             cornerstone.setViewport(element, viewport);
         });
 

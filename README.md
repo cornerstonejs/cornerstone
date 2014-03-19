@@ -23,21 +23,17 @@ Vision
  * Displays non DICOM image types (e.g. JPEG from camera)
  * High performance image display
  * Server software can run on Linux, Windows and Mac OS X
- * Server provides plugin interface to allow interfacing with image archives in different ways (e.g. DICOM port 104, WADO, custom)
+ * Server provides plugin interface to allow interfacing with image archives in different ways (e.g. DIMSE, WADO, custom)
 
 Roadmap
 ========
 
 Phase 1
 -------
- * Supports all HTML5 based browsers (including mobile, tablet and desktop).  Specific targets include:
-    * IE9+
-    * Chrome
-    * Safari
-    * FireFox
-    * Opera
- * Server software shall be cross platform and run on Linux, Windows and Mac OS X
- * Supports display of all DICOM Image formats (8 bit gray, 16 bit gray, RGB, etc)
+ * Target browser OS: Mac OS X (desktop)
+ * Target browser: Google Chrome
+ * Target server OS: Mac OS X
+ * Display of 16 bit unsigned MRI Image
  * All image rendering done on client side (server only returns raw pixel data)
  * Programmatic support for modifying the following:
     * Window/Center adjustments
@@ -47,13 +43,26 @@ Phase 1
     * Flip (Horizontal / Vertical)
     * Image displayed
  * Markup mode - static configuration done via HTML5 data- attributes, no javascript needed
+ * Events - image updated, viewport property changed, etc
 
-Phase 2
--------
- * Configurable interactive tools
+Backlog:
+========
+ * More browser platforms
+   * image tiling to workaround iOS canvas size limitation
+ * More server platforms
+ * More image types
+ * Performance related
+   * Multiresolution image streaming
+   * image compression
  * Overlays
+ * server plugin to communicate archive via DIMSE
+ * server plugin to communicate archive via WADO
+ * Prebuilt tools for common ui paradigms (e.g. left click w/l, mouse wheel zoom, middle mouse pan)
+ * Programmatic access to raw pixel data (for tools like ROI)
+ * Caching of pixel data to HTML5 local storage?
+ * image cache management
 
 Future Possibilities
 =================================
-* 3D functionality - MPR, MIP, Volume Rendering
-* Fusion (e.g. PET/CT, CT/MR)
+ * 3D functionality - MPR, MIP, Volume Rendering
+ * Fusion (e.g. PET/CT, CT/MR)

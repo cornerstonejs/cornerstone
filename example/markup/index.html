@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- twitter bootstrap CSS stylesheet - included to make things pretty, not needed or used by cornerstone -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+
+    <h1>
+        changeimage/markup.html
+    </h1>
+    This example demonstrates setting various viewport settings through markup.
+    <br>
+    <br>
+    TODO:
+    <ul>
+        <li>data-cornerstoneViewportWindowWidthWindowCenter = "1024,512" vs two attributes</li>
+        <li>data-cornerstoneViewportCenter = "110,150" vs two attributes</li>
+    </ul>
+
+    <br>
+    <br>
+
+    <div id="dicomImage" class="cornerstone"
+         data-cornerstoneEnabled="true"
+         data-cornerstoneStudyId="1.3.12.2.1107.5.2.32.35020.30000011062212111306200000003"
+         data-cornerstoneOmageId="1.3.12.2.1107.5.2.32.35020.2011062208172724415309288"
+         data-cornerstoneViewportWindowWidth="1024"
+         data-cornerstoneViewportWindowCenter="512"
+         data-cornerstoneViewportScale="2.0"
+         data-cornerstoneViewportCenterX="110"
+         data-cornerstoneViewportCenterY="150"
+         style="width:512px;height:512px;">
+    </div>
+
+
+
+</div>
+</body>
+<!-- include the cornerstone library -->
+<script src="../../src/client/cornerstone.js"></script>
+
+</html>
