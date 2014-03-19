@@ -10,6 +10,8 @@ or medical imaging should not be required
 
 [Click here to see live examples](https://rawgithub.com/chafey/cornerstone/master/example/index.html)
 
+Project Status: Proof of concept
+
 This project was initiated based on the following comp.protocols.dicom discussion:
 https://groups.google.com/forum/#!topic/comp.protocols.dicom/_2fMh69GdAM
 
@@ -28,29 +30,30 @@ Vision
 Roadmap
 ========
 
-Phase 1
+Phase 1 (proof of concept)
 -------
  * Target browser OS: Mac OS X (desktop)
  * Target browser: Google Chrome
- * Target server OS: Mac OS X
- * Display of 16 bit unsigned MRI Image
+ * Display of 16 bit unsigned MRI Image from hardcoded pixel data (no server, just HTTP Get)
  * All image rendering done on client side (server only returns raw pixel data)
  * Programmatic support for modifying the following:
     * Window/Center adjustments
     * Zooming/Scaling
     * Panning/Translating
-    * Rotation (90, 180, 270, 0)
-    * Flip (Horizontal / Vertical)
     * Image displayed
- * Markup mode - static configuration done via HTML5 data- attributes, no javascript needed
- * Events - image updated, viewport property changed, etc
+ * Markup mode - static configuration done via HTML5 data attributes, no javascript needed
 
 Backlog:
 ========
+ * build server
+ * Events - image updated, viewport property changed, etc
  * More browser platforms
    * image tiling to workaround iOS canvas size limitation
  * More server platforms
  * More image types
+ * more viewport functionality
+     * Rotation (90, 180, 270, 0)
+     * Flip (Horizontal / Vertical)
  * Performance related
    * Multiresolution image streaming
    * image compression
