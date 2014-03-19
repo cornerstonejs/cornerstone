@@ -108,9 +108,10 @@ var cornerstoneCore = (function (cornerstoneCore) {
         };
 
         var index=0;
+        var rnd = Math.round(Math.random() * 255);
         for(var row=0; row < image.rows; row++) {
             for(var column=0; column < image.columns; column++) {
-                image.storedPixelData[index] = 0;
+                image.storedPixelData[index] = (rnd + index) % 256;
                 index++;
             }
         }
