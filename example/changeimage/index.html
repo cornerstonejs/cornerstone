@@ -63,7 +63,7 @@ to change between images or press the buttons below.
     $('#dicomImage').on('mousewheel DOMMouseScroll', function(e) {
         // Firefox e.originalEvent.detail > 0 scroll back, < 0 scroll forward
         // chrome/safari e.originalEvent.wheelDelta < 0 scroll back, > 0 scroll forward
-        if(e.originalEvent.wheelDelta < 0 || e.originalEvent.detail > 0)
+        if(e.originalEvent.wheelDelta < 0 || e.originalEvent.detail > 0) {
             if(currentImageIndex == 0) {
                 updateTheImage(1);
             }
