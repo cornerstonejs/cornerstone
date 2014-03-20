@@ -14,13 +14,15 @@ Project Status: proof of concept
 
 Vision
 ======
- * Supports all HTML5 based browsers
- * Runs on mobile, tablet and desktop
+ * HTML5/Javascript based library to easily add interactive medical images to web applications
+ * Supports all HTML5 based browsers including mobile, tablet and desktop
  * Displays all DICOM image types
  * Displays non DICOM image types (e.g. JPEG from camera)
  * High performance image display
- * Server software can run on Linux, Windows and Mac OS X
- * Server provides plugin interface to allow interfacing with image archives in different ways (e.g. DIMSE, WADO, custom)
+ * Cross platform server (tested on Linux and Windows)
+ * Server plugin interface to allow interfacing with image archives in different ways (e.g. DIMSE, WADO, custom)
+ * Serves as a foundation to build more complex medical imaging applications from - enterprise viewer, report viewer, etc.
+ * Easily extendable by developers to add custom tools (e.g. measurement, ROI, filters, etc)
 
 Links
 =====

@@ -4,6 +4,7 @@ Backlog:
  * Examples showing touch UI
  * load images from a server (not the example embedded images)
  * More browser platforms
+ * Cine clip support via HTML5 video tag
  * More image types
    * signed 16 bit gray
    * 8 bit gray

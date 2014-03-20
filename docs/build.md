@@ -6,8 +6,10 @@ This project uses grunt to build the software.
 Pre-requisites:
 ---------------
 
-* NodeJs - [click to visit web site for installation instructions](http://nodejs.org).
-* grunt-cli
+NodeJs - [click to visit web site for installation instructions](http://nodejs.org).
+
+grunt-cli
+
 > npm install -g grunt-cli
 
 Common Tasks
@@ -15,6 +17,7 @@ Common Tasks
 
 Update dependencies (after each pull):
 > npm install
+
 > bower install
 
 Running the build:
