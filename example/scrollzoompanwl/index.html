@@ -3,6 +3,19 @@
 <head>
     <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* prevents selection when left click dragging */
+        .disable-selection {
+            -moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;
+        }
+        /* prevents cursor from changing to the i bar on the overlays*/
+        .noIbar {
+            cursor:default;
+        }
+
+    </style>
+
 </head>
 <body>
 <div class="container">
@@ -25,12 +38,8 @@
         <li>Mouse wheel - scroll images</li>
     </ul>
 
-
-    <br>
-    <br>
-
     <div style="width:512px;height:512px;position:relative;color: white;"
-         class='disable-selection'
+         class='disable-selection noIbar'
          unselectable='on'
          onselectstart='return false;'
          onmousedown='return false;'>
@@ -93,7 +102,7 @@
 
         var mouseButton = e.which;
 
-        $('#dicomImage').mousemove(function(e) {
+        $(document).mousemove(function(e) {
             var deltaX = e.pageX - lastX,
                     deltaY = e.pageY - lastY ;
             lastX = e.pageX;
@@ -120,8 +129,9 @@
             }
         });
 
-        $('#dicomImage').mouseup(function(e) {
-            $('#dicomImage').unbind('mousemove');
+        $(document).mouseup(function(e) {
+            $(document).unbind('mousemove');
+            $(document).unbind('mouseup');
         });
     });
 

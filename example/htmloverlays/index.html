@@ -5,8 +5,13 @@
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
+        /* prevents selection when left click dragging */
         .disable-selection {
             -moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;
+        }
+        /* prevents cursor from changing to the i bar on the overlays*/
+        .noIbar {
+            cursor:default;
         }
     </style>
 </head>
@@ -22,7 +27,7 @@
 
     <!-- note we disable selection on the top most div -->
     <div style="width:512px;height:512px;position:relative;color: white;"
-         class='disable-selection'
+         class='disable-selection noIbar'
          unselectable='on'
          onselectstart='return false;'
          onmousedown='return false;'>

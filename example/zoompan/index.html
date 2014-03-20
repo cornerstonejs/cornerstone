@@ -3,6 +3,14 @@
 <head>
     <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* prevents selection when left click dragging */
+        .disable-selection {
+            -moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;
+        }
+
+    </style>
 </head>
 <body>
 <div class="container">
@@ -24,7 +32,10 @@ by the developer
 <br>
 
 
-<div id="dicomImage" style="width:512px;height:512px">
+<div id="dicomImage" class ="disable-selection" style="width:512px;height:512px"
+     unselectable='on'
+     onselectstart='return false;'
+     onmousedown='return false;'>
 </div>
 
 <button id="zoomIn" type="button" class="btn btn-default">Zoom In</button>
@@ -68,7 +79,7 @@ by the developer
         var lastY = e.pageY;
 
 
-        $('#dicomImage').mousemove(function(e) {
+        $(document).mousemove(function(e) {
             var deltaX = e.pageX - lastX,
                     deltaY = e.pageY - lastY ;
             lastX = e.pageX;
@@ -80,8 +91,9 @@ by the developer
             cornerstone.setViewport(element, viewport);
         });
 
-        $('#dicomImage').mouseup(function(e) {
-            $('#dicomImage').unbind('mousemove');
+        $(document).mouseup(function(e) {
+            $(document).unbind('mousemove');
+            $(document).unbind('mouseup');
         });
     });
 
