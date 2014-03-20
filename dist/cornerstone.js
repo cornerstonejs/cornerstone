@@ -336,11 +336,11 @@ var cornerstone = (function (cs, csc) {
 
     function getExampleImage(imageId) {
         var image = csc.image();
-        if(imageId == '1.3.12.2.1107.5.2.32.35020.2011062208172724415309288')
+        if(imageId == 'example://1')
         {
             updatePixels(image, cs.image108Base64);
         }
-        else if(imageId = '1.3.12.2.1107.5.2.32.35020.2011062208172724415309289')
+        else if(imageId = 'example://2')
         {
             updatePixels(image, cs.image109Base64);
         }
@@ -363,8 +363,11 @@ var cornerstone = (function (cornerstone, csc) {
     function loadImage(imageId) {
         if(imageCache[imageId] === undefined) {
             // currently hardcoded to use example images only
-            var image = cornerstone.getExampleImage(imageId);
-            return image;
+            if(imageId.substring(0, 10) === 'example://')
+            {
+                var image = cornerstone.getExampleImage(imageId);
+                return image;
+            }
         }
         else {
             return imageCache[imageId];
