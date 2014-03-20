@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+
+    <h1>
+        zoompan/index.html
+    </h1>
+
+    This is an example of interactive zoom and pan
+
+    <br>
+    <br>
+
+    Controls:
+    <ul>
+        <li>Left click drag - window/level</li>
+        <li>Middle Mouse button drag - pan</li>
+        <li>Right click drag - zoom</li>
+        <li>Mouse wheel - scroll images</li>
+    </ul>
+
+
+    <br>
+    <br>
+
+
+    <div oncontextmenu="return false" id="dicomImage" style="width:512px;height:512px">
+    </div>
+
+</div>
+</body>
+<!-- include the cornerstone library -->
+<script src="../../dist/cornerstone.js"></script>
+
+<!-- jquery - included to make things easier to demo, not needed or used by cornerstone -->
+<script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
+
+<script>
+
+    var imageIds = [
+        '1.3.12.2.1107.5.2.32.35020.2011062208172724415309288',
+        '1.3.12.2.1107.5.2.32.35020.2011062208172724415309289'];
+
+    var currentImageIndex = 0;
+
+    // show image #1 initially
+    function updateTheImage(imageIndex) {
+        currentImageIndex = imageIndex;
+        var element = $('#dicomImage').get(0);
+        var studyId = '1.3.12.2.1107.5.2.32.35020.30000011062212111306200000003';
+        cornerstone.showImage(element, studyId, imageIds[currentImageIndex]);
+    };
+
+    var element = $('#dicomImage').get(0);
+    var studyId = '1.3.12.2.1107.5.2.32.35020.30000011062212111306200000003';
+    cornerstone.enable(element, studyId, imageIds[currentImageIndex]);
+
+    // add event handlers to pan image on mouse move
+    $('#dicomImage').mousedown(function(e) {
+        var lastX = e.pageX;
+        var lastY = e.pageY;
+
+
+        $('#dicomImage').mousemove(function(e) {
+            var deltaX = e.pageX - lastX,
+                    deltaY = e.pageY - lastY ;
+            lastX = e.pageX;
+            lastY = e.pageY;
+
+            if(e.which == 1) {
+                var viewport = cornerstone.getViewport(element);
+                viewport.windowWidth += (deltaX / viewport.scale);
+                viewport.windowCenter += (deltaY / viewport.scale);
+                cornerstone.setViewport(element, viewport);
+            }
+            else if(e.which == 2) {
+                var viewport = cornerstone.getViewport(element);
+                viewport.centerX += (deltaX / viewport.scale);
+                viewport.centerY += (deltaY / viewport.scale);
+                cornerstone.setViewport(element, viewport);
+            }
+            else if(e.which == 3) {
+                var viewport = cornerstone.getViewport(element);
+                viewport.scale += (deltaY / 100);
+                cornerstone.setViewport(element, viewport);
+            }
+        });
+
+        $('#dicomImage').mouseup(function(e) {
+            $('#dicomImage').unbind('mousemove');
+        });
+    });
+
+    $('#dicomImage').on('mousewheel DOMMouseScroll', function(e) {
+        // Firefox e.originalEvent.detail > 0 scroll back, < 0 scroll forward
+        // chrome/safari e.originalEvent.wheelDelta < 0 scroll back, > 0 scroll forward
+        if(e.originalEvent.wheelDelta < 0 || e.originalEvent.detail > 0) {
+            if(currentImageIndex == 0) {
+                updateTheImage(1);
+            }
+        } else {
+            if(currentImageIndex == 1) {
+                updateTheImage(0);
+            }
+        }
+        //prevent page fom scrolling
+        return false;
+    });
+
+</script>
+</html>
