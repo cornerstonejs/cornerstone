@@ -17,7 +17,6 @@ var cornerstone = (function (cs, csc) {
         var ees = document.querySelectorAll('[data-cornerstoneEnabled]');
         for(var i=0; i < ees.length; i++) {
             var ee = ees[i];
-            var studyId = ee.getAttribute('data-cornerstoneStudyId');
             var imageId = ee.getAttribute('data-cornerstoneImageId');
 
             var viewport =
@@ -28,7 +27,7 @@ var cornerstone = (function (cs, csc) {
                 windowWidth : getAttribute(ee, 'data-cornerstoneViewportWindowWidth'),
                 windowCenter : getAttribute(ee, 'data-cornerstoneViewportWindowCenter')
             };
-            cs.enable(ee, studyId, imageId, viewport);
+            cs.enable(ee, imageId, viewport);
         }
     }
 

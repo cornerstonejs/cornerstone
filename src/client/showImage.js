@@ -3,11 +3,10 @@ var cornerstone = (function (cornerstone, csc) {
         cornerstone = {};
     }
 
-    cornerstone.showImage = function (element, studyId, imageId, viewportOptions) {
+    cornerstone.showImage = function (element, imageId, viewportOptions) {
         enabledElement = cornerstone.getEnabledElement(element);
-        enabledElement.ids.studyId = studyId;
         enabledElement.ids.imageId = imageId;
-        enabledElement.image = cornerstone.loadImage(studyId, imageId);
+        enabledElement.image = cornerstone.loadImage(imageId);
 
         // merge
         if(viewportOptions) {

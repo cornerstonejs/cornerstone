@@ -8,24 +8,6 @@ var cornerstoneCore = (function (cornerstoneCore) {
     renderCanvas.width = 1024;
     renderCanvas.height = 1024;
 
-    function drawDebugOverlays(ee, context)
-    {
-        var lineHeight = 25;
-        var y = 30;
-
-        //draw some overlay stuff
-        context.fillStyle = 'white';
-        context.fillText(ee.ids.studyId, 10, y);
-        y+=lineHeight;
-        context.fillText(ee.ids.imageId, 10, y);
-        y+=lineHeight;
-        for(var property in ee.viewport) {
-            var str = property + ' = ' + ee.viewport[property];
-            context.fillText(str, 10, y);
-            y+=lineHeight;
-        }
-    };
-
     function drawImage(ee, image) {
 
         var context = ee.canvas.getContext('2d');
@@ -50,10 +32,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
         renderCanvasContext.putImageData(imageData, 0, 0);
         context.drawImage(renderCanvas, -image.columns / 2, -image.rows / 2);
         context.restore();
-
-        //drawDebugOverlays(ee, context);
     };
-
 
     // Module exports
     cornerstoneCore.drawImage = drawImage;
@@ -177,13 +156,13 @@ var cornerstone = (function (cornerstone, csc) {
         cornerstone = {};
     }
 
-    function enable(element, studyId, imageId, viewportOptions) {
+    function enable(element, imageId, viewportOptions) {
         var canvas = document.createElement('canvas');
-           canvas.width = element.clientWidth;
+        canvas.width = element.clientWidth;
         canvas.height = element.clientHeight;
         element.appendChild(canvas);
 
-        var image = cornerstone.loadImage(studyId, imageId);
+        var image = cornerstone.loadImage(imageId);
 
         var viewport = {
             scale : 1.0,
@@ -216,7 +195,6 @@ var cornerstone = (function (cornerstone, csc) {
             element: element,
             canvas: canvas,
             ids : {
-                studyId: studyId,
                 imageId: imageId
             },
             image:image,
@@ -356,7 +334,7 @@ var cornerstone = (function (cs, csc) {
         }
     };
 
-    function getExampleImage(studyId, imageId) {
+    function getExampleImage(imageId) {
         var image = csc.image();
         if(imageId == '1.3.12.2.1107.5.2.32.35020.2011062208172724415309288')
         {
@@ -382,10 +360,10 @@ var cornerstone = (function (cornerstone, csc) {
     var imageCache = {
     };
 
-    function loadImage(studyId, imageId) {
+    function loadImage(imageId) {
         if(imageCache[imageId] === undefined) {
             // currently hardcoded to use example images only
-            var image = cornerstone.getExampleImage(studyId, imageId);
+            var image = cornerstone.getExampleImage(imageId);
             return image;
         }
         else {
@@ -418,7 +396,6 @@ var cornerstone = (function (cs, csc) {
         var ees = document.querySelectorAll('[data-cornerstoneEnabled]');
         for(var i=0; i < ees.length; i++) {
             var ee = ees[i];
-            var studyId = ee.getAttribute('data-cornerstoneStudyId');
             var imageId = ee.getAttribute('data-cornerstoneImageId');
 
             var viewport =
@@ -429,7 +406,7 @@ var cornerstone = (function (cs, csc) {
                 windowWidth : getAttribute(ee, 'data-cornerstoneViewportWindowWidth'),
                 windowCenter : getAttribute(ee, 'data-cornerstoneViewportWindowCenter')
             };
-            cs.enable(ee, studyId, imageId, viewport);
+            cs.enable(ee, imageId, viewport);
         }
     }
 
@@ -449,11 +426,10 @@ var cornerstone = (function (cornerstone, csc) {
         cornerstone = {};
     }
 
-    cornerstone.showImage = function (element, studyId, imageId, viewportOptions) {
+    cornerstone.showImage = function (element, imageId, viewportOptions) {
         enabledElement = cornerstone.getEnabledElement(element);
-        enabledElement.ids.studyId = studyId;
         enabledElement.ids.imageId = imageId;
-        enabledElement.image = cornerstone.loadImage(studyId, imageId);
+        enabledElement.image = cornerstone.loadImage(imageId);
 
         // merge
         if(viewportOptions) {

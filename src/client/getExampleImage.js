@@ -56,7 +56,7 @@ var cornerstone = (function (cs, csc) {
         }
     };
 
-    function getExampleImage(studyId, imageId) {
+    function getExampleImage(imageId) {
         var image = csc.image();
         if(imageId == '1.3.12.2.1107.5.2.32.35020.2011062208172724415309288')
         {

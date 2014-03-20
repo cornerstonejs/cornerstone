@@ -80,16 +80,14 @@
     function updateTheImage(imageIndex) {
         currentImageIndex = imageIndex;
         var element = $('#dicomImage').get(0);
-        var studyId = '1.3.12.2.1107.5.2.32.35020.30000011062212111306200000003';
-        cornerstone.showImage(element, studyId, imageIds[currentImageIndex]);
+        cornerstone.showImage(element, imageIds[currentImageIndex]);
         var viewport = cornerstone.getViewport(element);
         $('#bottomright').text("Zoom: " + viewport.scale.toFixed(2)+ "x");
         $('#bottomleft').text("WW/WC:" + Math.round(viewport.windowWidth) + "/" + Math.round(viewport.windowCenter));
     };
 
     var element = $('#dicomImage').get(0);
-    var studyId = '1.3.12.2.1107.5.2.32.35020.30000011062212111306200000003';
-    cornerstone.enable(element, studyId, imageIds[currentImageIndex]);
+    cornerstone.enable(element, imageIds[currentImageIndex]);
     var viewport = cornerstone.getViewport(element);
     $('#bottomright').text("Zoom: " + viewport.scale.toFixed(2) + "x");
     $('#bottomleft').text("WW/WC:" + Math.round(viewport.windowWidth) + "/" + Math.round(viewport.windowCenter));

@@ -6,10 +6,10 @@ var cornerstone = (function (cornerstone, csc) {
     var imageCache = {
     };
 
-    function loadImage(studyId, imageId) {
+    function loadImage(imageId) {
         if(imageCache[imageId] === undefined) {
             // currently hardcoded to use example images only
-            var image = cornerstone.getExampleImage(studyId, imageId);
+            var image = cornerstone.getExampleImage(imageId);
             return image;
         }
         else {

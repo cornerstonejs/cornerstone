@@ -3,13 +3,13 @@ var cornerstone = (function (cornerstone, csc) {
         cornerstone = {};
     }
 
-    function enable(element, studyId, imageId, viewportOptions) {
+    function enable(element, imageId, viewportOptions) {
         var canvas = document.createElement('canvas');
         canvas.width = element.clientWidth;
         canvas.height = element.clientHeight;
         element.appendChild(canvas);
 
-        var image = cornerstone.loadImage(studyId, imageId);
+        var image = cornerstone.loadImage(imageId);
 
         var viewport = {
             scale : 1.0,
@@ -42,7 +42,6 @@ var cornerstone = (function (cornerstone, csc) {
             element: element,
             canvas: canvas,
             ids : {
-                studyId: studyId,
                 imageId: imageId
             },
             image:image,
