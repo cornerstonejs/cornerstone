@@ -8,10 +8,10 @@
 <div class="container">
 
     <h1>
-        zoompan/index.html
+        scrollzoompanwl/index.html
     </h1>
 
-    This is an example of interactive zoom and pan
+    This is an example of interactive series scroll, pan, zoom and window/level
 
     <br>
     <br>
@@ -65,6 +65,7 @@
         var lastX = e.pageX;
         var lastY = e.pageY;
 
+        var mouseButton = e.which;
 
         $('#dicomImage').mousemove(function(e) {
             var deltaX = e.pageX - lastX,
@@ -72,19 +73,19 @@
             lastX = e.pageX;
             lastY = e.pageY;
 
-            if(e.which == 1) {
+            if(mouseButton == 1) {
                 var viewport = cornerstone.getViewport(element);
                 viewport.windowWidth += (deltaX / viewport.scale);
                 viewport.windowCenter += (deltaY / viewport.scale);
                 cornerstone.setViewport(element, viewport);
             }
-            else if(e.which == 2) {
+            else if(mouseButton == 2) {
                 var viewport = cornerstone.getViewport(element);
                 viewport.centerX += (deltaX / viewport.scale);
                 viewport.centerY += (deltaY / viewport.scale);
                 cornerstone.setViewport(element, viewport);
             }
-            else if(e.which == 3) {
+            else if(mouseButton == 3) {
                 var viewport = cornerstone.getViewport(element);
                 viewport.scale += (deltaY / 100);
                 cornerstone.setViewport(element, viewport);
