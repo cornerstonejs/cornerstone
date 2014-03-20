@@ -11,7 +11,8 @@
         scrollzoompanwl/index.html
     </h1>
 
-    This is an example of interactive series scroll, pan, zoom and window/level
+    This is an example of interactive series scroll, pan, zoom and window/level with HTML
+    based overlays.
 
     <br>
     <br>
@@ -28,10 +29,28 @@
     <br>
     <br>
 
+    <div style="width:512px;height:512px;position:relative;color: white;"
+         class='disable-selection'
+         unselectable='on'
+         onselectstart='return false;'
+         onmousedown='return false;'>
+        <div id="dicomImage" oncontextmenu="return false"
+             style="width:512px;height:512px;top:0px;left:0px; position:absolute">
+        </div>
+        <div id="topleft" style="position: absolute;top:0px; left:0px">
+            Patient Name
+        </div>
+        <div id="topright" style="position: absolute;top:0px; right:0px">
+            Hospital
+        </div>
+        <div id="bottomright" style="position: absolute;bottom:0px; right:0px">
+            Zoom:
+        </div>
+        <div id="bottomleft" style="position: absolute;bottom:0px; left:0px">
+            WW/WC:
+        </div>
 
-    <div oncontextmenu="return false" id="dicomImage" style="width:512px;height:512px">
     </div>
-
 </div>
 </body>
 <!-- include the cornerstone library -->
@@ -54,11 +73,18 @@
         var element = $('#dicomImage').get(0);
         var studyId = '1.3.12.2.1107.5.2.32.35020.30000011062212111306200000003';
         cornerstone.showImage(element, studyId, imageIds[currentImageIndex]);
+        var viewport = cornerstone.getViewport(element);
+        $('#bottomright').text("Zoom: " + viewport.scale.toFixed(2)+ "x");
+        $('#bottomleft').text("WW/WC:" + Math.round(viewport.windowWidth) + "/" + Math.round(viewport.windowCenter));
     };
 
     var element = $('#dicomImage').get(0);
     var studyId = '1.3.12.2.1107.5.2.32.35020.30000011062212111306200000003';
     cornerstone.enable(element, studyId, imageIds[currentImageIndex]);
+    var viewport = cornerstone.getViewport(element);
+    $('#bottomright').text("Zoom: " + viewport.scale.toFixed(2) + "x");
+    $('#bottomleft').text("WW/WC:" + Math.round(viewport.windowWidth) + "/" + Math.round(viewport.windowCenter));
+
 
     // add event handlers to pan image on mouse move
     $('#dicomImage').mousedown(function(e) {
@@ -78,6 +104,7 @@
                 viewport.windowWidth += (deltaX / viewport.scale);
                 viewport.windowCenter += (deltaY / viewport.scale);
                 cornerstone.setViewport(element, viewport);
+                $('#bottomleft').text("WW/WL:" + Math.round(viewport.windowWidth) + "/" + Math.round(viewport.windowCenter));
             }
             else if(mouseButton == 2) {
                 var viewport = cornerstone.getViewport(element);
@@ -89,6 +116,7 @@
                 var viewport = cornerstone.getViewport(element);
                 viewport.scale += (deltaY / 100);
                 cornerstone.setViewport(element, viewport);
+                $('#bottomright').text("Zoom: " + viewport.scale.toFixed(2) + "x");
             }
         });
 

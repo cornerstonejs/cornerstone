@@ -179,7 +179,7 @@ var cornerstone = (function (cornerstone, csc) {
 
     function enable(element, studyId, imageId, viewportOptions) {
         var canvas = document.createElement('canvas');
-        canvas.width = element.clientWidth;
+           canvas.width = element.clientWidth;
         canvas.height = element.clientHeight;
         element.appendChild(canvas);
 
