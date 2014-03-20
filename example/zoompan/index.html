@@ -29,6 +29,7 @@ by the developer
 
 <button id="zoomIn" type="button" class="btn btn-default">Zoom In</button>
 <button id="zoomOut" type="button" class="btn btn-default">Zoom Out</button>
+<button id="fitToWindow" type="button" class="btn btn-default">Reset</button>
 
 </div>
 </body>
@@ -57,6 +58,9 @@ by the developer
         viewport.scale -= 0.25;
         cornerstone.setViewport(element, viewport);
     });
+    $('#fitToWindow').click(function(e) {
+        cornerstone.fitToWindow(element);
+    });
 
     // add event handlers to pan image on mouse move
     $('#dicomImage').mousedown(function(e) {
@@ -81,8 +85,9 @@ by the developer
         });
     });
 
-    $('#dicomImage').on('mousewheel', function(e) {
-        if(e.originalEvent.detail > 0 || e.originalEvent.wheelDelta < 0) { //alternative options for wheelData: wheelDeltaX & wheelDeltaY
+    $('#dicomImage').on('mousewheel DOMMouseScroll', function(e) {
+        if(e.originalEvent.detail > 0 || e.originalEvent.wheelDelta > 0)
+        {
             var viewport = cornerstone.getViewport(element);
             viewport.scale -= 0.25;
             cornerstone.setViewport(element, viewport);
@@ -94,5 +99,6 @@ by the developer
         //prevent page fom scrolling
         return false;
     });
+
 </script>
 </html>

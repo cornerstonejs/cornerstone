@@ -33,6 +33,12 @@ var cornerstone = (function (cs, csc) {
     }
 
 
+    var oldOnLoad = window.onload;
+    window.onload = function() {
+        if(typeof oldOnLoad == 'function') {oldOnLoad();}
+        enableAllElements();
+    };
+
     cs.enableAllElements = enableAllElements;
 
     return cs;

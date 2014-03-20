@@ -60,7 +60,7 @@ to change between images or press the buttons below.
         updateTheImage(1);
     });
 
-    $('#dicomImage').on('mousewheel', function(e) {
+    $('#dicomImage').on('mousewheel DOMMouseScroll', function(e) {
         if(e.originalEvent.detail > 0 || e.originalEvent.wheelDelta < 0) { //alternative options for wheelData: wheelDeltaX & wheelDeltaY
             if(currentImageIndex == 0) {
                 updateTheImage(1);
