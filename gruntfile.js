@@ -11,15 +11,24 @@ module.exports = function(grunt) {
             }
         },
         concat: {
-            dist: {
-                src : ['src/client/core/*.js', 'src/client/*.js', 'src/client/tools/*.js'],
+            distCornerstone: {
+                src : ['src/client/core/*.js', 'src/client/*.js'],
                 dest: 'dist/cornerstone.js'
+            },
+            distCornerstoneTools: {
+                src : [ 'src/client/tools/*.js'],
+                dest: 'dist/cornerstone-tools.js'
             }
         },
         uglify: {
-            my_target: {
+            cornerstone: {
                 files: {
                     'dist/cornerstone.min.js': ['dist/cornerstone.js']
+                }
+            },
+            cornerstoneTools: {
+                files: {
+                    'dist/cornerstone-tools.min.js': ['dist/cornerstone-tools.js']
                 }
             }
         },
@@ -42,5 +51,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
-    grunt.registerTask('default', ['clean', 'concat', 'uglify']);
+    grunt.registerTask('default', ['clean', 'concat:distCornerstone', 'concat:distCornerstoneTools', 'uglify:cornerstone', 'uglify:cornerstoneTools']);
 };
