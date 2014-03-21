@@ -1,21 +1,23 @@
+//
+// This is a cornerstone imageLoader that generates test images.  These test images
+// are useful for debugging as they don't require a server
+//
 
-var cornerstoneCore = (function (cornerstoneCore) {
-    if(cornerstoneCore === undefined) {
-        cornerstoneCore = {};
-    }
+(function (cornerstone) {
 
-    function image(width, height)
-    {
+    // Loads an image given an imageId
+    // TODO: make this api async?
+    function loadImage(imageId) {
         var image = {
             minPixelValue : 0,
-            maxPixelValue : 257,
+            maxPixelValue : 255,
             slope: 1.0,
             intercept: 0,
             windowCenter : 127,
             windowWidth : 256,
             storedPixelData: [], // generated below
-            rows: height,
-            columns: width,
+            rows: 256,
+            columns: 256,
             color: false
         };
 
@@ -31,8 +33,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
         return image;
     };
 
-    // Module exports
-    cornerstoneCore.image = image;
+    cornerstone.registerImageLoader('test', loadImage);
 
-    return cornerstoneCore;
-}(cornerstoneCore));
+    return cornerstone;
+}(cornerstone));

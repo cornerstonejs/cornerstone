@@ -83,7 +83,8 @@ var cornerstoneCore = (function (cornerstoneCore) {
             windowWidth : 256,
             storedPixelData: [], // generated below
             rows: height,
-            columns: width
+            columns: width,
+            color: false
         };
 
         var index=0;
@@ -268,15 +269,36 @@ var cornerstone = (function (cornerstone, csc) {
         cornerstone = {};
     }
 
+    var imageLoaders = {};
+
+    var unknownImageLoader;
+
     var imageCache = {
     };
 
+    function loadImageFromImageLoader(imageId) {
+        var colonIndex = imageId.indexOf(":");
+        var scheme = imageId.substring(0, colonIndex);
+        var loader = imageLoaders[scheme];
+        if(loader === undefined || loader === null) {
+            if(unknownImageLoader !== undefined) {
+                var image = unknownImageLoader(imageId);
+                return image;
+            }
+            else {
+                return undefined;
+            }
+        }
+        var image = loader(imageId);
+        return image;
+    }
+
+    // Loads an image given an imageId
+    // TODO: make this api async?
     function loadImage(imageId) {
         if(imageCache[imageId] === undefined) {
-            var colonIndex = imageId.indexOf(":");
-            var scheme = imageId.substring(0, colonIndex);
-            var loader = cornerstone.imageIdSchemes[scheme];
-            var image = loader(imageId);
+            var image = loadImageFromImageLoader(imageId);
+            imageCache[imageId] = image;
             return image;
         }
         else {
@@ -284,9 +306,23 @@ var cornerstone = (function (cornerstone, csc) {
         }
     };
 
+    // registers an imageLoader plugin with cornerstone for the specified scheme
+    function registerImageLoader(scheme, imageLoader) {
+        imageLoaders[scheme] = imageLoader;
+    };
+
+    // Registers a new unknownImageLoader and returns the previous one (if it exists)
+    function registerUnknownImageLoader(imageLoader) {
+        var oldImageLoader = unknownImageLoader;
+        unknownImageLoader = imageLoader;
+        return oldImageLoader;
+    }
+
     // module exports
 
     cornerstone.loadImage = loadImage;
+    cornerstone.registerImageLoader = registerImageLoader;
+    cornerstone.registerUnknownImageLoader = registerUnknownImageLoader;
 
     return cornerstone;
 }(cornerstone, cornerstoneCore));
