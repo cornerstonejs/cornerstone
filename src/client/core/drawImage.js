@@ -30,7 +30,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
         var imageData = renderCanvasContext.createImageData(image.columns, image.rows);
         cornerstoneCore.storedPixelDataToCanvasImageData(image, lut, imageData.data);
         renderCanvasContext.putImageData(imageData, 0, 0);
-        context.drawImage(renderCanvas, -image.columns / 2, -image.rows / 2);
+        context.drawImage(renderCanvas, 0,0, image.columns, image.rows, -image.columns / 2, -image.rows / 2, image.columns, image.rows);
         context.restore();
     };
 

@@ -12,7 +12,7 @@ module.exports = function(grunt) {
         },
         concat: {
             dist: {
-                src : ['src/client/core/*.js', 'src/client/*.js'],
+                src : ['src/client/core/*.js', 'src/client/*.js', 'src/client/tools/*.js'],
                 dest: 'dist/cornerstone.js'
             }
         },

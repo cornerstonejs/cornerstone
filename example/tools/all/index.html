@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <style>
+        /* prevents selection when left click dragging */
+        .disable-selection {
+            -moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;
+        }
+        /* prevents cursor from changing to the i bar on the overlays*/
+        .noIbar {
+            cursor:default;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>
+        tools/all/index.html
+    </h1>
+
+    This is an example of using all of the cornerstone tools
+
+    <br>
+    <br>
+
+    <ul>
+        <li>Adjust window width / window center by dragging the left mouse button</li>
+        <li>Pan by dragging the middle mouse button</li>
+        <li>Zoom by dragging the right mouse button</li>
+        <li>Scroll by rolling the mouse wheel (MRI image only)</li>
+    </ul>
+
+    <br>
+    <br>
+
+    <div id="dicomImage" oncontextmenu="return false"
+         style="width:256px;height:256px;display:inline-block"
+         class='disable-selection'
+         unselectable='on'
+         onselectstart='return false;'
+         onmousedown='return false;'>
+    </div>
+    <div id="ctImage" oncontextmenu="return false"
+         style="width:256px;height:256px;display:inline-block" class='disable-selection'
+         unselectable='on'
+         onselectstart='return false;'
+         onmousedown='return false;'>
+    </div>
+</body>
+
+<!-- jquery - included to make things easier to demo, not needed or used by cornerstone -->
+<script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
+
+<!-- include the cornerstone library -->
+<script src="../../../dist/cornerstone.js"></script>
+
+<!-- include special code for these examples which provides images -->
+<script src="../../exampleImageIdLoader.js"></script>
+
+<!-- include special code for these examples which provides images -->
+<script src="../../exampleImageIdLoaderCt.js"></script>
+
+
+<script>
+
+    var imageIds = [
+        'example://1',
+        'example://2'];
+
+    // image enable the dicomImage element
+    var element = $('#dicomImage').get(0);
+    cornerstone.enable(element, imageIds[0]);
+    cornerstoneTools.windowWidthWindowCenter(element, 1);
+    cornerstoneTools.pan(element, 2);
+    cornerstoneTools.zoom(element, 3);
+    cornerstoneTools.scroll(element, imageIds, 0);
+
+    var ctelement = $('#ctImage').get(0);
+    cornerstone.enable(ctelement, "ctexample://1");
+    cornerstoneTools.windowWidthWindowCenter(ctelement, 1);
+    cornerstoneTools.pan(ctelement, 2);
+    cornerstoneTools.zoom(ctelement, 3);
+
+
+</script>
+</html>
