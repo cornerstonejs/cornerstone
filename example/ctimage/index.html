@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <style>
+        /* prevents selection when left click dragging */
+        .disable-selection {
+            -moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>
+        ctimage/index.html
+    </h1>
+
+    This is an example of displaying a ct image along with buttons to set ww/wc presets.  You can
+    manually adjust the ww/wc by dragging the left mouse button
+
+    <br>
+    <br>
+
+    <!-- note we disable selection on the top most div -->
+    <div style="width:512px;height:512px;position:relative;color: white;"
+         class='disable-selection noIbar'
+         unselectable='on'
+         onselectstart='return false;'
+         onmousedown='return false;'>
+        <div id="dicomImage"
+             style="width:512px;height:512px;top:0px;left:0px; position:absolute">
+        </div>
+        <div id="topleft" style="position: absolute;top:0px; left:0px">
+            Patient Name
+        </div>
+        <div id="topright" style="position: absolute;top:0px; right:0px">
+            Hospital
+        </div>
+        <div id="bottomright" style="position: absolute;bottom:0px; right:0px">
+            Zoom:
+        </div>
+        <div id="bottomleft" style="position: absolute;bottom:0px; left:0px">
+            WW/WC:
+        </div>
+
+    </div>
+
+
+    <button id="softTissue" class="btn">Soft Tissue</button>
+    <button id="lung" class="btn">Lung</button>
+    <button id="bone" class="btn">Bone</button>
+
+</div>
+</body>
+<!-- include the cornerstone library -->
+<script src="../../dist/cornerstone.js"></script>
+
+<!-- include special code for these examples which provides images -->
+<script src="../exampleImageIdLoaderCt.js"></script>
+
+<!-- jquery - included to make things easier to demo, not needed or used by cornerstone -->
+<script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
+
+<script>
+
+    // image enable the dicomImage element
+    var imageId = 'ctexample://1';
+    var element = $('#dicomImage').get(0);
+    cornerstone.enable(element, imageId);
+    var viewport = cornerstone.getViewport(element);
+    $('#bottomright').text("Zoom: " + viewport.scale + "x");
+    $('#bottomleft').text("WW/WC:" + Math.round(viewport.windowWidth) + "/" + Math.round(viewport.windowCenter));
+
+    // Add event handler for the ww/wc presets
+    $('#softTissue').click(function(e) {
+        var viewport = cornerstone.getViewport(element);
+        viewport.windowWidth = 400;
+        viewport.windowCenter = 20;
+        cornerstone.setViewport(element, viewport);
+    });
+
+    $('#lung').click(function(e) {
+        var viewport = cornerstone.getViewport(element);
+        viewport.windowWidth = 1600;
+        viewport.windowCenter = -600;
+        cornerstone.setViewport(element, viewport);
+    });
+
+    $('#bone').click(function(e) {
+        var viewport = cornerstone.getViewport(element);
+        viewport.windowWidth = 2000;
+        viewport.windowCenter = 300;
+        cornerstone.setViewport(element, viewport);
+    });
+
+
+    // add event handlers to mouse move to adjust window/center
+    $('#dicomImage').mousedown(function(e) {
+        var lastX = e.pageX;
+        var lastY = e.pageY;
+
+        $(document).mousemove(function(e) {
+            var deltaX = e.pageX - lastX,
+                    deltaY = e.pageY - lastY ;
+            lastX = e.pageX;
+            lastY = e.pageY;
+
+            var viewport = cornerstone.getViewport(element);
+            viewport.windowWidth += (deltaX / viewport.scale);
+            viewport.windowCenter += (deltaY / viewport.scale);
+            cornerstone.setViewport(element, viewport);
+            $('#bottomleft').text("WW/WL:" + Math.round(viewport.windowWidth) + "/" + Math.round(viewport.windowCenter));
+        });
+
+        $(document).mouseup(function(e) {
+            $(document).unbind('mousemove');
+            $(document).unbind('mouseup');
+        });
+    });
+
+</script>
+</html>

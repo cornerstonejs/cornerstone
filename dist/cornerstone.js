@@ -72,7 +72,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
         cornerstoneCore = {};
     }
 
-    function image()
+    function image(width, height)
     {
         var image = {
             minPixelValue : 0,
@@ -82,8 +82,8 @@ var cornerstoneCore = (function (cornerstoneCore) {
             windowCenter : 127,
             windowWidth : 256,
             storedPixelData: [], // generated below
-            rows: 256,
-            columns: 256
+            rows: height,
+            columns: width
         };
 
         var index=0;

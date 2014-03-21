@@ -19,7 +19,7 @@ var cornerstone = (function (cs, csc) {
         for (var i=0, strLen=str.length; i<strLen; i+=2) {
             var lower = str.charCodeAt(i);
             var upper = str.charCodeAt(i+1);
-            bufView[index] = lower + (upper >>8);
+            bufView[index] = lower + (upper <<8);
             index++;
         }
         return bufView;
@@ -39,7 +39,7 @@ var cornerstone = (function (cs, csc) {
     };
 
     function getExampleImage(imageId) {
-        var image = csc.image();
+        var image = csc.image(256,256);
         if(imageId == 'example://1')
         {
             updatePixels(image, image108Base64);
