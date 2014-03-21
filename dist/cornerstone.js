@@ -168,9 +168,10 @@ var cornerstone = (function (cornerstone, csc) {
             scale : 1.0,
             centerX : 0,//image.columns / 2,
             centerY: 0,//image.rows / 2,
-            windowWidth: 256,
-            windowCenter: 128
+            windowWidth: image.windowWidth,
+            windowCenter: image.windowCenter
         };
+
 
         // fit image to window
         var verticalScale = canvas.height / image.rows;

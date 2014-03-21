@@ -10,7 +10,8 @@
     <h1>
         multimage/index.html
     </h1>
-    This is an example of showing two different images side by side
+    This is an example of showing two mr images and one ct image on one page.  Note that two different
+    imageId plugins are used in this case - one for the mr images and one for the ct image.
     <br>
     <br>
 
@@ -22,6 +23,10 @@
          data-cornerstoneImageId="example://2"
          style="width:256px;height:256px;display:inline-block;">
     </div>
+    <div data-cornerstoneEnabled="true"
+         data-cornerstoneImageId="ctexample://1"
+         style="width:512px;height:512px;">
+    </div>
 
 </div>
 </body>
@@ -29,4 +34,6 @@
 <script src="../../dist/cornerstone.js"></script>
 <!-- include special code for these examples which provides images -->
 <script src="../exampleImageIdLoader.js"></script>
+<!-- include special code for these examples which provides images -->
+<script src="../exampleImageIdLoaderCt.js"></script>
 </html>
