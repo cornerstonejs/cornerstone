@@ -19,7 +19,6 @@ var cornerstone = (function (cornerstone, csc) {
             windowCenter: image.windowCenter
         };
 
-
         // fit image to window
         var verticalScale = canvas.height / image.rows;
         var horizontalScale = canvas.width / image.columns;
@@ -50,6 +49,20 @@ var cornerstone = (function (cornerstone, csc) {
         };
         cornerstone.addEnabledElement(el);
         cornerstone.updateImage(element);
+
+        var event = new CustomEvent(
+            "CornerstoneViewportUpdated",
+            {
+                detail: {
+                    viewport: viewport,
+                    element: element,
+                },
+                bubbles: false,
+                cancelable: false
+            }
+        );
+        element.dispatchEvent(event);
+
     };
 
 

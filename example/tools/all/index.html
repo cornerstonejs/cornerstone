@@ -23,7 +23,8 @@
         tools/all/index.html
     </h1>
 
-    This is an example of using all of the cornerstone tools
+    This is an example of using all of the cornerstone tools and capturing events to show the
+    current ww/wc, zoom and drawing an overlay on the mri image
 
     <br>
     <br>
@@ -38,13 +39,30 @@
     <br>
     <br>
 
-    <div id="dicomImage" oncontextmenu="return false"
-         style="width:256px;height:256px;display:inline-block"
-         class='disable-selection'
+    <div style="width:256px;height:256px;position:relative;color: white;display:inline-block"
+         oncontextmenu="return false"
+         class='disable-selection noIbar'
          unselectable='on'
          onselectstart='return false;'
          onmousedown='return false;'>
+        <div id="dicomImage"
+             style="width:256px;height:256px;top:0px;left:0px; position:absolute">
+        </div>
+        <div id="mrtopleft" style="position: absolute;top:0px; left:0px">
+            Patient Name
+        </div>
+        <div id="mrtopright" style="position: absolute;top:0px; right:0px">
+            Hospital
+        </div>
+        <div id="mrbottomright" style="position: absolute;bottom:0px; right:0px">
+            Zoom:
+        </div>
+        <div id="mrbottomleft" style="position: absolute;bottom:0px; left:0px">
+            WW/WC:
+        </div>
+
     </div>
+
     <div id="ctImage" oncontextmenu="return false"
          style="width:256px;height:256px;display:inline-block" class='disable-selection'
          unselectable='on'
@@ -71,17 +89,46 @@
 
 <script>
 
+    var element = $('#dicomImage').get(0);
+
+    function onViewportUpdated(e) {
+        $('#mrbottomleft').text("WW/WL:" + Math.round(e.detail.viewport.windowWidth) + "/" + Math.round(e.detail.viewport.windowCenter));
+        $('#mrbottomright').text("Zoom:" + e.detail.viewport.scale.toFixed(2));
+    };
+
+    element.addEventListener("CornerstoneViewportUpdated", onViewportUpdated, false);
+
+    function onImageRendered(e) {
+        // NOTE: The coordinate system of the canvas is in image pixel space.  Drawing
+        // to location 0,0 will be the top left of the image and rows,columns is the bottom
+        // right.
+        var context = e.detail.canvasContext;
+        context.beginPath();
+        context.strokeStyle = 'white';
+        context.lineWidth = .5;
+        context.rect(128,90,50,60);
+        context.stroke();
+        context.fillStyle = "white";
+        context.font = "6px Arial";
+        context.fillText("Tumor Here", 128, 85);
+    };
+
+    element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
+
     var imageIds = [
         'example://1',
         'example://2'];
 
     // image enable the dicomImage element
-    var element = $('#dicomImage').get(0);
     cornerstone.enable(element, imageIds[0]);
     cornerstoneTools.windowWidthWindowCenter(element, 1);
     cornerstoneTools.pan(element, 2);
     cornerstoneTools.zoom(element, 3);
     cornerstoneTools.scroll(element, imageIds, 0);
+
+
+
+
 
     var ctelement = $('#ctImage').get(0);
     cornerstone.enable(ctelement, "ctexample://1");

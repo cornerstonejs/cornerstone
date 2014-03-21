@@ -31,6 +31,24 @@ var cornerstoneCore = (function (cornerstoneCore) {
         cornerstoneCore.storedPixelDataToCanvasImageData(image, lut, imageData.data);
         renderCanvasContext.putImageData(imageData, 0, 0);
         context.drawImage(renderCanvas, 0,0, image.columns, image.rows, -image.columns / 2, -image.rows / 2, image.columns, image.rows);
+
+
+        context.translate(-image.columns/2, -image.rows /2);
+        var event = new CustomEvent(
+            "CornerstoneImageRendered",
+            {
+                detail: {
+                    canvasContext: context,
+                    viewport: ee.viewport,
+                    element: ee.element,
+                },
+                bubbles: false,
+                cancelable: false
+            }
+        );
+        ee.element.dispatchEvent(event);
+
+
         context.restore();
     };
 
@@ -173,7 +191,6 @@ var cornerstone = (function (cornerstone, csc) {
             windowCenter: image.windowCenter
         };
 
-
         // fit image to window
         var verticalScale = canvas.height / image.rows;
         var horizontalScale = canvas.width / image.columns;
@@ -204,6 +221,20 @@ var cornerstone = (function (cornerstone, csc) {
         };
         cornerstone.addEnabledElement(el);
         cornerstone.updateImage(element);
+
+        var event = new CustomEvent(
+            "CornerstoneViewportUpdated",
+            {
+                detail: {
+                    viewport: viewport,
+                    element: element,
+                },
+                bubbles: false,
+                cancelable: false
+            }
+        );
+        element.dispatchEvent(event);
+
     };
 
 
@@ -403,6 +434,8 @@ var cornerstone = (function (cornerstone, csc) {
         var ee = cornerstone.getEnabledElement(element);
         var image = ee.image;
         csc.drawImage(ee, image);
+
+
     };
 
     // module exports
@@ -425,6 +458,20 @@ var cornerstone = (function (cornerstone, csc) {
         }
         enabledElement.viewport = viewport;
         cornerstone.updateImage(element);
+
+        var event = new CustomEvent(
+            "CornerstoneViewportUpdated",
+            {
+                detail: {
+                    viewport: viewport,
+                    element: element,
+                },
+                bubbles: false,
+                cancelable: false
+            }
+        );
+        element.dispatchEvent(event);
+
     };
 
     cornerstone.getViewport= function (element) {

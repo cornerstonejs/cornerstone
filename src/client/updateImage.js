@@ -7,6 +7,8 @@ var cornerstone = (function (cornerstone, csc) {
         var ee = cornerstone.getEnabledElement(element);
         var image = ee.image;
         csc.drawImage(ee, image);
+
+
     };
 
     // module exports

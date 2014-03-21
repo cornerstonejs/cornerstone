@@ -31,6 +31,24 @@ var cornerstoneCore = (function (cornerstoneCore) {
         cornerstoneCore.storedPixelDataToCanvasImageData(image, lut, imageData.data);
         renderCanvasContext.putImageData(imageData, 0, 0);
         context.drawImage(renderCanvas, 0,0, image.columns, image.rows, -image.columns / 2, -image.rows / 2, image.columns, image.rows);
+
+
+        context.translate(-image.columns/2, -image.rows /2);
+        var event = new CustomEvent(
+            "CornerstoneImageRendered",
+            {
+                detail: {
+                    canvasContext: context,
+                    viewport: ee.viewport,
+                    element: ee.element,
+                },
+                bubbles: false,
+                cancelable: false
+            }
+        );
+        ee.element.dispatchEvent(event);
+
+
         context.restore();
     };
 

@@ -20,26 +20,45 @@
         eventhandling/index.html
     </h1>
 
-    This is an example of event handling
+    This is an example of event handling.  Cornerstone fires the event 'CornerstoneViewportUpdated" any time a
+    viewport property is changed.  Listen for this event and the event passed to your callback function will
+    include the element and the updated viewport.  Cornerstone first the event 'CornerstoneImageRendered'
+    everytime the image is updated.  The event includes the canvas context set to the image coordinate system
+    so you can draw overlays.
+    <br>
+    <br>
+    This example illustrates this by updating the bottom left overlay with the updated WW/WC values.  It also
+    illustrates overlays on the image itself by drawing a rectangle around a tumor and labeling it with the text
+    "Tumor Here"
     <br>
     <br>
 
-    TODO: Make this example
 
     <br>
     <br>
-
-    <div id="dicomImage" class ="disable-selection" style="width:512px;height:512px"
+    <div style="width:512px;height:512px;position:relative;color: white;"
+         class='disable-selection noIbar'
          unselectable='on'
          onselectstart='return false;'
          onmousedown='return false;'>
+        <div id="dicomImage" oncontextmenu="return false"
+             style="width:512px;height:512px;top:0px;left:0px; position:absolute">
+        </div>
+        <div id="topleft" style="position: absolute;top:0px; left:0px">
+            Patient Name
+        </div>
+        <div id="topright" style="position: absolute;top:0px; right:0px">
+            Hospital
+        </div>
+        <div id="bottomright" style="position: absolute;bottom:0px; right:0px">
+            Zoom:
+        </div>
+        <div id="bottomleft" style="position: absolute;bottom:0px; left:0px">
+            WW/WC:
+        </div>
+
     </div>
 
-    <label>Window Width</label>
-    <input id="ww" type="text" placeholder="e.g. 1000">
-    <label>Window Center</label>
-    <input id="wc" type="text" placeholder="e.g. 500">
-    <button id="apply" class="btn">Apply</button>
 
 </div>
 </body>
@@ -57,23 +76,39 @@
     // image enable the dicomImage element
     var imageId = 'example://1';
     var element = $('#dicomImage').get(0);
+
+    function onViewportUpdated(e) {
+        $('#bottomleft').text("WW/WL:" + Math.round(e.detail.viewport.windowWidth) + "/" + Math.round(e.detail.viewport.windowCenter));
+        $('#bottomright').text("Zoom:" + e.detail.viewport.scale.toFixed(2));
+    };
+
+    element.addEventListener("CornerstoneViewportUpdated", onViewportUpdated, false);
+
+    function onImageRendered(e) {
+        // NOTE: The coordinate system of the canvas is in image pixel space.  Drawing
+        // to location 0,0 will be the top left of the image and rows,columns is the bottom
+        // right.
+        var context = e.detail.canvasContext;
+        context.beginPath();
+        context.strokeStyle = 'white';
+        context.lineWidth = .5;
+        context.rect(128,90,50,60);
+        context.stroke();
+        context.fillStyle = "white";
+        context.font = "6px Arial";
+        context.fillText("Tumor Here", 128, 85);
+    };
+
+    element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
+
     cornerstone.enable(element, imageId);
-    var viewport = cornerstone.getViewport(element);
-    $('#ww').val(viewport.windowWidth);
-    $('#wc').val(viewport.windowCenter);
 
-    // Add event handler to the ww/wc apply button
-    $('#apply').click(function(e) {
-        var viewport = cornerstone.getViewport(element);
-        viewport.windowWidth = parseFloat($('#ww').val());
-        viewport.windowCenter = parseFloat($('#wc').val());
-        cornerstone.setViewport(element, viewport);
-    });
-
-    // add event handlers to mouse move to adjust window/center
+    // add event handlers to pan image on mouse move
     $('#dicomImage').mousedown(function(e) {
         var lastX = e.pageX;
         var lastY = e.pageY;
+
+        var mouseButton = e.which;
 
         $(document).mousemove(function(e) {
             var deltaX = e.pageX - lastX,
@@ -81,10 +116,25 @@
             lastX = e.pageX;
             lastY = e.pageY;
 
-            var viewport = cornerstone.getViewport(element);
-            viewport.windowWidth += (deltaX / viewport.scale);
-            viewport.windowCenter += (deltaY / viewport.scale);
-            cornerstone.setViewport(element, viewport);
+            if(mouseButton == 1) {
+                var viewport = cornerstone.getViewport(element);
+                viewport.windowWidth += (deltaX / viewport.scale);
+                viewport.windowCenter += (deltaY / viewport.scale);
+                cornerstone.setViewport(element, viewport);
+                $('#bottomleft').text("WW/WL:" + Math.round(viewport.windowWidth) + "/" + Math.round(viewport.windowCenter));
+            }
+            else if(mouseButton == 2) {
+                var viewport = cornerstone.getViewport(element);
+                viewport.centerX += (deltaX / viewport.scale);
+                viewport.centerY += (deltaY / viewport.scale);
+                cornerstone.setViewport(element, viewport);
+            }
+            else if(mouseButton == 3) {
+                var viewport = cornerstone.getViewport(element);
+                viewport.scale += (deltaY / 100);
+                cornerstone.setViewport(element, viewport);
+                $('#bottomright').text("Zoom: " + viewport.scale.toFixed(2) + "x");
+            }
         });
 
         $(document).mouseup(function(e) {
@@ -92,6 +142,7 @@
             $(document).unbind('mouseup');
         });
     });
+
 
 </script>
 </html>
