@@ -44,6 +44,7 @@
     <button id="enableLength" type="button" class="btn">Length</button>
     <button id="probe" type="button" class="btn">Probe</button>
     <button id="circleroi" type="button" class="btn">Circle ROI</button>
+    <button id="rectangleroi" type="button" class="btn">Rectangle ROI</button>
 
     <br>
     <div style="width:512px;height:512px;position:relative;color: white;display:inline-block"
@@ -122,11 +123,11 @@
 
     // image enable the dicomImage element
     cornerstone.enable(element, imageIds[0]);
-    //cornerstoneTools.windowWidthWindowCenter(element, 1);
     cornerstoneTools.pan(element, 2);
     cornerstoneTools.zoom(element, 3);
     cornerstoneTools.scroll(element, imageIds, 0);
-    cornerstoneTools.windowWidthWindowCenter(element, 1);
+    //cornerstoneTools.windowWidthWindowCenter(element, 1);
+    cornerstoneTools.enableLength(element, 1);
 
     function disableAllTools()
     {
@@ -134,6 +135,7 @@
         cornerstoneTools.disableProbe(element);
         cornerstoneTools.disableLength(element);
         cornerstoneTools.disableCircleRoi(element);
+        cornerstoneTools.disableRectangleRoi(element);
     }
 
     $('#enableLength').click(function() {
@@ -154,7 +156,10 @@
         disableAllTools();
         cornerstoneTools.enableCircleRoi(element, 1);
     })
-
+    $('#rectangleroi').click(function() {
+        disableAllTools();
+        cornerstoneTools.enableRectangleRoi(element, 1);
+    })
 
 </script>
 </html>

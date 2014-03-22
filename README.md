@@ -36,3 +36,5 @@ Links
 [comp.protocols.dicom thread](https://groups.google.com/forum/#!topic/comp.protocols.dicom/_2fMh69GdAM)
 
 [Trello](https://trello.com/b/tGTDIyt4/cornerstone)
+
+Feel free to drop me an email with any questions at [chafey@gmail.com](emailto:chafey@gmailcom)

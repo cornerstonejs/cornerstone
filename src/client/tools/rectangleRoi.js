@@ -54,15 +54,10 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         var index =0;
 
         for(var y=0; y < diameter; y++) {
-            var ysq = (radius - y) * (radius - y);
             for(var x=0; x < diameter; x++) {
-                var xsq = (radius - x) * (radius - x);
-                var distanceSquared = xsq + ysq;
-                if(distanceSquared < radiusSquared) {
-                    sum += sp[index];
-                    sumSquared += sp[index] * sp[index];
-                    count++;
-                }
+                sum += sp[index];
+                sumSquared += sp[index] * sp[index];
+                count++;
                 index++;
             }
         }
@@ -96,12 +91,15 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         var centerX = (data.startX + data.endX) / 2;
         var centerY = (data.startY + data.endY) / 2;
 
+        var left = Math.min(data.startX, data.endX);
+        var top = Math.min(data.startY, data.endY);
+
+
         var context = e.detail.canvasContext;
         context.beginPath();
         context.strokeStyle = 'white';
         context.lineWidth = 1;
-        context.beginPath();
-        context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        context.rect(left, top, width, height);
         context.stroke();
         context.fillStyle = "white";
         context.font = e.detail.mediumFontSize + " Arial";
@@ -113,7 +111,12 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         context.fillText(text, centerX, centerY);
     };
 
-    function enableCircleRoi(element, whichMouseButton)
+    function onMouseMove(e)
+    {
+
+    };
+
+    function enableRectangleRoi(element, whichMouseButton)
     {
         element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
 
@@ -130,9 +133,12 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         toolData[element] = eventData;
 
         $(element).mousedown(onMouseDown);
+
+        $(element).mousemove(onMouseMove);
+
     };
 
-    function disableCircleRoi(element)
+    function disableRectangleRoi(element)
     {
         element.removeEventListener("CornerstoneImageRendered", onImageRendered);
         $(element).unbind('mousedown', onMouseDown);
@@ -140,8 +146,8 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
     };
 
     // module/private exports
-    cornerstoneTools.enableCircleRoi = enableCircleRoi;
-    cornerstoneTools.disableCircleRoi = disableCircleRoi;
+    cornerstoneTools.enableRectangleRoi = enableRectangleRoi;
+    cornerstoneTools.disableRectangleRoi = disableRectangleRoi;
 
     return cornerstoneTools;
 }($, cornerstone, cornerstoneTools));

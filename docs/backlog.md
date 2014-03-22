@@ -16,11 +16,20 @@ Backlog:
      * invert
      * non square pixels (pixel spacing is not the same vertically and horizontally)
      * Non linear LUTs (modality & voi)
- * Find a math/geometry library with transformation matrix, points, vectors and planes
+ * look for libraries to use instead of writing our own code for:
+    * statistics - standard deviation, mean, etc
+    * geometry - point, plane, line, circle, matrix
+    * Image processing - filters
+    * RESTful calls (cujo.js rest library)
+    * DICOM parsing
+    * DICOM transfer syntax decoding (e.g. jpeg-ls)
  * Performance related
-   * Multiresolution image streaming
-   * image compression
-   * Optimize image display
+   * Multiresolution image streaming (improve time to first image by first getting a 128x128 version of image then get rest of pixels)
+   * image compression - JPEG, gzip
+   * Optimize image display (lut generation, stored pixel data -> canvas, etc)
+   * switch to lower resolution image during ww/wc operation to improve framerate
+   * only regenerate rendered image if ww/wc changes - that way pan/zoom is faster
+   * only regenerate the part of the rendered image that is actually visible - perhaps by tiling it
  * developer api
      * Programmatic access to raw pixel data (for tools like ROI)
  * Pixel data management
