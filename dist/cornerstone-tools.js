@@ -4,6 +4,98 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         cornerstoneTools = {};
     }
 
+    // TODO: make a generic data storage mechanism for elements that
+    //       gets cleaned up when the element is destroyed
+    var lengthData = {};
+
+    function onMouseDown(e) {
+        var element = e.currentTarget;
+        var data = lengthData[element];
+        if(e.which == data.whichMouseButton) {
+            var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
+            data.startX = coords.x;
+            data.startY = coords.y;
+            data.endX = coords.x;
+            data.endY = coords.y;
+            data.lengthVisible = true;
+
+            $(document).mousemove(function(e) {
+                var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
+                data.endX = coords.x;
+                data.endY = coords.y;
+                cornerstone.updateImage(element);
+            });
+
+            $(document).mouseup(function(e) {
+                $(document).unbind('mousemove');
+                $(document).unbind('mouseup');
+            });
+        }
+    };
+
+    function onImageRendered(e)
+    {
+        var data = lengthData[e.detail.element];
+
+        if(data.lengthVisible == false)
+        {
+            return;
+        }
+
+        var context = e.detail.canvasContext;
+        context.beginPath();
+        context.strokeStyle = 'white';
+        context.lineWidth = 1;
+        context.moveTo(data.startX, data.startY);
+        context.lineTo(data.endX, data.endY);
+        context.stroke();
+        context.fillStyle = "white";
+        context.font = "6px Arial";
+        var dx = data.startX - data.endX * e.detail.image.columnPixelSpacing;
+        var dy = data.startY - data.endY * e.detail.image.rowPixelSpacing;
+        var length = Math.sqrt(dx * dx + dy * dy);
+        var text = "" + length.toFixed(2) + " mm";
+        context.fillText(text, (data.startX + data.endX) / 2, (data.startY + data.endY) / 2);
+    };
+
+    function enableLength(element, whichMouseButton)
+    {
+        element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
+
+        var eventData =
+        {
+            whichMouseButton: whichMouseButton,
+            lengthVisible : false,
+            startX : 0,
+            startY : 0,
+            endX : 0,
+            endY : 0
+        };
+
+        lengthData[element] = eventData;
+
+        $(element).mousedown(onMouseDown);
+    };
+
+    function disableLength(element)
+    {
+        element.removeEventListener("CornerstoneImageRendered", onImageRendered);
+        $(element).unbind('mousedown', onMouseDown);
+        lengthData[element] = undefined;
+    };
+
+    // module/private exports
+    cornerstoneTools.enableLength = enableLength;
+    cornerstoneTools.disableLength = disableLength;
+
+    return cornerstoneTools;
+}($, cornerstone, cornerstoneTools));
+var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
+
+    if(cornerstoneTools === undefined) {
+        cornerstoneTools = {};
+    }
+
     function pan(element, whichMouseButton){
         $(element).mousedown(function(e) {
             var lastX = e.pageX;
@@ -113,38 +205,52 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         cornerstoneTools = {};
     }
 
+    function onMouseDown(e) {
+        var whichMouseButton = e.data.whichMouseButton;
+        var lastX = e.pageX;
+        var lastY = e.pageY;
+
+        var mouseButton = e.which;
+
+        if(mouseButton == whichMouseButton) {
+
+            var element = e.currentTarget;
+
+            $(document).mousemove(function(e) {
+                var deltaX = e.pageX - lastX;
+                var deltaY = e.pageY - lastY;
+                lastX = e.pageX;
+                lastY = e.pageY;
+
+                var viewport = cornerstone.getViewport(element);
+                viewport.windowWidth += (deltaX / viewport.scale);
+                viewport.windowCenter += (deltaY / viewport.scale);
+                cornerstone.setViewport(element, viewport);
+            });
+
+            $(document).mouseup(function(e) {
+                $(document).unbind('mousemove');
+                $(document).unbind('mouseup');
+            });
+        }
+    };
+
     function windowWidthWindowCenter(element, whichMouseButton){
-        $(element).mousedown(function(e) {
-            var lastX = e.pageX;
-            var lastY = e.pageY;
+        var eventData =
+        {
+            whichMouseButton: whichMouseButton
+        };
+        $(element).mousedown(eventData, onMouseDown);
+    }
 
-            var mouseButton = e.which;
-
-            if(mouseButton == whichMouseButton) {
-                $(document).mousemove(function(e) {
-                    var deltaX = e.pageX - lastX,
-                        deltaY = e.pageY - lastY ;
-                    lastX = e.pageX;
-                    lastY = e.pageY;
-
-
-                    var viewport = cornerstone.getViewport(element);
-                    viewport.windowWidth += (deltaX / viewport.scale);
-                    viewport.windowCenter += (deltaY / viewport.scale);
-                    cornerstone.setViewport(element, viewport);
-                });
-
-                $(document).mouseup(function(e) {
-                    $(document).unbind('mousemove');
-                    $(document).unbind('mouseup');
-                });
-            }
-        });
+    function disableWindowWidthWindowCenter(element){
+        $(element).unbind('mousedown', onMouseDown);
     }
 
 
     // module/private exports
     cornerstoneTools.windowWidthWindowCenter = windowWidthWindowCenter;
+    cornerstoneTools.disableWindowWidthWindowCenter = disableWindowWidthWindowCenter;
 
     return cornerstoneTools;
 }($, cornerstone, cornerstoneTools));

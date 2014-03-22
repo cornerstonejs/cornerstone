@@ -21,7 +21,9 @@
             storedPixelData: [], // generated below
             rows: 256,
             columns: 256,
-            color: false
+            color: false,
+            columnPixelSpacing: 1.0,
+            rowPixelSpacing: 1.0
         };
 
         var index=0;

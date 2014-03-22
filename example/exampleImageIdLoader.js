@@ -30,7 +30,29 @@
     };
 
     function getExampleImage(imageId) {
-        var image = csc.image(256,256);
+        var image = {
+            minPixelValue : 0,
+            maxPixelValue : 257,
+            slope: 1.0,
+            intercept: 0,
+            windowCenter : 127,
+            windowWidth : 256,
+            storedPixelData: [], // generated below
+            rows: 256,
+            columns: 256,
+            color: false,
+            columnPixelSpacing: .8984375,
+            rowPixelSpacing: .8984375
+        };
+
+        var index=0;
+        for(var row=0; row < image.rows; row++) {
+            for(var column=0; column < image.columns; column++) {
+                image.storedPixelData[index] = 0;
+                index++;
+            }
+        }
+
         if(imageId == 'example://1')
         {
             updatePixels(image, image108Base64);

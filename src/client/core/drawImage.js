@@ -18,21 +18,29 @@ var cornerstoneCore = (function (cornerstoneCore) {
 
         // setup the viewport
         context.save();
+        // move origin to center of canvas
         context.translate(ee.canvas.width/2, ee.canvas.height / 2);
+        // apply the scale
         context.scale(ee.viewport.scale, ee.viewport.scale);
+        // apply the pan offset
         context.translate(ee.viewport.centerX,ee.viewport.centerY);
 
-        // draw the image
+        // Generate the LUT
+        // TODO: Cache the LUT and only regenerate if we have to
         image.windowCenter = ee.viewport.windowCenter;
         image.windowWidth = ee.viewport.windowWidth;
         var lut = cornerstoneCore.generateLut(image);
+
+        // apply the lut to the stored pixel data onto the render canvas
         var renderCanvasContext = renderCanvas.getContext("2d");
         var imageData = renderCanvasContext.createImageData(image.columns, image.rows);
         cornerstoneCore.storedPixelDataToCanvasImageData(image, lut, imageData.data);
         renderCanvasContext.putImageData(imageData, 0, 0);
+
+        // Draw the render canvas half the image size (because we set origin to the middle of the canvas above)
         context.drawImage(renderCanvas, 0,0, image.columns, image.rows, -image.columns / 2, -image.rows / 2, image.columns, image.rows);
 
-
+        // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
         context.translate(-image.columns/2, -image.rows /2);
         var event = new CustomEvent(
             "CornerstoneImageRendered",
@@ -40,14 +48,14 @@ var cornerstoneCore = (function (cornerstoneCore) {
                 detail: {
                     canvasContext: context,
                     viewport: ee.viewport,
-                    element: ee.element,
+                    image: ee.image,
+                    element: ee.element
                 },
                 bubbles: false,
                 cancelable: false
             }
         );
         ee.element.dispatchEvent(event);
-
 
         context.restore();
     };

@@ -8,12 +8,12 @@ var cornerstone = (function (cs, csc) {
     {
         var ee = cs.getEnabledElement(e);
         var verticalScale = ee.canvas.height / ee.image.rows;
-        var horizontalScale = ee.canvas.width / ee.image.columns;
-        if(verticalScale > horizontalScale) {
-            ee.viewport.scale = verticalScale;
+        var horizontalScale= ee.canvas.width / ee.image.columns;
+        if(horizontalScale < verticalScale) {
+            ee.viewport.scale = horizontalScale;
         }
         else {
-            ee.viewport.scale = horizontalScale;
+            ee.viewport.scale = verticalScale;
         }
         ee.viewport.centerX = 0;
         ee.viewport.centerY = 0;

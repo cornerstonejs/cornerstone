@@ -13,20 +13,20 @@ var cornerstone = (function (cornerstone, csc) {
 
         var viewport = {
             scale : 1.0,
-            centerX : 0,//image.columns / 2,
-            centerY: 0,//image.rows / 2,
+            centerX : 0,
+            centerY: 0,
             windowWidth: image.windowWidth,
             windowCenter: image.windowCenter
         };
 
         // fit image to window
         var verticalScale = canvas.height / image.rows;
-        var horizontalScale = canvas.width / image.columns;
-        if(verticalScale > horizontalScale) {
-            viewport.scale = verticalScale;
+        var horizontalScale= canvas.width / image.columns;
+        if(horizontalScale < verticalScale) {
+            viewport.scale = horizontalScale;
         }
         else {
-            viewport.scale = horizontalScale;
+            viewport.scale = verticalScale;
         }
         // merge
         if(viewportOptions) {

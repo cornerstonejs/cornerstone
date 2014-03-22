@@ -18,21 +18,29 @@ var cornerstoneCore = (function (cornerstoneCore) {
 
         // setup the viewport
         context.save();
+        // move origin to center of canvas
         context.translate(ee.canvas.width/2, ee.canvas.height / 2);
+        // apply the scale
         context.scale(ee.viewport.scale, ee.viewport.scale);
+        // apply the pan offset
         context.translate(ee.viewport.centerX,ee.viewport.centerY);
 
-        // draw the image
+        // Generate the LUT
+        // TODO: Cache the LUT and only regenerate if we have to
         image.windowCenter = ee.viewport.windowCenter;
         image.windowWidth = ee.viewport.windowWidth;
         var lut = cornerstoneCore.generateLut(image);
+
+        // apply the lut to the stored pixel data onto the render canvas
         var renderCanvasContext = renderCanvas.getContext("2d");
         var imageData = renderCanvasContext.createImageData(image.columns, image.rows);
         cornerstoneCore.storedPixelDataToCanvasImageData(image, lut, imageData.data);
         renderCanvasContext.putImageData(imageData, 0, 0);
+
+        // Draw the render canvas half the image size (because we set origin to the middle of the canvas above)
         context.drawImage(renderCanvas, 0,0, image.columns, image.rows, -image.columns / 2, -image.rows / 2, image.columns, image.rows);
 
-
+        // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
         context.translate(-image.columns/2, -image.rows /2);
         var event = new CustomEvent(
             "CornerstoneImageRendered",
@@ -40,14 +48,14 @@ var cornerstoneCore = (function (cornerstoneCore) {
                 detail: {
                     canvasContext: context,
                     viewport: ee.viewport,
-                    element: ee.element,
+                    image: ee.image,
+                    element: ee.element
                 },
                 bubbles: false,
                 cancelable: false
             }
         );
         ee.element.dispatchEvent(event);
-
 
         context.restore();
     };
@@ -81,44 +89,6 @@ var cornerstoneCore = (function (cornerstoneCore) {
 
     // Module exports
     cornerstoneCore.generateLut = generateLut;
-
-    return cornerstoneCore;
-}(cornerstoneCore));
-
-var cornerstoneCore = (function (cornerstoneCore) {
-    if(cornerstoneCore === undefined) {
-        cornerstoneCore = {};
-    }
-
-    function image(width, height)
-    {
-        var image = {
-            minPixelValue : 0,
-            maxPixelValue : 257,
-            slope: 1.0,
-            intercept: 0,
-            windowCenter : 127,
-            windowWidth : 256,
-            storedPixelData: [], // generated below
-            rows: height,
-            columns: width,
-            color: false
-        };
-
-        var index=0;
-        var rnd = Math.round(Math.random() * 255);
-        for(var row=0; row < image.rows; row++) {
-            for(var column=0; column < image.columns; column++) {
-                image.storedPixelData[index] = (rnd + index) % 256;
-                index++;
-            }
-        }
-
-        return image;
-    };
-
-    // Module exports
-    cornerstoneCore.image = image;
 
     return cornerstoneCore;
 }(cornerstoneCore));
@@ -185,20 +155,20 @@ var cornerstone = (function (cornerstone, csc) {
 
         var viewport = {
             scale : 1.0,
-            centerX : 0,//image.columns / 2,
-            centerY: 0,//image.rows / 2,
+            centerX : 0,
+            centerY: 0,
             windowWidth: image.windowWidth,
             windowCenter: image.windowCenter
         };
 
         // fit image to window
         var verticalScale = canvas.height / image.rows;
-        var horizontalScale = canvas.width / image.columns;
-        if(verticalScale > horizontalScale) {
-            viewport.scale = verticalScale;
+        var horizontalScale= canvas.width / image.columns;
+        if(horizontalScale < verticalScale) {
+            viewport.scale = horizontalScale;
         }
         else {
-            viewport.scale = horizontalScale;
+            viewport.scale = verticalScale;
         }
         // merge
         if(viewportOptions) {
@@ -279,12 +249,12 @@ var cornerstone = (function (cs, csc) {
     {
         var ee = cs.getEnabledElement(e);
         var verticalScale = ee.canvas.height / ee.image.rows;
-        var horizontalScale = ee.canvas.width / ee.image.columns;
-        if(verticalScale > horizontalScale) {
-            ee.viewport.scale = verticalScale;
+        var horizontalScale= ee.canvas.width / ee.image.columns;
+        if(horizontalScale < verticalScale) {
+            ee.viewport.scale = horizontalScale;
         }
         else {
-            ee.viewport.scale = horizontalScale;
+            ee.viewport.scale = verticalScale;
         }
         ee.viewport.centerX = 0;
         ee.viewport.centerY = 0;
@@ -448,7 +418,7 @@ var cornerstone = (function (cornerstone, csc) {
         cornerstone = {};
     }
 
-    cornerstone.setViewport= function (element, viewport) {
+    function setViewport(element, viewport) {
         enabledElement = cornerstone.getEnabledElement(element);
         if(viewport.windowWidth < 1) {
             viewport.windowWidth = 1;
@@ -465,6 +435,8 @@ var cornerstone = (function (cornerstone, csc) {
                 detail: {
                     viewport: viewport,
                     element: element,
+                    image: enabledElement.image
+
                 },
                 bubbles: false,
                 cancelable: false
@@ -474,11 +446,133 @@ var cornerstone = (function (cornerstone, csc) {
 
     };
 
-    cornerstone.getViewport= function (element) {
+    function getViewport(element) {
         return cornerstone.getEnabledElement(element).viewport;
     };
 
+    // converts pageX and pageY coordinates in an image enabled element
+    // to image coordinates
+    function pageToImage(element, pageX, pageY) {
+        var ee = cornerstone.getEnabledElement(element);
+
+        // TODO: replace this with a transformation matrix
+
+        // convert the pageX and pageY to the canvas client coordinates
+        var rect = element.getBoundingClientRect();
+        var clientX = pageX - rect.left;
+        var clientY = pageY - rect.top;
+
+        // translate the client relative to the middle of the canvas
+        var middleX = clientX - rect.width / 2.0;
+        var middleY = clientY - rect.height / 2.0;
+
+        // scale to image coordinates middleX/middleY
+        var viewport = ee.viewport;
+        var scaledMiddleX = middleX / viewport.scale;
+        var scaledMiddleY = middleY / viewport.scale;
+
+        // apply pan offset
+        var imageX = scaledMiddleX - viewport.centerX;
+        var imageY = scaledMiddleY - viewport.centerY;
+
+        // translate to image top left
+        imageX += ee.image.columns / 2;
+        imageY += ee.image.rows / 2;
+
+        return {
+            x: imageX,
+            y: imageY
+        };
+    };
+
     // module/private exports
+    cornerstone.getViewport = getViewport;
+    cornerstone.setViewport=setViewport;
+    cornerstone.pageToImage=pageToImage;
 
     return cornerstone;
 }(cornerstone, cornerstoneCore));
+//
+// This is a cornerstone imageLoader that generates test images.  These test images
+// are useful for debugging as they don't require a server
+//
+
+(function (cornerstone) {
+
+    // Loads an image given an imageId
+    // TODO: make this api async?
+    function loadImage(imageId) {
+        var image = {
+            minPixelValue : 0,
+            maxPixelValue : 255,
+            slope: 1.0,
+            intercept: 0,
+            windowCenter : 127,
+            windowWidth : 256,
+            storedPixelData: [], // generated below
+            rows: 256,
+            columns: 128,
+            color: false,
+            columnPixelSpacing: 1.0,
+            rowPixelSpacing: 1.0
+        };
+
+        var index=0;
+        var rnd = Math.round(Math.random() * 255);
+        for(var row=0; row < image.rows; row++) {
+            for(var column=0; column < image.columns; column++) {
+                image.storedPixelData[index] = (rnd + index) % 256;
+                index++;
+            }
+        }
+
+        return image;
+    };
+
+    cornerstone.registerImageLoader('test', loadImage);
+
+    return cornerstone;
+}(cornerstone));
+//
+// This image loader returns a blank/black image.  It registers itself with cornerstone
+// as the unknown image loader which means it will be called when cornerstone is given an
+// imageId with a scheme it doesn't have a plugin for.  Since this shouldn't happen normally,
+// we opt to return a blank image rather than return an error to the higher level code
+// which couldn't do anything about the error anyway and makes it more complex.
+//
+
+(function (cornerstone) {
+
+    // Loads an image given an imageId
+    // TODO: make this api async?
+    function loadImage(imageId) {
+        var image = {
+            minPixelValue : 0,
+            maxPixelValue : 255,
+            slope: 1.0,
+            intercept: 0,
+            windowCenter : 127,
+            windowWidth : 256,
+            storedPixelData: [], // generated below
+            rows: 256,
+            columns: 256,
+            color: false,
+            columnPixelSpacing: 1.0,
+            rowPixelSpacing: 1.0
+        };
+
+        var index=0;
+        for(var row=0; row < image.rows; row++) {
+            for(var column=0; column < image.columns; column++) {
+                image.storedPixelData[index] = 0;
+                index++;
+            }
+        }
+
+        // write something into the image saying "internal error?"
+
+    };
+
+    cornerstone.registerUnknownImageLoader(loadImage);
+
+}(cornerstone));

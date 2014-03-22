@@ -34,11 +34,16 @@
         <li>Pan by dragging the middle mouse button</li>
         <li>Zoom by dragging the right mouse button</li>
         <li>Scroll by rolling the mouse wheel (MRI image only)</li>
+        <li>Click "Length Tool" to activate the length measurement tool in the MR image.  Measure by dragging left mouse button.  Click "WW/WC Tool" to return the left click drag to WW/WL</li>
     </ul>
 
     <br>
     <br>
 
+    <button id="enableLength" type="button" class="btn">Length Tool</button>
+    <button id="enableWindowLevelTool" type="button" class="btn">WW/WC Tool</button>
+
+    <br>
     <div style="width:256px;height:256px;position:relative;color: white;display:inline-block"
          oncontextmenu="return false"
          class='disable-selection noIbar'
@@ -60,6 +65,9 @@
         <div id="mrbottomleft" style="position: absolute;bottom:0px; left:0px">
             WW/WC:
         </div>
+
+
+
 
     </div>
 
@@ -121,20 +129,27 @@
 
     // image enable the dicomImage element
     cornerstone.enable(element, imageIds[0]);
-    cornerstoneTools.windowWidthWindowCenter(element, 1);
+    //cornerstoneTools.windowWidthWindowCenter(element, 1);
     cornerstoneTools.pan(element, 2);
     cornerstoneTools.zoom(element, 3);
     cornerstoneTools.scroll(element, imageIds, 0);
-
-
-
-
+    cornerstoneTools.windowWidthWindowCenter(element, 1);
 
     var ctelement = $('#ctImage').get(0);
     cornerstone.enable(ctelement, "ctexample://1");
     cornerstoneTools.windowWidthWindowCenter(ctelement, 1);
     cornerstoneTools.pan(ctelement, 2);
     cornerstoneTools.zoom(ctelement, 3);
+
+    $('#enableLength').click(function() {
+        cornerstoneTools.disableWindowWidthWindowCenter(element);
+        cornerstoneTools.enableLength(element, 1);
+    })
+
+    $('#enableWindowLevelTool').click(function() {
+        cornerstoneTools.disableLength(element);
+        cornerstoneTools.windowWidthWindowCenter(element, 1);
+    })
 
 
 </script>

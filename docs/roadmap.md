@@ -7,6 +7,7 @@ Phase 2 (in progress)
  * Viewport Event - fired every time a viewport property changes
  * Render Event - fired every time the image is rendered (useful for generating overlays)
  * Overlay drawing
+ * coordinate conversion helper from page coordinate to image coordinate
 
 
 Phase 1 / proof of concept (DONE!)

@@ -1,36 +1,35 @@
 Backlog:
 ========
- * Events - image updated, viewport property changed, etc
  * Examples showing touch UI
  * load images from a server (not the example embedded images)
+   * WADO ImageLoader plugin
+   * Custom ImageLoader plugin (with corresponding server)
  * More browser platforms
  * Cine clip support via HTML5 video tag
- * More image types
-   * signed 16 bit gray
-   * 8 bit gray
-   * color types (RGB,)
-   * JPEG or PNG
-   * MONOCHROME1 vs MONOCHROME2
- * Large image support (e.g. mammo, large CR > 512x512 resolution )
- * Very large image support (e.g. pathology > 4kx4k resolution)
+ * Image support
+    * color image support
+    * Large image support (e.g. mammo, large CR > 512x512 resolution )
+    * Very large image support (e.g. pathology > 4kx4k resolution)
  * more viewport functionality
      * Rotation (90, 180, 270, 0)
      * Flip (Horizontal / Vertical)
      * invert
+     * non square pixels (pixel spacing is not the same vertically and horizontally)
+     * Non linear LUTs (modality & voi)
+ * Find a math/geometry library with transformation matrix, points, vectors and planes
  * Performance related
    * Multiresolution image streaming
    * image compression
    * Optimize image display
- * Overlays (e.g. to support drawing lines/text on top of image for measurement tools)
- * server plugin to communicate with archive via DIMSE
- * server plugin to communicate with archive via WADO
- * Prebuilt tools for common ui paradigms (e.g. left click w/l, mouse wheel zoom, middle mouse pan)
- * Programmatic access to raw pixel data (for tools like ROI)
- * Caching of pixel data to HTML5 local storage?
- * image cache management
- * packaged as a bower module
- * jquery plugin wrapper to make it easier to use with jquery
- * AMD wrapper to make it easier to use with AMD loaders
+ * developer api
+     * Programmatic access to raw pixel data (for tools like ROI)
+ * Pixel data management
+     * Caching of pixel data to HTML5 local storage?
+     * image cache management
+ * Packaging/build related
+     * packaged as a bower module
+     * jquery plugin wrapper to make it easier to use with jquery
+     * AMD wrapper to make it easier to use with AMD loaders
 
 Future Possibilities
 =================================

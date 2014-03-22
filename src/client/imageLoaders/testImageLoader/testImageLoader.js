@@ -17,8 +17,10 @@
             windowWidth : 256,
             storedPixelData: [], // generated below
             rows: 256,
-            columns: 256,
-            color: false
+            columns: 128,
+            color: false,
+            columnPixelSpacing: 1.0,
+            rowPixelSpacing: 1.0
         };
 
         var index=0;

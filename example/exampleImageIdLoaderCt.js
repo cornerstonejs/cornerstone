@@ -29,11 +29,29 @@
     };
 
     function getExampleImage(imageId) {
-        var image = csc.image(512,512);
-        image.maxPixelValue = 4096;
-        image.intercept = -1024;
-        image.windowCenter = 40; // soft tissue ww/wc
-        image.windowWidth = 400;
+        var image = {
+            minPixelValue : 0,
+            maxPixelValue : 4096,
+            slope: 1.0,
+            intercept : -1024,
+            windowCenter : 40,
+            windowWidth : 400,
+            storedPixelData: [], // generated below
+            rows: 512,
+            columns: 512,
+            color: false,
+            columnPixelSpacing: 0.67578,
+            rowPixelSpacing: 0.67578
+        };
+
+        var index=0;
+        for(var row=0; row < image.rows; row++) {
+            for(var column=0; column < image.columns; column++) {
+                image.storedPixelData[index] = 0;
+                index++;
+            }
+        }
+
         if(imageId == 'ctexample://1')
         {
             updatePixels(image, ctimage);
