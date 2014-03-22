@@ -44,6 +44,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
         var mediumFontSize = Math.round(16 / scaler);
         var largeFontSize = Math.round(20 / scaler);
 
+
         // Draw the render canvas half the image size (because we set origin to the middle of the canvas above)
         context.drawImage(renderCanvas, 0,0, image.columns, image.rows, -image.columns / 2, -image.rows / 2, image.columns, image.rows);
 
@@ -60,6 +61,9 @@ var cornerstoneCore = (function (cornerstoneCore) {
                     smallFontSize: "" + smallFontSize + "px",
                     mediumFontSize: "" + mediumFontSize + "px",
                     largeFontSize: "" + largeFontSize + "px",
+                    halfPixelLineWidth : .5 / scaler,
+                    singlePixelLineWidth : 1 / scaler,
+                    doublePixelLineWidth : 2 / scaler,
                 },
                 bubbles: false,
                 cancelable: false

@@ -4,15 +4,16 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         cornerstoneTools = {};
     }
 
-    var handleRadius = 3;
-    var handleRadiusSquared = handleRadius * handleRadius;
+    var handleRadius = 6;
 
-    function findHandleNear(handles, imagePoint)
+    function findHandleNear(handles, imagePoint, scale)
     {
+        var handleRadiusScaled = handleRadius / scale;
+
         for(var property in handles) {
             var handle = handles[property];
-            var distanceSquared = csc.distanceSquared(imagePoint, handle);
-            if(distanceSquared <= handleRadiusSquared)
+            var distance = csc.distance(imagePoint, handle);
+            if(distance <= handleRadiusScaled)
             {
                 return handle;
             }
@@ -30,10 +31,10 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         return undefined;
     };
 
-    function activateNearbyHandle(handles, imagePoint)
+    function activateNearbyHandle(handles, imagePoint, scale)
     {
         var activeHandle = getActiveHandle(handles);
-        var nearbyHandle = findHandleNear(handles, imagePoint);
+        var nearbyHandle = findHandleNear(handles, imagePoint, scale);
         if(activeHandle != nearbyHandle)
         {
             if(nearbyHandle !== undefined) {
@@ -47,13 +48,13 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         return false;
     };
 
-    function handleCursorNearHandle(e, data, coords) {
+    function handleCursorNearHandle(e, data, coords, scale) {
 
         if(data.visible === false) {
             return false;
         }
 
-        var nearbyHandle = cornerstoneTools.findHandleNear(data.handles, coords)
+        var nearbyHandle = cornerstoneTools.findHandleNear(data.handles, coords, scale)
         if(nearbyHandle == undefined)
         {
             return false;
@@ -74,12 +75,15 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         return true;
     };
 
-    function drawHandles(context, handles)
+    function drawHandles(context, viewport, handles)
     {
+        context.strokeStyle = 'white';
+        context.lineWidth = 1 / viewport.scale;
+        var radius = handleRadius / viewport.scale;
         for(var property in handles) {
             var handle = handles[property];
             if(handle.active == true) {
-                context.arc(handle.x, handle.y, handleRadius, 0, 2 * Math.PI);
+                context.arc(handle.x, handle.y, radius, 0, 2 * Math.PI);
             }
         }
     };

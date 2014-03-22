@@ -8,7 +8,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
     //       gets cleaned up when the element is destroyed
     var lengthData = {};
 
-    function drawNewMeasurement(e, data, coords)
+    function drawNewMeasurement(e, data, coords, scale)
     {
         data.handles.start.x = coords.x;
         data.handles.start.y = coords.y;
@@ -16,37 +16,31 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         data.handles.end.y = coords.y;
         data.visible = true;
 
-        $(document).mousemove(function(e) {
-            var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
-            data.handles.end.x = coords.x;
-            data.handles.end.y = coords.y;
-            cornerstone.updateImage(element);
-        });
-
-        $(document).mouseup(function(e) {
-            $(document).unbind('mousemove');
-            $(document).unbind('mouseup');
-        });
+        cornerstoneTools.handleCursorNearHandle(e, data, coords, scale);
     };
 
     function onMouseDown(e) {
         var element = e.currentTarget;
+        var viewport = cornerstone.getViewport(element);
         var data = lengthData[element];
         if(e.which == data.whichMouseButton) {
             var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
 
             // if we have a visible length measurement, check to see if this point
             // is near one of its handles
-            if(cornerstoneTools.handleCursorNearHandle(e, data, coords) == true) {
+            if(cornerstoneTools.handleCursorNearHandle(e, data, coords, viewport.scale) == true) {
                 e.stopPropagation();
                 return;
             }
             else
             {
-                drawNewMeasurement(e, data, coords);
+                drawNewMeasurement(e, data, coords, viewport.scale);
+                e.stopPropagation();
+                return;
             }
         }
     };
+
 
     function onImageRendered(e)
     {
@@ -60,14 +54,12 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         var context = e.detail.canvasContext;
         context.beginPath();
         context.strokeStyle = 'white';
-        context.lineWidth = 1;
+        context.lineWidth = e.detail.singlePixelLineWidth;
         context.moveTo(data.handles.start.x, data.handles.start.y);
         context.lineTo(data.handles.end.x, data.handles.end.y);
         context.stroke();
         context.beginPath();
-        context.strokeStyle = 'white';
-        context.lineWidth = 0;
-        cornerstoneTools.drawHandles(context, data.handles);
+        cornerstoneTools.drawHandles(context, e.detail.viewport, data.handles, e.detail.viewport.scale);
         context.stroke();
         context.fillStyle = "white";
         context.font = e.detail.mediumFontSize + " Arial";
@@ -96,7 +88,9 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         // get the cursor position in image coordinates
         var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
 
-        if(cornerstoneTools.activateNearbyHandle(data.handles, coords) == true)
+        var viewport = cornerstone.getViewport(element);
+
+        if(cornerstoneTools.activateNearbyHandle(data.handles, coords, viewport.scale ) == true)
         {
             cornerstone.updateImage(element);
         }
