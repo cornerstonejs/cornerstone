@@ -38,7 +38,7 @@ module.exports = function(grunt) {
         watch: {
             scripts: {
                 files: ['src/client/**/*.js', 'test/**/*.js'],
-                tasks: ['concat', 'qunit']
+                tasks: ['buildAll', 'qunit']
             }
         },
 
@@ -51,5 +51,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
-    grunt.registerTask('default', ['clean', 'concat:distCornerstone', 'concat:distCornerstoneTools', 'uglify:cornerstone', 'uglify:cornerstoneTools']);
+    grunt.registerTask('buildAll', ['concat:distCornerstone', 'concat:distCornerstoneTools', 'uglify:cornerstone', 'uglify:cornerstoneTools']);
+
+    grunt.registerTask('default', ['clean', 'buildAll']);
 };

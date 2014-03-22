@@ -400,6 +400,33 @@ var cornerstone = (function (cornerstone, csc) {
         cornerstone = {};
     }
 
+    // returns an array of stored pixels given an image pixel x,y
+    // and width/height
+    function getStoredPixels(element, x, y, width, height) {
+        x = Math.round(x);
+        y = Math.round(y);
+        var ee = cornerstone.getEnabledElement(element);
+        var storedPixels = [];
+        var index = 0;
+        for(var row=0; row < height; row++) {
+            for(var column=0; column < width; column++) {
+                var spIndex = ((row + y) * ee.image.columns) + (column + x);
+                storedPixels[index++] = ee.image.storedPixelData[spIndex];
+            }
+        }
+        return storedPixels;
+    };
+
+    // module exports
+    cornerstone.getStoredPixels = getStoredPixels;
+
+    return cornerstone;
+}(cornerstone, cornerstoneCore));
+var cornerstone = (function (cornerstone, csc) {
+    if(cornerstone === undefined) {
+        cornerstone = {};
+    }
+
     function updateImage(element) {
         var ee = cornerstone.getEnabledElement(element);
         var image = ee.image;
@@ -450,6 +477,7 @@ var cornerstone = (function (cornerstone, csc) {
         return cornerstone.getEnabledElement(element).viewport;
     };
 
+
     // converts pageX and pageY coordinates in an image enabled element
     // to image coordinates
     function pageToImage(element, pageX, pageY) {
@@ -459,8 +487,8 @@ var cornerstone = (function (cornerstone, csc) {
 
         // convert the pageX and pageY to the canvas client coordinates
         var rect = element.getBoundingClientRect();
-        var clientX = pageX - rect.left;
-        var clientY = pageY - rect.top;
+        var clientX = pageX - rect.left - window.scrollX;
+        var clientY = pageY - rect.top - window.scrollY;
 
         // translate the client relative to the middle of the canvas
         var middleX = clientX - rect.width / 2.0;

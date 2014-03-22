@@ -34,24 +34,25 @@
         <li>Pan by dragging the middle mouse button</li>
         <li>Zoom by dragging the right mouse button</li>
         <li>Scroll by rolling the mouse wheel (MRI image only)</li>
-        <li>Click "Length Tool" to activate the length measurement tool in the MR image.  Measure by dragging left mouse button.  Click "WW/WC Tool" to return the left click drag to WW/WL</li>
+        <li>Click "Length" to activate the length measurement tool in the MR image.  Measure by dragging left mouse button.  Click "WW/WC" to return the left click drag to WW/WL</li>
     </ul>
 
     <br>
     <br>
 
-    <button id="enableLength" type="button" class="btn">Length Tool</button>
-    <button id="enableWindowLevelTool" type="button" class="btn">WW/WC Tool</button>
+    <button id="enableLength" type="button" class="btn">Length</button>
+    <button id="enableWindowLevelTool" type="button" class="btn">WW/WC</button>
+    <button id="probe" type="button" class="btn">Probe</button>
 
     <br>
-    <div style="width:256px;height:256px;position:relative;color: white;display:inline-block"
+    <div style="width:512px;height:512px;position:relative;color: white;display:inline-block"
          oncontextmenu="return false"
          class='disable-selection noIbar'
          unselectable='on'
          onselectstart='return false;'
          onmousedown='return false;'>
         <div id="dicomImage"
-             style="width:256px;height:256px;top:0px;left:0px; position:absolute">
+             style="width:512px;height:512px;top:0px;left:0px; position:absolute">
         </div>
         <div id="mrtopleft" style="position: absolute;top:0px; left:0px">
             Patient Name
@@ -66,17 +67,8 @@
             WW/WC:
         </div>
 
-
-
-
     </div>
 
-    <div id="ctImage" oncontextmenu="return false"
-         style="width:256px;height:256px;display:inline-block" class='disable-selection'
-         unselectable='on'
-         onselectstart='return false;'
-         onmousedown='return false;'>
-    </div>
 </body>
 
 <!-- jquery - included to make things easier to demo, needed by cornerstone tools -->
@@ -135,20 +127,22 @@
     cornerstoneTools.scroll(element, imageIds, 0);
     cornerstoneTools.windowWidthWindowCenter(element, 1);
 
-    var ctelement = $('#ctImage').get(0);
-    cornerstone.enable(ctelement, "ctexample://1");
-    cornerstoneTools.windowWidthWindowCenter(ctelement, 1);
-    cornerstoneTools.pan(ctelement, 2);
-    cornerstoneTools.zoom(ctelement, 3);
-
     $('#enableLength').click(function() {
         cornerstoneTools.disableWindowWidthWindowCenter(element);
+        cornerstoneTools.disableProbe(element);
         cornerstoneTools.enableLength(element, 1);
     })
 
     $('#enableWindowLevelTool').click(function() {
         cornerstoneTools.disableLength(element);
+        cornerstoneTools.disableProbe(element);
         cornerstoneTools.windowWidthWindowCenter(element, 1);
+    })
+
+    $('#probe').click(function() {
+        cornerstoneTools.disableLength(element);
+        cornerstoneTools.disableWindowWidthWindowCenter(element);
+        cornerstoneTools.enableProbe(element, 1);
     })
 
 

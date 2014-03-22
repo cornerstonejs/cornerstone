@@ -35,6 +35,7 @@ var cornerstone = (function (cornerstone, csc) {
         return cornerstone.getEnabledElement(element).viewport;
     };
 
+
     // converts pageX and pageY coordinates in an image enabled element
     // to image coordinates
     function pageToImage(element, pageX, pageY) {
@@ -44,8 +45,8 @@ var cornerstone = (function (cornerstone, csc) {
 
         // convert the pageX and pageY to the canvas client coordinates
         var rect = element.getBoundingClientRect();
-        var clientX = pageX - rect.left;
-        var clientY = pageY - rect.top;
+        var clientX = pageX - rect.left - window.scrollX;
+        var clientY = pageY - rect.top - window.scrollY;
 
         // translate the client relative to the middle of the canvas
         var middleX = clientX - rect.width / 2.0;
