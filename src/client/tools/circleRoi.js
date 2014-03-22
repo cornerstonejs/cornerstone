@@ -105,7 +105,7 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
         context.stroke();
         context.fillStyle = "white";
-        context.font = "6px Arial";
+        context.font = e.detail.mediumFontSize + " Arial";
 
         // TODO: calculate this in web worker for large pixel counts...
         var storedPixels = cornerstone.getStoredPixels(e.detail.element, centerX - radius, centerY - radius, radius * 2, radius *2);

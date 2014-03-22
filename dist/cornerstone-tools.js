@@ -105,7 +105,7 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
         context.stroke();
         context.fillStyle = "white";
-        context.font = "6px Arial";
+        context.font = e.detail.mediumFontSize + " Arial";
 
         // TODO: calculate this in web worker for large pixel counts...
         var storedPixels = cornerstone.getStoredPixels(e.detail.element, centerX - radius, centerY - radius, radius * 2, radius *2);
@@ -198,7 +198,7 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         context.lineTo(data.endX, data.endY);
         context.stroke();
         context.fillStyle = "white";
-        context.font = "6px Arial";
+        context.font = e.detail.mediumFontSize + " Arial";
         var dx = data.startX - data.endX * e.detail.image.columnPixelSpacing;
         var dy = data.startY - data.endY * e.detail.image.rowPixelSpacing;
         var length = Math.sqrt(dx * dx + dy * dy);
@@ -325,7 +325,7 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         var context = e.detail.canvasContext;
         context.beginPath();
         context.fillStyle = "white";
-        context.font = "6px Arial";
+        context.font = e.detail.mediumFontSize + " Arial";
 
         var storedPixels = cornerstone.getStoredPixels(e.detail.element, data.x, data.y, 1, 1);
         var sp = storedPixels[0];

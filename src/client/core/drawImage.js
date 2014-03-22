@@ -37,6 +37,13 @@ var cornerstoneCore = (function (cornerstoneCore) {
         cornerstoneCore.storedPixelDataToCanvasImageData(image, lut, imageData.data);
         renderCanvasContext.putImageData(imageData, 0, 0);
 
+
+        var scaler = ee.viewport.scale;
+
+        var smallFontSize = Math.round(10 / scaler);
+        var mediumFontSize = Math.round(16 / scaler);
+        var largeFontSize = Math.round(20 / scaler);
+
         // Draw the render canvas half the image size (because we set origin to the middle of the canvas above)
         context.drawImage(renderCanvas, 0,0, image.columns, image.rows, -image.columns / 2, -image.rows / 2, image.columns, image.rows);
 
@@ -49,7 +56,10 @@ var cornerstoneCore = (function (cornerstoneCore) {
                     canvasContext: context,
                     viewport: ee.viewport,
                     image: ee.image,
-                    element: ee.element
+                    element: ee.element,
+                    smallFontSize: "" + smallFontSize + "px",
+                    mediumFontSize: "" + mediumFontSize + "px",
+                    largeFontSize: "" + largeFontSize + "px",
                 },
                 bubbles: false,
                 cancelable: false

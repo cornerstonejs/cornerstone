@@ -50,7 +50,7 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         context.lineTo(data.endX, data.endY);
         context.stroke();
         context.fillStyle = "white";
-        context.font = "6px Arial";
+        context.font = e.detail.mediumFontSize + " Arial";
         var dx = data.startX - data.endX * e.detail.image.columnPixelSpacing;
         var dy = data.startY - data.endY * e.detail.image.rowPixelSpacing;
         var length = Math.sqrt(dx * dx + dy * dy);

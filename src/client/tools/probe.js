@@ -45,7 +45,7 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         var context = e.detail.canvasContext;
         context.beginPath();
         context.fillStyle = "white";
-        context.font = "6px Arial";
+        context.font = e.detail.mediumFontSize + " Arial";
 
         var storedPixels = cornerstone.getStoredPixels(e.detail.element, data.x, data.y, 1, 1);
         var sp = storedPixels[0];
