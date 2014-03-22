@@ -40,9 +40,10 @@
     <br>
     <br>
 
-    <button id="enableLength" type="button" class="btn">Length</button>
     <button id="enableWindowLevelTool" type="button" class="btn">WW/WC</button>
+    <button id="enableLength" type="button" class="btn">Length</button>
     <button id="probe" type="button" class="btn">Probe</button>
+    <button id="circleroi" type="button" class="btn">Circle ROI</button>
 
     <br>
     <div style="width:512px;height:512px;position:relative;color: white;display:inline-block"
@@ -127,22 +128,31 @@
     cornerstoneTools.scroll(element, imageIds, 0);
     cornerstoneTools.windowWidthWindowCenter(element, 1);
 
-    $('#enableLength').click(function() {
+    function disableAllTools()
+    {
         cornerstoneTools.disableWindowWidthWindowCenter(element);
         cornerstoneTools.disableProbe(element);
+        cornerstoneTools.disableLength(element);
+        cornerstoneTools.disableCircleRoi(element);
+    }
+
+    $('#enableLength').click(function() {
+        disableAllTools();
         cornerstoneTools.enableLength(element, 1);
     })
 
     $('#enableWindowLevelTool').click(function() {
-        cornerstoneTools.disableLength(element);
-        cornerstoneTools.disableProbe(element);
+        disableAllTools();
         cornerstoneTools.windowWidthWindowCenter(element, 1);
     })
 
     $('#probe').click(function() {
-        cornerstoneTools.disableLength(element);
-        cornerstoneTools.disableWindowWidthWindowCenter(element);
+        disableAllTools();
         cornerstoneTools.enableProbe(element, 1);
+    })
+    $('#circleroi').click(function() {
+        disableAllTools();
+        cornerstoneTools.enableCircleRoi(element, 1);
     })
 
 
