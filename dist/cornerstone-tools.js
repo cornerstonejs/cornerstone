@@ -145,50 +145,71 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
 
     return cornerstoneTools;
 }($, cornerstone, cornerstoneTools));
-var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
+var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
 
     if(cornerstoneTools === undefined) {
         cornerstoneTools = {};
     }
 
-    // TODO: make a generic data storage mechanism for elements that
-    //       gets cleaned up when the element is destroyed
-    var lengthData = {};
-
     var handleRadius = 3;
     var handleRadiusSquared = handleRadius * handleRadius;
 
-    function distanceSquared(point1, point2)
+    function findHandleNear(handles, imagePoint)
     {
-        var dx = point1.x - point2.x;
-        var dy = point1.y - point2.y;
-        var lengthSquared = dx * dx + dy * dy;
-        return lengthSquared;
-    }
+        for(var property in handles) {
+            var handle = handles[property];
+            var distanceSquared = csc.distanceSquared(imagePoint, handle);
+            if(distanceSquared <= handleRadiusSquared)
+            {
+                return handle;
+            }
+        }
+        return undefined;
+    };
+
+    function getActiveHandle(handles) {
+        for(var property in handles) {
+            var handle = handles[property];
+            if(handle.active === true) {
+                return handle;
+            }
+        }
+        return undefined;
+    };
+
+    function activateNearbyHandle(handles, imagePoint)
+    {
+        var activeHandle = getActiveHandle(handles);
+        var nearbyHandle = findHandleNear(handles, imagePoint);
+        if(activeHandle != nearbyHandle)
+        {
+            if(nearbyHandle !== undefined) {
+                nearbyHandle.active = true;
+            }
+            if(activeHandle != undefined) {
+                activeHandle.active = false;
+            }
+            return true;
+        }
+        return false;
+    };
 
     function handleCursorNearHandle(e, data, coords) {
 
-        if(data.lengthVisible === false) {
+        if(data.visible === false) {
             return false;
         }
-        var startDistanceSquared = distanceSquared({x: data.startX, y: data.startY}, coords);
-        var endDistanceSquared = distanceSquared({x: data.endX, y: data.endY}, coords);
 
-        if(startDistanceSquared > handleRadiusSquared && endDistanceSquared > handleRadiusSquared) {
+        var nearbyHandle = cornerstoneTools.findHandleNear(data.handles, coords)
+        if(nearbyHandle == undefined)
+        {
             return false;
         }
 
         $(document).mousemove(function(e) {
             var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
-            if(startDistanceSquared <= handleRadius) {
-                data.startX = coords.x;
-                data.startY = coords.y;
-            }
-            else
-            {
-                data.endX = coords.x;
-                data.endY = coords.y;
-            }
+            nearbyHandle.x = coords.x;
+            nearbyHandle.y = coords.y;
             cornerstone.updateImage(element);
         });
 
@@ -198,9 +219,57 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         });
 
         return true;
+    };
+
+    function drawHandles(context, handles)
+    {
+        for(var property in handles) {
+            var handle = handles[property];
+            if(handle.active == true) {
+                context.arc(handle.x, handle.y, handleRadius, 0, 2 * Math.PI);
+            }
+        }
+    };
+
+
+    // module/private exports
+    cornerstoneTools.findHandleNear = findHandleNear;
+    cornerstoneTools.handleCursorNearHandle = handleCursorNearHandle;
+    cornerstoneTools.drawHandles = drawHandles;
+    cornerstoneTools.activateNearbyHandle = activateNearbyHandle;
+
+    return cornerstoneTools;
+}($, cornerstone, cornerstoneCore, cornerstoneTools));
+var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
+
+    if(cornerstoneTools === undefined) {
+        cornerstoneTools = {};
     }
 
+    // TODO: make a generic data storage mechanism for elements that
+    //       gets cleaned up when the element is destroyed
+    var lengthData = {};
 
+    function drawNewMeasurement(e, data, coords)
+    {
+        data.handles.start.x = coords.x;
+        data.handles.start.y = coords.y;
+        data.handles.end.x = coords.x;
+        data.handles.end.y = coords.y;
+        data.visible = true;
+
+        $(document).mousemove(function(e) {
+            var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
+            data.handles.end.x = coords.x;
+            data.handles.end.y = coords.y;
+            cornerstone.updateImage(element);
+        });
+
+        $(document).mouseup(function(e) {
+            $(document).unbind('mousemove');
+            $(document).unbind('mouseup');
+        });
+    };
 
     function onMouseDown(e) {
         var element = e.currentTarget;
@@ -210,28 +279,14 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
 
             // if we have a visible length measurement, check to see if this point
             // is near one of its handles
-            if(handleCursorNearHandle(e, data, coords) == true) {
+            if(cornerstoneTools.handleCursorNearHandle(e, data, coords) == true) {
                 e.stopPropagation();
                 return;
             }
-
-            data.startX = coords.x;
-            data.startY = coords.y;
-            data.endX = coords.x;
-            data.endY = coords.y;
-            data.lengthVisible = true;
-
-            $(document).mousemove(function(e) {
-                var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
-                data.endX = coords.x;
-                data.endY = coords.y;
-                cornerstone.updateImage(element);
-            });
-
-            $(document).mouseup(function(e) {
-                $(document).unbind('mousemove');
-                $(document).unbind('mouseup');
-            });
+            else
+            {
+                drawNewMeasurement(e, data, coords);
+            }
         }
     };
 
@@ -239,7 +294,7 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
     {
         var data = lengthData[e.detail.element];
 
-        if(data.lengthVisible == false)
+        if(data.visible == false)
         {
             return;
         }
@@ -248,31 +303,22 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         context.beginPath();
         context.strokeStyle = 'white';
         context.lineWidth = 1;
-        context.moveTo(data.startX, data.startY);
-        context.lineTo(data.endX, data.endY);
+        context.moveTo(data.handles.start.x, data.handles.start.y);
+        context.lineTo(data.handles.end.x, data.handles.end.y);
         context.stroke();
         context.beginPath();
         context.strokeStyle = 'white';
         context.lineWidth = 0;
-        if(data.cursorNearEnd == true) {
-            context.arc(data.endX, data.endY, handleRadius, 0, 2 * Math.PI);
-            //context.rect(data.endX-handleRadius, data.endY - handleRadius, handleRadius * 2, handleRadius *2);
-        }
-        if(data.cursorNearStart == true) {
-            context.arc(data.startX, data.startY, handleRadius, 0, 2 * Math.PI);
-            //context.rect(data.startX-handleRadius, data.startY - handleRadius, handleRadius * 2, handleRadius *2);
-        }
+        cornerstoneTools.drawHandles(context, data.handles);
         context.stroke();
         context.fillStyle = "white";
         context.font = e.detail.mediumFontSize + " Arial";
-        var dx = data.startX - data.endX * e.detail.image.columnPixelSpacing;
-        var dy = data.startY - data.endY * e.detail.image.rowPixelSpacing;
+        var dx = data.handles.start.x - data.handles.end.x * e.detail.image.columnPixelSpacing;
+        var dy = data.handles.start.y - data.handles.end.y * e.detail.image.rowPixelSpacing;
         var length = Math.sqrt(dx * dx + dy * dy);
         var text = "" + length.toFixed(2) + " mm";
-        context.fillText(text, (data.startX + data.endX) / 2, (data.startY + data.endY) / 2);
+        context.fillText(text, (data.handles.start.x + data.handles.end.x) / 2, (data.handles.start.y + data.handles.end.y) / 2);
     };
-
-
 
 
     function onMouseMove(e)
@@ -292,26 +338,10 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         // get the cursor position in image coordinates
         var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
 
-        // Check to see if mouse is over the length measurement and highlight it if it is
-        var startDistanceSquared = distanceSquared({x: data.startX, y: data.startY}, coords);
-        var handleVisible = data.cursorNearEnd | data.cursorNearStart;
-        data.cursorNearStart = false;
-        data.cursorNearEnd = false;
-        if(startDistanceSquared <= handleRadius) {
-            data.cursorNearStart = true;
-            cornerstone.updateImage(element);
-            return;
-        }
-        var endDistanceSquared = distanceSquared({x: data.endX, y: data.endY}, coords);
-        if(endDistanceSquared <= handleRadius) {
-            data.cursorNearEnd = true;
-            cornerstone.updateImage(element);
-            return;
-        }
-        if(handleVisible == true) {
+        if(cornerstoneTools.activateNearbyHandle(data.handles, coords) == true)
+        {
             cornerstone.updateImage(element);
         }
-
     };
 
     function enableLength(element, whichMouseButton)
@@ -321,13 +351,19 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         var eventData =
         {
             whichMouseButton: whichMouseButton,
-            lengthVisible : false,
-            startX : 0,
-            startY : 0,
-            endX : 0,
-            endY : 0,
-            cursorNearStart: false,
-            cursorNearEnd: false
+            visible : false,
+            handles: {
+                start: {
+                    x:0,
+                    y:0,
+                    active: false
+                },
+                end: {
+                    x:0,
+                    y:0,
+                    active: false
+                }
+            }
         };
 
         lengthData[element] = eventData;
@@ -348,7 +384,7 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
     cornerstoneTools.disableLength = disableLength;
 
     return cornerstoneTools;
-}($, cornerstone, cornerstoneTools));
+}($, cornerstone, cornerstoneCore, cornerstoneTools));
 var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
 
     if(cornerstoneTools === undefined) {
