@@ -512,11 +512,18 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         context.fillStyle = "white";
         context.font = e.detail.mediumFontSize + " Arial";
 
-        var storedPixels = cornerstone.getStoredPixels(e.detail.element, data.x, data.y, 1, 1);
+        var x =Math.round(data.x);
+        var y = Math.round(data.y);
+        var storedPixels = cornerstone.getStoredPixels(e.detail.element, x, y, 1, 1);
         var sp = storedPixels[0];
         var mo = sp * e.detail.image.slope + e.detail.image.intercept;
-        var text = "" + Math.round(data.x) + "," + Math.round(data.y) + " SP: " + sp + " MO: " + mo;
-        context.fillText(text, data.x +3, data.y-3);
+        var offset = 15 / e.detail.viewport.scale;
+        var textY = y - offset - 3;
+        context.fillText("" + x + "," + y, x +3, textY);
+        context.fillText("SP: " + sp + " MO: " + mo, x +3, textY + offset + 3);
+        context.lineWidth = .1;
+        context.rect(x,y,1,1);
+        context.stroke();
     };
 
     function enableProbe(element, whichMouseButton)
@@ -846,16 +853,24 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
             $(element).on('mousewheel DOMMouseScroll', function(e) {
                 // Firefox e.originalEvent.detail > 0 scroll back, < 0 scroll forward
                 // chrome/safari e.originalEvent.wheelDelta < 0 scroll back, > 0 scroll forward
+                var ticks = 0;
+                var delta = Math.abs(e.originalEvent.wheelDelta ? e.originalEvent.wheelDelta/40 : e.originalEvent.detail ? -e.originalEvent.detail : 0);
                 if(e.originalEvent.wheelDelta < 0 || e.originalEvent.detail > 0)
                 {
-                    var viewport = cornerstone.getViewport(element);
-                    viewport.scale -= 0.25;
-                    cornerstone.setViewport(element, viewport);
+                    ticks = delta;
                 } else {
-                    var viewport = cornerstone.getViewport(element);
-                    viewport.scale += 0.25;
-                    cornerstone.setViewport(element, viewport);
+                    ticks = -delta;
                 }
+
+                var power = 1.005;
+                var viewport = cornerstone.getViewport(element);
+                var oldFactor = Math.log(viewport.scale) / Math.log(power);
+                var factor = oldFactor + ticks;
+                var scale = Math.pow(power, factor);
+                viewport.scale = scale;
+                cornerstone.setViewport(element, viewport);
+
+
                 //prevent page fom scrolling
                 return false;
             });
@@ -874,8 +889,14 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
                         lastX = e.pageX;
                         lastY = e.pageY;
 
+                        var pow = 1.3;
+
                         var viewport = cornerstone.getViewport(element);
-                        viewport.scale += (deltaY / 100);
+                        var ticks = deltaY/100;
+                        var oldFactor = Math.log(viewport.scale) / Math.log(pow);
+                        var factor = oldFactor + ticks;
+                        var scale = Math.pow(pow, factor);
+                        viewport.scale = scale;
                         cornerstone.setViewport(element, viewport);
                     });
 

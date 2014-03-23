@@ -48,11 +48,18 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         context.fillStyle = "white";
         context.font = e.detail.mediumFontSize + " Arial";
 
-        var storedPixels = cornerstone.getStoredPixels(e.detail.element, data.x, data.y, 1, 1);
+        var x =Math.round(data.x);
+        var y = Math.round(data.y);
+        var storedPixels = cornerstone.getStoredPixels(e.detail.element, x, y, 1, 1);
         var sp = storedPixels[0];
         var mo = sp * e.detail.image.slope + e.detail.image.intercept;
-        var text = "" + Math.round(data.x) + "," + Math.round(data.y) + " SP: " + sp + " MO: " + mo;
-        context.fillText(text, data.x +3, data.y-3);
+        var offset = 15 / e.detail.viewport.scale;
+        var textY = y - offset - 3;
+        context.fillText("" + x + "," + y, x +3, textY);
+        context.fillText("SP: " + sp + " MO: " + mo, x +3, textY + offset + 3);
+        context.lineWidth = .1;
+        context.rect(x,y,1,1);
+        context.stroke();
     };
 
     function enableProbe(element, whichMouseButton)

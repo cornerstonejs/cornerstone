@@ -104,6 +104,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
 
 
         // Draw the render canvas half the image size (because we set origin to the middle of the canvas above)
+        //context.webkitImageSmoothingEnabled = false;
         context.drawImage(renderCanvas, 0,0, image.columns, image.rows, -image.columns / 2, -image.rows / 2, image.columns, image.rows);
 
         // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
