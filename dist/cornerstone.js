@@ -70,6 +70,8 @@ var cornerstoneCore = (function (cornerstoneCore) {
 
         var context = ee.canvas.getContext('2d');
 
+        context.setTransform(1, 0, 0, 1, 0, 0);
+
         // clear the canvas
         context.fillStyle = 'black';
         context.fillRect(0,0, ee.canvas.width, ee.canvas.height);
@@ -114,8 +116,6 @@ var cornerstoneCore = (function (cornerstoneCore) {
             }
         );
         ee.element.dispatchEvent(event);
-
-        context.restore();
     };
 
     function setToPixelCoordinateSystem(ee, context)
