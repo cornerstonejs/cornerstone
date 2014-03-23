@@ -43,7 +43,7 @@
     <button id="enableWindowLevelTool" type="button" class="btn">WW/WC</button>
     <button id="enableLength" type="button" class="btn">Length</button>
     <button id="probe" type="button" class="btn">Probe</button>
-    <button id="circleroi" type="button" class="btn">Circle ROI</button>
+    <button id="circleroi" type="button" class="btn">Elliptical ROI</button>
     <button id="rectangleroi" type="button" class="btn">Rectangle ROI</button>
 
     <br>
@@ -134,7 +134,7 @@
         cornerstoneTools.disableWindowWidthWindowCenter(element);
         cornerstoneTools.disableProbe(element);
         cornerstoneTools.disableLength(element);
-        cornerstoneTools.disableCircleRoi(element);
+        cornerstoneTools.disableEllipticalRoi(element);
         cornerstoneTools.disableRectangleRoi(element);
     }
 
@@ -154,7 +154,7 @@
     })
     $('#circleroi').click(function() {
         disableAllTools();
-        cornerstoneTools.enableCircleRoi(element, 1);
+        cornerstoneTools.enableEllipticalRoi(element, 1);
     })
     $('#rectangleroi').click(function() {
         disableAllTools();

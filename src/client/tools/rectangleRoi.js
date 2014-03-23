@@ -98,17 +98,26 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         var context = e.detail.canvasContext;
         context.beginPath();
         context.strokeStyle = 'white';
-        context.lineWidth = 1;
+        context.lineWidth = e.detail.singlePixelLineWidth;
         context.rect(left, top, width, height);
         context.stroke();
         context.fillStyle = "white";
         context.font = e.detail.mediumFontSize + " Arial";
 
+        var area = width * e.detail.image.columnPixelSpacing * height * e.detail.image.rowPixelSpacing;
+        var area = "Area: " + area.toFixed(2) + " mm^2";
+        var textSize = context.measureText(area);
+
+        var offset = 15 / e.detail.viewport.scale;
+        var textX  = centerX < (e.detail.image.columns / 2) ? centerX + (width /2): centerX - (width/2) - textSize.width;
+        var textY  = centerY < (e.detail.image.rows / 2) ? centerY + (height /2): centerY - (height/2);
         // TODO: calculate this in web worker for large pixel counts...
         var storedPixels = cornerstone.getStoredPixels(e.detail.element, centerX - radius, centerY - radius, radius * 2, radius *2);
         var meanStdDev = calculateMeanStdDev(storedPixels, radius);
-        var text = "Mean: " + meanStdDev.mean.toFixed(2) + " StdDev: " + meanStdDev.stdDev.toFixed(2);
-        context.fillText(text, centerX, centerY);
+
+        context.fillText("Mean: " + meanStdDev.mean.toFixed(2), textX, textY - offset);
+        context.fillText("StdDev: " + meanStdDev.stdDev.toFixed(2), textX, textY);
+        context.fillText(area, textX, textY + offset);
     };
 
     function onMouseMove(e)

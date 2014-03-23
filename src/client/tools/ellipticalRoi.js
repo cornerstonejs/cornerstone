@@ -1,4 +1,4 @@
-var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
+var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
 
     if(cornerstoneTools === undefined) {
         cornerstoneTools = {};
@@ -33,9 +33,54 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         }
     };
 
-    function calculateMeanStdDev(sp, radius)
+    function pointInEllipse(ellipse, location)
+    {
+        var xRadius = ellipse.width / 2;
+        var yRadius = ellipse.height / 2;
+
+        if (xRadius <= 0.0 || yRadius <= 0.0)
+            return false;
+
+        var center = {
+            x: ellipse.left + xRadius,
+            y: ellipse.top + yRadius
+        };
+
+        /* This is a more general form of the circle equation
+         *
+         * X^2/a^2 + Y^2/b^2 <= 1
+         */
+
+        var normalized = {
+            x: location.x - center.x,
+            y: location.y - center.y
+        };
+
+        var inEllipse = ((normalized.x * normalized.y) / (xRadius * xRadius)) + ((normalized.y * normalized.y) / (yRadius * yRadius)) <= 1.0;
+        return inEllipse;
+    };
+
+    function calculateMeanStdDev(sp, ellipse)
     {
         // TODO: Get a real statistics library here that supports large counts
+
+        var sum = 0;
+        var sumSquared =0;
+        var count = 0;
+        var index =0;
+
+        for(var y=ellipse.top; y < ellipse.top + ellipse.height; y++) {
+            for(var x=ellipse.left; x < ellipse.left + ellipse.width; x++) {
+                if(pointInEllipse(ellipse, {x: x, y: y}) == true)
+                {
+                    sum += sp[index];
+                    sumSquared += sp[index] * sp[index];
+                    count++;
+                }
+                index++;
+            }
+        }
+
         if(count == 0) {
             return {
                 count: count,
@@ -43,28 +88,6 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
                 variance: 0.0,
                 stdDev: 0.0
             };
-        }
-
-        var diameter = Math.round(radius * 2);
-        var radiusSquared = radius * radius;
-
-        var sum = 0;
-        var sumSquared =0;
-        var count = 0;
-        var index =0;
-
-        for(var y=0; y < diameter; y++) {
-            var ysq = (radius - y) * (radius - y);
-            for(var x=0; x < diameter; x++) {
-                var xsq = (radius - x) * (radius - x);
-                var distanceSquared = xsq + ysq;
-                if(distanceSquared < radiusSquared) {
-                    sum += sp[index];
-                    sumSquared += sp[index] * sp[index];
-                    count++;
-                }
-                index++;
-            }
         }
 
         var mean = sum / count;
@@ -78,7 +101,7 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         };
 
         return sum / count;
-    }
+    };
 
 
     function onImageRendered(e)
@@ -92,28 +115,45 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
 
         var width = Math.abs(data.startX - data.endX);
         var height = Math.abs(data.startY - data.endY);
-        var radius = Math.max(width, height) / 2;
+        var left = Math.min(data.startX, data.endX);
+        var top = Math.min(data.startY, data.endY);
         var centerX = (data.startX + data.endX) / 2;
         var centerY = (data.startY + data.endY) / 2;
 
         var context = e.detail.canvasContext;
         context.beginPath();
         context.strokeStyle = 'white';
-        context.lineWidth = 1;
+        context.lineWidth = e.detail.singlePixelLineWidth;
         context.beginPath();
-        context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        csc.drawEllipse(context, left, top, width, height);
         context.stroke();
         context.fillStyle = "white";
         context.font = e.detail.mediumFontSize + " Arial";
 
         // TODO: calculate this in web worker for large pixel counts...
-        var storedPixels = cornerstone.getStoredPixels(e.detail.element, centerX - radius, centerY - radius, radius * 2, radius *2);
-        var meanStdDev = calculateMeanStdDev(storedPixels, radius);
-        var text = "Mean: " + meanStdDev.mean.toFixed(2) + " StdDev: " + meanStdDev.stdDev.toFixed(2);
-        context.fillText(text, centerX, centerY);
+        var storedPixels = cornerstone.getStoredPixels(e.detail.element, left, top, width, height);
+        var ellipse = {
+            left: left,
+            top: top,
+            width: width,
+            height: height
+        };
+        var meanStdDev = calculateMeanStdDev(storedPixels, ellipse);
+        var area = Math.PI * (width * e.detail.image.columnPixelSpacing / 2) * (height * e.detail.image.rowPixelSpacing / 2);
+
+        var area = "Area: " + area.toFixed(2) + " mm^2";
+        var textSize = context.measureText(area);
+
+        var offset = 15 / e.detail.viewport.scale;
+        var textX  = centerX < (e.detail.image.columns / 2) ? centerX + (width /2): centerX - (width/2) - textSize.width;
+        var textY  = centerY < (e.detail.image.rows / 2) ? centerY + (height /2): centerY - (height/2);
+
+        context.fillText("Mean: " + meanStdDev.mean.toFixed(2), textX, textY - offset);
+        context.fillText("StdDev: " + meanStdDev.stdDev.toFixed(2), textX, textY);
+        context.fillText(area, textX, textY + offset);
     };
 
-    function enableCircleRoi(element, whichMouseButton)
+    function enableEllipticalRoi(element, whichMouseButton)
     {
         element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
 
@@ -132,7 +172,7 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         $(element).mousedown(onMouseDown);
     };
 
-    function disableCircleRoi(element)
+    function disableEllipticalRoi(element)
     {
         element.removeEventListener("CornerstoneImageRendered", onImageRendered);
         $(element).unbind('mousedown', onMouseDown);
@@ -140,8 +180,8 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
     };
 
     // module/private exports
-    cornerstoneTools.enableCircleRoi = enableCircleRoi;
-    cornerstoneTools.disableCircleRoi = disableCircleRoi;
+    cornerstoneTools.enableEllipticalRoi = enableEllipticalRoi;
+    cornerstoneTools.disableEllipticalRoi = disableEllipticalRoi;
 
     return cornerstoneTools;
-}($, cornerstone, cornerstoneTools));
+}($, cornerstone, cornerstoneCore, cornerstoneTools));

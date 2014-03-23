@@ -16,6 +16,7 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
             data.x = coords.x;
             data.y = coords.y;
             data.visible = true;
+            cornerstone.updateImage(element);
 
             $(document).mousemove(function(e) {
                 var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
