@@ -85,6 +85,9 @@
     element.addEventListener("CornerstoneViewportUpdated", onViewportUpdated, false);
 
     function onImageRendered(e) {
+        // set the canvas context to the image coordinate system
+        cornerstoneCore.setToPixelCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext);
+
         // NOTE: The coordinate system of the canvas is in image pixel space.  Drawing
         // to location 0,0 will be the top left of the image and rows,columns is the bottom
         // right.

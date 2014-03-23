@@ -1,4 +1,4 @@
-var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
+var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
 
     if(cornerstoneTools === undefined) {
         cornerstoneTools = {};
@@ -43,23 +43,31 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
             return;
         }
 
+        csc.setToPixelCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext);
+
         var context = e.detail.canvasContext;
         context.beginPath();
-        context.fillStyle = "white";
-        context.font = e.detail.mediumFontSize + " Arial";
+        //context.fillStyle = "white";
+        //context.lineWidth = .1;
+        //context.rect(x,y,1,1);
+        context.stroke();
+
+
+        var fontParameters = csc.setToFontCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext, 15);
+        context.font = "" + fontParameters.fontSize + "px Arial";
 
         var x =Math.round(data.x);
         var y = Math.round(data.y);
         var storedPixels = cornerstone.getStoredPixels(e.detail.element, x, y, 1, 1);
         var sp = storedPixels[0];
         var mo = sp * e.detail.image.slope + e.detail.image.intercept;
-        var offset = 15 / e.detail.viewport.scale;
-        var textY = y - offset - 3;
-        context.fillText("" + x + "," + y, x +3, textY);
-        context.fillText("SP: " + sp + " MO: " + mo, x +3, textY + offset + 3);
-        context.lineWidth = .1;
-        context.rect(x,y,1,1);
-        context.stroke();
+
+        var textX = (x + 3)/ fontParameters.fontScale;
+        var textY = (y- 3) / fontParameters.fontScale - fontParameters.lineHeight;
+
+        context.fillStyle = "white";
+        context.fillText("" + x + "," + y, textX, textY);
+        context.fillText("SP: " + sp + " MO: " + mo, textX, textY + fontParameters.lineHeight);
     };
 
     function enableProbe(element, whichMouseButton)
@@ -91,4 +99,4 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
     cornerstoneTools.disableProbe = disableProbe;
 
     return cornerstoneTools;
-}($, cornerstone, cornerstoneTools));
+}($, cornerstone, cornerstoneCore, cornerstoneTools));

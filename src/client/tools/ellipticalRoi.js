@@ -113,6 +113,8 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             return;
         }
 
+        csc.setToPixelCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext);
+
         var width = Math.abs(data.startX - data.endX);
         var height = Math.abs(data.startY - data.endY);
         var left = Math.min(data.startX, data.endX);
@@ -123,12 +125,11 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         var context = e.detail.canvasContext;
         context.beginPath();
         context.strokeStyle = 'white';
-        context.lineWidth = e.detail.singlePixelLineWidth;
+        context.lineWidth = 1 / e.detail.viewport.scale;
         context.beginPath();
         csc.drawEllipse(context, left, top, width, height);
         context.stroke();
         context.fillStyle = "white";
-        context.font = e.detail.mediumFontSize + " Arial";
 
         // TODO: calculate this in web worker for large pixel counts...
         var storedPixels = cornerstone.getStoredPixels(e.detail.element, left, top, width, height);
@@ -140,17 +141,23 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         };
         var meanStdDev = calculateMeanStdDev(storedPixels, ellipse);
         var area = Math.PI * (width * e.detail.image.columnPixelSpacing / 2) * (height * e.detail.image.rowPixelSpacing / 2);
+        var areaText = "Area: " + area.toFixed(2) + " mm^2";
 
-        var area = "Area: " + area.toFixed(2) + " mm^2";
+        var fontParameters = csc.setToFontCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext, 15);
+        context.font = "" + fontParameters.fontSize + "px Arial";
+
         var textSize = context.measureText(area);
 
-        var offset = 15 / e.detail.viewport.scale;
-        var textX  = centerX < (e.detail.image.columns / 2) ? centerX + (width /2): centerX - (width/2) - textSize.width;
+        var offset = fontParameters.lineHeight;
+        var textX  = centerX < (e.detail.image.columns / 2) ? centerX + (width /2): centerX - (width/2) - textSize.width * fontParameters.fontScale;
         var textY  = centerY < (e.detail.image.rows / 2) ? centerY + (height /2): centerY - (height/2);
+
+        textX /= fontParameters.fontScale;
+        textY /= fontParameters.fontScale;
 
         context.fillText("Mean: " + meanStdDev.mean.toFixed(2), textX, textY - offset);
         context.fillText("StdDev: " + meanStdDev.stdDev.toFixed(2), textX, textY);
-        context.fillText(area, textX, textY + offset);
+        context.fillText(areaText, textX, textY + offset);
     };
 
     function enableEllipticalRoi(element, whichMouseButton)

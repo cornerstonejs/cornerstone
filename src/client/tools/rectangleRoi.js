@@ -1,4 +1,4 @@
-var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
+var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
 
     if(cornerstoneTools === undefined) {
         cornerstoneTools = {};
@@ -85,6 +85,9 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
             return;
         }
 
+        csc.setToPixelCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext);
+
+
         var width = Math.abs(data.startX - data.endX);
         var height = Math.abs(data.startY - data.endY);
         var radius = Math.max(width, height) / 2;
@@ -98,19 +101,25 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         var context = e.detail.canvasContext;
         context.beginPath();
         context.strokeStyle = 'white';
-        context.lineWidth = e.detail.singlePixelLineWidth;
+        context.lineWidth = 1 / e.detail.viewport.scale;
         context.rect(left, top, width, height);
         context.stroke();
         context.fillStyle = "white";
-        context.font = e.detail.mediumFontSize + " Arial";
+
+        var fontParameters = csc.setToFontCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext, 15);
+        context.font = "" + fontParameters.fontSize + "px Arial";
 
         var area = width * e.detail.image.columnPixelSpacing * height * e.detail.image.rowPixelSpacing;
         var area = "Area: " + area.toFixed(2) + " mm^2";
         var textSize = context.measureText(area);
 
-        var offset = 15 / e.detail.viewport.scale;
-        var textX  = centerX < (e.detail.image.columns / 2) ? centerX + (width /2): centerX - (width/2) - textSize.width;
+        var offset = fontParameters.lineHeight;
+        var textX  = centerX < (e.detail.image.columns / 2) ? centerX + (width /2): centerX - (width/2) - textSize.width * fontParameters.fontScale;
         var textY  = centerY < (e.detail.image.rows / 2) ? centerY + (height /2): centerY - (height/2);
+
+        textX /= fontParameters.fontScale;
+        textY /= fontParameters.fontScale;
+
         // TODO: calculate this in web worker for large pixel counts...
         var storedPixels = cornerstone.getStoredPixels(e.detail.element, centerX - radius, centerY - radius, radius * 2, radius *2);
         var meanStdDev = calculateMeanStdDev(storedPixels, radius);
@@ -159,4 +168,4 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
     cornerstoneTools.disableRectangleRoi = disableRectangleRoi;
 
     return cornerstoneTools;
-}($, cornerstone, cornerstoneTools));
+}($, cornerstone, cornerstoneCore, cornerstoneTools));

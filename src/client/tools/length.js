@@ -51,23 +51,31 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             return;
         }
 
+        csc.setToPixelCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext);
+
         var context = e.detail.canvasContext;
         context.beginPath();
         context.strokeStyle = 'white';
-        context.lineWidth = e.detail.singlePixelLineWidth;
+        context.lineWidth = 1 / e.detail.viewport.scale;
         context.moveTo(data.handles.start.x, data.handles.start.y);
         context.lineTo(data.handles.end.x, data.handles.end.y);
         context.stroke();
         context.beginPath();
+
         cornerstoneTools.drawHandles(context, e.detail.viewport, data.handles, e.detail.viewport.scale);
         context.stroke();
         context.fillStyle = "white";
-        context.font = e.detail.mediumFontSize + " Arial";
         var dx = data.handles.start.x - data.handles.end.x * e.detail.image.columnPixelSpacing;
         var dy = data.handles.start.y - data.handles.end.y * e.detail.image.rowPixelSpacing;
         var length = Math.sqrt(dx * dx + dy * dy);
         var text = "" + length.toFixed(2) + " mm";
-        context.fillText(text, (data.handles.start.x + data.handles.end.x) / 2, (data.handles.start.y + data.handles.end.y) / 2);
+
+        var fontParameters = csc.setToFontCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext, 15);
+        context.font = "" + fontParameters.fontSize + "px Arial";
+
+        var textX = (data.handles.start.x + data.handles.end.x) / 2 / fontParameters.fontScale;
+        var textY = (data.handles.start.y + data.handles.end.y) / 2 / fontParameters.fontScale;
+        context.fillText(text, textX, textY);
     };
 
 
@@ -104,6 +112,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         {
             whichMouseButton: whichMouseButton,
             visible : false,
+            active: false,
             handles: {
                 start: {
                     x:0,

@@ -76,12 +76,8 @@ var cornerstoneCore = (function (cornerstoneCore) {
 
         // setup the viewport
         context.save();
-        // move origin to center of canvas
-        context.translate(ee.canvas.width/2, ee.canvas.height / 2);
-        // apply the scale
-        context.scale(ee.viewport.scale, ee.viewport.scale);
-        // apply the pan offset
-        context.translate(ee.viewport.centerX,ee.viewport.centerY);
+
+        setToPixelCoordinateSystem(ee, context);
 
         // Generate the LUT
         // TODO: Cache the LUT and only regenerate if we have to
@@ -95,20 +91,14 @@ var cornerstoneCore = (function (cornerstoneCore) {
         cornerstoneCore.storedPixelDataToCanvasImageData(image, lut, imageData.data);
         renderCanvasContext.putImageData(imageData, 0, 0);
 
-
         var scaler = ee.viewport.scale;
-
-        var smallFontSize = Math.round(10 / scaler);
-        var mediumFontSize = Math.round(16 / scaler);
-        var largeFontSize = Math.round(20 / scaler);
-
 
         // Draw the render canvas half the image size (because we set origin to the middle of the canvas above)
         //context.webkitImageSmoothingEnabled = false;
-        context.drawImage(renderCanvas, 0,0, image.columns, image.rows, -image.columns / 2, -image.rows / 2, image.columns, image.rows);
+        context.drawImage(renderCanvas, 0,0, image.columns, image.rows, 0, 0, image.columns, image.rows);
 
-        // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
-        context.translate(-image.columns/2, -image.rows /2);
+        context.restore();
+
         var event = new CustomEvent(
             "CornerstoneImageRendered",
             {
@@ -117,12 +107,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
                     viewport: ee.viewport,
                     image: ee.image,
                     element: ee.element,
-                    smallFontSize: "" + smallFontSize + "px",
-                    mediumFontSize: "" + mediumFontSize + "px",
-                    largeFontSize: "" + largeFontSize + "px",
-                    halfPixelLineWidth : .5 / scaler,
-                    singlePixelLineWidth : 1 / scaler,
-                    doublePixelLineWidth : 2 / scaler,
+                    enabledElement: ee,
                 },
                 bubbles: false,
                 cancelable: false
@@ -133,8 +118,54 @@ var cornerstoneCore = (function (cornerstoneCore) {
         context.restore();
     };
 
+    function setToPixelCoordinateSystem(ee, context)
+    {
+        // reset the transformation matrix
+        context.setTransform(1, 0, 0, 1, 0, 0);
+        // move origin to center of canvas
+        context.translate(ee.canvas.width/2, ee.canvas.height / 2);
+        // apply the scale
+        context.scale(ee.viewport.scale, ee.viewport.scale);
+        // apply the pan offset
+        context.translate(ee.viewport.centerX, ee.viewport.centerY);
+        // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
+        context.translate(-ee.image.columns /2, -ee.image.rows/2);
+    };
+
+    function setToFontCoordinateSystem(ee, context, fontSize)
+    {
+        // reset the transformation matrix
+        context.setTransform(1, 0, 0, 1, 0, 0);
+        // move origin to center of canvas
+        context.translate(ee.canvas.width/2, ee.canvas.height / 2);
+        // apply the scale
+        context.scale(ee.viewport.scale, ee.viewport.scale);
+        // apply the pan offset
+        context.translate(ee.viewport.centerX, ee.viewport.centerY);
+
+        var fontScale = .1;
+        // apply the font scale
+        context.scale(fontScale, fontScale);
+        // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
+        context.translate(-ee.image.columns /2 / fontScale, -ee.image.rows/2 / fontScale);
+
+        // return the font size to use
+        var scaledFontSize = fontSize / ee.viewport.scale / fontScale;
+        // TODO: actually calculate this?
+        var lineHeight  = fontSize / ee.viewport.scale / fontScale;
+
+        return {
+            fontSize :scaledFontSize,
+            lineHeight:lineHeight,
+            fontScale: fontScale
+        };
+
+    };
+
     // Module exports
     cornerstoneCore.drawImage = drawImage;
+    cornerstoneCore.setToPixelCoordinateSystem = setToPixelCoordinateSystem;
+    cornerstoneCore.setToFontCoordinateSystem = setToFontCoordinateSystem;
 
     return cornerstoneCore;
 }(cornerstoneCore));
