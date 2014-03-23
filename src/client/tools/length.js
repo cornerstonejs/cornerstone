@@ -4,10 +4,6 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         cornerstoneTools = {};
     }
 
-    // TODO: make a generic data storage mechanism for elements that
-    //       gets cleaned up when the element is destroyed
-    var lengthData = {};
-
     function drawNewMeasurement(e, data, coords, scale)
     {
         data.handles.start.x = coords.x;
@@ -22,7 +18,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
     function onMouseDown(e) {
         var element = e.currentTarget;
         var viewport = cornerstone.getViewport(element);
-        var data = lengthData[element];
+        var data = cornerstone.getElementData(element, 'length');
         if(e.which == data.whichMouseButton) {
             var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
 
@@ -44,7 +40,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
 
     function onImageRendered(e)
     {
-        var data = lengthData[e.detail.element];
+        var data = cornerstone.getElementData(e.currentTarget, 'length');
 
         if(data.visible == false)
         {
@@ -88,7 +84,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
 
         // get the data associated with this element or return if none
         var element = e.currentTarget;
-        var data = lengthData[element];
+        var data = cornerstone.getElementData(element, 'length');
         if(data === undefined) {
             return;
         }
@@ -127,7 +123,11 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             }
         };
 
-        lengthData[element] = eventData;
+        var data = cornerstone.getElementData(element, 'length');
+        for(var attrname in eventData)
+        {
+            data[attrname] = eventData[attrname];
+        }
 
         $(element).mousedown(onMouseDown);
         $(element).mousemove(onMouseMove);
@@ -137,7 +137,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
     {
         element.removeEventListener("CornerstoneImageRendered", onImageRendered);
         $(element).unbind('mousedown', onMouseDown);
-        lengthData[element] = undefined;
+        cornerstone.removeElementData(element, 'length');
     };
 
     // module/private exports

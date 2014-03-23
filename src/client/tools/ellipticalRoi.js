@@ -4,13 +4,9 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         cornerstoneTools = {};
     }
 
-    // TODO: make a generic data storage mechanism for elements that
-    //       gets cleaned up when the element is destroyed
-    var toolData = {};
-
     function onMouseDown(e) {
         var element = e.currentTarget;
-        var data = toolData[element];
+        var data = cornerstone.getElementData(element, 'ellipticalRoi');
         if(e.which == data.whichMouseButton) {
             var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
             data.startX = coords.x;
@@ -106,7 +102,8 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
 
     function onImageRendered(e)
     {
-        var data = toolData[e.detail.element];
+
+        var data = cornerstone.getElementData(e.currentTarget, 'ellipticalRoi');
 
         if(data.lengthVisible == false)
         {
@@ -174,7 +171,11 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             endY : 0
         };
 
-        toolData[element] = eventData;
+        var data = cornerstone.getElementData(element, 'ellipticalRoi');
+        for(var attrname in eventData)
+        {
+            data[attrname] = eventData[attrname];
+        }
 
         $(element).mousedown(onMouseDown);
     };
@@ -183,7 +184,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
     {
         element.removeEventListener("CornerstoneImageRendered", onImageRendered);
         $(element).unbind('mousedown', onMouseDown);
-        toolData[element] = undefined;
+        cornerstone.removeElementData(element, 'ellipticalRoi');
     };
 
     // module/private exports

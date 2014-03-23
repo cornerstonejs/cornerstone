@@ -45,7 +45,8 @@ var cornerstone = (function (cornerstone, csc) {
                 imageId: imageId
             },
             image:image,
-            viewport : viewport
+            viewport : viewport,
+            data : {}
         };
         cornerstone.addEnabledElement(el);
         cornerstone.updateImage(element);
