@@ -38,10 +38,10 @@
             windowCenter : 127,
             windowWidth : 256,
             storedPixelData: [], // generated below
-            rows: 512,
-            columns: 512,
-            height: 512,
-            width: 512,
+            rows: 256,
+            columns: 256,
+            height: 256,
+            width: 256,
             color: false,
             columnPixelSpacing: .8984375,
             rowPixelSpacing: .8984375
