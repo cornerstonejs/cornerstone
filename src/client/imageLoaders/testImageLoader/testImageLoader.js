@@ -18,6 +18,8 @@
             storedPixelData: [], // generated below
             rows: 128,
             columns: 256,
+            height: 128,
+            width: 256,
             color: false,
             columnPixelSpacing: 1.0,
             rowPixelSpacing: 1.0

@@ -39,6 +39,8 @@
             storedPixelData: [], // generated below
             rows: 512,
             columns: 512,
+            height: 512,
+            width: 512,
             color: false,
             columnPixelSpacing: 0.67578,
             rowPixelSpacing: 0.67578
