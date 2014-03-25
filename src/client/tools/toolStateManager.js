@@ -40,11 +40,13 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         enabledImage.toolStateManager = toolStateManager;
     }
 
+    /*
     function getElementToolStateManager(element)
     {
         var enabledImage = cornerstone.getEnabledElement(element);
         return enabledImage.toolStateManager;
     }
+    */
 
     // module/private exports
     cornerstoneTools.addToolState = addToolState;
