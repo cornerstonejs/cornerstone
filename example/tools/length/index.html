@@ -29,6 +29,13 @@
     <br>
     <br>
 
+    <button id="enable" type="button" class="btn">Enable</button>
+    <button id="disable" type="button" class="btn">Disable</button>
+    <button id="activate" type="button" class="btn">Activate</button>
+    <button id="deactivate" type="button" class="btn">Deactivate</button>
+
+    <br>
+
     <div id="dicomImage" class ="disable-selection" style="width:512px;height:512px"
          unselectable='on'
          onselectstart='return false;'
@@ -60,7 +67,40 @@
     var imageId = 'example://1';
     var element = $('#dicomImage').get(0);
     cornerstone.enable(element, imageId);
-    cornerstoneTools.enableLength(element, 1);
+    cornerstoneTools.length.enable(element);
+    cornerstoneTools.length.activate(element, 1);
+
+    $('#enable').click(function() {
+        cornerstoneTools.length.enable(element);
+    });
+    $('#disable').click(function() {
+        cornerstoneTools.length.disable(element);
+    });
+    $('#activate').click(function() {
+        cornerstoneTools.length.activate(element, 1);
+    });
+    $('#deactivate').click(function() {
+        cornerstoneTools.length.deactivate(element, 1);
+    });
+
+    // start off by adding a measurement
+    var data = {
+        visible : true,
+        handles : {
+            start : {
+                x : 152.5,
+                y : 148.5,
+                active: false
+            },
+            end: {
+                x : 155.5,
+                y : 91.5,
+                active: false
+            }
+        }
+    };
+    cornerstoneTools.addToolState(element, 'length', data);
+    cornerstone.updateImage(element);
 
 </script>
 </html>

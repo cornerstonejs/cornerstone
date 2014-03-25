@@ -11,32 +11,7 @@ var cornerstone = (function (cornerstone, csc) {
 
         var image = cornerstone.loadImage(imageId);
 
-        var viewport = {
-            scale : 1.0,
-            centerX : 0,
-            centerY: 0,
-            windowWidth: image.windowWidth,
-            windowCenter: image.windowCenter
-        };
-
-        // fit image to window
-        var verticalScale = canvas.height / image.rows;
-        var horizontalScale= canvas.width / image.columns;
-        if(horizontalScale < verticalScale) {
-            viewport.scale = horizontalScale;
-        }
-        else {
-            viewport.scale = verticalScale;
-        }
-        // merge
-        if(viewportOptions) {
-            for(var attrname in viewportOptions)
-            {
-                if(viewportOptions[attrname] !== null) {
-                    viewport[attrname] = viewportOptions[attrname];
-                }
-            }
-        }
+        var viewport = cornerstone.resetViewport(element, canvas, image);
 
         var el = {
             element: element,
@@ -64,7 +39,7 @@ var cornerstone = (function (cornerstone, csc) {
         );
         element.dispatchEvent(event);
 
-    };
+    }
 
 
     // module/private exports

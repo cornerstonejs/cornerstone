@@ -120,30 +120,44 @@
 
     element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
 
-    var imageIds = [
-        'example://1',
-        'example://2'];
+    var stack1 = {
+        stackId : '1',
+        imageIds : [
+            'example://1',
+            'example://2']
+    };
+
+    var stack2 = {
+        stackId: '2',
+        imageIds: [
+            'ctexample://1']
+    };
+
+    var stacks = [
+        stack1,
+        stack2];
+
 
     // image enable the dicomImage element
-    cornerstone.enable(element, imageIds[0]);
+    cornerstone.enable(element, stack1.imageIds[0]);
     cornerstoneTools.pan(element, 2);
     cornerstoneTools.zoom(element, 3);
-    cornerstoneTools.scroll(element, imageIds, 0);
-    //cornerstoneTools.windowWidthWindowCenter(element, 1);
-    cornerstoneTools.enableLength(element, 1);
+    cornerstoneTools.scroll(element, stacks, 0);
+    cornerstoneTools.length.enable(element);
+    cornerstoneTools.length.activate(element, 1);
 
     function disableAllTools()
     {
         cornerstoneTools.disableWindowWidthWindowCenter(element);
         cornerstoneTools.disableProbe(element);
-        cornerstoneTools.disableLength(element);
+        cornerstoneTools.length.deactivate(element, 1);
         cornerstoneTools.disableEllipticalRoi(element);
         cornerstoneTools.disableRectangleRoi(element);
     }
 
     $('#enableLength').click(function() {
         disableAllTools();
-        cornerstoneTools.enableLength(element, 1);
+        cornerstoneTools.length.activate(element, 1);
     })
 
     $('#enableWindowLevelTool').click(function() {
@@ -163,6 +177,25 @@
         disableAllTools();
         cornerstoneTools.enableRectangleRoi(element, 1);
     })
+
+    // add a measurement to the image - this is showing tool state restore
+    var data = {
+        visible : true,
+        handles : {
+            start : {
+                x : 152.5,
+                y : 148.5,
+                active: false
+            },
+            end: {
+                x : 155.5,
+                y : 91.5,
+                active: false
+            }
+        }
+    };
+    cornerstoneTools.addToolState(element, 'length', data);
+    cornerstone.updateImage(element);
 
 </script>
 </html>

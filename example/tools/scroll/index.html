@@ -55,16 +55,32 @@
 <script src="../../exampleImageIdLoader.js"></script>
 
 
+<!-- include special code for these examples which provides images -->
+<script src="../../exampleImageIdLoaderCt.js"></script>
 <script>
 
-    var imageIds = [
-        'example://1',
-        'example://2'];
+    var stack1 = {
+        stackId : '1',
+        imageIds : [
+            'example://1',
+            'example://2']
+    };
+
+    var stack2 = {
+        stackId: '2',
+        imageIds: [
+            'ctexample://1']
+    };
+
+    var stacks = [
+        stack1,
+        stack2];
+
 
     // image enable the dicomImage element
     var element = $('#dicomImage').get(0);
-    cornerstone.enable(element, imageIds[0]);
-    cornerstoneTools.scroll(element, imageIds, 0);
+    cornerstone.enable(element, stack1.imageIds[0]);
+    cornerstoneTools.scroll(element, stacks, 0);
 
 </script>
 </html>

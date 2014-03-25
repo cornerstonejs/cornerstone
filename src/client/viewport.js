@@ -29,11 +29,11 @@ var cornerstone = (function (cornerstone, csc) {
         );
         element.dispatchEvent(event);
 
-    };
+    }
 
     function getViewport(element) {
         return cornerstone.getEnabledElement(element).viewport;
-    };
+    }
 
 
     // converts pageX and pageY coordinates in an image enabled element
@@ -69,12 +69,34 @@ var cornerstone = (function (cornerstone, csc) {
             x: imageX,
             y: imageY
         };
-    };
+    }
+
+    function resetViewport(element, canvas, image) {
+        var viewport = {
+            scale : 1.0,
+            centerX : 0,
+            centerY: 0,
+            windowWidth: image.windowWidth,
+            windowCenter: image.windowCenter
+        };
+
+        // fit image to window
+        var verticalScale = canvas.height / image.rows;
+        var horizontalScale= canvas.width / image.columns;
+        if(horizontalScale < verticalScale) {
+            viewport.scale = horizontalScale;
+        }
+        else {
+            viewport.scale = verticalScale;
+        }
+        return viewport;
+    }
 
     // module/private exports
     cornerstone.getViewport = getViewport;
     cornerstone.setViewport=setViewport;
     cornerstone.pageToImage=pageToImage;
+    cornerstone.resetViewport = resetViewport;
 
     return cornerstone;
 }(cornerstone, cornerstoneCore));

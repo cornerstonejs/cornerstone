@@ -297,145 +297,279 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         cornerstoneTools = {};
     }
 
-    function drawNewMeasurement(e, data, coords, scale)
-    {
-        data.handles.start.x = coords.x;
-        data.handles.start.y = coords.y;
-        data.handles.end.x = coords.x;
-        data.handles.end.y = coords.y;
-        data.visible = true;
+    // This implements an imageId specific tool state management strategy.  This means that
+    // measurements data is tied to a specific imageId and only visible for enabled elements
+    // that are displaying that imageId.
 
-        cornerstoneTools.handleCursorNearHandle(e, data, coords, scale);
-    };
+    function newImageIdSpecificToolStateManager() {
+        var toolState = {};
 
-    function onMouseDown(e) {
-        var element = e.currentTarget;
-        var viewport = cornerstone.getViewport(element);
-        var data = cornerstone.getElementData(element, 'length');
-        if(e.which == data.whichMouseButton) {
-            var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
-
-            // if we have a visible length measurement, check to see if this point
-            // is near one of its handles
-            if(cornerstoneTools.handleCursorNearHandle(e, data, coords, viewport.scale) == true) {
-                e.stopPropagation();
-                return;
-            }
-            else
+        // here we add tool state, this is done by tools as well
+        // as modules that restore saved state
+        function addImageIdSpecificToolState(element, toolType, data)
+        {
+            var enabledImage = cornerstone.getEnabledElement(element);
+            // if we don't have any tool state for this imageId, add an empty object
+            if(toolState.hasOwnProperty(enabledImage.ids.imageId) == false)
             {
-                drawNewMeasurement(e, data, coords, viewport.scale);
-                e.stopPropagation();
-                return;
+                toolState[enabledImage.ids.imageId] = {};
             }
-        }
+            var imageIdToolState = toolState[enabledImage.ids.imageId];
+
+            // if we don't have tool state for this type of tool, add an empty object
+            if(imageIdToolState.hasOwnProperty(toolType) == false)
+            {
+                imageIdToolState[toolType] = {
+                    data: []
+                };
+            }
+            var toolData = imageIdToolState[toolType];
+
+            // finally, add this new tool to the state
+            toolData.data.push(data);
+        };
+
+        // here you can get state - used by tools as well as modules
+        // that save state persistently
+        function getImageIdSpecificToolState(element, toolType)
+        {
+            var enabledImage = cornerstone.getEnabledElement(element);
+            // if we don't have any tool state for this imageId, return undefined
+            if(toolState.hasOwnProperty(enabledImage.ids.imageId) == false)
+            {
+                return undefined;
+            }
+            var imageIdToolState = toolState[enabledImage.ids.imageId];
+
+            // if we don't have tool state for this type of tool, return undefined
+            if(imageIdToolState.hasOwnProperty(toolType) == false)
+            {
+                return undefined;
+            }
+            var toolData = imageIdToolState[toolType];
+            return toolData;
+        };
+
+        var imageIdToolStateManager = {
+            get: getImageIdSpecificToolState,
+            add: addImageIdSpecificToolState
+        };
+        return imageIdToolStateManager;
     };
 
+    // a global imageIdSpecificToolStateManager - the most common case is to share state between all
+    // visible enabled images
+    var globalImageIdSpecificToolStateManager = newImageIdSpecificToolStateManager();
 
-    function onImageRendered(e)
+    // module/private exports
+    cornerstoneTools.newImageIdSpecificToolStateManager = newImageIdSpecificToolStateManager;
+    cornerstoneTools.globalImageIdSpecificToolStateManager = globalImageIdSpecificToolStateManager;
+
+    return cornerstoneTools;
+}($, cornerstone, cornerstoneCore, cornerstoneTools));
+var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
+
+    if(cornerstoneTools === undefined) {
+        cornerstoneTools = {};
+    }
+
+    // TODO: Figure out how to delete length measurements.
+
+    var toolType = 'length';
+
+    function drawNewMeasurement(e, coords, scale)
     {
-        var data = cornerstone.getElementData(e.currentTarget, 'length');
-
-        if(data.visible == false)
-        {
-            return;
-        }
-
-        csc.setToPixelCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext);
-
-        var context = e.detail.canvasContext;
-        context.beginPath();
-        context.strokeStyle = 'white';
-        context.lineWidth = 1 / e.detail.viewport.scale;
-        context.moveTo(data.handles.start.x, data.handles.start.y);
-        context.lineTo(data.handles.end.x, data.handles.end.y);
-        context.stroke();
-        context.beginPath();
-
-        cornerstoneTools.drawHandles(context, e.detail.viewport, data.handles, e.detail.viewport.scale);
-        context.stroke();
-        context.fillStyle = "white";
-        var dx = data.handles.start.x - data.handles.end.x * e.detail.image.columnPixelSpacing;
-        var dy = data.handles.start.y - data.handles.end.y * e.detail.image.rowPixelSpacing;
-        var length = Math.sqrt(dx * dx + dy * dy);
-        var text = "" + length.toFixed(2) + " mm";
-
-        var fontParameters = csc.setToFontCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext, 15);
-        context.font = "" + fontParameters.fontSize + "px Arial";
-
-        var textX = (data.handles.start.x + data.handles.end.x) / 2 / fontParameters.fontScale;
-        var textY = (data.handles.start.y + data.handles.end.y) / 2 / fontParameters.fontScale;
-        context.fillText(text, textX, textY);
-    };
-
-
-    function onMouseMove(e)
-    {
-        // if a mouse button is down, ignore it
-        if(e.which != 0) {
-            return;
-        }
-
-        // get the data associated with this element or return if none
-        var element = e.currentTarget;
-        var data = cornerstone.getElementData(element, 'length');
-        if(data === undefined) {
-            return;
-        }
-
-        // get the cursor position in image coordinates
-        var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
-
-        var viewport = cornerstone.getViewport(element);
-
-        if(cornerstoneTools.activateNearbyHandle(data.handles, coords, viewport.scale ) == true)
-        {
-            cornerstone.updateImage(element);
-        }
-    };
-
-    function enableLength(element, whichMouseButton)
-    {
-        element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
-
-        var eventData =
-        {
-            whichMouseButton: whichMouseButton,
-            visible : false,
-            active: false,
-            handles: {
-                start: {
-                    x:0,
-                    y:0,
+        // create the tool state data for this tool with the end handle activated
+        var data = {
+            visible : true,
+            handles : {
+                start : {
+                    x : coords.x,
+                    y : coords.y,
                     active: false
                 },
                 end: {
-                    x:0,
-                    y:0,
-                    active: false
+                    x : coords.x,
+                    y : coords.y,
+                    active: true
                 }
             }
         };
 
-        var data = cornerstone.getElementData(element, 'length');
-        for(var attrname in eventData)
-        {
-            data[attrname] = eventData[attrname];
+        // associate this data with this imageId so we can render it and manipulate it
+        cornerstoneTools.addToolState(e.currentTarget, toolType, data);
+
+        // since we are dragging to another place to drop the end point, we can just activate
+        // the end point and let the handleHelper move it for us.
+        cornerstoneTools.handleCursorNearHandle(e, data, coords, scale);
+    }
+
+    function onMouseDown(e) {
+        var eventData = e.data;
+        if(e.which == eventData.whichMouseButton) {
+            var element = e.currentTarget;
+            var viewport = cornerstone.getViewport(element);
+            var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
+            var toolData = cornerstoneTools.getToolState(e.currentTarget, toolType);
+
+            // first check to see if we have an existing length measurement that has a handle that we can move
+            if(toolData !== undefined) {
+                for(var i=0; i < toolData.data.length; i++) {
+                    var data = toolData.data[i];
+                    if(cornerstoneTools.handleCursorNearHandle(e, data, coords, viewport.scale) == true) {
+                        e.stopPropagation();
+                        return;
+                    }
+                }
+            }
+
+            // If we are "active" start drawing a new measurement
+            if(eventData.active === true) {
+                // no existing measurements care about this, draw a new measurement
+                drawNewMeasurement(e, coords, viewport.scale);
+                e.stopPropagation();
+                return;
+            }
+        }
+    }
+
+    function onImageRendered(e)
+    {
+        // if we have no toolData for this element, return immediately as there is nothing to do
+        var toolData = cornerstoneTools.getToolState(e.currentTarget, toolType);
+        if(toolData === undefined) {
+            return;
         }
 
-        $(element).mousedown(onMouseDown);
-        $(element).mousemove(onMouseMove);
-    };
+        // we have tool data for this element - iterate over each one and draw it
+        var context = e.detail.canvasContext.canvas.getContext("2d");
+        csc.setToPixelCoordinateSystem(e.detail.enabledElement, context);
 
-    function disableLength(element)
+        for(var i=0; i < toolData.data.length; i++) {
+            // TODO: see if we can get rid of save/restore on the context, the lines and handles don't show up without
+            // it so there is probably a bug here
+            context.save();
+            var data = toolData.data[i];
+
+            // draw the line
+            context.beginPath();
+            context.strokeStyle = 'white';
+            context.lineWidth = 1 / e.detail.viewport.scale;
+            context.moveTo(data.handles.start.x, data.handles.start.y);
+            context.lineTo(data.handles.end.x, data.handles.end.y);
+            context.stroke();
+
+            // draw the handles
+            context.beginPath();
+            cornerstoneTools.drawHandles(context, e.detail.viewport, data.handles, e.detail.viewport.scale);
+            context.stroke();
+
+            // Draw the text
+            context.fillStyle = "white";
+            var dx = data.handles.start.x - data.handles.end.x * e.detail.image.columnPixelSpacing;
+            var dy = data.handles.start.y - data.handles.end.y * e.detail.image.rowPixelSpacing;
+            var length = Math.sqrt(dx * dx + dy * dy);
+            var text = "" + length.toFixed(2) + " mm";
+
+            var fontParameters = csc.setToFontCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext, 15);
+            context.font = "" + fontParameters.fontSize + "px Arial";
+
+            var textX = (data.handles.start.x + data.handles.end.x) / 2 / fontParameters.fontScale;
+            var textY = (data.handles.start.y + data.handles.end.y) / 2 / fontParameters.fontScale;
+            context.fillText(text, textX, textY);
+            context.restore();
+        }
+    }
+
+    function onMouseMove(e)
     {
-        element.removeEventListener("CornerstoneImageRendered", onImageRendered);
-        $(element).unbind('mousedown', onMouseDown);
-        cornerstone.removeElementData(element, 'length');
-    };
+        // if a mouse button is down, do nothing
+        if(e.which != 0) {
+            return;
+        }
 
-    // module/private exports
-    cornerstoneTools.enableLength = enableLength;
-    cornerstoneTools.disableLength = disableLength;
+        // if we have no tool data for this element, do nothing
+        var toolData = cornerstoneTools.getToolState(e.currentTarget, toolType);
+        if(toolData === undefined) {
+            return;
+        }
+
+        // We have tool data, search through all data
+        // and see we can activate a handle
+        var imageNeedsUpdate = false;
+        for(var i=0; i < toolData.data.length; i++) {
+            // get the cursor position in image coordinates
+            var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
+            var viewport = cornerstone.getViewport(element);
+            var data = toolData.data[i];
+
+            if(cornerstoneTools.activateNearbyHandle(data.handles, coords, viewport.scale ) == true)
+            {
+                imageNeedsUpdate = true;
+            }
+        }
+
+        // Handle activation status changed, redraw the image
+        if(imageNeedsUpdate === true) {
+            cornerstone.updateImage(element);
+        }
+    }
+
+    // enables the length tool on the specified element.  The length tool must first
+    // be enabled before it can be activated.  Enabling it will allow it to display
+    // any length measurements that already exist
+    // NOTE: if we want to make this tool at all configurable, we can pass in an options object here
+    function enable(element)
+    {
+        element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
+        $(element).mousemove(onMouseMove);
+        cornerstone.updateImage(element);
+        deactivate(element);
+    }
+
+    // disables the length tool on the specified element.  This will cause existing
+    // measurements to no longer be displayed.  You must re-enable the tool on an element
+    // before you can activate it again.
+    function disable(element)
+    {
+        deactivate(element);
+        $(element).unbind('mousemove', onMouseMove);
+        element.removeEventListener("CornerstoneImageRendered", onImageRendered);
+        cornerstone.updateImage(element);
+    }
+
+    // hook the mousedown event so we can create a new measurement
+    function activate(element, whichMouseButton)
+    {
+        // rehook the mnousedown with a new eventData that says we are active
+        var eventData = {
+            whichMouseButton: whichMouseButton,
+            active: true
+        };
+        $(element).unbind('mousedown', onMouseDown);
+        $(element).mousedown(eventData, onMouseDown);
+    }
+
+    // rehook mousedown with a new eventData that says we are not active
+    function deactivate(element)
+    {
+        // TODO: we currently assume that left mouse button is used to move measurements, this should
+        // probably be configurable
+        var eventData = {
+            whichMouseButton: 1,
+            active: false
+        };
+        $(element).unbind('mousedown', onMouseDown);
+        $(element).mousedown(eventData, onMouseDown);
+    }
+
+    // module exports
+    cornerstoneTools.length = {
+        enable: enable,
+        disable : disable,
+        activate: activate,
+        deactivate: deactivate
+    }
 
     return cornerstoneTools;
 }($, cornerstone, cornerstoneCore, cornerstoneTools));
@@ -747,27 +881,63 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
         cornerstoneTools = {};
     }
 
-    function scroll(element, imageIds, whichMouseButton){
+    function scroll(element, stacks, whichMouseButton){
         var currentImageIdIndex = 0;
+        var currentStackIndex = 0;
+        var stackStateManagers = [];
+
+        var oldStateManager = cornerstoneTools.getElementToolStateManager(element);
+        if(oldStateManager === undefined) {
+            oldStateManager = cornerstoneTools.globalImageIdSpecificToolStateManager;
+        }
+
+        var stackTools = ['length'];
+        stacks.forEach(function(stack) {
+            var stackSpecificStateManager = cornerstoneTools.newStackSpecificToolStateManager(stackTools, oldStateManager);
+            stackStateManagers.push(stackSpecificStateManager);
+        });
+
+        cornerstoneTools.setElementToolStateManager(element, stackStateManagers[0]);
+
         if(whichMouseButton == 0) {
             $(element).on('mousewheel DOMMouseScroll', function(e) {
+                var currentStack = stacks[currentStackIndex];
                 // Firefox e.originalEvent.detail > 0 scroll back, < 0 scroll forward
                 // chrome/safari e.originalEvent.wheelDelta < 0 scroll back, > 0 scroll forward
                 if(e.originalEvent.wheelDelta < 0 || e.originalEvent.detail > 0) {
-                    if(currentImageIdIndex < (imageIds.length - 1)) {
+                    if(currentImageIdIndex < (currentStack.imageIds.length - 1)) {
                         currentImageIdIndex++;
-                        cornerstone.showImage(element, imageIds[currentImageIdIndex]);
+                        cornerstone.newStackImage(element, currentStack.imageIds[currentImageIdIndex]);
+                    }
+                    else {
+                        if(currentStackIndex < stacks.length - 1) {
+                            currentStackIndex++;
+                            currentStack = stacks[currentStackIndex];
+                            currentImageIdIndex = 0;
+                            cornerstoneTools.setElementToolStateManager(element, stackStateManagers[currentStackIndex]);
+                            cornerstone.newStack(element, currentStack.imageIds[currentImageIdIndex]);
+                        }
                     }
                 } else {
                     if(currentImageIdIndex > 0) {
                         currentImageIdIndex--;
-                        cornerstone.showImage(element, imageIds[currentImageIdIndex]);
+                        cornerstone.newStackImage(element, currentStack.imageIds[currentImageIdIndex]);
+                    } else {
+                        if(currentStackIndex > 0) {
+                            currentStackIndex--;
+                            currentStack = stacks[currentStackIndex];
+                            currentImageIdIndex = currentStack.imageIds.length - 1;
+                            cornerstoneTools.setElementToolStateManager(element, stackStateManagers[currentStackIndex]);
+                            cornerstone.newStack(element, currentStack.imageIds[currentImageIdIndex]);
+                        }
+
                     }
                 }
                 //prevent page fom scrolling
                 return false;
             });
         }
+        /*
         else {
             $(element).mousedown(function(e) {
                 var lastX = e.pageX;
@@ -802,6 +972,7 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
                 }
             });
         }
+        */
 
     }
 
@@ -810,6 +981,134 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
 
     return cornerstoneTools;
 }($, cornerstone, cornerstoneTools));
+var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
+
+    if(cornerstoneTools === undefined) {
+        cornerstoneTools = {};
+    }
+
+    // This implements an Stack specific tool state management strategy.  This means
+    // that tool data is shared between all imageIds in a given stack
+    function newStackSpecificToolStateManager(toolTypes, oldStateManager) {
+        var toolState = {};
+
+        // here we add tool state, this is done by tools as well
+        // as modules that restore saved state
+        function addStackSpecificToolState(element, toolType, data)
+        {
+            // if this is a tool type to apply to the stack, do so
+            if(toolTypes.indexOf(toolType) >= 0) {
+                var enabledImage = cornerstone.getEnabledElement(element);
+
+                // if we don't have tool state for this type of tool, add an empty object
+                if(toolState.hasOwnProperty(toolType) == false)
+                {
+                    toolState[toolType] = {
+                        data: []
+                    };
+                }
+                var toolData = toolState[toolType];
+
+                // finally, add this new tool to the state
+                toolData.data.push(data);
+            }
+            else {
+                // call the imageId specific tool state manager
+                return oldStateManager.get(element, toolType, data);
+            }
+        };
+
+        // here you can get state - used by tools as well as modules
+        // that save state persistently
+        function getStackSpecificToolState(element, toolType)
+        {
+            // if this is a tool type to apply to the stack, do so
+            if(toolTypes.indexOf(toolType) >= 0) {
+                // if we don't have tool state for this type of tool, add an empty object
+                if(toolState.hasOwnProperty(toolType) == false)
+                {
+                    toolState[toolType] = {
+                        data: []
+                    };
+                }
+                var toolData = toolState[toolType];
+                return toolData;
+            }
+            else
+            {
+                // call the imageId specific tool state manager
+                return oldStateManager.add(element, toolType, data);
+            }
+        };
+
+        var imageIdToolStateManager = {
+            get: getStackSpecificToolState,
+            add: addStackSpecificToolState
+        };
+        return imageIdToolStateManager;
+    };
+
+    // module/private exports
+    cornerstoneTools.newStackSpecificToolStateManager = newStackSpecificToolStateManager;
+
+    return cornerstoneTools;
+}($, cornerstone, cornerstoneCore, cornerstoneTools));
+var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
+
+    if(cornerstoneTools === undefined) {
+        cornerstoneTools = {};
+    }
+
+    function getElementToolStateManager(element)
+    {
+        var enabledImage = cornerstone.getEnabledElement(element);
+        // if the enabledImage has no toolStateManager, create a default one for it
+        // NOTE: This makes state management element specific
+        if(enabledImage.toolStateManager === undefined) {
+            enabledImage.toolStateManager = cornerstoneTools.globalImageIdSpecificToolStateManager;
+        }
+        return enabledImage.toolStateManager;
+    }
+
+    // here we add tool state, this is done by tools as well
+    // as modules that restore saved state
+    function addToolState(element, toolType, data)
+    {
+        toolStateManager = getElementToolStateManager(element);
+        toolStateManager.add(element, toolType, data);
+        // TODO: figure out how to broadcast this change to all enabled elements so they can update the image
+        // if this change effects them
+    }
+
+    // here you can get state - used by tools as well as modules
+    // that save state persistently
+    function getToolState(element, toolType)
+    {
+        toolStateManager = getElementToolStateManager(element);
+        return toolStateManager.get(element, toolType, data);
+    }
+
+    // sets the tool state manager for an element
+    function setElementToolStateManager(element, toolStateManager)
+    {
+        var enabledImage = cornerstone.getEnabledElement(element);
+        enabledImage.toolStateManager = toolStateManager;
+    }
+
+    function getElementToolStateManager(element)
+    {
+        var enabledImage = cornerstone.getEnabledElement(element);
+        return enabledImage.toolStateManager;
+    }
+
+    // module/private exports
+    cornerstoneTools.addToolState = addToolState;
+    cornerstoneTools.getToolState = getToolState;
+    cornerstoneTools.setElementToolStateManager = setElementToolStateManager;
+    cornerstoneTools.getElementToolStateManager = getElementToolStateManager;
+
+    return cornerstoneTools;
+}($, cornerstone, cornerstoneCore, cornerstoneTools));
 var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
 
     if(cornerstoneTools === undefined) {

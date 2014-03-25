@@ -257,32 +257,7 @@ var cornerstone = (function (cornerstone, csc) {
 
         var image = cornerstone.loadImage(imageId);
 
-        var viewport = {
-            scale : 1.0,
-            centerX : 0,
-            centerY: 0,
-            windowWidth: image.windowWidth,
-            windowCenter: image.windowCenter
-        };
-
-        // fit image to window
-        var verticalScale = canvas.height / image.rows;
-        var horizontalScale= canvas.width / image.columns;
-        if(horizontalScale < verticalScale) {
-            viewport.scale = horizontalScale;
-        }
-        else {
-            viewport.scale = verticalScale;
-        }
-        // merge
-        if(viewportOptions) {
-            for(var attrname in viewportOptions)
-            {
-                if(viewportOptions[attrname] !== null) {
-                    viewport[attrname] = viewportOptions[attrname];
-                }
-            }
-        }
+        var viewport = cornerstone.resetViewport(element, canvas, image);
 
         var el = {
             element: element,
@@ -310,7 +285,7 @@ var cornerstone = (function (cornerstone, csc) {
         );
         element.dispatchEvent(event);
 
-    };
+    }
 
 
     // module/private exports
@@ -332,11 +307,21 @@ var cornerstone = (function (cornerstone, csc) {
             }
         }
         return undefined;
-    };
+    }
 
     function addEnabledElement(el) {
         enabledElements.push(el);
-    };
+    }
+
+    function removeEnabledElement(element) {
+        for(var i=0; i < enabledElements.length; i++) {
+            if(enabledElements[i].element == element) {
+                enabledElements[i].element.removeChild(enabledElements[i].canvas);
+                enabledElements.splice(i, 1);
+                return;
+            }
+        }
+    }
 
     function getElementData(el, dataType) {
         var ee = getEnabledElement(el);
@@ -345,16 +330,18 @@ var cornerstone = (function (cornerstone, csc) {
             ee.data[dataType] = {};
         }
         return ee.data[dataType];
-    };
+    }
+
     function removeElementData(el, dataType) {
         var ee = getEnabledElement(el);
         delete ee.data[dataType];
-    };
+    }
 
 
     // module/private exports
     cornerstone.getEnabledElement = getEnabledElement;
     cornerstone.addEnabledElement = addEnabledElement;
+    cornerstone.removeEnabledElement = removeEnabledElement ;
     cornerstone.getElementData = getElementData;
     cornerstone.removeElementData = removeElementData;
 
@@ -497,6 +484,48 @@ var cornerstone = (function (cornerstone, csc) {
         cornerstone = {};
     }
 
+    // Shows a new image in the existing stack
+    function newStackImage(element, imageId, viewportOptions)
+    {
+        enabledElement = cornerstone.getEnabledElement(element);
+        enabledElement.ids.imageId = imageId;
+        enabledElement.image = cornerstone.loadImage(imageId);
+
+        // merge
+        if(viewportOptions) {
+            for(var attrname in viewportOptions)
+            {
+                if(viewportOptions[attrname] !== null) {
+                    enabledElement.viewport[attrname] = viewportOptions[attrname];
+                }
+            }
+        }
+        cornerstone.updateImage(element);
+    }
+
+    // shows a new stack
+    function newStack(element, imageId, viewportOptions)
+    {
+        enabledElement = cornerstone.getEnabledElement(element);
+        enabledElement.ids.imageId = imageId;
+        enabledElement.image = cornerstone.loadImage(imageId);
+
+        enabledElement.viewport = cornerstone.resetViewport(enabledElement.element, enabledElement.canvas, enabledElement.image);
+
+        // merge
+        if(viewportOptions) {
+            for(var attrname in viewportOptions)
+            {
+                if(viewportOptions[attrname] !== null) {
+                    enabledElement.viewport[attrname] = viewportOptions[attrname];
+                }
+            }
+        }
+        cornerstone.updateImage(element);
+    }
+
+    // This function changes the image while preserving viewport settings.  This is appropriate
+    // when changing to a different image in the same stack/series
     cornerstone.showImage = function (element, imageId, viewportOptions) {
         enabledElement = cornerstone.getEnabledElement(element);
         enabledElement.ids.imageId = imageId;
@@ -513,6 +542,18 @@ var cornerstone = (function (cornerstone, csc) {
         }
         cornerstone.updateImage(element);
     };
+
+    // this function completely replaces an image with a new one losing all tool state
+    // and viewport settings.  This is appropriate when changing to an image that is not part
+    // of the same stack
+    cornerstone.replaceImage = function(element, imageId, viewportOptions)
+    {
+        cornerstone.removeEnabledElement(element);
+        cornerstone.enable(element, imageId, viewportOptions);
+    };
+
+    cornerstone.newStackImage = newStackImage;
+    cornerstone.newStack = newStack;
 
     return cornerstone;
 }(cornerstone, cornerstoneCore));
@@ -592,11 +633,11 @@ var cornerstone = (function (cornerstone, csc) {
         );
         element.dispatchEvent(event);
 
-    };
+    }
 
     function getViewport(element) {
         return cornerstone.getEnabledElement(element).viewport;
-    };
+    }
 
 
     // converts pageX and pageY coordinates in an image enabled element
@@ -632,12 +673,34 @@ var cornerstone = (function (cornerstone, csc) {
             x: imageX,
             y: imageY
         };
-    };
+    }
+
+    function resetViewport(element, canvas, image) {
+        var viewport = {
+            scale : 1.0,
+            centerX : 0,
+            centerY: 0,
+            windowWidth: image.windowWidth,
+            windowCenter: image.windowCenter
+        };
+
+        // fit image to window
+        var verticalScale = canvas.height / image.rows;
+        var horizontalScale= canvas.width / image.columns;
+        if(horizontalScale < verticalScale) {
+            viewport.scale = horizontalScale;
+        }
+        else {
+            viewport.scale = verticalScale;
+        }
+        return viewport;
+    }
 
     // module/private exports
     cornerstone.getViewport = getViewport;
     cornerstone.setViewport=setViewport;
     cornerstone.pageToImage=pageToImage;
+    cornerstone.resetViewport = resetViewport;
 
     return cornerstone;
 }(cornerstone, cornerstoneCore));
