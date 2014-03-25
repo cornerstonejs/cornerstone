@@ -60,19 +60,30 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             return false;
         }
 
+        return handleHandle(e, nearbyHandle);
+
+    };
+
+    function handleHandle(e, handle)
+    {
+        var element = e.currentTarget;
+
         $(document).mousemove(function(e) {
             var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
-            nearbyHandle.x = coords.x;
-            nearbyHandle.y = coords.y;
+            handle.x = coords.x;
+            handle.y = coords.y;
             cornerstone.updateImage(element);
         });
 
         $(document).mouseup(function(e) {
+            handle.active = false;
             $(document).unbind('mousemove');
             $(document).unbind('mouseup');
+            cornerstone.updateImage(element);
         });
 
         return true;
+
     };
 
     function drawHandles(context, viewport, handles)
@@ -93,6 +104,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
     cornerstoneTools.handleCursorNearHandle = handleCursorNearHandle;
     cornerstoneTools.drawHandles = drawHandles;
     cornerstoneTools.activateNearbyHandle = activateNearbyHandle;
+    cornerstoneTools.handleHandle = handleHandle;
 
     return cornerstoneTools;
 }($, cornerstone, cornerstoneCore, cornerstoneTools));

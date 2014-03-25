@@ -255,19 +255,30 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             return false;
         }
 
+        return handleHandle(e, nearbyHandle);
+
+    };
+
+    function handleHandle(e, handle)
+    {
+        var element = e.currentTarget;
+
         $(document).mousemove(function(e) {
             var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
-            nearbyHandle.x = coords.x;
-            nearbyHandle.y = coords.y;
+            handle.x = coords.x;
+            handle.y = coords.y;
             cornerstone.updateImage(element);
         });
 
         $(document).mouseup(function(e) {
+            handle.active = false;
             $(document).unbind('mousemove');
             $(document).unbind('mouseup');
+            cornerstone.updateImage(element);
         });
 
         return true;
+
     };
 
     function drawHandles(context, viewport, handles)
@@ -288,6 +299,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
     cornerstoneTools.handleCursorNearHandle = handleCursorNearHandle;
     cornerstoneTools.drawHandles = drawHandles;
     cornerstoneTools.activateNearbyHandle = activateNearbyHandle;
+    cornerstoneTools.handleHandle = handleHandle;
 
     return cornerstoneTools;
 }($, cornerstone, cornerstoneCore, cornerstoneTools));
@@ -401,7 +413,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
 
         // since we are dragging to another place to drop the end point, we can just activate
         // the end point and let the handleHelper move it for us.
-        cornerstoneTools.handleCursorNearHandle(e, data, coords, scale);
+        cornerstoneTools.handleHandle(e, data.handles.end);
     }
 
     function onMouseDown(e) {
@@ -522,9 +534,8 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
     function enable(element)
     {
         element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
-        $(element).mousemove(onMouseMove);
         cornerstone.updateImage(element);
-        deactivate(element);
+        $(element).unbind('mousedown', onMouseDown);
     }
 
     // disables the length tool on the specified element.  This will cause existing
@@ -548,6 +559,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         };
         $(element).unbind('mousedown', onMouseDown);
         $(element).mousedown(eventData, onMouseDown);
+        $(element).mousemove(onMouseMove);
     }
 
     // rehook mousedown with a new eventData that says we are not active
@@ -561,6 +573,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         };
         $(element).unbind('mousedown', onMouseDown);
         $(element).mousedown(eventData, onMouseDown);
+        $(element).mousemove(onMouseMove);
     }
 
     // module exports
