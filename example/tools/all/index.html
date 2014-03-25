@@ -145,13 +145,14 @@
     cornerstoneTools.scroll(element, stacks, 0);
     cornerstoneTools.length.enable(element);
     cornerstoneTools.length.activate(element, 1);
+    cornerstoneTools.ellipticalRoi.enable(element);
 
     function disableAllTools()
     {
         cornerstoneTools.disableWindowWidthWindowCenter(element);
         cornerstoneTools.disableProbe(element);
-        cornerstoneTools.length.deactivate(element, 1);
-        cornerstoneTools.disableEllipticalRoi(element);
+        cornerstoneTools.length.deactivate(element);
+        cornerstoneTools.ellipticalRoi.deactivate(element);
         cornerstoneTools.disableRectangleRoi(element);
     }
 
@@ -171,7 +172,7 @@
     })
     $('#circleroi').click(function() {
         disableAllTools();
-        cornerstoneTools.enableEllipticalRoi(element, 1);
+        cornerstoneTools.ellipticalRoi.activate(element, 1);
     })
     $('#rectangleroi').click(function() {
         disableAllTools();

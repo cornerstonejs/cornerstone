@@ -60,7 +60,7 @@
     var imageId = 'example://1';
     var element = $('#dicomImage').get(0);
     cornerstone.enable(element, imageId);
-    cornerstoneTools.enableEllipticalRoi(element, 1);
-
+    cornerstoneTools.ellipticalRoi.enable(element);
+    cornerstoneTools.ellipticalRoi.activate(element, 1);
 </script>
 </html>

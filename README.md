@@ -25,7 +25,10 @@ Status
 NOTE: Project is currently under active development - functionality is not complete, bugs exist,
 APIs will change and documentation is missing or not correct.
 
-Some documentation has been added to the [wiki](https://github.com/chafey/cornerstone/wiki) - check it out
+Some documentation has been added to the [wiki](https://github.com/chafey/cornerstone/wiki) - check it out.  The live
+examples are a good place to see how to use cornerstone and an effort is made to keep all of them working on
+Google Chrome Mac OS X Mavericks (they generally work on other browsers and platforms but testing on the is not a current
+priority)
 
 Links
 =====

@@ -77,8 +77,6 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         csc.setToPixelCoordinateSystem(e.detail.enabledElement, context);
 
         for(var i=0; i < toolData.data.length; i++) {
-            // TODO: see if we can get rid of save/restore on the context, the lines and handles don't show up without
-            // it so there is probably a bug here
             context.save();
             var data = toolData.data[i];
 
@@ -155,7 +153,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
         cornerstone.updateImage(element);
         $(element).unbind('mousedown', onMouseDown);
-        $(element).unbind('mousemove', onMouseMove);
+        $(element).unbind('mousedown', onMouseMove);
     }
 
     // disables the length tool on the specified element.  This will cause existing

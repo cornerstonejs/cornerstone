@@ -30,7 +30,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
     function getToolState(element, toolType)
     {
         toolStateManager = getElementToolStateManager(element);
-        return toolStateManager.get(element, toolType, data);
+        return toolStateManager.get(element, toolType);
     }
 
     // sets the tool state manager for an element
