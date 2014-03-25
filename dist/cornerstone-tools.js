@@ -536,6 +536,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
         cornerstone.updateImage(element);
         $(element).unbind('mousedown', onMouseDown);
+        $(element).unbind('mousemove', onMouseMove);
     }
 
     // disables the length tool on the specified element.  This will cause existing
