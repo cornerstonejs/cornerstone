@@ -60,7 +60,8 @@
     var imageId = 'example://1';
     var element = $('#dicomImage').get(0);
     cornerstone.enable(element, imageId);
-    cornerstoneTools.enableProbe(element, 1);
+    cornerstoneTools.probe.enable(element);
+    cornerstoneTools.probe.activate(element, 1);
 
 </script>
 </html>

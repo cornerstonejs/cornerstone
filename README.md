@@ -4,7 +4,8 @@ cornerstone
 The goal of this project is to make it easy to enable HTML5 based web apps to display interactive medical images.
 
 [Click here for an example showing many of the features in action!](https://rawgithub.com/chafey/cornerstone/master/example/tools/all/index.html)
-NOTE - use google chrome if you can as the other browsers are not tested frequently right now (although they should work)
+
+**NOTE - please use Google Chrome if you can as the other browsers are not tested frequently right now (although they should work)**
 
 Project Vision
 ==============
@@ -28,9 +29,7 @@ APIs will change and documentation is missing or not correct.
 
 Some documentation has been added to the [wiki](https://github.com/chafey/cornerstone/wiki) - check it out.
 
-The live examples are a good place to see how to use cornerstone and an effort is made to keep all of them working on
-Google Chrome Mac OS X Mavericks (they generally work on other browsers and platforms but testing on the is not a current
-priority)  [Click here to see live examples](https://rawgithub.com/chafey/cornerstone/master/example/index.html)
+The [live examples](https://rawgithub.com/chafey/cornerstone/master/example/index.html) are a good place to see how to use cornerstone.
 
 Links
 =====

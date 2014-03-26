@@ -4,98 +4,196 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         cornerstoneTools = {};
     }
 
-    function onMouseDown(e) {
-        var element = e.currentTarget;
-        var data = cornerstone.getElementData(element, 'probe');
-        if(e.which == data.whichMouseButton) {
-            var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
-            data.x = coords.x;
-            data.y = coords.y;
-            data.visible = true;
-            cornerstone.updateImage(element);
+    var toolType = 'probe';
 
-            $(document).mousemove(function(e) {
-                var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
-                data.x = coords.x;
-                data.y = coords.y;
-                cornerstone.updateImage(element);
-            });
-
-            $(document).mouseup(function(e) {
-                data.visible = false;
-                cornerstone.updateImage(element);
-                $(document).unbind('mousemove');
-                $(document).unbind('mouseup');
-            });
-        }
-    };
-
-    function onImageRendered(e)
+    function drawNewMeasurement(e, coords, scale)
     {
-        var data = cornerstone.getElementData(e.currentTarget, 'probe');
+        // create the tool state data for this tool with the end handle activated
+        var data = {
+            visible : true,
+            handles : {
+                end: {
+                    x : coords.x,
+                    y : coords.y,
+                    active: true
+                }
+            }
+        };
 
-        if(data.visible == false)
-        {
+        // associate this data with this imageId so we can render it and manipulate it
+        cornerstoneTools.addToolState(e.currentTarget, toolType, data);
+
+        // since we are dragging to another place to drop the end point, we can just activate
+        // the end point and let the handleHelper move it for us.
+        cornerstoneTools.handleHandle(e, data.handles.end);
+    }
+
+    function onMouseDown(e) {
+        var eventData = e.data;
+        if(e.which == eventData.whichMouseButton) {
+            var element = e.currentTarget;
+            var viewport = cornerstone.getViewport(element);
+            var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
+            var toolData = cornerstoneTools.getToolState(e.currentTarget, toolType);
+
+            // first check to see if we have an existing measurement that has a handle that we can move
+            if(toolData !== undefined) {
+                for(var i=0; i < toolData.data.length; i++) {
+                    var data = toolData.data[i];
+                    if(cornerstoneTools.handleCursorNearHandle(e, data, coords, viewport.scale) == true) {
+                        e.stopPropagation();
+                        return;
+                    }
+                }
+            }
+
+            // If we are "active" start drawing a new measurement
+            if(eventData.active === true) {
+                // no existing measurements care about this, draw a new measurement
+                drawNewMeasurement(e, coords, viewport.scale);
+                e.stopPropagation();
+                return;
+            }
+        }
+    }
+
+    function onMouseMove(e)
+    {
+        // if a mouse button is down, do nothing
+        if(e.which != 0) {
             return;
         }
 
-        csc.setToPixelCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext);
+        // if we have no tool data for this element, do nothing
+        var toolData = cornerstoneTools.getToolState(e.currentTarget, toolType);
+        if(toolData === undefined) {
+            return;
+        }
 
-        var context = e.detail.canvasContext;
-        context.beginPath();
-        //context.fillStyle = "white";
-        //context.lineWidth = .1;
-        //context.rect(x,y,1,1);
-        context.stroke();
+        // We have tool data, search through all data
+        // and see we can activate a handle
+        var imageNeedsUpdate = false;
+        for(var i=0; i < toolData.data.length; i++) {
+            // get the cursor position in image coordinates
+            var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
+            var viewport = cornerstone.getViewport(element);
+            var data = toolData.data[i];
+
+            if(cornerstoneTools.activateNearbyHandle(data.handles, coords, viewport.scale ) == true)
+            {
+                imageNeedsUpdate = true;
+            }
+        }
+
+        // Handle activation status changed, redraw the image
+        if(imageNeedsUpdate === true) {
+            cornerstone.updateImage(element);
+        }
+    }
+
+    function onImageRendered(e)
+    {
+        // if we have no toolData for this element, return immediately as there is nothing to do
+        var toolData = cornerstoneTools.getToolState(e.currentTarget, toolType);
+        if(toolData === undefined) {
+            return;
+        }
+
+        // we have tool data for this element - iterate over each one and draw it
+        var context = e.detail.canvasContext.canvas.getContext("2d");
+        csc.setToPixelCoordinateSystem(e.detail.enabledElement, context);
+
+        for(var i=0; i < toolData.data.length; i++) {
+            context.save();
+            var data = toolData.data[i];
+
+            // Draw text
+            var fontParameters = csc.setToFontCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext, 15);
+            context.font = "" + fontParameters.fontSize + "px Arial";
+
+            // translate the x/y away from the cursor
+            var x = Math.round(data.handles.end.x);
+            var y = Math.round(data.handles.end.y);
+            textX = data.handles.end.x + 3;
+            textY = data.handles.end.y - 3;
+
+            var textX = textX / fontParameters.fontScale;
+            var textY = textY / fontParameters.fontScale;
+
+            context.fillStyle = "white";
+
+            var storedPixels = cornerstone.getStoredPixels(e.detail.element, x, y, 1, 1);
+            var sp = storedPixels[0];
+            var mo = sp * e.detail.image.slope + e.detail.image.intercept;
 
 
-        var fontParameters = csc.setToFontCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext, 15);
-        context.font = "" + fontParameters.fontSize + "px Arial";
+            context.fillText("" + x + "," + y, textX, textY);
+            context.fillText("SP: " + sp + " MO: " + mo, textX, textY + fontParameters.lineHeight);
 
-        var x =Math.round(data.x);
-        var y = Math.round(data.y);
-        var storedPixels = cornerstone.getStoredPixels(e.detail.element, x, y, 1, 1);
-        var sp = storedPixels[0];
-        var mo = sp * e.detail.image.slope + e.detail.image.intercept;
+            context.restore();
+        }
+    }
 
-        var textX = (x + 3)/ fontParameters.fontScale;
-        var textY = (y- 3) / fontParameters.fontScale - fontParameters.lineHeight;
-
-        context.fillStyle = "white";
-        context.fillText("" + x + "," + y, textX, textY);
-        context.fillText("SP: " + sp + " MO: " + mo, textX, textY + fontParameters.lineHeight);
-    };
-
-    function enableProbe(element, whichMouseButton)
+    // enables the tool on the specified element.  The tool must first
+    // be enabled before it can be activated.  Enabling it will allow it to display
+    // any measurements that already exist
+    // NOTE: if we want to make this tool at all configurable, we can pass in an options object here
+    function enable(element)
     {
         element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
-
-        var eventData =
-        {
-            whichMouseButton: whichMouseButton,
-            visible : false,
-            x : 0,
-            y : 0
-        };
-
-        var data = cornerstone.getElementData(element, 'probe');
-        for(var attrname in eventData)
-        {
-            data[attrname] = eventData[attrname];
-        }
-        $(element).mousedown(onMouseDown);
-    };
-
-    function disableProbe(element)
-    {
-        element.removeEventListener("CornerstoneImageRendered", onImageRendered);
+        cornerstone.updateImage(element);
         $(element).unbind('mousedown', onMouseDown);
-        cornerstone.removeElementData(element, 'probe');
-    };
+        $(element).unbind('mousemove', onMouseMove);
+    }
+
+    // disables the tool on the specified element.  This will cause existing
+    // measurements to no longer be displayed.  You must re-enable the tool on an element
+    // before you can activate it again.
+    function disable(element)
+    {
+        deactivate(element);
+        $(element).unbind('mousemove', onMouseMove);
+        element.removeEventListener("CornerstoneImageRendered", onImageRendered);
+        cornerstone.updateImage(element);
+    }
+
+    // hook the mousedown event so we can create a new measurement
+    function activate(element, whichMouseButton)
+    {
+        // rehook the mnousedown with a new eventData that says we are active
+        var eventData = {
+            whichMouseButton: whichMouseButton,
+            active: true
+        };
+        $(element).unbind('mousedown', onMouseDown);
+        $(element).mousedown(eventData, onMouseDown);
+        $(element).mousemove(onMouseMove);
+    }
+
+    // rehook mousedown with a new eventData that says we are not active
+    function deactivate(element)
+    {
+        // TODO: we currently assume that left mouse button is used to move measurements, this should
+        // probably be configurable
+        var eventData = {
+            whichMouseButton: 1,
+            active: false
+        };
+        $(element).unbind('mousedown', onMouseDown);
+        $(element).mousedown(eventData, onMouseDown);
+        $(element).mousemove(onMouseMove);
+    }
 
     // module/private exports
-    cornerstoneTools.enableProbe = enableProbe;
-    cornerstoneTools.disableProbe = disableProbe;
+    //cornerstoneTools.enableEllipticalRoi = enableEllipticalRoi;
+    //cornerstoneTools.disableEllipticalRoi = disableEllipticalRoi;
+
+    cornerstoneTools.probe = {
+        enable: enable,
+        disable : disable,
+        activate: activate,
+        deactivate: deactivate
+    }
 
     return cornerstoneTools;
 }($, cornerstone, cornerstoneCore, cornerstoneTools));

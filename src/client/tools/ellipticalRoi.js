@@ -112,7 +112,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
             var toolData = cornerstoneTools.getToolState(e.currentTarget, toolType);
 
-            // first check to see if we have an existing length measurement that has a handle that we can move
+            // first check to see if we have an existing measurement that has a handle that we can move
             if(toolData !== undefined) {
                 for(var i=0; i < toolData.data.length; i++) {
                     var data = toolData.data[i];
@@ -239,9 +239,9 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         }
     }
 
-    // enables the length tool on the specified element.  The length tool must first
+    // enables the tool on the specified element.  The tool must first
     // be enabled before it can be activated.  Enabling it will allow it to display
-    // any length measurements that already exist
+    // any measurements that already exist
     // NOTE: if we want to make this tool at all configurable, we can pass in an options object here
     function enable(element)
     {
@@ -251,7 +251,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         $(element).unbind('mousemove', onMouseMove);
     }
 
-    // disables the length tool on the specified element.  This will cause existing
+    // disables the tool on the specified element.  This will cause existing
     // measurements to no longer be displayed.  You must re-enable the tool on an element
     // before you can activate it again.
     function disable(element)

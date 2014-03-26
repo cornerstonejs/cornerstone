@@ -22,19 +22,38 @@
     <h1>
         tools/all/index.html
     </h1>
-
-    This is an example of using all of the cornerstone tools and capturing events to show the
-    current ww/wc, zoom and drawing an overlay on the mri image
-
+    This example illustrates most of cornerstone's functionality all in one page.
+    <br>
+    <br>
+    <strong>Please use Google Chrome if possible
+    as this is the primary browser used for development and testing for other browsers is not done as regularly.</strong>
     <br>
     <br>
 
+    Functionality:
     <ul>
-        <li>Adjust window width / window center by dragging the left mouse button</li>
+        <li>Activation of different tools via buttons
+            <ul>
+                <li>WW/WC - Adjust the WW/WC for all images in the stack</li>
+                <li>Length - Length measurement tool</li>
+                <li>Probe - Display the image x,y coordinate under cursor as well as the pixel value (stored pixel and modality)</li>
+                <li>Elliptical ROI - An elliptical ROI that shows mean, stddev and area</li>
+                <li>Rectangle ROI - A rectangular ROI that shows mean, stddev and area</li>
+            </ul>
+        </li>
+        <li>Use the activated tool by dragging the left mouse button</li>
         <li>Pan by dragging the middle mouse button</li>
         <li>Zoom by dragging the right mouse button</li>
-        <li>Scroll by rolling the mouse wheel (MRI image only)</li>
-        <li>Click "Length" to activate the length measurement tool in the MR image.  Measure by dragging left mouse button.  Click "WW/WC" to return the left click drag to WW/WL</li>
+        <li>Text overlays in the four corners using HTML elements updated by listening for the CornerstoneViewportUpdated event</li>
+        <li>Adding a custom annotation "Tumor Here" with rectangle to the element by responding to the CornerstoneViewportUpdated event </li>
+        <li>Initializing the length tool with a previously created length measurement</li>
+        <li>Stack functionality
+            <ul>
+                <li>Change to different stacks and images in those stacks rolling the mouse wheel (there are two stacks - one with two MRI images and one with a single CT image</li>
+                <li>Stack specific length measurement.  A length measurement made on an MRI image is visible on both MRI images but not the CT image</li>
+                <li>automatically resizing the viewport when scrolling to another stack (the CT image is 512x512 and the MRI is 256x256)</li>
+            </ul>
+        </li>
     </ul>
 
     <br>
@@ -90,16 +109,16 @@
 
 
 <script>
-
     var element = $('#dicomImage').get(0);
 
+    // Listen for changes to the viewport so we can update the text overlays in the corner
     function onViewportUpdated(e) {
         $('#mrbottomleft').text("WW/WL:" + Math.round(e.detail.viewport.windowWidth) + "/" + Math.round(e.detail.viewport.windowCenter));
         $('#mrbottomright').text("Zoom:" + e.detail.viewport.scale.toFixed(2));
     };
-
     element.addEventListener("CornerstoneViewportUpdated", onViewportUpdated, false);
 
+    // Listen for image render events so we can add out "Tumor Here" and rectangle overlay to the rendered image
     function onImageRendered(e) {
         // set the canvas context to the image coordinate system
         cornerstoneCore.setToPixelCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext);
@@ -117,9 +136,10 @@
         context.font = "6px Arial";
         context.fillText("Tumor Here", 128, 85);
     };
-
     element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
 
+
+    // Declare two stacks, one with two MRI images and another with a single CT image
     var stack1 = {
         stackId : '1',
         imageIds : [
@@ -140,35 +160,40 @@
 
     // image enable the dicomImage element
     cornerstone.enable(element, stack1.imageIds[0]);
+
+    // Enable all tools we want to use with this element
     cornerstoneTools.pan(element, 2);
     cornerstoneTools.zoom(element, 3);
     cornerstoneTools.scroll(element, stacks, 0);
     cornerstoneTools.length.enable(element);
-    cornerstoneTools.length.activate(element, 1);
     cornerstoneTools.ellipticalRoi.enable(element);
+    cornerstoneTools.rectangleRoi.enable(element);
+    cornerstoneTools.probe.enable(element);
+    cornerstoneTools.length.activate(element, 1);
 
+    // helper function used by the tool button handlers to disable the active tool
+    // before making a new tool active
     function disableAllTools()
     {
         cornerstoneTools.disableWindowWidthWindowCenter(element);
-        cornerstoneTools.disableProbe(element);
         cornerstoneTools.length.deactivate(element);
         cornerstoneTools.ellipticalRoi.deactivate(element);
-        cornerstoneTools.disableRectangleRoi(element);
+        cornerstoneTools.rectangleRoi.deactivate(element);
+        cornerstoneTools.probe.deactivate(element);
     }
 
+    // Tool button event handlers that set the new active tool
     $('#enableLength').click(function() {
         disableAllTools();
         cornerstoneTools.length.activate(element, 1);
     })
-
     $('#enableWindowLevelTool').click(function() {
         disableAllTools();
         cornerstoneTools.windowWidthWindowCenter(element, 1);
     })
-
     $('#probe').click(function() {
         disableAllTools();
-        cornerstoneTools.enableProbe(element, 1);
+        cornerstoneTools.probe.activate(element, 1);
     })
     $('#circleroi').click(function() {
         disableAllTools();
@@ -176,7 +201,7 @@
     })
     $('#rectangleroi').click(function() {
         disableAllTools();
-        cornerstoneTools.enableRectangleRoi(element, 1);
+        cornerstoneTools.rectangleRoi.activate(element, 1);
     })
 
     // add a measurement to the image - this is showing tool state restore
@@ -197,6 +222,7 @@
     };
     cornerstoneTools.addToolState(element, 'length', data);
     cornerstone.updateImage(element);
+
 
 </script>
 </html>
