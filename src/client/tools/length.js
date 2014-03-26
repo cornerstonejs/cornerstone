@@ -125,7 +125,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             var viewport = cornerstone.getViewport(element);
             var data = toolData.data[i];
 
-            if(pointNearTool(data, coords) === true)
+            if(cornerstoneTools.lineHelper.pointNearLineSegment(coords, data.handles) === true)
             {
                 if(cornerstoneTools.setHighlightForAllHandles(data, true))
                 {

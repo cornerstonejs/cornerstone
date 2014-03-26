@@ -108,20 +108,15 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
 
     function pointNearTool(data, coords)
     {
-        var pad = 5;
-        var left = Math.min(data.handles.start.x, data.handles.end.x) - pad;
-        var top = Math.min(data.handles.start.y, data.handles.end.y) - pad;
-        var right = Math.max(data.handles.start.x, data.handles.end.x) + pad;
-        var bottom = Math.max(data.handles.start.y, data.handles.end.y) + pad;
+        // TODO: Find a formula for shortest distance betwen point and ellipse.  Rectangle is close enough
+        var rect = {
+            left : Math.min(data.handles.start.x, data.handles.end.x),
+            top : Math.min(data.handles.start.y, data.handles.end.y),
+            width : Math.abs(data.handles.start.x - data.handles.end.x),
+            height : Math.abs(data.handles.start.y - data.handles.end.y)
+        };
 
-        if(left < coords.x &&
-           right > coords.x &&
-            top < coords.y &&
-            bottom > coords.y)
-        {
-            return true;
-        }
-        return false;
+        return cornerstoneTools.lineHelper.pointNearRect(coords, rect);
     }
 
     function onMouseDown(e) {
@@ -737,7 +732,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             var viewport = cornerstone.getViewport(element);
             var data = toolData.data[i];
 
-            if(pointNearTool(data, coords) === true)
+            if(cornerstoneTools.lineHelper.pointNearLineSegment(coords, data.handles) === true)
             {
                 if(cornerstoneTools.setHighlightForAllHandles(data, true))
                 {
@@ -870,6 +865,108 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         disable : disable,
         activate: activate,
         deactivate: deactivate
+    }
+
+    return cornerstoneTools;
+}($, cornerstone, cornerstoneCore, cornerstoneTools));
+var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
+
+    if(cornerstoneTools === undefined) {
+        cornerstoneTools = {};
+    }
+
+    // from http://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
+    function sqr(x) { return x * x }
+    function dist2(v, w) { return sqr(v.x - w.x) + sqr(v.y - w.y) }
+    function distToSegmentSquared(p, v, w) {
+        var l2 = dist2(v, w);
+        if (l2 == 0) return dist2(p, v);
+        var t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+        if (t < 0) return dist2(p, v);
+        if (t > 1) return dist2(p, w);
+        return dist2(p, { x: v.x + t * (w.x - v.x),
+            y: v.y + t * (w.y - v.y) });
+    }
+    function distToSegment(p, v, w) { return Math.sqrt(distToSegmentSquared(p, v, w)); }
+
+
+    function pointNearLineSegment(point, lineSegment, maxDistance)
+    {
+        if(maxDistance === undefined) {
+            maxDistance = 5;
+        }
+        var distance = distToSegment(point, lineSegment.start, lineSegment.end);
+
+        return (distance < maxDistance);
+    }
+
+    function rectToLineSegments(rect)
+    {
+        var top = {
+            start : {
+                x :rect.left,
+                y :rect.top
+            },
+            end : {
+                x :rect.left + rect.width,
+                y :rect.top
+
+            }
+        };
+        var right = {
+            start : {
+                x :rect.left + rect.width,
+                y :rect.top
+            },
+            end : {
+                x :rect.left + rect.width,
+                y :rect.top + rect.height
+
+            }
+        };
+        var bottom = {
+            start : {
+                x :rect.left + rect.width,
+                y :rect.top + rect.height
+            },
+            end : {
+                x :rect.left,
+                y :rect.top + rect.height
+
+            }
+        };
+        var left = {
+            start : {
+                x :rect.left,
+                y :rect.top + rect.height
+            },
+            end : {
+                x :rect.left,
+                y :rect.top
+
+            }
+        };
+        var lineSegments = [top, right, bottom, left];
+        return lineSegments;
+    }
+
+    function pointNearRect(point, rect, maxDistance)
+    {
+        var found = false;
+        var lineSegments = rectToLineSegments(rect);
+        lineSegments.forEach(function(lineSegment) {
+            if(pointNearLineSegment(point, lineSegment, maxDistance))
+            {
+                found = true;
+            }
+        })
+        return found;
+    }
+
+    // module exports
+    cornerstoneTools.lineHelper = {
+        pointNearLineSegment: pointNearLineSegment,
+        pointNearRect: pointNearRect,
     }
 
     return cornerstoneTools;
@@ -1231,20 +1328,14 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
 
     function pointNearTool(data, coords)
     {
-        var pad = 5;
-        var left = Math.min(data.handles.start.x, data.handles.end.x) - pad;
-        var top = Math.min(data.handles.start.y, data.handles.end.y) - pad;
-        var right = Math.max(data.handles.start.x, data.handles.end.x) + pad;
-        var bottom = Math.max(data.handles.start.y, data.handles.end.y) + pad;
+        var rect = {
+            left : Math.min(data.handles.start.x, data.handles.end.x),
+            top : Math.min(data.handles.start.y, data.handles.end.y),
+            width : Math.abs(data.handles.start.x - data.handles.end.x),
+            height : Math.abs(data.handles.start.y - data.handles.end.y)
+        };
 
-        if(left < coords.x &&
-            right > coords.x &&
-            top < coords.y &&
-            bottom > coords.y)
-        {
-            return true;
-        }
-        return false;
+        return cornerstoneTools.lineHelper.pointNearRect(coords, rect);
     }
 
     function onMouseDown(e) {
@@ -1324,7 +1415,6 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
                 {
                     imageNeedsUpdate = true;
                 }
-
             }
             else
             {

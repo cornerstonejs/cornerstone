@@ -108,20 +108,15 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
 
     function pointNearTool(data, coords)
     {
-        var pad = 5;
-        var left = Math.min(data.handles.start.x, data.handles.end.x) - pad;
-        var top = Math.min(data.handles.start.y, data.handles.end.y) - pad;
-        var right = Math.max(data.handles.start.x, data.handles.end.x) + pad;
-        var bottom = Math.max(data.handles.start.y, data.handles.end.y) + pad;
+        // TODO: Find a formula for shortest distance betwen point and ellipse.  Rectangle is close enough
+        var rect = {
+            left : Math.min(data.handles.start.x, data.handles.end.x),
+            top : Math.min(data.handles.start.y, data.handles.end.y),
+            width : Math.abs(data.handles.start.x - data.handles.end.x),
+            height : Math.abs(data.handles.start.y - data.handles.end.y)
+        };
 
-        if(left < coords.x &&
-           right > coords.x &&
-            top < coords.y &&
-            bottom > coords.y)
-        {
-            return true;
-        }
-        return false;
+        return cornerstoneTools.lineHelper.pointNearRect(coords, rect);
     }
 
     function onMouseDown(e) {
