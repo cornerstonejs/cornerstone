@@ -147,6 +147,23 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         return true;
     }
 
+    function deactivateAndUnhighlightAllHandles(data)
+    {
+        var changed = false
+        for(var property in data.handles) {
+            var handle = data.handles[property];
+            if(handle.active) {
+                handle.active = false;
+                changed = true;
+            }
+            if(handle.highlight) {
+                handle.highlight = false;
+                changed = true;
+            }
+        }
+        return changed;
+    }
+
     // module/private exports
     cornerstoneTools.findHandleNear = findHandleNear;
     cornerstoneTools.handleCursorNearHandle = handleCursorNearHandle;
@@ -155,6 +172,6 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
     cornerstoneTools.handleHandle = handleHandle;
     cornerstoneTools.setHighlightForAllHandles = setHighlightForAllHandles;
     cornerstoneTools.moveAllHandles = moveAllHandles;
-
+    cornerstoneTools.deactivateAndUnhighlightAllHandles = deactivateAndUnhighlightAllHandles;
     return cornerstoneTools;
 }($, cornerstone, cornerstoneCore, cornerstoneTools));

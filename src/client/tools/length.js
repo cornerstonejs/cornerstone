@@ -135,11 +135,10 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
                 {
                     imageNeedsUpdate = true;
                 }
-
             }
             else
             {
-                if(cornerstoneTools.setHighlightForAllHandles(data, false))
+                if(cornerstoneTools.deactivateAndUnhighlightAllHandles(data))
                 {
                     imageNeedsUpdate = true;
                 }
