@@ -30,8 +30,6 @@ Backlog:
    * switch to lower resolution image during ww/wc operation to improve framerate
    * only regenerate rendered image if ww/wc changes - that way pan/zoom is faster
    * only regenerate the part of the rendered image that is actually visible - perhaps by tiling it
- * developer api
-     * Programmatic access to raw pixel data (for tools like ROI)
  * Pixel data management
      * Caching of pixel data to HTML5 local storage?
      * image cache management

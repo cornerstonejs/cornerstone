@@ -3,11 +3,28 @@ Roadmap
 
 Phase 2 (in progress)
 -------
+ * Tool framework
+   * Data management
+   * Handle helpers
+   * Tool dragging
+   * Drawing Geometry
+   * Drawing Text
+   * coordinate conversion helper from page coordinate to image coordinate
+ * Interaction paradigm
+   * Tool adjustment through handles
+   * Delete by dragging tool off screen
+   * Tool states
  * Generic tools for interactively adjusting window width/window center, zoom, pan and scroll
+   * WW/WC
+   * Pan
+   * Zoom
+   * Stack Scroll
+   * Length Measurement
+   * Pixel Probe
+   * Rectangle ROI
+   * Elliptical ROI
  * Viewport Event - fired every time a viewport property changes
  * Render Event - fired every time the image is rendered (useful for generating overlays)
- * Overlay drawing
- * coordinate conversion helper from page coordinate to image coordinate
 
 
 Phase 1 / proof of concept (DONE!)
