@@ -169,10 +169,10 @@
     cornerstoneTools.ellipticalRoi.enable(element);
     cornerstoneTools.rectangleRoi.enable(element);
     cornerstoneTools.probe.enable(element);
-    cornerstoneTools.windowWidthWindowCenter(element, 1); // important to do ww/wc last for now, probably need separate event for the 'active' tool vs the rest
+    cornerstoneTools.wwwc.activate(element, 1); // important to do ww/wc last for now, probably need separate event for the 'active' tool vs the rest
 
-    cornerstoneTools.pan(element, 2);
-    cornerstoneTools.zoom(element, 3);
+    cornerstoneTools.pan.activate(element, 2);
+    cornerstoneTools.zoom.activate(element, 3);
     cornerstoneTools.scroll(element, stacks, 0);
 
 
@@ -180,7 +180,7 @@
     // before making a new tool active
     function disableAllTools()
     {
-        cornerstoneTools.disableWindowWidthWindowCenter(element);
+        cornerstoneTools.wwwc.disable(element);
         cornerstoneTools.length.deactivate(element);
         cornerstoneTools.ellipticalRoi.deactivate(element);
         cornerstoneTools.rectangleRoi.deactivate(element);
@@ -191,23 +191,23 @@
     $('#enableLength').click(function() {
         disableAllTools();
         cornerstoneTools.length.activate(element, 1);
-    })
+    });
     $('#enableWindowLevelTool').click(function() {
         disableAllTools();
         cornerstoneTools.windowWidthWindowCenter(element, 1);
-    })
+    });
     $('#probe').click(function() {
         disableAllTools();
         cornerstoneTools.probe.activate(element, 1);
-    })
+    });
     $('#circleroi').click(function() {
         disableAllTools();
         cornerstoneTools.ellipticalRoi.activate(element, 1);
-    })
+    });
     $('#rectangleroi').click(function() {
         disableAllTools();
         cornerstoneTools.rectangleRoi.activate(element, 1);
-    })
+    });
 
     // add a measurement to the image - this is showing tool state restore
     var data = {
