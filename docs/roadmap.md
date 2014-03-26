@@ -9,7 +9,7 @@ Phase 2 (in progress)
    * Tool dragging
    * Drawing Geometry
    * Drawing Text
-   * coordinate conversion helper from page coordinate to image coordinate
+   * Coordinate conversion helper from page coordinate to image coordinate
  * Interaction paradigm
    * Tool adjustment through handles
    * Delete by dragging tool off screen

@@ -86,11 +86,13 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
                 start : {
                     x : coords.x,
                     y : coords.y,
+                    highlight: true,
                     active: false
                 },
                 end: {
                     x : coords.x,
                     y : coords.y,
+                    highlight: true,
                     active: true
                 }
             }
@@ -102,6 +104,24 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         // since we are dragging to another place to drop the end point, we can just activate
         // the end point and let the handleHelper move it for us.
         cornerstoneTools.handleHandle(e, data.handles.end);
+    }
+
+    function pointNearTool(data, coords)
+    {
+        var pad = 5;
+        var left = Math.min(data.handles.start.x, data.handles.end.x) - pad;
+        var top = Math.min(data.handles.start.y, data.handles.end.y) - pad;
+        var right = Math.max(data.handles.start.x, data.handles.end.x) + pad;
+        var bottom = Math.max(data.handles.start.y, data.handles.end.y) + pad;
+
+        if(left < coords.x &&
+           right > coords.x &&
+            top < coords.y &&
+            bottom > coords.y)
+        {
+            return true;
+        }
+        return false;
     }
 
     function onMouseDown(e) {
@@ -117,7 +137,19 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
                 for(var i=0; i < toolData.data.length; i++) {
                     var data = toolData.data[i];
                     if(cornerstoneTools.handleCursorNearHandle(e, data, coords, viewport.scale) == true) {
-                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        return;
+                    }
+                }
+            }
+
+            // now check to see if we have a tool that we can move
+            if(toolData !== undefined) {
+                for(var i=0; i < toolData.data.length; i++) {
+                    var data = toolData.data[i];
+                    if(pointNearTool(data, coords)) {
+                        cornerstoneTools.moveAllHandles(e, data);
+                        e.stopImmediatePropagation();
                         return;
                     }
                 }
@@ -127,7 +159,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             if(eventData.active === true) {
                 // no existing measurements care about this, draw a new measurement
                 drawNewMeasurement(e, coords, viewport.scale);
-                e.stopPropagation();
+                e.stopImmediatePropagation();
                 return;
             }
         }
@@ -147,7 +179,10 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         }
 
         // We have tool data, search through all data
-        // and see we can activate a handle
+        // and see if the mouse cursor is close enough
+        // to the tool to make it interactive (by highlighting
+        // all handles) and close enough to make a handle draggable
+
         var imageNeedsUpdate = false;
         for(var i=0; i < toolData.data.length; i++) {
             // get the cursor position in image coordinates
@@ -155,9 +190,24 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             var viewport = cornerstone.getViewport(element);
             var data = toolData.data[i];
 
-            if(cornerstoneTools.activateNearbyHandle(data.handles, coords, viewport.scale ) == true)
+            if(pointNearTool(data, coords) === true)
             {
-                imageNeedsUpdate = true;
+                if(cornerstoneTools.setHighlightForAllHandles(data, true))
+                {
+                    imageNeedsUpdate = true;
+                }
+                if(cornerstoneTools.activateNearbyHandle(data.handles, coords, viewport.scale))
+                {
+                    imageNeedsUpdate = true;
+                }
+
+            }
+            else
+            {
+                if(cornerstoneTools.setHighlightForAllHandles(data, false))
+                {
+                    imageNeedsUpdate = true;
+                }
             }
         }
 
@@ -246,9 +296,9 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
     function enable(element)
     {
         element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
-        cornerstone.updateImage(element);
         $(element).unbind('mousedown', onMouseDown);
         $(element).unbind('mousemove', onMouseMove);
+        cornerstone.updateImage(element);
     }
 
     // disables the tool on the specified element.  This will cause existing
@@ -256,37 +306,42 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
     // before you can activate it again.
     function disable(element)
     {
-        deactivate(element);
-        $(element).unbind('mousemove', onMouseMove);
         element.removeEventListener("CornerstoneImageRendered", onImageRendered);
+        $(element).unbind('mousedown', onMouseDown);
+        $(element).unbind('mousemove', onMouseMove);
         cornerstone.updateImage(element);
     }
 
     // hook the mousedown event so we can create a new measurement
     function activate(element, whichMouseButton)
     {
-        // rehook the mnousedown with a new eventData that says we are active
+        element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
+        $(element).unbind('mousedown', onMouseDown);
+        $(element).unbind('mousemove', onMouseMove);
         var eventData = {
             whichMouseButton: whichMouseButton,
             active: true
         };
-        $(element).unbind('mousedown', onMouseDown);
         $(element).mousedown(eventData, onMouseDown);
         $(element).mousemove(onMouseMove);
+        cornerstone.updateImage(element);
     }
 
     // rehook mousedown with a new eventData that says we are not active
     function deactivate(element)
     {
+        element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
+        $(element).unbind('mousedown', onMouseDown);
+        $(element).unbind('mousemove', onMouseMove);
         // TODO: we currently assume that left mouse button is used to move measurements, this should
         // probably be configurable
         var eventData = {
             whichMouseButton: 1,
             active: false
         };
-        $(element).unbind('mousedown', onMouseDown);
         $(element).mousedown(eventData, onMouseDown);
         $(element).mousemove(onMouseMove);
+        cornerstone.updateImage(element);
     }
 
     // module/private exports

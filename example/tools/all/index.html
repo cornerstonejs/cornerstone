@@ -54,6 +54,9 @@
                 <li>automatically resizing the viewport when scrolling to another stack (the CT image is 512x512 and the MRI is 256x256)</li>
             </ul>
         </li>
+        <li>Tool handles (partially implemented)</li>
+        <li>Tool dragging (not implemented yet)</li>
+        <li>Tool deletion (not implemented yet)</li>
     </ul>
 
     <br>
@@ -162,14 +165,16 @@
     cornerstone.enable(element, stack1.imageIds[0]);
 
     // Enable all tools we want to use with this element
-    cornerstoneTools.pan(element, 2);
-    cornerstoneTools.zoom(element, 3);
-    cornerstoneTools.scroll(element, stacks, 0);
-    cornerstoneTools.length.enable(element);
+    cornerstoneTools.length.deactivate(element);
     cornerstoneTools.ellipticalRoi.enable(element);
     cornerstoneTools.rectangleRoi.enable(element);
     cornerstoneTools.probe.enable(element);
-    cornerstoneTools.length.activate(element, 1);
+    cornerstoneTools.windowWidthWindowCenter(element, 1); // important to do ww/wc last for now, probably need separate event for the 'active' tool vs the rest
+
+    cornerstoneTools.pan(element, 2);
+    cornerstoneTools.zoom(element, 3);
+    cornerstoneTools.scroll(element, stacks, 0);
+
 
     // helper function used by the tool button handlers to disable the active tool
     // before making a new tool active

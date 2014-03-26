@@ -83,21 +83,69 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         });
 
         return true;
+    }
 
-    };
+    function setHighlightForAllHandles(data, highlighted)
+    {
+        var changed = false
+        for(var property in data.handles) {
+            var handle = data.handles[property];
+            if(handle.highlight !== highlighted) {
+                handle.highlight = highlighted;
+                changed = true;
+            }
+        }
+        return changed;
+    }
 
     function drawHandles(context, viewport, handles)
     {
         context.strokeStyle = 'white';
-        context.lineWidth = 1 / viewport.scale;
         var radius = handleRadius / viewport.scale;
         for(var property in handles) {
             var handle = handles[property];
-            if(handle.active == true) {
+            if(handle.active || handle.highlight) {
+                context.beginPath();
+                if(handle.active)
+                {
+                    context.lineWidth = 1 / viewport.scale;
+                }
+                else
+                {
+                    context.lineWidth = .5 / viewport.scale;
+                }
                 context.arc(handle.x, handle.y, radius, 0, 2 * Math.PI);
+                context.stroke();
             }
         }
-    };
+    }
+
+    function moveAllHandles(e, data)
+    {
+        var element = e.currentTarget;
+
+        var lastCoord = cornerstone.pageToImage(element, e.pageX, e.pageY);
+
+        $(document).mousemove(function(e) {
+            var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
+            for(var property in data.handles) {
+                var handle = data.handles[property];
+                handle.x += coords.x - lastCoord.x;
+                handle.y += coords.y - lastCoord.y;
+            }
+            lastCoord = coords;
+            cornerstone.updateImage(element);
+        });
+
+        $(document).mouseup(function(e) {
+            data.moving = false;
+            $(document).unbind('mousemove');
+            $(document).unbind('mouseup');
+            cornerstone.updateImage(element);
+        });
+
+        return true;
+    }
 
     // module/private exports
     cornerstoneTools.findHandleNear = findHandleNear;
@@ -105,6 +153,8 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
     cornerstoneTools.drawHandles = drawHandles;
     cornerstoneTools.activateNearbyHandle = activateNearbyHandle;
     cornerstoneTools.handleHandle = handleHandle;
+    cornerstoneTools.setHighlightForAllHandles = setHighlightForAllHandles;
+    cornerstoneTools.moveAllHandles = moveAllHandles;
 
     return cornerstoneTools;
 }($, cornerstone, cornerstoneCore, cornerstoneTools));

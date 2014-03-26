@@ -31,6 +31,7 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
                 $(document).unbind('mousemove');
                 $(document).unbind('mouseup');
             });
+            e.stopPropagation();
         }
     };
 

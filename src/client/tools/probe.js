@@ -15,6 +15,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
                 end: {
                     x : coords.x,
                     y : coords.y,
+                    highlight: true,
                     active: true
                 }
             }
