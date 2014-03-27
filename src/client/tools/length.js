@@ -37,6 +37,8 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         cornerstoneTools.handleHandle(e, data.handles.end);
     }
 
+
+
     function onMouseDown(e) {
         var eventData = e.data;
         if(e.which == eventData.whichMouseButton) {
@@ -61,7 +63,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
                 for(var i=0; i < toolData.data.length; i++) {
                     var data = toolData.data[i];
                     if(pointNearTool(data, coords)) {
-                        cornerstoneTools.moveAllHandles(e, data);
+                        cornerstoneTools.moveAllHandles(e, data, toolData, true);
                         e.stopImmediatePropagation();
                         return;
                     }

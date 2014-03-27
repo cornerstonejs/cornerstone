@@ -19,7 +19,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             }
         }
         return undefined;
-    };
+    }
 
     function getActiveHandle(handles) {
         for(var property in handles) {
@@ -29,7 +29,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             }
         }
         return undefined;
-    };
+    }
 
     function activateNearbyHandle(handles, imagePoint, scale)
     {
@@ -46,9 +46,9 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             return true;
         }
         return false;
-    };
+    }
 
-    function handleCursorNearHandle(e, data, coords, scale) {
+    function handleCursorNearHandle(e, data, coords, scale, deleteToolDataWhenDone) {
 
         if(data.visible === false) {
             return false;
@@ -62,9 +62,9 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
 
         return handleHandle(e, nearbyHandle);
 
-    };
+    }
 
-    function handleHandle(e, handle)
+    function handleHandle(e, handle, deleteToolDataWhenDone)
     {
         var element = e.currentTarget;
 
@@ -79,6 +79,26 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             handle.active = false;
             $(document).unbind('mousemove');
             $(document).unbind('mouseup');
+
+            /*
+            if(deleteToolDataWhenDone === true) {
+                var toolData = cornerstoneTools.getToolState(e.currentTarget, toolType);
+                var indexOfData = -1;
+                for(var i = 0; i < toolData.data.length; i++) {
+                    if(toolData.data[i] === data)
+                    {
+                        console.log("found tool");
+                        indexOfData = i;
+                    }
+                }
+                if(indexOfData !== -1) {
+                    console.log("deleteing tool");
+                    toolData.data.splice(indexOfData, 1);
+                }
+
+            }
+            */
+
             cornerstone.updateImage(element);
         });
 
@@ -120,7 +140,19 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         }
     }
 
-    function moveAllHandles(e, data)
+    function pointOutsideImage(point, image)
+    {
+        if( point.x < 0
+            || point.x > image.width
+            || point.y < 0
+            || point.y > image.height)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    function moveAllHandles(e, data, toolData, deleteIfHandleOutsideImage)
     {
         var element = e.currentTarget;
 
@@ -141,6 +173,37 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             data.moving = false;
             $(document).unbind('mousemove');
             $(document).unbind('mouseup');
+            // If any handle is outside the image, delete the tool data
+
+            if(deleteIfHandleOutsideImage === true) {
+                var image = cornerstone.getEnabledElement(element).image;
+                var handleOutsideImage = false;
+                for(var property in data.handles) {
+                    var handle = data.handles[property];
+                    if(pointOutsideImage(handle, image)
+                        || pointOutsideImage(data.handles.end, image))
+                    {
+                        handleOutsideImage = true;
+                    }
+                }
+
+                if(handleOutsideImage)
+                {
+                    // find this tool data
+                    var indexOfData = -1;
+                    for(var i = 0; i < toolData.data.length; i++) {
+                        if(toolData.data[i] === data)
+                        {
+                            console.log("found tool");
+                            indexOfData = i;
+                        }
+                    }
+                    if(indexOfData !== -1) {
+                        console.log("deleteing tool");
+                        toolData.data.splice(indexOfData, 1);
+                    }
+                }
+            }
             cornerstone.updateImage(element);
         });
 

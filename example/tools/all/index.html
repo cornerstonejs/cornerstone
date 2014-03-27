@@ -23,10 +23,47 @@
         tools/all/index.html
     </h1>
     This example illustrates most of cornerstone's functionality all in one page.
+    Scroll to the bottom of the page to see the list of functionality in this example.
     <br>
     <br>
     <strong>Please use Google Chrome if possible
     as this is the primary browser used for development and testing for other browsers is not done as regularly.</strong>
+    <br>
+    <br>
+
+
+
+    <button id="enableWindowLevelTool" type="button" class="btn">WW/WC</button>
+    <button id="enableLength" type="button" class="btn">Length</button>
+    <button id="probe" type="button" class="btn">Probe</button>
+    <button id="circleroi" type="button" class="btn">Elliptical ROI</button>
+    <button id="rectangleroi" type="button" class="btn">Rectangle ROI</button>
+
+    <br>
+    <div style="width:512px;height:512px;position:relative;color: white;display:inline-block"
+         oncontextmenu="return false"
+         class='disable-selection noIbar'
+         unselectable='on'
+         onselectstart='return false;'
+         onmousedown='return false;'>
+        <div id="dicomImage"
+             style="width:512px;height:512px;top:0px;left:0px; position:absolute">
+        </div>
+        <div id="mrtopleft" style="position: absolute;top:0px; left:0px">
+            Patient Name
+        </div>
+        <div id="mrtopright" style="position: absolute;top:0px; right:0px">
+            Hospital
+        </div>
+        <div id="mrbottomright" style="position: absolute;bottom:0px; right:0px">
+            Zoom:
+        </div>
+        <div id="mrbottomleft" style="position: absolute;bottom:0px; left:0px">
+            WW/WC:
+        </div>
+
+    </div>
+
     <br>
     <br>
 
@@ -60,39 +97,7 @@
         <li>Tool deletion (not implemented yet)</li>
     </ul>
 
-    <br>
-    <br>
 
-    <button id="enableWindowLevelTool" type="button" class="btn">WW/WC</button>
-    <button id="enableLength" type="button" class="btn">Length</button>
-    <button id="probe" type="button" class="btn">Probe</button>
-    <button id="circleroi" type="button" class="btn">Elliptical ROI</button>
-    <button id="rectangleroi" type="button" class="btn">Rectangle ROI</button>
-
-    <br>
-    <div style="width:512px;height:512px;position:relative;color: white;display:inline-block"
-         oncontextmenu="return false"
-         class='disable-selection noIbar'
-         unselectable='on'
-         onselectstart='return false;'
-         onmousedown='return false;'>
-        <div id="dicomImage"
-             style="width:512px;height:512px;top:0px;left:0px; position:absolute">
-        </div>
-        <div id="mrtopleft" style="position: absolute;top:0px; left:0px">
-            Patient Name
-        </div>
-        <div id="mrtopright" style="position: absolute;top:0px; right:0px">
-            Hospital
-        </div>
-        <div id="mrbottomright" style="position: absolute;bottom:0px; right:0px">
-            Zoom:
-        </div>
-        <div id="mrbottomleft" style="position: absolute;bottom:0px; left:0px">
-            WW/WC:
-        </div>
-
-    </div>
 
 </body>
 
