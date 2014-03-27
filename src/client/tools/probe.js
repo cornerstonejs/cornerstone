@@ -41,8 +41,9 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             if(toolData !== undefined) {
                 for(var i=0; i < toolData.data.length; i++) {
                     var data = toolData.data[i];
-                    if(cornerstoneTools.handleCursorNearHandle(e, data, coords, viewport.scale) == true) {
-                        e.stopPropagation();
+                    if(cornerstoneTools.findHandleNear(data.handles, coords, viewport.scale)) {
+                        cornerstoneTools.moveAllHandles(e, data, toolData, true);
+                        e.stopImmediatePropagation();
                         return;
                     }
                 }
@@ -107,6 +108,11 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         for(var i=0; i < toolData.data.length; i++) {
             context.save();
             var data = toolData.data[i];
+
+            // draw the handles
+            context.beginPath();
+            cornerstoneTools.drawHandles(context, e.detail.viewport, data.handles, e.detail.viewport.scale);
+            context.stroke();
 
             // Draw text
             var fontParameters = csc.setToFontCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext, 15);
