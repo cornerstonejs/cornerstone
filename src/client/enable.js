@@ -13,6 +13,16 @@ var cornerstone = (function (cornerstone, csc) {
 
         var viewport = cornerstone.resetViewport(element, canvas, image);
 
+        // merge viewportOptions into this viewport
+        if(viewportOptions) {
+            for(var property in viewport)
+            {
+                if(viewportOptions[property] !== null) {
+                    viewport[property] = viewportOptions[property];
+                }
+            }
+        }
+
         var el = {
             element: element,
             canvas: canvas,
