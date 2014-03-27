@@ -1,8 +1,16 @@
 Roadmap
 ========
 
-Phase 2 (in progress)
--------
+Phase 3 (in progress)
+---------------------
+ * Code cleanup / refactoring / documentation
+ * run jshint on build
+ * ImageLoader design
+ * ImageLoader API Documentation
+ * WADO ImageLoader plugin
+
+Phase 2 (complete)
+------------------
  * Tool framework
    * Data management
    * Handle helpers
@@ -28,7 +36,7 @@ Phase 2 (in progress)
 
 
 Phase 1 / proof of concept (DONE!)
--------
+----------------------------------
  * Target browser OS: Mac OS X (desktop)
  * Target browser: Google Chrome
  * Display of 16 bit unsigned MRI Image from pixel data embedded in javascript (no server)

@@ -20,7 +20,7 @@ Project Vision
  * Easily extendable by developers to add custom tools (e.g. measurement, ROI, filters, etc)
 
 Status
-=====
+======
 
 **Project Status: Alpha**
 
@@ -44,4 +44,10 @@ Links
 
 [Trello](https://trello.com/b/tGTDIyt4/cornerstone)
 
-Feel free to drop me an email with any questions at [chafey@gmail.com](emailto:chafey@gmailcom)
+
+Copyright
+=========
+
+Copyright 2014 Chris Hafey [chafey@gmail.com](mailto:chafey@gmail.com)
+
+
