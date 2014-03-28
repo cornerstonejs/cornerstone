@@ -8,6 +8,7 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
 
 
         var eventData = e.data;
+        var element = e.currentTarget;
         if(e.which == eventData.whichMouseButton) {
 
             var lastX = e.pageX;

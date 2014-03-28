@@ -255,46 +255,60 @@ var cornerstone = (function (cornerstone, csc) {
         canvas.height = element.clientHeight;
         element.appendChild(canvas);
 
-        var image = cornerstone.loadImage(imageId);
-
-        var viewport = cornerstone.resetViewport(element, canvas, image);
-
-        // merge viewportOptions into this viewport
-        if(viewportOptions) {
-            for(var property in viewport)
-            {
-                if(viewportOptions[property] !== null) {
-                    viewport[property] = viewportOptions[property];
-                }
-            }
-        }
-
         var el = {
             element: element,
             canvas: canvas,
             ids : {
                 imageId: imageId
             },
-            image:image,
-            viewport : viewport,
             data : {}
         };
         cornerstone.addEnabledElement(el);
-        cornerstone.updateImage(element);
 
-        var event = new CustomEvent(
-            "CornerstoneViewportUpdated",
-            {
-                detail: {
-                    viewport: viewport,
-                    element: element,
-                },
-                bubbles: false,
-                cancelable: false
+
+        var loadImageDeferred = cornerstone.loadImage(imageId);
+        loadImageDeferred.done(function(image){
+            var viewport = cornerstone.resetViewport(element, canvas, image);
+
+            // merge viewportOptions into this viewport
+            if(viewportOptions) {
+                for(var property in viewport)
+                {
+                    if(viewportOptions[property] !== null) {
+                        viewport[property] = viewportOptions[property];
+                    }
+                }
             }
-        );
-        element.dispatchEvent(event);
 
+            /*var el = {
+                element: element,
+                canvas: canvas,
+                ids : {
+                    imageId: imageId
+                },
+                image:image,
+                viewport : viewport,
+                data : {}
+            };
+            */
+            //var el = cornerstone.getEnabledElement(el);
+            el.image = image;
+            el.viewport = viewport;
+            cornerstone.updateImage(element);
+
+            var event = new CustomEvent(
+                "CornerstoneViewportUpdated",
+                {
+                    detail: {
+                        viewport: viewport,
+                        element: element,
+                    },
+                    bubbles: false,
+                    cancelable: false
+                }
+            );
+            element.dispatchEvent(event);
+        });
     }
 
 
@@ -499,18 +513,22 @@ var cornerstone = (function (cornerstone, csc) {
     {
         enabledElement = cornerstone.getEnabledElement(element);
         enabledElement.ids.imageId = imageId;
-        enabledElement.image = cornerstone.loadImage(imageId);
+        var loadImageDeferred = cornerstone.loadImage(imageId);
 
-        // merge
-        if(viewportOptions) {
-            for(var attrname in viewportOptions)
-            {
-                if(viewportOptions[attrname] !== null) {
-                    enabledElement.viewport[attrname] = viewportOptions[attrname];
+        loadImageDeferred.done(function(image) {
+            enabledElement.image = image;
+            // merge
+            if(viewportOptions) {
+                for(var attrname in viewportOptions)
+                {
+                    if(viewportOptions[attrname] !== null) {
+                        enabledElement.viewport[attrname] = viewportOptions[attrname];
+                    }
                 }
             }
-        }
-        cornerstone.updateImage(element);
+            cornerstone.updateImage(element);
+        });
+
     }
 
     // shows a new stack
@@ -802,3 +820,614 @@ var cornerstone = (function (cornerstone, csc) {
     cornerstone.registerUnknownImageLoader(loadImage);
 
 }(cornerstone));
+//
+// This is a very simple DICOM Parser for parsing DICOM Part 10 encoded byte streams
+// Functionality Implemented:
+//  * DICOM Part10 header verification
+//  * Explicit Little Endian Transfer Syntax
+//  * Implicit Little Endian Transfer Syntax
+//  * Extracting string VR types
+//  * Extracting US and UL VR types
+//  * Offset of the data for each attribute so the caller can parse the data as it likes
+//  * Sequences of known and unknown length with items containing known and unknown lengths
+//  TOOD: Look into encapsulated multiframe as I seem to recall some trickerie associated with it
+//
+
+(function (cornerstone) {
+
+    function readUint32(dicomFileAsBytes, offset)
+    {
+        return dicomFileAsBytes[offset]
+            + (dicomFileAsBytes[offset+1] << 8)
+            + (dicomFileAsBytes[offset + 2] << 16)
+            + (dicomFileAsBytes[offset + 3] << 24);
+    }
+
+    function readUint16(dicomFileAsBytes, offset)
+    {
+        return dicomFileAsBytes[offset] + (dicomFileAsBytes[offset+1] << 8);
+    }
+
+    function readString(dicomFileAsBytes, offset, length)
+    {
+        var result = "";
+        for(var i=0; i < length; i++)
+        {
+            var byte = dicomFileAsBytes[offset + i];
+            if(byte != 0) {
+                result += String.fromCharCode(byte);
+            }
+        }
+        return result;
+    }
+
+    function prefixIsInvalid(data) {
+        return (
+            data[128] !== 68 || // D
+            data[129] !== 73 || // I
+            data[130] !== 67 || // C
+            data[131] !== 77);  // M
+    }
+
+    function getDataLengthSizeInBytesForVR(vr)
+    {
+        if(vr === 'OB'
+            || vr === 'OW'
+            || vr === 'SQ'
+            || vr === 'OF'
+            || vr === 'UT'
+            || vr === 'UN')
+        {
+            return 4;
+        }
+        else {
+            return 2;
+        }
+    }
+
+    function setLengthAndDataOffsetExplicit(data, offset, attr)
+    {
+        var dataLengthSizeBytes = getDataLengthSizeInBytesForVR(attr.vr);
+        if(dataLengthSizeBytes === 2) {
+            attr.length = readUint16(data, offset+6);
+            attr.dataOffset = offset + 8;
+        } else {
+            attr.length = readUint32(data, offset+8);
+            attr.dataOffset = offset + 12;
+        }
+    }
+
+    function setLengthAndDataOffsetImplicit(data, offset, attr)
+    {
+        attr.length = readUint32(data, offset+4);
+        attr.dataOffset = offset + 8;
+    }
+
+    function isStringVr(vr)
+    {
+        if(vr === 'AT'
+            || vr === 'FL'
+            || vr === 'FD'
+            || vr === 'OB'
+            || vr === 'OF'
+            || vr === 'OW'
+            || vr === 'SI'
+            || vr === 'SQ'
+            || vr === 'SS'
+            || vr === 'UL'
+            || vr === 'US'
+            )
+        {
+            return false;
+        }
+        return true;
+    }
+
+    function parseSQItemUndefinedLength(data, sqItem, offset, explicit)
+    {
+        // scan up until we find a item delimiter tag
+        while(offset < data.length) {
+            var group = readUint16(data, offset);
+            var element = readUint16(data, offset+2);
+
+            // we hit an item delimeter tag, return the current offset to market
+            // the end of this sequence item
+            if(group === 0xfffe && element === 0xe00d)
+            {
+                // NOTE: There should be 0x00000000 following the group/element but there really is no
+                // use in checking it - what are we gonna do if it isn't 0:?
+                return offset + 8;
+            }
+
+            var attr =
+            {
+                group : group,
+                element: element,
+                tag : 'x' + ('00000000' + ((group << 16) + element).toString(16)).substr(-8),
+
+                vr : '', // set below if explit
+                length: 0, // set below
+                dataOffset: 0 // set below
+                // properties are added here with the extracted data for the supported VRs
+            };
+
+            if(explicit === true) {
+                attr.vr = readString(data, offset+4, 2);
+                setLengthAndDataOffsetExplicit(data, offset, attr);
+                setDataExplicit(data, attr);
+            }
+            else
+            {
+                setLengthAndDataOffsetImplicit(data, offset, attr);
+                setDataImplicit(data, attr);
+            }
+
+            offset = attr.dataOffset + attr.length;
+            sqItem[attr.tag] = attr;
+        }
+
+        // Buffer overread!  Return current offset so at least they get the data we did read.  Would be nice
+        // to indicate the caller this happened though...
+        return offset;
+    }
+
+    // TODO: Find some data to verify this with
+    function parseSQItemKnownLength(data, itemLength, sqItem, offset, explicit)
+    {
+        // Sanity check the offsets
+        if(offset + itemLength > data.length)
+        {
+            throw "sequence item offsets mismatch";
+        }
+
+        // scan up until we find a item delimiter tag
+        while(offset < offset + itemLength ) {
+            var group = readUint16(data, offset);
+            var element = readUint16(data, offset+2);
+
+            var attr =
+            {
+                group : group,
+                element: element,
+                tag : 'x' + ('00000000' + ((group << 16) + element).toString(16)).substr(-8),
+
+                vr : '', // set below if explit
+                length: 0, // set below
+                dataOffset: 0 // set below
+                // properties are added here with the extracted data for the supported VRs
+            };
+
+            if(explicit === true) {
+                attr.vr = readString(data, offset+4, 2);
+                setLengthAndDataOffsetExplicit(data, offset, attr);
+                setDataExplicit(data, attr);
+            }
+            else
+            {
+                setLengthAndDataOffsetImplicit(data, offset, attr);
+                setDataImplicit(data, attr);
+            }
+
+            offset = attr.dataOffset + attr.length;
+            sqItem[attr.tag] = attr;
+        }
+
+        // TODO: Might be good to sanity check offsets and tell user if the overran the buffer
+    }
+
+    function parseSQElementUndefinedLength(data, attr, explicit)
+    {
+        attr.items = [];
+        var offset = attr.dataOffset;
+        while(offset < data.length) {
+            var group = readUint16(data, offset);
+            var element = readUint16(data, offset+2);
+            var itemLength = readUint32(data, offset+4);
+            offset += 8;
+
+            if(group === 0xFFFE && element === 0xE0DD) {
+                // sequence delimitation item, update attr data length and return
+                attr.length = offset - attr.dataOffset;
+                return;
+            }
+            else {
+
+                var sqItem = {};
+                attr.items.push(sqItem);
+
+                if(itemLength === -1)
+                {
+                    offset = parseSQItemUndefinedLength(data, sqItem, offset, explicit);
+                } else {
+                    parseSQItemKnownLength(data, itemLength, sqItem, offset, explicit);
+                    offset += itemLength;
+                }
+            }
+        }
+
+        // Buffer overread!  Return current offset so at least they get the data we did read.  Would be nice
+        // to indicate the caller this happened though...
+        return offset;
+    }
+
+    // TODO: Find some data to verify this with
+    function parseSQElementKnownLength(data, attr)
+    {
+        attr.items = [];
+        var offset = attr.dataOffset;
+        while(offset < data.dataOffset + data.length) {
+            var group = readUint16(data, offset);
+            var element = readUint16(data, offset+2);
+            var itemLength = readUint32(data, offset+4);
+            offset += 8;
+
+            var sqItem = {};
+            attr.items.push(sqItem);
+
+            if(itemLength === -1)
+            {
+                offset = parseSQItemUndefinedLength(data, sqItem, offset, explicit);
+            } else {
+                parseSQItemKnownLength(data, itemLength, sqItem, offset, explicit);
+                offset += itemLength;
+            }
+        }
+
+        // TODO: Might be good to sanity check offsets and tell user if the overran the buffer
+    }
+
+    function setDataExplicit(data, attr)
+    {
+        if(isStringVr(attr.vr)) {
+            attr.str = readString(data, attr.dataOffset, attr.length);
+        } else if(attr.vr == 'UL') {
+            attr.uint32 = readUint32(data, attr.dataOffset);
+        } else if(attr.vr == 'US') {
+            attr.uint16 = readUint16(data, attr.dataOffset);
+        }
+        else if(attr.vr == 'SQ') {
+            if(attr.length === -1)
+            {
+                parseSQElementUndefinedLength(data, attr, true);
+            }
+            else
+            {
+                parseSQElementKnownLength(data, attr);
+            }
+        }
+    }
+
+    function setDataImplicit(data, attr)
+    {
+        // most attributes are strings so assume it is one.  We could be smarter
+        // here and use heuristics but that would be almost the same as doing
+        // the conversion anyway.  The data offset is included in the attribute
+        // so the caller can use a data dictionary if desired
+        attr.str = readString(data, attr.dataOffset, attr.length);
+
+        // try to convert into a uint32 or uint16 if the length
+        if(attr.length === 4) {
+            attr.uint32 = readUint32(data, attr.dataOffset);
+        } else if(attr.length === 2) {
+            attr.uint16 = readUint16(data, attr.dataOffset);
+        }
+    }
+
+    function readAttribute(data, offset, explicit)
+    {
+        var group = readUint16(data, offset);
+        var element = readUint16(data, offset+2);
+
+        var attr =
+        {
+            group : group,
+            element: element,
+            tag : 'x' + ('00000000' + ((group << 16) + element).toString(16)).substr(-8),
+
+            vr : '', // set below if explit
+            length: 0, // set below
+            dataOffset: 0 // set below
+            // properties are added here with the extracted data for the supported VRs
+        };
+
+        if(explicit === true) {
+            attr.vr = readString(data, offset+4, 2);
+            setLengthAndDataOffsetExplicit(data, offset, attr);
+            setDataExplicit(data, attr);
+        }
+        else
+        {
+            setLengthAndDataOffsetImplicit(data, offset, attr);
+            setDataImplicit(data, attr);
+        }
+
+        return attr;
+    }
+
+    function isExplicit(dicomFields) {
+        var transferSyntax = dicomFields.x00020010.str;
+        if(transferSyntax === '1.2.840.10008.1.2')
+        {
+            return false;
+        }
+        else if(transferSyntax === '1.2.840.10008.1.2.2')  // explicit big endian  not supported
+        {
+            return undefined;
+        }
+        // all other transfer syntaxes should be explicit
+        return true;
+    }
+
+    //
+    // Parses a DICOM Part 10 byte stream and returns a javascript
+    // object containing properties for each element found named
+    // using its tag.  For example, the Rows attribute 0028,0010 would
+    // be named 'x00280010'.  dicomFileAsArrayBuffer is an ArrayBuffer
+    // that contains the DICOM Part 10 byte stream
+    //
+    function parseDicom(dicomPart10AsArrayBuffer)
+    {
+        var data = new Uint8Array(dicomPart10AsArrayBuffer);
+
+        if(prefixIsInvalid(data)) {
+            return undefined;
+        }
+
+        var fields = {};
+
+        var offset = 132; // position offset at the first part 10 header attribute
+
+        // read the group length attribute
+        var groupLength = readAttribute(data, offset, true);
+        offset = groupLength.dataOffset + groupLength.length;
+
+        var offsetOfFirstElementAfterMetaHeader = groupLength.dataOffset + groupLength.uint32 + 4;
+
+        // read part 10 header
+        while(offset < offsetOfFirstElementAfterMetaHeader)
+        {
+            var attr = readAttribute(data, offset, true);
+            offset = attr.dataOffset + attr.length;
+            fields[attr.tag] = attr;
+        }
+
+        // Check to see if this is explicit little endian or explicit little encoding
+        // NOT: Big endian is not supported (and not widely used nowadays)
+        var explicit = isExplicit(fields);
+        if(explicit == undefined)
+        {
+            return undefined;
+        }
+
+        // Now read the rest of the attributes
+        while(offset < data.length) {
+            var attr = readAttribute(data, offset, explicit);
+            offset = attr.dataOffset + attr.length;
+            fields[attr.tag] = attr;
+        }
+
+        return fields;
+    }
+
+    cornerstone.parseDicom = parseDicom;
+
+    return cornerstone;
+}(cornerstone));
+//
+// This is a cornerstone image loader for WADO requests.  It currently only supports WADO objects returned in
+// explit little endian transfer syntax so the WADO URL should include &transferSyntax=1.2.840.10008.1.2.1
+// if needed
+//
+
+(function ($, cornerstone) {
+
+    function getPixelSpacing(dicomElements)
+    {
+        // NOTE - these are not required for all SOP Classes
+        // so we return them as undefined.  We also do not
+        // deal with the complexity associated with projection
+        // radiographs here and leave that to a higher layer
+        var pixelSpacingAttr  = dicomElements.x00280030;
+        if(pixelSpacingAttr && pixelSpacingAttr.str.length > 0) {
+            var split = pixelSpacingAttr.str.split('\\');
+            var result =
+            {
+                row: parseFloat(split[0]),
+                column: parseFloat(split[1])
+            };
+            return result;
+        }
+        else {
+            var result =
+            {
+                row: undefined,
+                column: undefined
+            };
+            return result;
+        }
+    }
+
+    function getPixelFormat(dicomElements) {
+        // NOTE - this should work for color images too - need to test
+        var pixelRepresentation = dicomElements.x00280103.uint16;
+        var bitsAllocated = dicomElements.x00280100.uint16;
+        if(pixelRepresentation === 0 && bitsAllocated === 8) {
+            return 1; // unsigned 8 bit
+        } else if(pixelRepresentation === 0 && bitsAllocated === 16) {
+            return 2; // unsigned 16 bit
+        } else if(pixelRepresentation === 1 && bitsAllocated === 16) {
+            return 3; // signed 16 bit data
+        }
+    }
+
+    function extractStoredPixels(dicomElements, dicomPart10AsArrayBuffer)
+    {
+        var pixelFormat = getPixelFormat(dicomElements);
+        var pixelDataElement = dicomElements.x7fe00010;
+        var pixelDataOffset = pixelDataElement.dataOffset;
+
+        // Note - we may want to sanity check the rows * columns * bitsAllocated * samplesPerPixel against the buffer size
+
+        if(pixelFormat === 1) {
+            return new Uint8Array(dicomPart10AsArrayBuffer, pixelDataOffset);
+        }
+        else if(pixelFormat === 2) {
+            return new Uint16Array(dicomPart10AsArrayBuffer, pixelDataOffset);
+        }
+        else if(pixelFormat === 3) {
+            return new Int16Array(dicomPart10AsArrayBuffer, pixelDataOffset);
+        }
+    }
+
+    function getRescaleSlopeAndIntercept(dicomElements)
+    {
+        // NOTE - we default these to an identity transform since modality LUT
+        // module is not required for all SOP Classes
+        var result = {
+            intercept : 0.0,
+            slope: 1.0
+        };
+
+        var rescaleIntercept  = dicomElements.x00281052;
+        var rescaleSlope  = dicomElements.x00281053;
+
+
+        if(rescaleIntercept && rescaleIntercept.str.length > 0) {
+            result.intercept = parseFloat(rescaleIntercept.str);
+        }
+        if(rescaleSlope && rescaleSlope.str.length > 0) {
+            result.slope = parseFloat(rescaleSlope.str);
+        }
+        return result;
+    }
+
+    function getWindowWidthAndCenter(dicomElements)
+    {
+        // NOTE - Default these to undefined since they may not be present as
+        // they are not present or required for all sop classes.  We leave it up
+        // to a higher layer to determine reasonable default values for these
+        // if they are not provided.  We also use the first ww/wc values if
+        // there are multiple and again leave it up the higher levels to deal with
+        // this
+        var result = {
+            windowCenter : undefined,
+            windowWidth: undefined
+        };
+
+        var windowCenter  = dicomElements.x00281050;
+        var windowWidth  = dicomElements.x00281051;
+
+        if(windowCenter && windowCenter.str.length > 0) {
+            var split = windowCenter.str.split('\\');
+            result.windowCenter = parseFloat(split[0]);
+        }
+        if(windowWidth && windowWidth.str.length > 0) {
+            var split = windowWidth.str.split('\\');
+            result.windowWidth = parseFloat(split[0]);
+        }
+        return result;
+    }
+
+    function setMinMaxPixelValue(image)
+    {
+        // we always calculate the min max values since they are not always
+        // present in DICOM and we don't want to trust them anyway as cornerstone
+        // depends on us providing reliable values for these
+        var min = 65535;
+        var max = -32768;
+        var numPixels = image.width * image.height;
+        var pixelData = image.storedPixelData;
+        for(var index = 0; index < numPixels; index++) {
+            var spv = pixelData[index];
+            // TODO: test to see if it is faster to use conditional here rather than calling min/max functions
+            min = Math.min(min, spv);
+            max = Math.max(max, spv);
+        }
+
+        image.minPixelValue = min;
+        image.maxPixelValue = max;
+    }
+
+    function createImageObject(dicomPart10AsArrayBuffer)
+    {
+        // Parse the DICOM File
+        var dicomElements = cornerstone.parseDicom(dicomPart10AsArrayBuffer);
+
+        // extract the DICOM attributes we need
+        var pixelSpacing = getPixelSpacing(dicomElements);
+        var rows = dicomElements.x00280010.uint16;
+        var columns = dicomElements.x00280010.uint16;
+        var rescaleSlopeAndIntercept = getRescaleSlopeAndIntercept(dicomElements);
+        var windowWidthAndCenter = getWindowWidthAndCenter(dicomElements);
+
+        // Extract the various attributes we need
+        var image = {
+            minPixelValue : -32767, // calculated below
+            maxPixelValue : 65535, // calculated below
+            slope: rescaleSlopeAndIntercept.slope,
+            intercept: rescaleSlopeAndIntercept.intercept,
+            windowCenter : windowWidthAndCenter.windowCenter,
+            windowWidth : windowWidthAndCenter.windowWidth,
+            storedPixelData: extractStoredPixels(dicomElements, dicomPart10AsArrayBuffer),
+            rows: rows,
+            columns: columns,
+            height: rows,
+            width: columns,
+            color: false,
+            columnPixelSpacing: pixelSpacing.column,
+            rowPixelSpacing: pixelSpacing.row,
+            data: dicomElements
+        };
+
+        // TODO: deal with pixel padding and all of the various issues by setting it to min pixel value (or lower)
+        // TODO: deal with MONOCHROME1 - either invert pixel data or add support to cornerstone
+        // TODO: Add support for color by converting all formats to RGB
+        // TODO: Mask out overlays embedded in pixel data above high bit
+
+        setMinMaxPixelValue(image);
+
+        return image;
+    }
+
+    // Loads an image given an imageId
+    // wado url example:
+    // http://localhost:3333/wado?requestType=WADO&studyUID=1.3.6.1.4.1.25403.166563008443.5076.20120418075541.1&seriesUID=1.3.6.1.4.1.25403.166563008443.5076.20120418075541.2&objectUID=1.3.6.1.4.1.25403.166563008443.5076.20120418075557.1&contentType=application%2Fdicom&transferSyntax=1.2.840.10008.1.2.1
+    // NOTE: supposedly the instance will be returned in Explicit Little Endian transfer syntax if you don't
+    // specify a transferSyntax but Osirix doesn't do this and seems to return it with the transfer syntax it is
+    // stored as.
+    function loadImage(imageId) {
+        // create a deferred object
+        // TODO: Consider not using jquery for deferred - maybe cujo's when library
+        var deferred = $.Deferred();
+
+        // Make the request for the DICOM data
+        // TODO: consider using cujo's REST library here?
+        var oReq = new XMLHttpRequest();
+        oReq.open("get", imageId, true);
+        oReq.responseType = "arraybuffer";
+        oReq.onreadystatechange = function(oEvent) {
+            // TODO: consider sending out progress messages here as we receive the pixel data
+            if(oReq.readyState == 4 && oReq.status == 200) {
+                // request succeeded, create an image object and resolve the deferred
+                // TODO: do error handling here in case something goes wrong parsing the response
+                var image = createImageObject(oReq.response);
+
+                deferred.resolve(image);
+            }
+            // TODO: Check for errors and reject the deferred if they happened
+            else {
+                // request failed, reject the deferred
+                //deferred.reject();
+            }
+        };
+        oReq.send();
+
+        return deferred;
+    }
+
+    // steam the http and https prefixes so we can use wado URL's directly
+    cornerstone.registerImageLoader('http', loadImage);
+    cornerstone.registerImageLoader('https', loadImage);
+
+    return cornerstone;
+}($, cornerstone));
