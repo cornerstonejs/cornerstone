@@ -835,7 +835,8 @@ var cornerstone = (function (cornerstone, csc) {
 //  Big Endian transfer syntaxes
 //
 
-(function (cornerstone) {
+(function (cornerstone)
+{
 
     function readUint32(data, offset)
     {
@@ -856,14 +857,16 @@ var cornerstone = (function (cornerstone, csc) {
         for(var i=0; i < length; i++)
         {
             var byte = data[offset + i];
-            if(byte != 0) {
+            if(byte != 0)
+            {
                 result += String.fromCharCode(byte);
             }
         }
         return result;
     }
 
-    function prefixIsInvalid(data) {
+    function prefixIsInvalid(data)
+    {
         return (
             data[128] !== 68 || // D
             data[129] !== 73 || // I
@@ -882,7 +885,8 @@ var cornerstone = (function (cornerstone, csc) {
         {
             return 4;
         }
-        else {
+        else
+        {
             return 2;
         }
     }
@@ -890,10 +894,13 @@ var cornerstone = (function (cornerstone, csc) {
     function setLengthAndDataOffsetExplicit(data, offset, element)
     {
         var dataLengthSizeBytes = getDataLengthSizeInBytesForVR(element.vr);
-        if(dataLengthSizeBytes === 2) {
+        if(dataLengthSizeBytes === 2)
+        {
             element.length = readUint16(data, offset+6);
             element.dataOffset = offset + 8;
-        } else {
+        }
+        else
+        {
             element.length = readUint32(data, offset+8);
             element.dataOffset = offset + 12;
         }
@@ -928,7 +935,8 @@ var cornerstone = (function (cornerstone, csc) {
     function parseSQItemUndefinedLength(data, offset, sqItem, explicit)
     {
         // scan up until we find a item delimiter tag
-        while(offset < data.length) {
+        while(offset < data.length)
+        {
             var groupNumber = readUint16(data, offset);
             var elementNumber = readUint16(data, offset+2);
 
@@ -953,7 +961,8 @@ var cornerstone = (function (cornerstone, csc) {
                 // properties are added here with the extracted data for the supported VRs
             };
 
-            if(explicit === true) {
+            if(explicit === true)
+            {
                 element.vr = readString(data, offset+4, 2);
                 setLengthAndDataOffsetExplicit(data, offset, element);
                 setDataExplicit(data, element);
@@ -983,7 +992,8 @@ var cornerstone = (function (cornerstone, csc) {
         }
 
         // scan up until we find a item delimiter tag
-        while(offset < offset + itemLength ) {
+        while(offset < offset + itemLength )
+        {
             var groupNumber = readUint16(data, offset);
             var elementNumber = readUint16(data, offset+2);
 
@@ -999,7 +1009,8 @@ var cornerstone = (function (cornerstone, csc) {
                 // properties are added here with the extracted data for the supported VRs
             };
 
-            if(explicit === true) {
+            if(explicit === true)
+            {
                 element.vr = readString(data, offset+4, 2);
                 setLengthAndDataOffsetExplicit(data, offset, element);
                 setDataExplicit(data, element);
@@ -1021,26 +1032,30 @@ var cornerstone = (function (cornerstone, csc) {
     {
         element.items = [];
         var offset = element.dataOffset;
-        while(offset < data.length) {
+        while(offset < data.length)
+        {
             var group = readUint16(data, offset);
             var elementNumber = readUint16(data, offset+2);
             var itemLength = readUint32(data, offset+4);
             offset += 8;
 
-            if(group === 0xFFFE && elementNumber === 0xE0DD) {
+            if(group === 0xFFFE && elementNumber === 0xE0DD)
+            {
                 // sequence delimitation item, update attr data length and return
                 element.length = offset - element.dataOffset;
                 return;
             }
-            else {
-
+            else
+            {
                 var sqItem = {};
                 element.items.push(sqItem);
 
                 if(itemLength === -1)
                 {
                     offset = parseSQItemUndefinedLength(data, offset, sqItem, explicit);
-                } else {
+                }
+                else
+                {
                     parseSQItemKnownLength(data, offest, itemLength, sqItem, explicit);
                     offset += itemLength;
                 }
@@ -1057,7 +1072,8 @@ var cornerstone = (function (cornerstone, csc) {
     {
         element.items = [];
         var offset = element.dataOffset;
-        while(offset < data.dataOffset + data.length) {
+        while(offset < data.dataOffset + data.length)
+        {
             var groupNumber = readUint16(data, offset);
             var elementNumber = readUint16(data, offset+2);
             var itemLength = readUint32(data, offset+4);
@@ -1066,9 +1082,12 @@ var cornerstone = (function (cornerstone, csc) {
             var sqItem = {};
             element.items.push(sqItem);
 
-            if(itemLength === -1) {
+            if(itemLength === -1)
+            {
                 offset = parseSQItemUndefinedLength(data, offset, sqItem, explicit);
-            } else {
+            }
+            else
+            {
                 parseSQItemKnownLength(data, offset, itemLength, sqItem, explicit);
                 offset += itemLength;
             }
@@ -1077,19 +1096,26 @@ var cornerstone = (function (cornerstone, csc) {
         // TODO: Might be good to sanity check offsets and tell user if the overran the buffer
     }
 
+    // this function converts the data associated with the element
+    // into the right type based on the VR and adds it to the element
     function setDataExplicit(data, element)
     {
-        // Here we cast the raw data to the right data type based on the VR.
 
         // TODO: add conversions for the other VR's
-        if(isStringVr(element.vr)) {
+        if(isStringVr(element.vr))
+        {
             element.str = readString(data, element.dataOffset, element.length);
-        } else if(element.vr == 'UL') {
+        }
+        else if(element.vr == 'UL')
+        {
             element.uint32 = readUint32(data, element.dataOffset);
-        } else if(element.vr == 'US') {
+        }
+        else if(element.vr == 'US')
+        {
             element.uint16 = readUint16(data, element.dataOffset);
         }
-        else if(element.vr == 'SQ') { // TODO: UN, OB, OW
+        else if(element.vr == 'SQ')  // TODO: UN, OB, OW
+        {
             if(element.length === -1)
             {
                 parseSQElementUndefinedLength(data, element, true);
@@ -1117,9 +1143,12 @@ var cornerstone = (function (cornerstone, csc) {
         // provide uint32 and uint16 data if the length is right for
         // those data types.  This obviously won't be meaningful
         // in all cases (e.g. a string could be 4 bytes long)
-        if(element.length === 4) {
+        if(element.length === 4)
+        {
             element.uint32 = readUint32(data, element.dataOffset);
-        } else if(attr.length === 2) {
+        }
+        else if(attr.length === 2)
+        {
             element.uint16 = readUint16(data, element.dataOffset);
         }
     }
@@ -1140,7 +1169,8 @@ var cornerstone = (function (cornerstone, csc) {
             //dataOffset: 0 // set below
         };
 
-        if(explicit === true) {
+        if(explicit === true)
+        {
             element.vr = readString(data, offset+4, 2);
             setLengthAndDataOffsetExplicit(data, offset, element);
             setDataExplicit(data, element);
@@ -1180,7 +1210,8 @@ var cornerstone = (function (cornerstone, csc) {
         var data = new Uint8Array(dicomPart10AsArrayBuffer);
 
         // Make sure we have a DICOM P10 File
-        if(prefixIsInvalid(data)) {
+        if(prefixIsInvalid(data))
+        {
             return undefined;
         }
 
@@ -1211,7 +1242,8 @@ var cornerstone = (function (cornerstone, csc) {
         }
 
         // Now read the rest of the elements
-        while(offset < data.length) {
+        while(offset < data.length)
+        {
             var element = readElement(data, offset, explicit);
             offset = element.dataOffset + element.length;
             elements[element.tag] = element;
