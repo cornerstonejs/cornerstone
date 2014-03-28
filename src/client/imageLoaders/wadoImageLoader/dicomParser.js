@@ -115,44 +115,19 @@
         // scan up until we find a item delimiter tag
         while(offset < data.length)
         {
-            var groupNumber = readUint16(data, offset);
-            var elementNumber = readUint16(data, offset+2);
+            var element = readElement(data, offset, explicit);
+            offset = element.dataOffset + element.length;
+            sqItem[element.tag] = element;
 
             // we hit an item delimeter tag, return the current offset to market
             // the end of this sequence item
-            if(groupNumber === 0xfffe && elementNumber === 0xe00d)
+            if(element.groupNumber === 0xfffe && element.elementNumber === 0xe00d)
             {
                 // NOTE: There should be 0x00000000 following the group/element but there really is no
                 // use in checking it - what are we gonna do if it isn't 0:?
-                return offset + 8;
+                return offset;
             }
 
-            var element =
-            {
-                groupNumber : groupNumber,
-                elementNumber: elementNumber,
-                tag : 'x' + ('00000000' + ((groupNumber << 16) + elementNumber).toString(16)).substr(-8),
-
-                vr : '', // set below if explit
-                length: 0, // set below
-                dataOffset: 0 // set below
-                // properties are added here with the extracted data for the supported VRs
-            };
-
-            if(explicit === true)
-            {
-                element.vr = readString(data, offset+4, 2);
-                setLengthAndDataOffsetExplicit(data, offset, element);
-                setDataExplicit(data, element);
-            }
-            else
-            {
-                setLengthAndDataOffsetImplicit(data, offset, element);
-                setDataImplicit(data, element);
-            }
-
-            offset = element.dataOffset + element.length;
-            sqItem[element.tag] = element;
         }
 
         // Buffer overread!  Return current offset so at least they get the data we did read.  Would be nice
@@ -172,38 +147,40 @@
         // scan up until we find a item delimiter tag
         while(offset < offset + itemLength )
         {
-            var groupNumber = readUint16(data, offset);
-            var elementNumber = readUint16(data, offset+2);
-
-            var element =
-            {
-                groupNumber : groupNumber,
-                elementNumber: elementNumber,
-                tag : 'x' + ('00000000' + ((groupNumber << 16) + elementNumber).toString(16)).substr(-8),
-
-                //vr : '', // set below if explit
-                //length: 0, // set below
-                //dataOffset: 0 // set below
-                // properties are added here with the extracted data for the supported VRs
-            };
-
-            if(explicit === true)
-            {
-                element.vr = readString(data, offset+4, 2);
-                setLengthAndDataOffsetExplicit(data, offset, element);
-                setDataExplicit(data, element);
-            }
-            else
-            {
-                setLengthAndDataOffsetImplicit(data, offset, element);
-                setDataImplicit(data, element);
-            }
-
+            var element = readElement(data, offset, explicit);
             offset = element.dataOffset + element.length;
             sqItem[element.tag] = element;
         }
 
         // TODO: Might be good to sanity check offsets and tell user if the overran the buffer
+    }
+
+    function readSequenceItem(data, offset, explicit)
+    {
+        var groupNumber = readUint16(data, offset);
+        var elementNumber = readUint16(data, offset+2);
+        var itemLength = readUint32(data, offset+4);
+        offset += 8;
+
+        var item =
+        {
+            groupNumber: groupNumber,
+            elementNumber: elementNumber,
+            elements : {},
+            length: itemLength,
+            dataOffset: offset
+        };
+
+        if(itemLength === -1)
+        {
+            offset = parseSQItemUndefinedLength(data, offset, item, explicit);
+            item.length = offset - item.dataOffset;
+        }
+        else
+        {
+            parseSQItemKnownLength(data, offset, itemLength, item, explicit);
+        }
+        return item;
     }
 
     function parseSQElementUndefinedLength(data, element, explicit)
@@ -212,31 +189,16 @@
         var offset = element.dataOffset;
         while(offset < data.length)
         {
-            var group = readUint16(data, offset);
-            var elementNumber = readUint16(data, offset+2);
-            var itemLength = readUint32(data, offset+4);
-            offset += 8;
+            var item = readSequenceItem(data, offset, explicit);
+            offset += item.length + 8;
+            element.items.push(item);
 
-            if(group === 0xFFFE && elementNumber === 0xE0DD)
+            // If this is the sequence delimitiation item, return the offset of the next element
+            if(item.groupNumber === 0xFFFE && item.elementNumber === 0xE0DD)
             {
                 // sequence delimitation item, update attr data length and return
                 element.length = offset - element.dataOffset;
-                return;
-            }
-            else
-            {
-                var sqItem = {};
-                element.items.push(sqItem);
-
-                if(itemLength === -1)
-                {
-                    offset = parseSQItemUndefinedLength(data, offset, sqItem, explicit);
-                }
-                else
-                {
-                    parseSQItemKnownLength(data, offest, itemLength, sqItem, explicit);
-                    offset += itemLength;
-                }
+                return offset;
             }
         }
 
@@ -246,29 +208,15 @@
     }
 
     // TODO: Find some data to verify this with
-    function parseSQElementKnownLength(data, element)
+    function parseSQElementKnownLength(data, element, explicit)
     {
         element.items = [];
         var offset = element.dataOffset;
-        while(offset < data.dataOffset + data.length)
+        while(offset < element.dataOffset + element.length)
         {
-            var groupNumber = readUint16(data, offset);
-            var elementNumber = readUint16(data, offset+2);
-            var itemLength = readUint32(data, offset+4);
-            offset += 8;
-
-            var sqItem = {};
-            element.items.push(sqItem);
-
-            if(itemLength === -1)
-            {
-                offset = parseSQItemUndefinedLength(data, offset, sqItem, explicit);
-            }
-            else
-            {
-                parseSQItemKnownLength(data, offset, itemLength, sqItem, explicit);
-                offset += itemLength;
-            }
+            var item = readSequenceItem(data, offset, explicit);
+            offset += item.length + 8;
+            element.items.push(item);
         }
 
         // TODO: Might be good to sanity check offsets and tell user if the overran the buffer
@@ -300,7 +248,7 @@
             }
             else
             {
-                parseSQElementKnownLength(data, element);
+                parseSQElementKnownLength(data, element, true);
             }
         }
     }
