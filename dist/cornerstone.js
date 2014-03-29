@@ -838,6 +838,8 @@ var cornerstone = (function (cornerstone, csc) {
 (function (cornerstone)
 {
 
+    ////////// begin data buffer parser helpers ////////
+
     function readUint32(data, offset)
     {
         return data[offset]
@@ -865,72 +867,12 @@ var cornerstone = (function (cornerstone, csc) {
         return result;
     }
 
-    function prefixIsInvalid(data)
-    {
-        return (
-            data[128] !== 68 || // D
-            data[129] !== 73 || // I
-            data[130] !== 67 || // C
-            data[131] !== 77);  // M
-    }
+    ////////// end data buffer parser helpers ////////
 
-    function getDataLengthSizeInBytesForVR(vr)
-    {
-        if(vr === 'OB'
-            || vr === 'OW'
-            || vr === 'SQ'
-            || vr === 'OF'
-            || vr === 'UT'
-            || vr === 'UN')
-        {
-            return 4;
-        }
-        else
-        {
-            return 2;
-        }
-    }
 
-    function setLengthAndDataOffsetExplicit(data, offset, element)
-    {
-        var dataLengthSizeBytes = getDataLengthSizeInBytesForVR(element.vr);
-        if(dataLengthSizeBytes === 2)
-        {
-            element.length = readUint16(data, offset+6);
-            element.dataOffset = offset + 8;
-        }
-        else
-        {
-            element.length = readUint32(data, offset+8);
-            element.dataOffset = offset + 12;
-        }
-    }
 
-    function setLengthAndDataOffsetImplicit(data, offset, element)
-    {
-        element.length = readUint32(data, offset+4);
-        element.dataOffset = offset + 8;
-    }
 
-    function isStringVr(vr)
-    {
-        if(vr === 'AT'
-            || vr === 'FL'
-            || vr === 'FD'
-            || vr === 'OB'
-            || vr === 'OF'
-            || vr === 'OW'
-            || vr === 'SI'
-            || vr === 'SQ'
-            || vr === 'SS'
-            || vr === 'UL'
-            || vr === 'US'
-            )
-        {
-            return false;
-        }
-        return true;
-    }
+    ////////// begin sequence item parsing ////////
 
     function parseSQItemUndefinedLength(data, offset, sqItem, explicit)
     {
@@ -941,7 +883,7 @@ var cornerstone = (function (cornerstone, csc) {
             offset = element.dataOffset + element.length;
             sqItem[element.tag] = element;
 
-            // we hit an item delimeter tag, return the current offset to market
+            // we hit an item delimeter tag, return the current offset to mark
             // the end of this sequence item
             if(element.groupNumber === 0xfffe && element.elementNumber === 0xe00d)
             {
@@ -949,7 +891,6 @@ var cornerstone = (function (cornerstone, csc) {
                 // use in checking it - what are we gonna do if it isn't 0:?
                 return offset;
             }
-
         }
 
         // Buffer overread!  Return current offset so at least they get the data we did read.  Would be nice
@@ -1005,6 +946,13 @@ var cornerstone = (function (cornerstone, csc) {
         return item;
     }
 
+    ////////// end sequence item parsing ////////
+
+
+
+
+    ////////// begin sequence element parsing ////////
+
     function parseSQElementUndefinedLength(data, element, explicit)
     {
         element.items = [];
@@ -1024,9 +972,10 @@ var cornerstone = (function (cornerstone, csc) {
             }
         }
 
-        // Buffer overread!  Return current offset so at least they get the data we did read.  Would be nice
-        // to indicate the caller this happened though...
-        return offset;
+        // Buffer overread!  Set the length of the element to reflect the end of buffer so
+        // the caller has access to what we were able to parse.
+        // TODO: Figure out how to communicate parse errors like this to the caller
+        element.length = offset - element.dataOffset;
     }
 
     // TODO: Find some data to verify this with
@@ -1044,11 +993,36 @@ var cornerstone = (function (cornerstone, csc) {
         // TODO: Might be good to sanity check offsets and tell user if the overran the buffer
     }
 
+    ////////// endsequence element parsing ////////
+
+
+
+    ////// begin element parsing /////
+
+    function isStringVr(vr)
+    {
+        if(vr === 'AT'
+            || vr === 'FL'
+            || vr === 'FD'
+            || vr === 'OB'
+            || vr === 'OF'
+            || vr === 'OW'
+            || vr === 'SI'
+            || vr === 'SQ'
+            || vr === 'SS'
+            || vr === 'UL'
+            || vr === 'US'
+            )
+        {
+            return false;
+        }
+        return true;
+    }
+
     // this function converts the data associated with the element
     // into the right type based on the VR and adds it to the element
     function setDataExplicit(data, element)
     {
-
         // TODO: add conversions for the other VR's
         if(isStringVr(element.vr))
         {
@@ -1101,6 +1075,44 @@ var cornerstone = (function (cornerstone, csc) {
         }
     }
 
+    function getDataLengthSizeInBytesForVR(vr)
+    {
+        if(vr === 'OB'
+            || vr === 'OW'
+            || vr === 'SQ'
+            || vr === 'OF'
+            || vr === 'UT'
+            || vr === 'UN')
+        {
+            return 4;
+        }
+        else
+        {
+            return 2;
+        }
+    }
+
+    function setLengthAndDataOffsetExplicit(data, offset, element)
+    {
+        var dataLengthSizeBytes = getDataLengthSizeInBytesForVR(element.vr);
+        if(dataLengthSizeBytes === 2)
+        {
+            element.length = readUint16(data, offset+6);
+            element.dataOffset = offset + 8;
+        }
+        else
+        {
+            element.length = readUint32(data, offset+8);
+            element.dataOffset = offset + 12;
+        }
+    }
+
+    function setLengthAndDataOffsetImplicit(data, offset, element)
+    {
+        element.length = readUint32(data, offset+4);
+        element.dataOffset = offset + 8;
+    }
+
     function readElement(data, offset, explicit)
     {
         var groupNumber = readUint16(data, offset);
@@ -1132,6 +1144,8 @@ var cornerstone = (function (cornerstone, csc) {
         return element;
     }
 
+    ////// end element parsing /////
+
     function isExplicit(dicomP10HeaderElements) {
         var transferSyntax = dicomP10HeaderElements.x00020010.str;
         if(transferSyntax === '1.2.840.10008.1.2')
@@ -1144,6 +1158,14 @@ var cornerstone = (function (cornerstone, csc) {
         }
         // all other transfer syntaxes should be explicit
         return true;
+    }
+
+    function prefixIsInvalid(data)
+    {
+        return (data[128] !== 68 || // D
+                data[129] !== 73 || // I
+                data[130] !== 67 || // C
+                data[131] !== 77);  // M
     }
 
     //
