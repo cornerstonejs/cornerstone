@@ -54,7 +54,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             else
             {
                 // call the imageId specific tool state manager
-                return oldStateManager.get(element, toolType, data);
+                return oldStateManager.get(element, toolType);
             }
         };
 

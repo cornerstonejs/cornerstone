@@ -77,6 +77,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
         var imageNeedsUpdate = false;
         for(var i=0; i < toolData.data.length; i++) {
             // get the cursor position in image coordinates
+            var element = e.currentTarget;
             var coords = cornerstone.pageToImage(element, e.pageX, e.pageY);
             var viewport = cornerstone.getViewport(element);
             var data = toolData.data[i];

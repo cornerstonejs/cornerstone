@@ -14,7 +14,7 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
             oldStateManager = cornerstoneTools.globalImageIdSpecificToolStateManager;
         }
 
-        var stackTools = ['length'];
+        var stackTools = [];//'length'];
         stacks.forEach(function(stack) {
             var stackSpecificStateManager = cornerstoneTools.newStackSpecificToolStateManager(stackTools, oldStateManager);
             stackStateManagers.push(stackSpecificStateManager);
