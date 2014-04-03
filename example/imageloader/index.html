@@ -28,13 +28,17 @@
 </body>
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
-<!-- include special code for these examples which provides images -->
-<script src="../exampleImageIdLoader.js"></script>
+
+<!-- jquery - included to make things easier to demo, not needed or used by the cornerstone library but
+is used by our example image loader-->
+<script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
+
 
 <script>
 
     // Loads an image given an imageId
     function loadImage(imageId) {
+
         var image = {
             minPixelValue : 0,
             maxPixelValue : 255,
@@ -61,7 +65,12 @@
             }
         }
 
-        return image;
+        // Create a deferred object, resolve it with the image object we just created and return the
+        // deferred to cornerstone.  Cornerstone will get the image object by calling then() on the
+        // deferred
+        var deferred = $.Deferred();
+        deferred.resolve(image);
+        return deferred;
     };
 
     cornerstone.registerImageLoader('myImageLoader', loadImage);

@@ -21,7 +21,7 @@ var cornerstone = (function (cornerstone, csc) {
 
 
         var loadImageDeferred = cornerstone.loadImage(imageId);
-        loadImageDeferred.done(function(image){
+        loadImageDeferred.then(function(image){
             var viewport = cornerstone.resetViewport(element, canvas, image);
 
             // merge viewportOptions into this viewport

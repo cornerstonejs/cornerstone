@@ -63,7 +63,10 @@
         {
             updatePixels(image, image109Base64);
         }
-        return image;
+
+        var deferred = $.Deferred();
+        deferred.resolve(image);
+        return deferred;
     };
 
 

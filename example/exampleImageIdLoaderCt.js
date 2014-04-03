@@ -58,7 +58,10 @@
         {
             updatePixels(image, ctimage);
         }
-        return image;
+
+        var deferred = $.Deferred();
+        deferred.resolve(image);
+        return deferred;
     };
 
     // register our imageLoader plugin with cornerstone

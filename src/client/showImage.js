@@ -31,20 +31,24 @@ var cornerstone = (function (cornerstone, csc) {
     {
         enabledElement = cornerstone.getEnabledElement(element);
         enabledElement.ids.imageId = imageId;
-        enabledElement.image = cornerstone.loadImage(imageId);
+        var loadImageDeferred = cornerstone.loadImage(imageId);
 
-        enabledElement.viewport = cornerstone.resetViewport(enabledElement.element, enabledElement.canvas, enabledElement.image);
+        loadImageDeferred.done(function(image) {
+            enabledElement.image = image;
 
-        // merge
-        if(viewportOptions) {
-            for(var attrname in viewportOptions)
-            {
-                if(viewportOptions[attrname] !== null) {
-                    enabledElement.viewport[attrname] = viewportOptions[attrname];
+            enabledElement.viewport = cornerstone.resetViewport(enabledElement.element, enabledElement.canvas, enabledElement.image);
+
+            // merge
+            if(viewportOptions) {
+                for(var attrname in viewportOptions)
+                {
+                    if(viewportOptions[attrname] !== null) {
+                        enabledElement.viewport[attrname] = viewportOptions[attrname];
+                    }
                 }
             }
-        }
-        cornerstone.updateImage(element);
+            cornerstone.updateImage(element);
+        });
     }
 
     // This function changes the image while preserving viewport settings.  This is appropriate
@@ -52,18 +56,23 @@ var cornerstone = (function (cornerstone, csc) {
     cornerstone.showImage = function (element, imageId, viewportOptions) {
         enabledElement = cornerstone.getEnabledElement(element);
         enabledElement.ids.imageId = imageId;
-        enabledElement.image = cornerstone.loadImage(imageId);
+        var loadImageDeferred = cornerstone.loadImage(imageId);
 
-        // merge
-        if(viewportOptions) {
-            for(var attrname in viewportOptions)
-            {
-                if(viewportOptions[attrname] !== null) {
-                    enabledElement.viewport[attrname] = viewportOptions[attrname];
+        loadImageDeferred.done(function(image) {
+            enabledElement.image = image;
+
+            // merge
+            if(viewportOptions) {
+                for(var attrname in viewportOptions)
+                {
+                    if(viewportOptions[attrname] !== null) {
+                        enabledElement.viewport[attrname] = viewportOptions[attrname];
+                    }
                 }
             }
-        }
-        cornerstone.updateImage(element);
+            cornerstone.updateImage(element);
+
+        });
     };
 
     // this function completely replaces an image with a new one losing all tool state
