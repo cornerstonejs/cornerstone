@@ -1168,8 +1168,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             if(toolData !== undefined) {
                 for(var i=0; i < toolData.data.length; i++) {
                     var data = toolData.data[i];
-                    if(cornerstoneTools.findHandleNear(data.handles, coords, viewport.scale)) {
-                        cornerstoneTools.moveAllHandles(e, data, toolData, true);
+                    if(cornerstoneTools.handleCursorNearHandle(data.handles, coords, viewport.scale)) {
                         e.stopImmediatePropagation();
                         return;
                     }
@@ -1180,7 +1179,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             if(eventData.active === true) {
                 // no existing measurements care about this, draw a new measurement
                 drawNewMeasurement(e, coords, viewport.scale);
-                e.stopPropagation();
+                e.stopImmediatePropagation();
                 return;
             }
         }
@@ -1295,6 +1294,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
     // hook the mousedown event so we can create a new measurement
     function activate(element, whichMouseButton)
     {
+        element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
         // rehook the mnousedown with a new eventData that says we are active
         var eventData = {
             whichMouseButton: whichMouseButton,
@@ -1314,6 +1314,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             whichMouseButton: 1,
             active: false
         };
+        element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
         $(element).unbind('mousedown', onMouseDown);
         $(element).mousedown(eventData, onMouseDown);
         $(element).mousemove(onMouseMove);
@@ -1744,6 +1745,72 @@ var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
 
     // module/private exports
     cornerstoneTools.scroll = scroll;
+
+    return cornerstoneTools;
+}($, cornerstone, cornerstoneTools));
+var cornerstoneTools = (function ($, cornerstone, cornerstoneTools) {
+
+    if(cornerstoneTools === undefined) {
+        cornerstoneTools = {};
+    }
+
+    function onMouseWheel(e) {
+        var eventData = e.data;
+        var currentStack = eventData.stack;
+        var element = e.currentTarget;
+        // Firefox e.originalEvent.detail > 0 scroll back, < 0 scroll forward
+        // chrome/safari e.originalEvent.wheelDelta < 0 scroll back, > 0 scroll forward
+        if(e.originalEvent.wheelDelta < 0 || e.originalEvent.detail > 0) {
+            if(eventData.currentImageIdIndex < (currentStack.imageIds.length - 1)) {
+                eventData.currentImageIdIndex++;
+                cornerstone.newStackImage(element, currentStack.imageIds[eventData.currentImageIdIndex]);
+            }
+        } else {
+            if(eventData.currentImageIdIndex > 0) {
+                eventData.currentImageIdIndex--;
+                cornerstone.newStackImage(element, currentStack.imageIds[eventData.currentImageIdIndex]);
+            }
+        }
+        //prevent page fom scrolling
+        return false;
+    }
+
+    function enableStackScroll(element, stack, whichMouseButton){
+        var stackStateManagers = [];
+
+        var eventData = {
+            whichMouseButton: 1,
+            active: false,
+            stack: stack,
+            currentImageIdIndex : 0
+        };
+
+
+        var oldStateManager = cornerstoneTools.getElementToolStateManager(element);
+        if(oldStateManager === undefined) {
+            oldStateManager = cornerstoneTools.globalImageIdSpecificToolStateManager;
+        }
+
+        var stackTools = [];//'length'];
+        var stackSpecificStateManager = cornerstoneTools.newStackSpecificToolStateManager(stackTools, oldStateManager);
+        stackStateManagers.push(stackSpecificStateManager);
+
+        cornerstoneTools.setElementToolStateManager(element, stackStateManagers[0]);
+
+        if(whichMouseButton == 0) {
+            $(element).on('mousewheel DOMMouseScroll', eventData, onMouseWheel);
+        }
+    }
+
+    function disableStackScroll(element) {
+        $(element).unbind('mousewheel DOMMouseScroll', onMouseWheel);
+    }
+
+    // module/private exports
+    cornerstoneTools.stackScroll = {
+        enable: enableStackScroll,
+        disable: disableStackScroll
+    };
 
     return cornerstoneTools;
 }($, cornerstone, cornerstoneTools));

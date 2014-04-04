@@ -41,8 +41,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             if(toolData !== undefined) {
                 for(var i=0; i < toolData.data.length; i++) {
                     var data = toolData.data[i];
-                    if(cornerstoneTools.findHandleNear(data.handles, coords, viewport.scale)) {
-                        cornerstoneTools.moveAllHandles(e, data, toolData, true);
+                    if(cornerstoneTools.handleCursorNearHandle(data.handles, coords, viewport.scale)) {
                         e.stopImmediatePropagation();
                         return;
                     }
@@ -53,7 +52,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             if(eventData.active === true) {
                 // no existing measurements care about this, draw a new measurement
                 drawNewMeasurement(e, coords, viewport.scale);
-                e.stopPropagation();
+                e.stopImmediatePropagation();
                 return;
             }
         }
@@ -168,6 +167,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
     // hook the mousedown event so we can create a new measurement
     function activate(element, whichMouseButton)
     {
+        element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
         // rehook the mnousedown with a new eventData that says we are active
         var eventData = {
             whichMouseButton: whichMouseButton,
@@ -187,6 +187,7 @@ var cornerstoneTools = (function ($, cornerstone, csc, cornerstoneTools) {
             whichMouseButton: 1,
             active: false
         };
+        element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
         $(element).unbind('mousedown', onMouseDown);
         $(element).mousedown(eventData, onMouseDown);
         $(element).mousemove(onMouseMove);

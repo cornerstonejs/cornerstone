@@ -63,8 +63,8 @@ var cornerstoneCore = (function (cornerstoneCore) {
     }
 
     var renderCanvas = document.createElement('canvas')
-    renderCanvas.width = 1024;
-    renderCanvas.height = 1024;
+    renderCanvas.width = 4000;
+    renderCanvas.height = 4000;
 
     function drawImage(ee, image) {
 
