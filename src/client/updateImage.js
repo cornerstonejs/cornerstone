@@ -6,9 +6,10 @@ var cornerstone = (function (cornerstone, csc) {
     function updateImage(element) {
         var ee = cornerstone.getEnabledElement(element);
         var image = ee.image;
-        csc.drawImage(ee, image);
-
-
+        // only draw the image if it has loaded
+        if(image !== undefined) {
+            csc.drawImage(ee, image);
+        }
     };
 
     // module exports
