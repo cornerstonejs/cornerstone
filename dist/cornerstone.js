@@ -63,35 +63,66 @@ var cornerstoneCore = (function (cornerstoneCore) {
     }
 
     var renderCanvas = document.createElement('canvas')
-    renderCanvas.width = 4000;
-    renderCanvas.height = 4000;
+    var renderCanvasContext;
+    var renderCanvasData;
+
+    function initializeRenderCanvas(image)
+    {
+        // Resize the canvas
+        renderCanvas.width = image.width;
+        renderCanvas.height = image.height;
+
+        // NOTE - we need to fill the render canvas with white pixels since we control the luminance
+        // using the alpha channel to improve rendering performance.
+        renderCanvasContext = renderCanvas.getContext('2d');
+        renderCanvasContext.fillStyle = 'white';
+        renderCanvasContext.fillRect(0,0, renderCanvas.width, renderCanvas.height);
+        renderCanvasData = renderCanvasContext.getImageData(0,0,image.width, image.height);
+    }
+
+    function getLut(image, viewport)
+    {
+        // if we have a cached lut and it has the right values, return it immediately
+        if(image.lut !== undefined && image.lut.windowCenter === viewport.windowCenter && image.lut.windowWidth === viewport.windowWidth) {
+            //console.log('using cached lut');
+            return image.lut;
+        }
+
+        // lut is invalid or not present, regenerate it and cache it
+        //console.log('generating lut');
+        image.lut = lut= cornerstoneCore.generateLut(image, viewport.windowWidth, viewport.windowCenter, viewport.invert);
+        image.lut.windowWidth = viewport.windowWidth;
+        image.lut.windowCenter = viewport.windowCenter;
+        return image.lut
+    }
 
     function drawImage(ee, image) {
 
+        // get the canvas context and reset the transform
         var context = ee.canvas.getContext('2d');
-
         context.setTransform(1, 0, 0, 1, 0, 0);
 
         // clear the canvas
         context.fillStyle = 'black';
         context.fillRect(0,0, ee.canvas.width, ee.canvas.height);
 
-        // setup the viewport
-        context.save();
+        // If our render canvas does not match the size of this image reset it
+        // NOTE: This will be inefficient if we are updating multiple images of different
+        // sizes frequently, but I don't know how much...
+        if(renderCanvas.width !== image.width || renderCanvas.height != image.height) {
+            initializeRenderCanvas(image);
+        }
 
+        // save the canvas context state and apply the viewport properties
+        context.save();
         setToPixelCoordinateSystem(ee, context);
 
-        // Generate the LUT
-        // TODO: Cache the LUT and only regenerate if we have to
-        image.windowCenter = ee.viewport.windowCenter;
-        image.windowWidth = ee.viewport.windowWidth;
-        var lut = cornerstoneCore.generateLut(image);
+        // generate the lut
+        var lut = getLut(image, ee.viewport);
 
         // apply the lut to the stored pixel data onto the render canvas
-        var renderCanvasContext = renderCanvas.getContext("2d");
-        var imageData = renderCanvasContext.createImageData(image.columns, image.rows);
-        cornerstoneCore.storedPixelDataToCanvasImageData(image, lut, imageData.data);
-        renderCanvasContext.putImageData(imageData, 0, 0);
+        cornerstoneCore.storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
+        renderCanvasContext.putImageData(renderCanvasData, 0, 0);
 
         var scaler = ee.viewport.scale;
 
@@ -175,17 +206,46 @@ var cornerstoneCore = (function (cornerstoneCore) {
         cornerstoneCore = {};
     }
 
-    function generateLut(image)
+    /**
+     * Creates a LUT used while rendering to convert stored pixel values to
+     * display pixels
+     *
+     * @param image
+     * @returns {Array}
+     */
+    function generateLut(image, windowWidth, windowCenter, invert)
     {
         var lut = [];
 
-        for(var storedValue = image.minPixelValue; storedValue <= image.maxPixelValue; storedValue++)
-        {
-            var modalityLutValue = storedValue * image.slope + image.intercept;
-            voiLutValue = (((modalityLutValue - (image.windowCenter)) / (image.windowWidth) + 0.5) * 255.0);
-            var clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
-            lut[storedValue] = Math.round(clampedValue);
+        var maxPixelValue = image.maxPixelValue;
+        var slope = image.slope;
+        var intercept = image.intercept;
+        var localWindowWidth = windowWidth;
+        var localWindowCenter = windowCenter;
+
+        var modalityLutValue;
+        var voiLutValue;
+        var clampedValue;
+
+        if(invert === true) {
+            for(var storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
+            {
+                modalityLutValue = storedValue * slope + intercept;
+                voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
+                clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
+                lut[storedValue] = Math.round(255 - clampedValue);
+            }
         }
+        else {
+            for(var storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
+            {
+                modalityLutValue = storedValue * slope + intercept;
+                voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
+                clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
+                lut[storedValue] = Math.round(clampedValue);
+            }
+        }
+
 
         return lut;
     };
@@ -223,19 +283,29 @@ var cornerstoneCore = (function (cornerstoneCore) {
         cornerstoneCore = {};
     }
 
+    /**
+     * This function transforms stored pixel values into a canvas image data buffer
+     * by using a LUT.  This is the most performance sensitive code in cornerstone and
+     * we use a special trick to make this go as fast as possible.  Specifically we
+     * use the alpha channel only to control the luminance rather than the red, green and
+     * blue channels which makes it over 3x faster.  The canvasImageDataData buffer needs
+     * to be previously filled with white pixels.
+     *
+     * @param image the image object
+     * @param lut the lut
+     * @param canvasImageDataData a canvasImgageData.data buffer filled with white pixels
+     */
     function storedPixelDataToCanvasImageData(image, lut, canvasImageDataData)
     {
-        var canvasImageDataIndex = 0;
+        var canvasImageDataIndex = 3;
         var storedPixelDataIndex = 0;
-        for(var row=0; row < image.rows; row++) {
-            for(var column=0; column< image.columns; column++) {
-                var storedPixelValue = image.storedPixelData[storedPixelDataIndex++];
-                var value = lut[storedPixelValue];
-                canvasImageDataData[canvasImageDataIndex++] = value; // red
-                canvasImageDataData[canvasImageDataIndex++] = value; // green
-                canvasImageDataData[canvasImageDataIndex++] = value; // blue
-                canvasImageDataData[canvasImageDataIndex++] = 255; // alpha
-            }
+        var numPixels = image.width * image.height;
+        var storedPixelData = image.storedPixelData;
+        var localLut = lut;
+        var localCanvasImageDataData = canvasImageDataData;
+        while(storedPixelDataIndex < numPixels) {
+            localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex++]]; // alpha
+            canvasImageDataIndex += 4;
         }
     };
 
@@ -251,8 +321,22 @@ var cornerstone = (function (cornerstone, csc) {
 
     function enable(element, imageId, viewportOptions) {
         var canvas = document.createElement('canvas');
-        canvas.width = element.clientWidth;
-        canvas.height = element.clientHeight;
+        // Set the size of canvas and take retina into account
+        var retina = window.devicePixelRatio > 1;
+        if(retina) {
+            canvas.width = element.clientWidth * 2;
+            canvas.height = element.clientHeight * 2;
+            canvas.style.width = element.clientWidth + "px";
+            canvas.style.height = element.clientHeight + "px";
+        }
+        else
+        {
+            canvas.width = element.clientWidth;
+            canvas.height = element.clientHeight;
+            canvas.style.width = element.clientWidth + "px";
+            canvas.style.height = element.clientHeight + "px";
+        }
+
         element.appendChild(canvas);
 
         var el = {
@@ -718,7 +802,8 @@ var cornerstone = (function (cornerstone, csc) {
             centerX : 0,
             centerY: 0,
             windowWidth: image.windowWidth,
-            windowCenter: image.windowCenter
+            windowCenter: image.windowCenter,
+            invert: image.invert
         };
 
         // fit image to window

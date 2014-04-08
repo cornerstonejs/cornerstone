@@ -3,19 +3,29 @@ var cornerstoneCore = (function (cornerstoneCore) {
         cornerstoneCore = {};
     }
 
+    /**
+     * This function transforms stored pixel values into a canvas image data buffer
+     * by using a LUT.  This is the most performance sensitive code in cornerstone and
+     * we use a special trick to make this go as fast as possible.  Specifically we
+     * use the alpha channel only to control the luminance rather than the red, green and
+     * blue channels which makes it over 3x faster.  The canvasImageDataData buffer needs
+     * to be previously filled with white pixels.
+     *
+     * @param image the image object
+     * @param lut the lut
+     * @param canvasImageDataData a canvasImgageData.data buffer filled with white pixels
+     */
     function storedPixelDataToCanvasImageData(image, lut, canvasImageDataData)
     {
-        var canvasImageDataIndex = 0;
+        var canvasImageDataIndex = 3;
         var storedPixelDataIndex = 0;
-        for(var row=0; row < image.rows; row++) {
-            for(var column=0; column< image.columns; column++) {
-                var storedPixelValue = image.storedPixelData[storedPixelDataIndex++];
-                var value = lut[storedPixelValue];
-                canvasImageDataData[canvasImageDataIndex++] = value; // red
-                canvasImageDataData[canvasImageDataIndex++] = value; // green
-                canvasImageDataData[canvasImageDataIndex++] = value; // blue
-                canvasImageDataData[canvasImageDataIndex++] = 255; // alpha
-            }
+        var numPixels = image.width * image.height;
+        var storedPixelData = image.storedPixelData;
+        var localLut = lut;
+        var localCanvasImageDataData = canvasImageDataData;
+        while(storedPixelDataIndex < numPixels) {
+            localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex++]]; // alpha
+            canvasImageDataIndex += 4;
         }
     };
 

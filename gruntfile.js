@@ -12,23 +12,14 @@ module.exports = function(grunt) {
         },
         concat: {
             distCornerstone: {
-                src : ['src/client/core/*.js', 'src/client/*.js', 'src/client/imageLoaders/**/*.js'],
+                src : ['src/client/core/*.js', 'src/client/*.js'],
                 dest: 'dist/cornerstone.js'
             },
-            distCornerstoneTools: {
-                src : [ 'src/client/tools/*.js'],
-                dest: 'dist/cornerstone-tools.js'
-            }
         },
         uglify: {
             cornerstone: {
                 files: {
                     'dist/cornerstone.min.js': ['dist/cornerstone.js']
-                }
-            },
-            cornerstoneTools: {
-                files: {
-                    'dist/cornerstone-tools.min.js': ['dist/cornerstone-tools.js']
                 }
             }
         },
@@ -38,7 +29,7 @@ module.exports = function(grunt) {
         watch: {
             scripts: {
                 files: ['src/client/**/*.js', 'test/**/*.js'],
-                tasks: ['buildAll', 'qunit']
+                tasks: ['buildAll']
             }
         },
 
@@ -51,7 +42,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
-    grunt.registerTask('buildAll', ['concat:distCornerstone', 'concat:distCornerstoneTools', 'uglify:cornerstone', 'uglify:cornerstoneTools']);
+    grunt.registerTask('buildAll', ['concat:distCornerstone', 'uglify:cornerstone']);
 
     grunt.registerTask('default', ['clean', 'buildAll']);
 };

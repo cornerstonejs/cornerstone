@@ -5,8 +5,22 @@ var cornerstone = (function (cornerstone, csc) {
 
     function enable(element, imageId, viewportOptions) {
         var canvas = document.createElement('canvas');
-        canvas.width = element.clientWidth;
-        canvas.height = element.clientHeight;
+        // Set the size of canvas and take retina into account
+        var retina = window.devicePixelRatio > 1;
+        if(retina) {
+            canvas.width = element.clientWidth * 2;
+            canvas.height = element.clientHeight * 2;
+            canvas.style.width = element.clientWidth + "px";
+            canvas.style.height = element.clientHeight + "px";
+        }
+        else
+        {
+            canvas.width = element.clientWidth;
+            canvas.height = element.clientHeight;
+            canvas.style.width = element.clientWidth + "px";
+            canvas.style.height = element.clientHeight + "px";
+        }
+
         element.appendChild(canvas);
 
         var el = {

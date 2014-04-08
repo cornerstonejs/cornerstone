@@ -8,6 +8,7 @@ Phase 3 (in progress)
  * ImageLoader design
  * ImageLoader API Documentation
  * WADO ImageLoader plugin
+ * Extract tools to separate library
 
 Phase 2 (complete)
 ------------------

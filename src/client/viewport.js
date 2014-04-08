@@ -77,7 +77,8 @@ var cornerstone = (function (cornerstone, csc) {
             centerX : 0,
             centerY: 0,
             windowWidth: image.windowWidth,
-            windowCenter: image.windowCenter
+            windowCenter: image.windowCenter,
+            invert: image.invert
         };
 
         // fit image to window
