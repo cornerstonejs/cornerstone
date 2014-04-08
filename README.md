@@ -3,7 +3,7 @@ cornerstone
 
 The goal of this project is to make it easy to enable HTML5 based web apps to display interactive medical images.
 
-[Click here for an example showing many of the features in action!](https://rawgithub.com/chafey/cornerstone/master/example/tools/all/index.html)
+[Click here for an example showing many of the features in action!](https://rawgithub.com/chafey/cornerstone/master/example/scrollzoompanwl/index.html)
 
 [Click here to see an example of a simple image viewer built on cornerstone](http://chafey.github.io/cornerstoneDemo/)
 
