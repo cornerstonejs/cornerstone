@@ -76,7 +76,23 @@ var cornerstone = (function (cornerstone, csc) {
                 }
             );
             element.dispatchEvent(event);
+
+            var event = new CustomEvent(
+                "CornerstoneNewImage",
+                {
+                    detail: {
+                        viewport: viewport,
+                        element: element,
+                        image: image
+
+                    },
+                    bubbles: false,
+                    cancelable: false
+                }
+            );
+            element.dispatchEvent(event);
         });
+
     }
 
 

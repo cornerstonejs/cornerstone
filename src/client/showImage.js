@@ -22,8 +22,22 @@ var cornerstone = (function (cornerstone, csc) {
                 }
             }
             cornerstone.updateImage(element);
-        });
 
+            var event = new CustomEvent(
+                "CornerstoneNewImage",
+                {
+                    detail: {
+                        viewport: enabledElement.viewport,
+                        element: element,
+                        image: enabledElement.image
+
+                    },
+                    bubbles: false,
+                    cancelable: false
+                }
+            );
+            element.dispatchEvent(event);
+        });
     }
 
     // shows a new stack
@@ -48,6 +62,21 @@ var cornerstone = (function (cornerstone, csc) {
                 }
             }
             cornerstone.updateImage(element);
+
+            var event = new CustomEvent(
+                "CornerstoneNewImage",
+                {
+                    detail: {
+                        viewport: enabledElement.viewport,
+                        element: element,
+                        image: enabledElement.image
+
+                    },
+                    bubbles: false,
+                    cancelable: false
+                }
+            );
+            element.dispatchEvent(event);
         });
     }
 
@@ -71,6 +100,21 @@ var cornerstone = (function (cornerstone, csc) {
                 }
             }
             cornerstone.updateImage(element);
+
+            var event = new CustomEvent(
+                "CornerstoneNewImage",
+                {
+                    detail: {
+                        viewport: enabledElement.viewport,
+                        element: element,
+                        image: enabledElement.image
+
+                    },
+                    bubbles: false,
+                    cancelable: false
+                }
+            );
+            element.dispatchEvent(event);
 
         });
     };
