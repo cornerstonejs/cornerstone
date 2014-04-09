@@ -26,6 +26,11 @@ module.exports = function(grunt) {
         qunit: {
             all: ['test/**/*.html']
         },
+        jshint: {
+            files: [
+                'src/**/*.js'
+            ]
+        },
         watch: {
             scripts: {
                 files: ['src/client/**/*.js', 'test/**/*.js'],
@@ -41,8 +46,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
 
-    grunt.registerTask('buildAll', ['concat:distCornerstone', 'uglify:cornerstone']);
+    grunt.registerTask('buildAll', ['concat:distCornerstone', 'uglify:cornerstone', 'jshint']);
 
     grunt.registerTask('default', ['clean', 'buildAll']);
 };

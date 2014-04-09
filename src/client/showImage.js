@@ -1,4 +1,8 @@
 var cornerstone = (function (cornerstone, csc) {
+
+    "use strict";
+
+
     if(cornerstone === undefined) {
         cornerstone = {};
     }
@@ -6,7 +10,7 @@ var cornerstone = (function (cornerstone, csc) {
     // Shows a new image in the existing stack
     function newStackImage(element, imageId, viewportOptions)
     {
-        enabledElement = cornerstone.getEnabledElement(element);
+        var enabledElement = cornerstone.getEnabledElement(element);
         enabledElement.ids.imageId = imageId;
         var loadImageDeferred = cornerstone.loadImage(imageId);
 
@@ -43,7 +47,7 @@ var cornerstone = (function (cornerstone, csc) {
     // shows a new stack
     function newStack(element, imageId, viewportOptions)
     {
-        enabledElement = cornerstone.getEnabledElement(element);
+        var enabledElement = cornerstone.getEnabledElement(element);
         enabledElement.ids.imageId = imageId;
         var loadImageDeferred = cornerstone.loadImage(imageId);
 
@@ -83,7 +87,7 @@ var cornerstone = (function (cornerstone, csc) {
     // This function changes the image while preserving viewport settings.  This is appropriate
     // when changing to a different image in the same stack/series
     cornerstone.showImage = function (element, imageId, viewportOptions) {
-        enabledElement = cornerstone.getEnabledElement(element);
+        var enabledElement = cornerstone.getEnabledElement(element);
         enabledElement.ids.imageId = imageId;
         var loadImageDeferred = cornerstone.loadImage(imageId);
 

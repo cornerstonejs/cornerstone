@@ -1,4 +1,7 @@
 var cornerstone = (function (cornerstone, csc) {
+
+    "use strict";
+
     if(cornerstone === undefined) {
         cornerstone = {};
     }
@@ -20,7 +23,7 @@ var cornerstone = (function (cornerstone, csc) {
 
     function removeEnabledElement(element) {
         for(var i=0; i < enabledElements.length; i++) {
-            if(enabledElements[i].element == element) {
+            if(enabledElements[i].element === element) {
                 enabledElements[i].element.removeChild(enabledElements[i].canvas);
                 enabledElements.splice(i, 1);
                 return;
@@ -30,7 +33,7 @@ var cornerstone = (function (cornerstone, csc) {
 
     function getElementData(el, dataType) {
         var ee = getEnabledElement(el);
-        if(ee.data.hasOwnProperty(dataType) == false)
+        if(ee.data.hasOwnProperty(dataType) === false)
         {
             ee.data[dataType] = {};
         }

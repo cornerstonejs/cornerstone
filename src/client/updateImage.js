@@ -1,4 +1,7 @@
 var cornerstone = (function (cornerstone, csc) {
+
+    "use strict";
+
     if(cornerstone === undefined) {
         cornerstone = {};
     }
@@ -10,7 +13,7 @@ var cornerstone = (function (cornerstone, csc) {
         if(image !== undefined) {
             csc.drawImage(ee, image);
         }
-    };
+    }
 
     // module exports
     cornerstone.updateImage = updateImage;

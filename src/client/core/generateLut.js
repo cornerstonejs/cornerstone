@@ -1,5 +1,8 @@
 
 var cornerstoneCore = (function (cornerstoneCore) {
+
+    "use strict";
+
     if(cornerstoneCore === undefined) {
         cornerstoneCore = {};
     }
@@ -24,9 +27,10 @@ var cornerstoneCore = (function (cornerstoneCore) {
         var modalityLutValue;
         var voiLutValue;
         var clampedValue;
+        var storedValue;
 
         if(invert === true) {
-            for(var storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
+            for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
             {
                 modalityLutValue = storedValue * slope + intercept;
                 voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
@@ -35,7 +39,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
             }
         }
         else {
-            for(var storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
+            for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
             {
                 modalityLutValue = storedValue * slope + intercept;
                 voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
@@ -46,7 +50,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
 
 
         return lut;
-    };
+    }
 
 
     // Module exports

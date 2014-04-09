@@ -1,9 +1,9 @@
 
-var cornerstoneCore = (function (cornerstoneCore) {
-    if(cornerstoneCore === undefined) {
-        cornerstoneCore = {};
-    }
+(function () {
 
+    "use strict";
+
+    /*jshint -W053 */
 
     function ie_ver(){
         var iev=0;
@@ -26,7 +26,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
                 var evt = document.createEvent( 'CustomEvent' );
                 evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
                 return evt;
-            };
+            }
 
             CustomEvent.prototype = window.Event.prototype;
 
@@ -34,75 +34,18 @@ var cornerstoneCore = (function (cornerstoneCore) {
         })();
     }
 
-
-    return cornerstoneCore;
-}(cornerstoneCore));
+}());
 
 
 var cornerstoneCore = (function (cornerstoneCore) {
+
+    "use strict";
+
     if(cornerstoneCore === undefined) {
         cornerstoneCore = {};
     }
 
-    function distanceSquared(pt1, pt2)
-    {
-        var dx = pt1.x - pt2.x;
-        var dy = pt1.y - pt2.y;
-        return dx * dx + dy * dy;
-    };
-
-    function distance(pt1, pt2)
-    {
-        var dx = pt1.x - pt2.x;
-        var dy = pt1.y - pt2.y;
-        return Math.sqrt(dx * dx + dy * dy);
-    };
-
-    // Module exports
-    cornerstoneCore.distance = distance;
-    cornerstoneCore.distanceSquared = distanceSquared;
-
-    return cornerstoneCore;
-}(cornerstoneCore));
-
-
-var cornerstoneCore = (function (cornerstoneCore) {
-    if(cornerstoneCore === undefined) {
-        cornerstoneCore = {};
-    }
-
-    // http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
-    function drawEllipse(ctx, x, y, w, h) {
-        var kappa = .5522848,
-            ox = (w / 2) * kappa, // control point offset horizontal
-            oy = (h / 2) * kappa, // control point offset vertical
-            xe = x + w,           // x-end
-            ye = y + h,           // y-end
-            xm = x + w / 2,       // x-middle
-            ym = y + h / 2;       // y-middle
-
-        ctx.beginPath();
-        ctx.moveTo(x, ym);
-        ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
-        ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
-        ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
-        ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
-        ctx.closePath();
-        ctx.stroke();
-    }
-
-    // Module exports
-    cornerstoneCore.drawEllipse = drawEllipse;
-
-    return cornerstoneCore;
-}(cornerstoneCore));
-
-var cornerstoneCore = (function (cornerstoneCore) {
-    if(cornerstoneCore === undefined) {
-        cornerstoneCore = {};
-    }
-
-    var renderCanvas = document.createElement('canvas')
+    var renderCanvas = document.createElement('canvas');
     var renderCanvasContext;
     var renderCanvasData;
 
@@ -130,10 +73,10 @@ var cornerstoneCore = (function (cornerstoneCore) {
 
         // lut is invalid or not present, regenerate it and cache it
         //console.log('generating lut');
-        image.lut = lut= cornerstoneCore.generateLut(image, viewport.windowWidth, viewport.windowCenter, viewport.invert);
+        image.lut = cornerstoneCore.generateLut(image, viewport.windowWidth, viewport.windowCenter, viewport.invert);
         image.lut.windowWidth = viewport.windowWidth;
         image.lut.windowCenter = viewport.windowCenter;
-        return image.lut
+        return image.lut;
     }
 
     function drawImage(ee, image) {
@@ -187,7 +130,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
             }
         );
         ee.element.dispatchEvent(event);
-    };
+    }
 
     function setToPixelCoordinateSystem(ee, context)
     {
@@ -201,7 +144,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
         context.translate(ee.viewport.centerX, ee.viewport.centerY);
         // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
         context.translate(-ee.image.columns /2, -ee.image.rows/2);
-    };
+    }
 
     function setToFontCoordinateSystem(ee, context, fontSize)
     {
@@ -214,7 +157,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
         // apply the pan offset
         context.translate(ee.viewport.centerX, ee.viewport.centerY);
 
-        var fontScale = .1;
+        var fontScale = 0.1;
         // apply the font scale
         context.scale(fontScale, fontScale);
         // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
@@ -231,7 +174,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
             fontScale: fontScale
         };
 
-    };
+    }
 
     // Module exports
     cornerstoneCore.drawImage = drawImage;
@@ -242,6 +185,9 @@ var cornerstoneCore = (function (cornerstoneCore) {
 }(cornerstoneCore));
 
 var cornerstoneCore = (function (cornerstoneCore) {
+
+    "use strict";
+
     if(cornerstoneCore === undefined) {
         cornerstoneCore = {};
     }
@@ -266,9 +212,10 @@ var cornerstoneCore = (function (cornerstoneCore) {
         var modalityLutValue;
         var voiLutValue;
         var clampedValue;
+        var storedValue;
 
         if(invert === true) {
-            for(var storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
+            for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
             {
                 modalityLutValue = storedValue * slope + intercept;
                 voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
@@ -277,7 +224,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
             }
         }
         else {
-            for(var storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
+            for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
             {
                 modalityLutValue = storedValue * slope + intercept;
                 voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
@@ -288,7 +235,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
 
 
         return lut;
-    };
+    }
 
 
     // Module exports
@@ -296,29 +243,10 @@ var cornerstoneCore = (function (cornerstoneCore) {
 
     return cornerstoneCore;
 }(cornerstoneCore));
-
 var cornerstoneCore = (function (cornerstoneCore) {
-    if(cornerstoneCore === undefined) {
-        cornerstoneCore = {};
-    }
 
-    function readPixelData(url, cb)
-    {
-        var oReq = new XMLHttpRequest();
-        oReq.open("get", url, true);
-        oReq.responseType = "arraybuffer";
-        oReq.onload = function (oEvent) {
-            cb(oReq.response);
-        };
-        oReq.send();
-    };
+    "use strict";
 
-    // Module exports
-    cornerstoneCore.readPixelData = readPixelData;
-
-    return cornerstoneCore;
-}(cornerstoneCore));
-var cornerstoneCore = (function (cornerstoneCore) {
     if(cornerstoneCore === undefined) {
         cornerstoneCore = {};
     }
@@ -347,7 +275,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
             localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex++]]; // alpha
             canvasImageDataIndex += 4;
         }
-    };
+    }
 
     // Module exports
     cornerstoneCore.storedPixelDataToCanvasImageData = storedPixelDataToCanvasImageData;
@@ -355,6 +283,9 @@ var cornerstoneCore = (function (cornerstoneCore) {
    return cornerstoneCore;
 }(cornerstoneCore));
 var cornerstone = (function (cornerstone, csc) {
+
+    "use strict";
+
     if(cornerstone === undefined) {
         cornerstone = {};
     }
@@ -433,7 +364,7 @@ var cornerstone = (function (cornerstone, csc) {
             );
             element.dispatchEvent(event);
 
-            var event = new CustomEvent(
+            event = new CustomEvent(
                 "CornerstoneNewImage",
                 {
                     detail: {
@@ -458,6 +389,9 @@ var cornerstone = (function (cornerstone, csc) {
     return cornerstone;
 }(cornerstone, cornerstoneCore));
 var cornerstone = (function (cornerstone, csc) {
+
+    "use strict";
+
     if(cornerstone === undefined) {
         cornerstone = {};
     }
@@ -479,7 +413,7 @@ var cornerstone = (function (cornerstone, csc) {
 
     function removeEnabledElement(element) {
         for(var i=0; i < enabledElements.length; i++) {
-            if(enabledElements[i].element == element) {
+            if(enabledElements[i].element === element) {
                 enabledElements[i].element.removeChild(enabledElements[i].canvas);
                 enabledElements.splice(i, 1);
                 return;
@@ -489,7 +423,7 @@ var cornerstone = (function (cornerstone, csc) {
 
     function getElementData(el, dataType) {
         var ee = getEnabledElement(el);
-        if(ee.data.hasOwnProperty(dataType) == false)
+        if(ee.data.hasOwnProperty(dataType) === false)
         {
             ee.data[dataType] = {};
         }
@@ -513,6 +447,8 @@ var cornerstone = (function (cornerstone, csc) {
 }(cornerstone, cornerstoneCore));
 var cornerstone = (function (cs, csc) {
 
+    "use strict";
+
     if(cs === undefined) {
         cs = {};
     }
@@ -531,13 +467,16 @@ var cornerstone = (function (cs, csc) {
         ee.viewport.centerX = 0;
         ee.viewport.centerY = 0;
         cs.updateImage(e);
-    };
+    }
 
     cs.fitToWindow = fitToWindow;
 
     return cs;
 }(cornerstone, cornerstoneCore));
 var cornerstone = (function (cornerstone, csc) {
+
+    "use strict";
+
     if(cornerstone === undefined) {
         cornerstone = {};
     }
@@ -553,16 +492,17 @@ var cornerstone = (function (cornerstone, csc) {
         var colonIndex = imageId.indexOf(":");
         var scheme = imageId.substring(0, colonIndex);
         var loader = imageLoaders[scheme];
+        var image;
         if(loader === undefined || loader === null) {
             if(unknownImageLoader !== undefined) {
-                var image = unknownImageLoader(imageId);
+                image = unknownImageLoader(imageId);
                 return image;
             }
             else {
                 return undefined;
             }
         }
-        var image = loader(imageId);
+        image = loader(imageId);
         return image;
     }
 
@@ -577,12 +517,12 @@ var cornerstone = (function (cornerstone, csc) {
         else {
             return imageCache[imageId];
         }
-    };
+    }
 
     // registers an imageLoader plugin with cornerstone for the specified scheme
     function registerImageLoader(scheme, imageLoader) {
         imageLoaders[scheme] = imageLoader;
-    };
+    }
 
     // Registers a new unknownImageLoader and returns the previous one (if it exists)
     function registerUnknownImageLoader(imageLoader) {
@@ -600,6 +540,8 @@ var cornerstone = (function (cornerstone, csc) {
     return cornerstone;
 }(cornerstone, cornerstoneCore));
 var cornerstone = (function (cs, csc) {
+
+    "use strict";
 
     if(cs === undefined) {
         cs = {};
@@ -644,6 +586,10 @@ var cornerstone = (function (cs, csc) {
     return cs;
 }(cornerstone, cornerstoneCore));
 var cornerstone = (function (cornerstone, csc) {
+
+    "use strict";
+
+
     if(cornerstone === undefined) {
         cornerstone = {};
     }
@@ -651,7 +597,7 @@ var cornerstone = (function (cornerstone, csc) {
     // Shows a new image in the existing stack
     function newStackImage(element, imageId, viewportOptions)
     {
-        enabledElement = cornerstone.getEnabledElement(element);
+        var enabledElement = cornerstone.getEnabledElement(element);
         enabledElement.ids.imageId = imageId;
         var loadImageDeferred = cornerstone.loadImage(imageId);
 
@@ -688,7 +634,7 @@ var cornerstone = (function (cornerstone, csc) {
     // shows a new stack
     function newStack(element, imageId, viewportOptions)
     {
-        enabledElement = cornerstone.getEnabledElement(element);
+        var enabledElement = cornerstone.getEnabledElement(element);
         enabledElement.ids.imageId = imageId;
         var loadImageDeferred = cornerstone.loadImage(imageId);
 
@@ -728,7 +674,7 @@ var cornerstone = (function (cornerstone, csc) {
     // This function changes the image while preserving viewport settings.  This is appropriate
     // when changing to a different image in the same stack/series
     cornerstone.showImage = function (element, imageId, viewportOptions) {
-        enabledElement = cornerstone.getEnabledElement(element);
+        var enabledElement = cornerstone.getEnabledElement(element);
         enabledElement.ids.imageId = imageId;
         var loadImageDeferred = cornerstone.loadImage(imageId);
 
@@ -779,6 +725,9 @@ var cornerstone = (function (cornerstone, csc) {
     return cornerstone;
 }(cornerstone, cornerstoneCore));
 var cornerstone = (function (cornerstone, csc) {
+
+    "use strict";
+
     if(cornerstone === undefined) {
         cornerstone = {};
     }
@@ -798,7 +747,7 @@ var cornerstone = (function (cornerstone, csc) {
             }
         }
         return storedPixels;
-    };
+    }
 
     // module exports
     cornerstone.getStoredPixels = getStoredPixels;
@@ -806,6 +755,9 @@ var cornerstone = (function (cornerstone, csc) {
     return cornerstone;
 }(cornerstone, cornerstoneCore));
 var cornerstone = (function (cornerstone, csc) {
+
+    "use strict";
+
     if(cornerstone === undefined) {
         cornerstone = {};
     }
@@ -817,7 +769,7 @@ var cornerstone = (function (cornerstone, csc) {
         if(image !== undefined) {
             csc.drawImage(ee, image);
         }
-    };
+    }
 
     // module exports
     cornerstone.updateImage = updateImage;
@@ -825,17 +777,20 @@ var cornerstone = (function (cornerstone, csc) {
     return cornerstone;
 }(cornerstone, cornerstoneCore));
 var cornerstone = (function (cornerstone, csc) {
+
+    "use strict";
+
     if(cornerstone === undefined) {
         cornerstone = {};
     }
 
     function setViewport(element, viewport) {
-        enabledElement = cornerstone.getEnabledElement(element);
+        var enabledElement = cornerstone.getEnabledElement(element);
         if(viewport.windowWidth < 1) {
             viewport.windowWidth = 1;
         }
         if(viewport.scale < 0.0001) {
-            viewport.scale = .25;
+            viewport.scale = 0.25;
         }
         enabledElement.viewport = viewport;
         cornerstone.updateImage(element);

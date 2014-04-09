@@ -1,4 +1,7 @@
 var cornerstone = (function (cornerstone, csc) {
+
+    "use strict";
+
     if(cornerstone === undefined) {
         cornerstone = {};
     }
@@ -18,7 +21,7 @@ var cornerstone = (function (cornerstone, csc) {
             }
         }
         return storedPixels;
-    };
+    }
 
     // module exports
     cornerstone.getStoredPixels = getStoredPixels;

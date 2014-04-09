@@ -1,4 +1,7 @@
 var cornerstoneCore = (function (cornerstoneCore) {
+
+    "use strict";
+
     if(cornerstoneCore === undefined) {
         cornerstoneCore = {};
     }
@@ -27,7 +30,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
             localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex++]]; // alpha
             canvasImageDataIndex += 4;
         }
-    };
+    }
 
     // Module exports
     cornerstoneCore.storedPixelDataToCanvasImageData = storedPixelDataToCanvasImageData;

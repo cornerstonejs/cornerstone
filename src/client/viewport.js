@@ -1,15 +1,18 @@
 var cornerstone = (function (cornerstone, csc) {
+
+    "use strict";
+
     if(cornerstone === undefined) {
         cornerstone = {};
     }
 
     function setViewport(element, viewport) {
-        enabledElement = cornerstone.getEnabledElement(element);
+        var enabledElement = cornerstone.getEnabledElement(element);
         if(viewport.windowWidth < 1) {
             viewport.windowWidth = 1;
         }
         if(viewport.scale < 0.0001) {
-            viewport.scale = .25;
+            viewport.scale = 0.25;
         }
         enabledElement.viewport = viewport;
         cornerstone.updateImage(element);

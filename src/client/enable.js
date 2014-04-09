@@ -1,4 +1,7 @@
 var cornerstone = (function (cornerstone, csc) {
+
+    "use strict";
+
     if(cornerstone === undefined) {
         cornerstone = {};
     }
@@ -77,7 +80,7 @@ var cornerstone = (function (cornerstone, csc) {
             );
             element.dispatchEvent(event);
 
-            var event = new CustomEvent(
+            event = new CustomEvent(
                 "CornerstoneNewImage",
                 {
                     detail: {

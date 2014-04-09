@@ -1,5 +1,7 @@
 var cornerstone = (function (cs, csc) {
 
+    "use strict";
+
     if(cs === undefined) {
         cs = {};
     }

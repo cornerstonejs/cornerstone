@@ -1,5 +1,7 @@
 var cornerstone = (function (cs, csc) {
 
+    "use strict";
+
     if(cs === undefined) {
         cs = {};
     }
@@ -18,7 +20,7 @@ var cornerstone = (function (cs, csc) {
         ee.viewport.centerX = 0;
         ee.viewport.centerY = 0;
         cs.updateImage(e);
-    };
+    }
 
     cs.fitToWindow = fitToWindow;
 

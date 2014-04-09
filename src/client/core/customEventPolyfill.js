@@ -1,9 +1,9 @@
 
-var cornerstoneCore = (function (cornerstoneCore) {
-    if(cornerstoneCore === undefined) {
-        cornerstoneCore = {};
-    }
+(function () {
 
+    "use strict";
+
+    /*jshint -W053 */
 
     function ie_ver(){
         var iev=0;
@@ -26,7 +26,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
                 var evt = document.createEvent( 'CustomEvent' );
                 evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
                 return evt;
-            };
+            }
 
             CustomEvent.prototype = window.Event.prototype;
 
@@ -34,6 +34,4 @@ var cornerstoneCore = (function (cornerstoneCore) {
         })();
     }
 
-
-    return cornerstoneCore;
-}(cornerstoneCore));
+}());

@@ -1,10 +1,13 @@
 
 var cornerstoneCore = (function (cornerstoneCore) {
+
+    "use strict";
+
     if(cornerstoneCore === undefined) {
         cornerstoneCore = {};
     }
 
-    var renderCanvas = document.createElement('canvas')
+    var renderCanvas = document.createElement('canvas');
     var renderCanvasContext;
     var renderCanvasData;
 
@@ -32,10 +35,10 @@ var cornerstoneCore = (function (cornerstoneCore) {
 
         // lut is invalid or not present, regenerate it and cache it
         //console.log('generating lut');
-        image.lut = lut= cornerstoneCore.generateLut(image, viewport.windowWidth, viewport.windowCenter, viewport.invert);
+        image.lut = cornerstoneCore.generateLut(image, viewport.windowWidth, viewport.windowCenter, viewport.invert);
         image.lut.windowWidth = viewport.windowWidth;
         image.lut.windowCenter = viewport.windowCenter;
-        return image.lut
+        return image.lut;
     }
 
     function drawImage(ee, image) {
@@ -89,7 +92,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
             }
         );
         ee.element.dispatchEvent(event);
-    };
+    }
 
     function setToPixelCoordinateSystem(ee, context)
     {
@@ -103,7 +106,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
         context.translate(ee.viewport.centerX, ee.viewport.centerY);
         // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
         context.translate(-ee.image.columns /2, -ee.image.rows/2);
-    };
+    }
 
     function setToFontCoordinateSystem(ee, context, fontSize)
     {
@@ -116,7 +119,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
         // apply the pan offset
         context.translate(ee.viewport.centerX, ee.viewport.centerY);
 
-        var fontScale = .1;
+        var fontScale = 0.1;
         // apply the font scale
         context.scale(fontScale, fontScale);
         // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
@@ -133,7 +136,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
             fontScale: fontScale
         };
 
-    };
+    }
 
     // Module exports
     cornerstoneCore.drawImage = drawImage;

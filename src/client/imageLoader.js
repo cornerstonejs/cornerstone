@@ -1,4 +1,7 @@
 var cornerstone = (function (cornerstone, csc) {
+
+    "use strict";
+
     if(cornerstone === undefined) {
         cornerstone = {};
     }
@@ -14,16 +17,17 @@ var cornerstone = (function (cornerstone, csc) {
         var colonIndex = imageId.indexOf(":");
         var scheme = imageId.substring(0, colonIndex);
         var loader = imageLoaders[scheme];
+        var image;
         if(loader === undefined || loader === null) {
             if(unknownImageLoader !== undefined) {
-                var image = unknownImageLoader(imageId);
+                image = unknownImageLoader(imageId);
                 return image;
             }
             else {
                 return undefined;
             }
         }
-        var image = loader(imageId);
+        image = loader(imageId);
         return image;
     }
 
@@ -38,12 +42,12 @@ var cornerstone = (function (cornerstone, csc) {
         else {
             return imageCache[imageId];
         }
-    };
+    }
 
     // registers an imageLoader plugin with cornerstone for the specified scheme
     function registerImageLoader(scheme, imageLoader) {
         imageLoaders[scheme] = imageLoader;
-    };
+    }
 
     // Registers a new unknownImageLoader and returns the previous one (if it exists)
     function registerUnknownImageLoader(imageLoader) {
