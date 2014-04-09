@@ -1,10 +1,10 @@
 
-var cornerstoneCore = (function (cornerstoneCore) {
+var cornerstone = (function (cornerstone) {
 
     "use strict";
 
-    if(cornerstoneCore === undefined) {
-        cornerstoneCore = {};
+    if(cornerstone === undefined) {
+        cornerstone = {};
     }
 
     var renderCanvas = document.createElement('canvas');
@@ -35,7 +35,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
 
         // lut is invalid or not present, regenerate it and cache it
         //console.log('generating lut');
-        image.lut = cornerstoneCore.generateLut(image, viewport.windowWidth, viewport.windowCenter, viewport.invert);
+        image.lut = cornerstone.generateLut(image, viewport.windowWidth, viewport.windowCenter, viewport.invert);
         image.lut.windowWidth = viewport.windowWidth;
         image.lut.windowCenter = viewport.windowCenter;
         return image.lut;
@@ -66,7 +66,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
         var lut = getLut(image, ee.viewport);
 
         // apply the lut to the stored pixel data onto the render canvas
-        cornerstoneCore.storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
+        cornerstone.storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
         renderCanvasContext.putImageData(renderCanvasData, 0, 0);
 
         var scaler = ee.viewport.scale;
@@ -139,9 +139,9 @@ var cornerstoneCore = (function (cornerstoneCore) {
     }
 
     // Module exports
-    cornerstoneCore.drawImage = drawImage;
-    cornerstoneCore.setToPixelCoordinateSystem = setToPixelCoordinateSystem;
-    cornerstoneCore.setToFontCoordinateSystem = setToFontCoordinateSystem;
+    cornerstone.drawImage = drawImage;
+    cornerstone.setToPixelCoordinateSystem = setToPixelCoordinateSystem;
+    cornerstone.setToFontCoordinateSystem = setToFontCoordinateSystem;
 
-    return cornerstoneCore;
-}(cornerstoneCore));
+    return cornerstone;
+}(cornerstone));

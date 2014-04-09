@@ -37,12 +37,12 @@
 }());
 
 
-var cornerstoneCore = (function (cornerstoneCore) {
+var cornerstone = (function (cornerstone) {
 
     "use strict";
 
-    if(cornerstoneCore === undefined) {
-        cornerstoneCore = {};
+    if(cornerstone === undefined) {
+        cornerstone = {};
     }
 
     var renderCanvas = document.createElement('canvas');
@@ -73,7 +73,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
 
         // lut is invalid or not present, regenerate it and cache it
         //console.log('generating lut');
-        image.lut = cornerstoneCore.generateLut(image, viewport.windowWidth, viewport.windowCenter, viewport.invert);
+        image.lut = cornerstone.generateLut(image, viewport.windowWidth, viewport.windowCenter, viewport.invert);
         image.lut.windowWidth = viewport.windowWidth;
         image.lut.windowCenter = viewport.windowCenter;
         return image.lut;
@@ -104,7 +104,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
         var lut = getLut(image, ee.viewport);
 
         // apply the lut to the stored pixel data onto the render canvas
-        cornerstoneCore.storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
+        cornerstone.storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
         renderCanvasContext.putImageData(renderCanvasData, 0, 0);
 
         var scaler = ee.viewport.scale;
@@ -177,112 +177,13 @@ var cornerstoneCore = (function (cornerstoneCore) {
     }
 
     // Module exports
-    cornerstoneCore.drawImage = drawImage;
-    cornerstoneCore.setToPixelCoordinateSystem = setToPixelCoordinateSystem;
-    cornerstoneCore.setToFontCoordinateSystem = setToFontCoordinateSystem;
+    cornerstone.drawImage = drawImage;
+    cornerstone.setToPixelCoordinateSystem = setToPixelCoordinateSystem;
+    cornerstone.setToFontCoordinateSystem = setToFontCoordinateSystem;
 
-    return cornerstoneCore;
-}(cornerstoneCore));
-
-var cornerstoneCore = (function (cornerstoneCore) {
-
-    "use strict";
-
-    if(cornerstoneCore === undefined) {
-        cornerstoneCore = {};
-    }
-
-    /**
-     * Creates a LUT used while rendering to convert stored pixel values to
-     * display pixels
-     *
-     * @param image
-     * @returns {Array}
-     */
-    function generateLut(image, windowWidth, windowCenter, invert)
-    {
-        var lut = [];
-
-        var maxPixelValue = image.maxPixelValue;
-        var slope = image.slope;
-        var intercept = image.intercept;
-        var localWindowWidth = windowWidth;
-        var localWindowCenter = windowCenter;
-
-        var modalityLutValue;
-        var voiLutValue;
-        var clampedValue;
-        var storedValue;
-
-        if(invert === true) {
-            for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
-            {
-                modalityLutValue = storedValue * slope + intercept;
-                voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
-                clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
-                lut[storedValue] = Math.round(255 - clampedValue);
-            }
-        }
-        else {
-            for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
-            {
-                modalityLutValue = storedValue * slope + intercept;
-                voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
-                clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
-                lut[storedValue] = Math.round(clampedValue);
-            }
-        }
-
-
-        return lut;
-    }
-
-
-    // Module exports
-    cornerstoneCore.generateLut = generateLut;
-
-    return cornerstoneCore;
-}(cornerstoneCore));
-var cornerstoneCore = (function (cornerstoneCore) {
-
-    "use strict";
-
-    if(cornerstoneCore === undefined) {
-        cornerstoneCore = {};
-    }
-
-    /**
-     * This function transforms stored pixel values into a canvas image data buffer
-     * by using a LUT.  This is the most performance sensitive code in cornerstone and
-     * we use a special trick to make this go as fast as possible.  Specifically we
-     * use the alpha channel only to control the luminance rather than the red, green and
-     * blue channels which makes it over 3x faster.  The canvasImageDataData buffer needs
-     * to be previously filled with white pixels.
-     *
-     * @param image the image object
-     * @param lut the lut
-     * @param canvasImageDataData a canvasImgageData.data buffer filled with white pixels
-     */
-    function storedPixelDataToCanvasImageData(image, lut, canvasImageDataData)
-    {
-        var canvasImageDataIndex = 3;
-        var storedPixelDataIndex = 0;
-        var numPixels = image.width * image.height;
-        var storedPixelData = image.storedPixelData;
-        var localLut = lut;
-        var localCanvasImageDataData = canvasImageDataData;
-        while(storedPixelDataIndex < numPixels) {
-            localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex++]]; // alpha
-            canvasImageDataIndex += 4;
-        }
-    }
-
-    // Module exports
-    cornerstoneCore.storedPixelDataToCanvasImageData = storedPixelDataToCanvasImageData;
-
-   return cornerstoneCore;
-}(cornerstoneCore));
-var cornerstone = (function (cornerstone, csc) {
+    return cornerstone;
+}(cornerstone));
+var cornerstone = (function (cornerstone) {
 
     "use strict";
 
@@ -387,8 +288,8 @@ var cornerstone = (function (cornerstone, csc) {
     cornerstone.enable = enable;
 
     return cornerstone;
-}(cornerstone, cornerstoneCore));
-var cornerstone = (function (cornerstone, csc) {
+}(cornerstone));
+var cornerstone = (function (cornerstone) {
 
     "use strict";
 
@@ -444,18 +345,18 @@ var cornerstone = (function (cornerstone, csc) {
     cornerstone.removeElementData = removeElementData;
 
     return cornerstone;
-}(cornerstone, cornerstoneCore));
-var cornerstone = (function (cs, csc) {
+}(cornerstone));
+var cornerstone = (function (cornerstone) {
 
     "use strict";
 
-    if(cs === undefined) {
-        cs = {};
+    if(cornerstone === undefined) {
+        cornerstone = {};
     }
 
     function fitToWindow(e)
     {
-        var ee = cs.getEnabledElement(e);
+        var ee = cornerstone.getEnabledElement(e);
         var verticalScale = ee.canvas.height / ee.image.rows;
         var horizontalScale= ee.canvas.width / ee.image.columns;
         if(horizontalScale < verticalScale) {
@@ -466,14 +367,74 @@ var cornerstone = (function (cs, csc) {
         }
         ee.viewport.centerX = 0;
         ee.viewport.centerY = 0;
-        cs.updateImage(e);
+        cornerstone.updateImage(e);
     }
 
-    cs.fitToWindow = fitToWindow;
+    cornerstone.fitToWindow = fitToWindow;
 
-    return cs;
-}(cornerstone, cornerstoneCore));
-var cornerstone = (function (cornerstone, csc) {
+    return cornerstone;
+}(cornerstone));
+
+var cornerstone = (function (cornerstone) {
+
+    "use strict";
+
+    if(cornerstone === undefined) {
+        cornerstone = {};
+    }
+
+    /**
+     * Creates a LUT used while rendering to convert stored pixel values to
+     * display pixels
+     *
+     * @param image
+     * @returns {Array}
+     */
+    function generateLut(image, windowWidth, windowCenter, invert)
+    {
+        var lut = [];
+
+        var maxPixelValue = image.maxPixelValue;
+        var slope = image.slope;
+        var intercept = image.intercept;
+        var localWindowWidth = windowWidth;
+        var localWindowCenter = windowCenter;
+
+        var modalityLutValue;
+        var voiLutValue;
+        var clampedValue;
+        var storedValue;
+
+        if(invert === true) {
+            for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
+            {
+                modalityLutValue = storedValue * slope + intercept;
+                voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
+                clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
+                lut[storedValue] = Math.round(255 - clampedValue);
+            }
+        }
+        else {
+            for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
+            {
+                modalityLutValue = storedValue * slope + intercept;
+                voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
+                clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
+                lut[storedValue] = Math.round(clampedValue);
+            }
+        }
+
+
+        return lut;
+    }
+
+
+    // Module exports
+    cornerstone.generateLut = generateLut;
+
+    return cornerstone;
+}(cornerstone));
+var cornerstone = (function (cornerstone) {
 
     "use strict";
 
@@ -538,13 +499,13 @@ var cornerstone = (function (cornerstone, csc) {
     cornerstone.registerUnknownImageLoader = registerUnknownImageLoader;
 
     return cornerstone;
-}(cornerstone, cornerstoneCore));
-var cornerstone = (function (cs, csc) {
+}(cornerstone));
+var cornerstone = (function (cs) {
 
     "use strict";
 
-    if(cs === undefined) {
-        cs = {};
+    if(cornerstone === undefined) {
+        cornerstone = {};
     }
 
     function getAttribute(ee, attrName) {
@@ -570,7 +531,7 @@ var cornerstone = (function (cs, csc) {
                 windowWidth : getAttribute(ee, 'data-cornerstoneViewportWindowWidth'),
                 windowCenter : getAttribute(ee, 'data-cornerstoneViewportWindowCenter')
             };
-            cs.enable(ee, imageId, viewport);
+            cornerstone.enable(ee, imageId, viewport);
         }
     }
 
@@ -581,11 +542,11 @@ var cornerstone = (function (cs, csc) {
         enableAllElements();
     };
 
-    cs.enableAllElements = enableAllElements;
+    cornerstone.enableAllElements = enableAllElements;
 
-    return cs;
-}(cornerstone, cornerstoneCore));
-var cornerstone = (function (cornerstone, csc) {
+    return cornerstone;
+}(cornerstone));
+var cornerstone = (function (cornerstone) {
 
     "use strict";
 
@@ -723,8 +684,47 @@ var cornerstone = (function (cornerstone, csc) {
     cornerstone.newStack = newStack;
 
     return cornerstone;
-}(cornerstone, cornerstoneCore));
-var cornerstone = (function (cornerstone, csc) {
+}(cornerstone));
+var cornerstone = (function (cornerstone) {
+
+    "use strict";
+
+    if(cornerstone === undefined) {
+        cornerstone = {};
+    }
+
+    /**
+     * This function transforms stored pixel values into a canvas image data buffer
+     * by using a LUT.  This is the most performance sensitive code in cornerstone and
+     * we use a special trick to make this go as fast as possible.  Specifically we
+     * use the alpha channel only to control the luminance rather than the red, green and
+     * blue channels which makes it over 3x faster.  The canvasImageDataData buffer needs
+     * to be previously filled with white pixels.
+     *
+     * @param image the image object
+     * @param lut the lut
+     * @param canvasImageDataData a canvasImgageData.data buffer filled with white pixels
+     */
+    function storedPixelDataToCanvasImageData(image, lut, canvasImageDataData)
+    {
+        var canvasImageDataIndex = 3;
+        var storedPixelDataIndex = 0;
+        var numPixels = image.width * image.height;
+        var storedPixelData = image.storedPixelData;
+        var localLut = lut;
+        var localCanvasImageDataData = canvasImageDataData;
+        while(storedPixelDataIndex < numPixels) {
+            localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex++]]; // alpha
+            canvasImageDataIndex += 4;
+        }
+    }
+
+    // Module exports
+    cornerstone.storedPixelDataToCanvasImageData = storedPixelDataToCanvasImageData;
+
+   return cornerstone;
+}(cornerstone));
+var cornerstone = (function (cornerstone) {
 
     "use strict";
 
@@ -753,8 +753,8 @@ var cornerstone = (function (cornerstone, csc) {
     cornerstone.getStoredPixels = getStoredPixels;
 
     return cornerstone;
-}(cornerstone, cornerstoneCore));
-var cornerstone = (function (cornerstone, csc) {
+}(cornerstone));
+var cornerstone = (function (cornerstone) {
 
     "use strict";
 
@@ -767,7 +767,7 @@ var cornerstone = (function (cornerstone, csc) {
         var image = ee.image;
         // only draw the image if it has loaded
         if(image !== undefined) {
-            csc.drawImage(ee, image);
+            cornerstone.drawImage(ee, image);
         }
     }
 
@@ -775,8 +775,8 @@ var cornerstone = (function (cornerstone, csc) {
     cornerstone.updateImage = updateImage;
 
     return cornerstone;
-}(cornerstone, cornerstoneCore));
-var cornerstone = (function (cornerstone, csc) {
+}(cornerstone));
+var cornerstone = (function (cornerstone) {
 
     "use strict";
 
@@ -886,4 +886,4 @@ var cornerstone = (function (cornerstone, csc) {
     cornerstone.resetViewport = resetViewport;
 
     return cornerstone;
-}(cornerstone, cornerstoneCore));
+}(cornerstone));

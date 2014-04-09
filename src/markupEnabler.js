@@ -1,9 +1,9 @@
-var cornerstone = (function (cs, csc) {
+var cornerstone = (function (cs) {
 
     "use strict";
 
-    if(cs === undefined) {
-        cs = {};
+    if(cornerstone === undefined) {
+        cornerstone = {};
     }
 
     function getAttribute(ee, attrName) {
@@ -29,7 +29,7 @@ var cornerstone = (function (cs, csc) {
                 windowWidth : getAttribute(ee, 'data-cornerstoneViewportWindowWidth'),
                 windowCenter : getAttribute(ee, 'data-cornerstoneViewportWindowCenter')
             };
-            cs.enable(ee, imageId, viewport);
+            cornerstone.enable(ee, imageId, viewport);
         }
     }
 
@@ -40,7 +40,7 @@ var cornerstone = (function (cs, csc) {
         enableAllElements();
     };
 
-    cs.enableAllElements = enableAllElements;
+    cornerstone.enableAllElements = enableAllElements;
 
-    return cs;
-}(cornerstone, cornerstoneCore));
+    return cornerstone;
+}(cornerstone));

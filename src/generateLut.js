@@ -1,10 +1,10 @@
 
-var cornerstoneCore = (function (cornerstoneCore) {
+var cornerstone = (function (cornerstone) {
 
     "use strict";
 
-    if(cornerstoneCore === undefined) {
-        cornerstoneCore = {};
+    if(cornerstone === undefined) {
+        cornerstone = {};
     }
 
     /**
@@ -54,7 +54,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
 
 
     // Module exports
-    cornerstoneCore.generateLut = generateLut;
+    cornerstone.generateLut = generateLut;
 
-    return cornerstoneCore;
-}(cornerstoneCore));
+    return cornerstone;
+}(cornerstone));

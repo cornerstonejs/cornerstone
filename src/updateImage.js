@@ -1,4 +1,4 @@
-var cornerstone = (function (cornerstone, csc) {
+var cornerstone = (function (cornerstone) {
 
     "use strict";
 
@@ -11,7 +11,7 @@ var cornerstone = (function (cornerstone, csc) {
         var image = ee.image;
         // only draw the image if it has loaded
         if(image !== undefined) {
-            csc.drawImage(ee, image);
+            cornerstone.drawImage(ee, image);
         }
     }
 
@@ -19,4 +19,4 @@ var cornerstone = (function (cornerstone, csc) {
     cornerstone.updateImage = updateImage;
 
     return cornerstone;
-}(cornerstone, cornerstoneCore));
+}(cornerstone));

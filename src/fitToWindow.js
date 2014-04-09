@@ -1,14 +1,14 @@
-var cornerstone = (function (cs, csc) {
+var cornerstone = (function (cornerstone) {
 
     "use strict";
 
-    if(cs === undefined) {
-        cs = {};
+    if(cornerstone === undefined) {
+        cornerstone = {};
     }
 
     function fitToWindow(e)
     {
-        var ee = cs.getEnabledElement(e);
+        var ee = cornerstone.getEnabledElement(e);
         var verticalScale = ee.canvas.height / ee.image.rows;
         var horizontalScale= ee.canvas.width / ee.image.columns;
         if(horizontalScale < verticalScale) {
@@ -19,10 +19,10 @@ var cornerstone = (function (cs, csc) {
         }
         ee.viewport.centerX = 0;
         ee.viewport.centerY = 0;
-        cs.updateImage(e);
+        cornerstone.updateImage(e);
     }
 
-    cs.fitToWindow = fitToWindow;
+    cornerstone.fitToWindow = fitToWindow;
 
-    return cs;
-}(cornerstone, cornerstoneCore));
+    return cornerstone;
+}(cornerstone));

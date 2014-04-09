@@ -1,4 +1,4 @@
-var cornerstone = (function (cornerstone, csc) {
+var cornerstone = (function (cornerstone) {
 
     "use strict";
 
@@ -136,4 +136,4 @@ var cornerstone = (function (cornerstone, csc) {
     cornerstone.newStack = newStack;
 
     return cornerstone;
-}(cornerstone, cornerstoneCore));
+}(cornerstone));

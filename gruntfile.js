@@ -12,9 +12,9 @@ module.exports = function(grunt) {
         },
         concat: {
             distCornerstone: {
-                src : ['src/client/core/*.js', 'src/client/*.js'],
+                src : ['src/*.js'],
                 dest: 'dist/cornerstone.js'
-            },
+            }
         },
         uglify: {
             cornerstone: {
@@ -28,12 +28,12 @@ module.exports = function(grunt) {
         },
         jshint: {
             files: [
-                'src/**/*.js'
+                'src/*.js'
             ]
         },
         watch: {
             scripts: {
-                files: ['src/client/**/*.js', 'test/**/*.js'],
+                files: ['src/*.js', 'test/**/*.js'],
                 tasks: ['buildAll']
             }
         },

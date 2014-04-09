@@ -1,4 +1,4 @@
-var cornerstone = (function (cornerstone, csc) {
+var cornerstone = (function (cornerstone) {
 
     "use strict";
 
@@ -63,4 +63,4 @@ var cornerstone = (function (cornerstone, csc) {
     cornerstone.registerUnknownImageLoader = registerUnknownImageLoader;
 
     return cornerstone;
-}(cornerstone, cornerstoneCore));
+}(cornerstone));

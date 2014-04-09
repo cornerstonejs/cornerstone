@@ -1,9 +1,9 @@
-var cornerstoneCore = (function (cornerstoneCore) {
+var cornerstone = (function (cornerstone) {
 
     "use strict";
 
-    if(cornerstoneCore === undefined) {
-        cornerstoneCore = {};
+    if(cornerstone === undefined) {
+        cornerstone = {};
     }
 
     /**
@@ -33,7 +33,7 @@ var cornerstoneCore = (function (cornerstoneCore) {
     }
 
     // Module exports
-    cornerstoneCore.storedPixelDataToCanvasImageData = storedPixelDataToCanvasImageData;
+    cornerstone.storedPixelDataToCanvasImageData = storedPixelDataToCanvasImageData;
 
-   return cornerstoneCore;
-}(cornerstoneCore));
+   return cornerstone;
+}(cornerstone));
