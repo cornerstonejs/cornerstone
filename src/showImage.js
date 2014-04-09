@@ -134,6 +134,5 @@ var cornerstone = (function (cornerstone) {
 
     cornerstone.newStackImage = newStackImage;
     cornerstone.newStack = newStack;
-
     return cornerstone;
 }(cornerstone));

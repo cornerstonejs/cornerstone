@@ -1,3 +1,4 @@
+/*! cornerstone - v0.0.1 - 2014-04-09 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 
 (function () {
 
@@ -98,7 +99,7 @@ var cornerstone = (function (cornerstone) {
 
         // save the canvas context state and apply the viewport properties
         context.save();
-        setToPixelCoordinateSystem(ee, context);
+        cornerstone.setToPixelCoordinateSystem(ee, context);
 
         // generate the lut
         var lut = getLut(image, ee.viewport);
@@ -132,54 +133,8 @@ var cornerstone = (function (cornerstone) {
         ee.element.dispatchEvent(event);
     }
 
-    function setToPixelCoordinateSystem(ee, context)
-    {
-        // reset the transformation matrix
-        context.setTransform(1, 0, 0, 1, 0, 0);
-        // move origin to center of canvas
-        context.translate(ee.canvas.width/2, ee.canvas.height / 2);
-        // apply the scale
-        context.scale(ee.viewport.scale, ee.viewport.scale);
-        // apply the pan offset
-        context.translate(ee.viewport.centerX, ee.viewport.centerY);
-        // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
-        context.translate(-ee.image.columns /2, -ee.image.rows/2);
-    }
-
-    function setToFontCoordinateSystem(ee, context, fontSize)
-    {
-        // reset the transformation matrix
-        context.setTransform(1, 0, 0, 1, 0, 0);
-        // move origin to center of canvas
-        context.translate(ee.canvas.width/2, ee.canvas.height / 2);
-        // apply the scale
-        context.scale(ee.viewport.scale, ee.viewport.scale);
-        // apply the pan offset
-        context.translate(ee.viewport.centerX, ee.viewport.centerY);
-
-        var fontScale = 0.1;
-        // apply the font scale
-        context.scale(fontScale, fontScale);
-        // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
-        context.translate(-ee.image.columns /2 / fontScale, -ee.image.rows/2 / fontScale);
-
-        // return the font size to use
-        var scaledFontSize = fontSize / ee.viewport.scale / fontScale;
-        // TODO: actually calculate this?
-        var lineHeight  = fontSize / ee.viewport.scale / fontScale;
-
-        return {
-            fontSize :scaledFontSize,
-            lineHeight:lineHeight,
-            fontScale: fontScale
-        };
-
-    }
-
     // Module exports
     cornerstone.drawImage = drawImage;
-    cornerstone.setToPixelCoordinateSystem = setToPixelCoordinateSystem;
-    cornerstone.setToFontCoordinateSystem = setToFontCoordinateSystem;
 
     return cornerstone;
 }(cornerstone));
@@ -236,18 +191,6 @@ var cornerstone = (function (cornerstone) {
                 }
             }
 
-            /*var el = {
-                element: element,
-                canvas: canvas,
-                ids : {
-                    imageId: imageId
-                },
-                image:image,
-                viewport : viewport,
-                data : {}
-            };
-            */
-            //var el = cornerstone.getEnabledElement(el);
             el.image = image;
             el.viewport = viewport;
             cornerstone.updateImage(element);
@@ -286,6 +229,52 @@ var cornerstone = (function (cornerstone) {
 
     // module/private exports
     cornerstone.enable = enable;
+
+    return cornerstone;
+}(cornerstone));
+var cornerstone = (function (cs) {
+
+    "use strict";
+
+    if(cornerstone === undefined) {
+        cornerstone = {};
+    }
+
+    function getAttribute(ee, attrName) {
+        var attr = ee.getAttribute(attrName);
+        if(attr === undefined) {
+            return undefined;
+        }
+        return attr;
+    }
+
+    function enableAllElements()
+    {
+        var ees = document.querySelectorAll('[data-cornerstoneEnabled]');
+        for(var i=0; i < ees.length; i++) {
+            var ee = ees[i];
+            var imageId = ee.getAttribute('data-cornerstoneImageId');
+
+            var viewport =
+            {
+                scale : getAttribute(ee, 'data-cornerstoneViewportScale'),
+                centerX : getAttribute(ee, 'data-cornerstoneViewportCenterX'),
+                centerY : getAttribute(ee, 'data-cornerstoneViewportCenterY'),
+                windowWidth : getAttribute(ee, 'data-cornerstoneViewportWindowWidth'),
+                windowCenter : getAttribute(ee, 'data-cornerstoneViewportWindowCenter')
+            };
+            cornerstone.enable(ee, imageId, viewport);
+        }
+    }
+
+
+    var oldOnLoad = window.onload;
+    window.onload = function() {
+        if(typeof oldOnLoad == 'function') {oldOnLoad();}
+        enableAllElements();
+    };
+
+    cornerstone.enableAllElements = enableAllElements;
 
     return cornerstone;
 }(cornerstone));
@@ -442,6 +431,36 @@ var cornerstone = (function (cornerstone) {
         cornerstone = {};
     }
 
+    // returns an array of stored pixels given an image pixel x,y
+    // and width/height
+    function getStoredPixels(element, x, y, width, height) {
+        x = Math.round(x);
+        y = Math.round(y);
+        var ee = cornerstone.getEnabledElement(element);
+        var storedPixels = [];
+        var index = 0;
+        for(var row=0; row < height; row++) {
+            for(var column=0; column < width; column++) {
+                var spIndex = ((row + y) * ee.image.columns) + (column + x);
+                storedPixels[index++] = ee.image.storedPixelData[spIndex];
+            }
+        }
+        return storedPixels;
+    }
+
+    // module exports
+    cornerstone.getStoredPixels = getStoredPixels;
+
+    return cornerstone;
+}(cornerstone));
+var cornerstone = (function (cornerstone) {
+
+    "use strict";
+
+    if(cornerstone === undefined) {
+        cornerstone = {};
+    }
+
     var imageLoaders = {};
 
     var unknownImageLoader;
@@ -468,7 +487,6 @@ var cornerstone = (function (cornerstone) {
     }
 
     // Loads an image given an imageId
-    // TODO: make this api async?
     function loadImage(imageId) {
         if(imageCache[imageId] === undefined) {
             var image = loadImageFromImageLoader(imageId);
@@ -500,7 +518,7 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
-var cornerstone = (function (cs) {
+var cornerstone = (function (cornerstone) {
 
     "use strict";
 
@@ -508,41 +526,155 @@ var cornerstone = (function (cs) {
         cornerstone = {};
     }
 
-    function getAttribute(ee, attrName) {
-        var attr = ee.getAttribute(attrName);
-        if(attr === undefined) {
-            return undefined;
+    // converts pageX and pageY coordinates in an image enabled element
+    // to image coordinates
+    function pageToImage(element, pageX, pageY) {
+        var ee = cornerstone.getEnabledElement(element);
+
+        if(ee.image === undefined) {
+            return {
+                x:0,
+                y:0};
         }
-        return attr;
+        // TODO: replace this with a transformation matrix
+
+        // convert the pageX and pageY to the canvas client coordinates
+        var rect = element.getBoundingClientRect();
+        var clientX = pageX - rect.left - window.scrollX;
+        var clientY = pageY - rect.top - window.scrollY;
+
+        // translate the client relative to the middle of the canvas
+        var middleX = clientX - rect.width / 2.0;
+        var middleY = clientY - rect.height / 2.0;
+
+        // scale to image coordinates middleX/middleY
+        var viewport = ee.viewport;
+        var scaledMiddleX = middleX / viewport.scale;
+        var scaledMiddleY = middleY / viewport.scale;
+
+        // apply pan offset
+        var imageX = scaledMiddleX - viewport.centerX;
+        var imageY = scaledMiddleY - viewport.centerY;
+
+        // translate to image top left
+        imageX += ee.image.columns / 2;
+        imageY += ee.image.rows / 2;
+
+        return {
+            x: imageX,
+            y: imageY
+        };
     }
 
-    function enableAllElements()
+    // module/private exports
+    cornerstone.pageToImage=pageToImage;
+
+    return cornerstone;
+}(cornerstone));
+var cornerstone = (function (cornerstone) {
+
+    "use strict";
+
+    if(cornerstone === undefined) {
+        cornerstone = {};
+    }
+
+    function resetViewport(element, canvas, image) {
+        var viewport = {
+            scale : 1.0,
+            centerX : 0,
+            centerY: 0,
+            windowWidth: image.windowWidth,
+            windowCenter: image.windowCenter,
+            invert: image.invert
+        };
+
+        // fit image to window
+        var verticalScale = canvas.height / image.rows;
+        var horizontalScale= canvas.width / image.columns;
+        if(horizontalScale < verticalScale) {
+            viewport.scale = horizontalScale;
+        }
+        else {
+            viewport.scale = verticalScale;
+        }
+        return viewport;
+    }
+
+    // module/private exports
+    cornerstone.resetViewport = resetViewport;
+
+    return cornerstone;
+}(cornerstone));
+
+var cornerstone = (function (cornerstone) {
+
+    "use strict";
+
+    if(cornerstone === undefined) {
+        cornerstone = {};
+    }
+
+    function setToFontCoordinateSystem(ee, context, fontSize)
     {
-        var ees = document.querySelectorAll('[data-cornerstoneEnabled]');
-        for(var i=0; i < ees.length; i++) {
-            var ee = ees[i];
-            var imageId = ee.getAttribute('data-cornerstoneImageId');
+        // reset the transformation matrix
+        context.setTransform(1, 0, 0, 1, 0, 0);
+        // move origin to center of canvas
+        context.translate(ee.canvas.width/2, ee.canvas.height / 2);
+        // apply the scale
+        context.scale(ee.viewport.scale, ee.viewport.scale);
+        // apply the pan offset
+        context.translate(ee.viewport.centerX, ee.viewport.centerY);
 
-            var viewport =
-            {
-                scale : getAttribute(ee, 'data-cornerstoneViewportScale'),
-                centerX : getAttribute(ee, 'data-cornerstoneViewportCenterX'),
-                centerY : getAttribute(ee, 'data-cornerstoneViewportCenterY'),
-                windowWidth : getAttribute(ee, 'data-cornerstoneViewportWindowWidth'),
-                windowCenter : getAttribute(ee, 'data-cornerstoneViewportWindowCenter')
-            };
-            cornerstone.enable(ee, imageId, viewport);
-        }
+        var fontScale = 0.1;
+        // apply the font scale
+        context.scale(fontScale, fontScale);
+        // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
+        context.translate(-ee.image.columns /2 / fontScale, -ee.image.rows/2 / fontScale);
+
+        // return the font size to use
+        var scaledFontSize = fontSize / ee.viewport.scale / fontScale;
+        // TODO: actually calculate this?
+        var lineHeight  = fontSize / ee.viewport.scale / fontScale;
+
+        return {
+            fontSize :scaledFontSize,
+            lineHeight:lineHeight,
+            fontScale: fontScale
+        };
+
     }
 
+    // Module exports
+    cornerstone.setToFontCoordinateSystem = setToFontCoordinateSystem;
 
-    var oldOnLoad = window.onload;
-    window.onload = function() {
-        if(typeof oldOnLoad == 'function') {oldOnLoad();}
-        enableAllElements();
-    };
+    return cornerstone;
+}(cornerstone));
 
-    cornerstone.enableAllElements = enableAllElements;
+var cornerstone = (function (cornerstone) {
+
+    "use strict";
+
+    if(cornerstone === undefined) {
+        cornerstone = {};
+    }
+
+    function setToPixelCoordinateSystem(ee, context)
+    {
+        // reset the transformation matrix
+        context.setTransform(1, 0, 0, 1, 0, 0);
+        // move origin to center of canvas
+        context.translate(ee.canvas.width/2, ee.canvas.height / 2);
+        // apply the scale
+        context.scale(ee.viewport.scale, ee.viewport.scale);
+        // apply the pan offset
+        context.translate(ee.viewport.centerX, ee.viewport.centerY);
+        // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
+        context.translate(-ee.image.columns /2, -ee.image.rows/2);
+    }
+
+    // Module exports
+    cornerstone.setToPixelCoordinateSystem = setToPixelCoordinateSystem;
 
     return cornerstone;
 }(cornerstone));
@@ -682,7 +814,6 @@ var cornerstone = (function (cornerstone) {
 
     cornerstone.newStackImage = newStackImage;
     cornerstone.newStack = newStack;
-
     return cornerstone;
 }(cornerstone));
 var cornerstone = (function (cornerstone) {
@@ -723,36 +854,6 @@ var cornerstone = (function (cornerstone) {
     cornerstone.storedPixelDataToCanvasImageData = storedPixelDataToCanvasImageData;
 
    return cornerstone;
-}(cornerstone));
-var cornerstone = (function (cornerstone) {
-
-    "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
-
-    // returns an array of stored pixels given an image pixel x,y
-    // and width/height
-    function getStoredPixels(element, x, y, width, height) {
-        x = Math.round(x);
-        y = Math.round(y);
-        var ee = cornerstone.getEnabledElement(element);
-        var storedPixels = [];
-        var index = 0;
-        for(var row=0; row < height; row++) {
-            for(var column=0; column < width; column++) {
-                var spIndex = ((row + y) * ee.image.columns) + (column + x);
-                storedPixels[index++] = ee.image.storedPixelData[spIndex];
-            }
-        }
-        return storedPixels;
-    }
-
-    // module exports
-    cornerstone.getStoredPixels = getStoredPixels;
-
-    return cornerstone;
 }(cornerstone));
 var cornerstone = (function (cornerstone) {
 
@@ -817,73 +918,9 @@ var cornerstone = (function (cornerstone) {
     }
 
 
-    // converts pageX and pageY coordinates in an image enabled element
-    // to image coordinates
-    function pageToImage(element, pageX, pageY) {
-        var ee = cornerstone.getEnabledElement(element);
-
-        if(ee.image === undefined) {
-            return {
-                x:0,
-            y:0};
-        }
-        // TODO: replace this with a transformation matrix
-
-        // convert the pageX and pageY to the canvas client coordinates
-        var rect = element.getBoundingClientRect();
-        var clientX = pageX - rect.left - window.scrollX;
-        var clientY = pageY - rect.top - window.scrollY;
-
-        // translate the client relative to the middle of the canvas
-        var middleX = clientX - rect.width / 2.0;
-        var middleY = clientY - rect.height / 2.0;
-
-        // scale to image coordinates middleX/middleY
-        var viewport = ee.viewport;
-        var scaledMiddleX = middleX / viewport.scale;
-        var scaledMiddleY = middleY / viewport.scale;
-
-        // apply pan offset
-        var imageX = scaledMiddleX - viewport.centerX;
-        var imageY = scaledMiddleY - viewport.centerY;
-
-        // translate to image top left
-        imageX += ee.image.columns / 2;
-        imageY += ee.image.rows / 2;
-
-        return {
-            x: imageX,
-            y: imageY
-        };
-    }
-
-    function resetViewport(element, canvas, image) {
-        var viewport = {
-            scale : 1.0,
-            centerX : 0,
-            centerY: 0,
-            windowWidth: image.windowWidth,
-            windowCenter: image.windowCenter,
-            invert: image.invert
-        };
-
-        // fit image to window
-        var verticalScale = canvas.height / image.rows;
-        var horizontalScale= canvas.width / image.columns;
-        if(horizontalScale < verticalScale) {
-            viewport.scale = horizontalScale;
-        }
-        else {
-            viewport.scale = verticalScale;
-        }
-        return viewport;
-    }
-
     // module/private exports
     cornerstone.getViewport = getViewport;
     cornerstone.setViewport=setViewport;
-    cornerstone.pageToImage=pageToImage;
-    cornerstone.resetViewport = resetViewport;
 
     return cornerstone;
 }(cornerstone));

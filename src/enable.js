@@ -51,18 +51,6 @@ var cornerstone = (function (cornerstone) {
                 }
             }
 
-            /*var el = {
-                element: element,
-                canvas: canvas,
-                ids : {
-                    imageId: imageId
-                },
-                image:image,
-                viewport : viewport,
-                data : {}
-            };
-            */
-            //var el = cornerstone.getEnabledElement(el);
             el.image = image;
             el.viewport = viewport;
             cornerstone.updateImage(element);

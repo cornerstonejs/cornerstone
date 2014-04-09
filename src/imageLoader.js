@@ -32,7 +32,6 @@ var cornerstone = (function (cornerstone) {
     }
 
     // Loads an image given an imageId
-    // TODO: make this api async?
     function loadImage(imageId) {
         if(imageCache[imageId] === undefined) {
             var image = loadImageFromImageLoader(imageId);
