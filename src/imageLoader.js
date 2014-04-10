@@ -1,3 +1,7 @@
+/**
+ * This module deals with ImageLoaders, loading images and caching images
+ */
+
 var cornerstone = (function (cornerstone) {
 
     "use strict";

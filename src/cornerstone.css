@@ -1,0 +1,30 @@
+
+/* class to disable interpolation of pixel data on the canvas element */
+/* http://stackoverflow.com/questions/7615009/disable-interpolation-when-scaling-a-canvas*/
+.cornerstone-disable-interpolation {
+    image-rendering: optimizeSpeed;             // Older versions of FF
+    image-rendering: -moz-crisp-edges;          // FF 6.0+
+    image-rendering: -webkit-optimize-contrast; // Webkit
+    //  (Safari now, Chrome soon)
+    image-rendering: -o-crisp-edges;            // OS X & Windows Opera (12.02+)
+    image-rendering: optimize-contrast;         // Possible future browsers.
+    -ms-interpolation-mode: nearest-neighbor;   // IE
+}
+
+/* apply this to image enabled divs */
+.cornerstone-enabled-image {
+
+    /* prevent text selection from occurring when dragging the mouse on the div */
+    /* http://stackoverflow.com/questions/826782/css-rule-to-disable-text-selection-highlighting */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    /* force the cursor to always be the default arrow.  This prevents it from changing to an ibar when it is
+       over HTML based text overlays (four corners */
+    cursor:default;
+}
+

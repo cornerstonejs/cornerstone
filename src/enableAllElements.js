@@ -1,3 +1,8 @@
+/**
+ * This module looks for elements in the document that have cornerstone markup attributes
+ * and applies them.  It also registers a window.onload handle to automatically do this
+ * after the document has been loaded
+ */
 var cornerstone = (function (cs) {
 
     "use strict";

@@ -1,3 +1,6 @@
+/**
+ * This module generates a lut for an image
+ */
 
 var cornerstone = (function (cornerstone) {
 

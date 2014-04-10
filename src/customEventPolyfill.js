@@ -1,10 +1,15 @@
+/**
+ * This module pollyfills the CustomEvent functionality for Internet Explorer 9,10 and 11.
+ */
 
 (function () {
 
     "use strict";
 
+    // Turn off jshint warnings about new Number() in borrowed code below
     /*jshint -W053 */
 
+    // Taken from : http://stackoverflow.com/questions/17907445/how-to-detect-ie11
     function ie_ver(){
         var iev=0;
         var ieold = (/MSIE (\d+\.\d+);/.test(navigator.userAgent));
@@ -18,6 +23,7 @@
         return iev;
     }
 
+    // Taken from: http://stackoverflow.com/questions/14358599/object-doesnt-support-this-action-ie9-with-customevent-initialization
     var ieVer = ie_ver();
     if(ieVer <= 11) {
         (function () {

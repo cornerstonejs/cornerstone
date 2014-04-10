@@ -1,3 +1,6 @@
+/**
+ * This module contains a helper function to covert page coordinates to pixel coordinates
+ */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -6,8 +9,15 @@ var cornerstone = (function (cornerstone) {
         cornerstone = {};
     }
 
-    // converts pageX and pageY coordinates in an image enabled element
-    // to image coordinates
+    /**
+     * Converts a point in the page coordinate system to the pixel coordinate
+     * system
+     * @param element
+     * @param pageX
+     * @param pageY
+     * @returns {{x: number, y: number}}
+     */
+
     function pageToImage(element, pageX, pageY) {
         var ee = cornerstone.getEnabledElement(element);
 

@@ -3,12 +3,13 @@ Roadmap
 
 Phase 3 (in progress)
 ---------------------
- * Code cleanup / refactoring / documentation
- * run jshint on build
- * ImageLoader design
- * ImageLoader API Documentation
- * WADO ImageLoader plugin
- * Extract tools to separate library
+ * Code cleanup / refactoring / documentation (in progress)
+ * run jshint on build (done)
+ * ImageLoader design (in wiki)
+ * ImageLoader API Documentation (in wiki)
+ * WADO ImageLoader plugin (now cornerstoneWADOImageLoader project)
+ * Extract tools to separate library (now cornerstoneTools project)
+ * Optimize image display (lut generation, stored pixel data -> canvas, etc) (done)
 
 Phase 2 (complete)
 ------------------
@@ -34,7 +35,6 @@ Phase 2 (complete)
    * Elliptical ROI
  * Viewport Event - fired every time a viewport property changes
  * Render Event - fired every time the image is rendered (useful for generating overlays)
-
 
 Phase 1 / proof of concept (DONE!)
 ----------------------------------

@@ -1,3 +1,6 @@
+/**
+ * This module contains a function to immediately redraw an image
+ */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -6,6 +9,10 @@ var cornerstone = (function (cornerstone) {
         cornerstone = {};
     }
 
+    /**
+     * Forces the image to be updated/redrawn for the specified enabled element
+     * @param element
+     */
     function updateImage(element) {
         var ee = cornerstone.getEnabledElement(element);
         var image = ee.image;

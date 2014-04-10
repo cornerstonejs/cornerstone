@@ -1,3 +1,6 @@
+/**
+ * This module is responsible for enabling an element to display images with cornerstone
+ */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -8,6 +11,7 @@ var cornerstone = (function (cornerstone) {
 
     function enable(element, imageId, viewportOptions) {
         var canvas = document.createElement('canvas');
+
         // Set the size of canvas and take retina into account
         var retina = window.devicePixelRatio > 1;
         if(retina) {
@@ -39,7 +43,7 @@ var cornerstone = (function (cornerstone) {
 
         var loadImageDeferred = cornerstone.loadImage(imageId);
         loadImageDeferred.then(function(image){
-            var viewport = cornerstone.resetViewport(element, canvas, image);
+            var viewport = cornerstone.getDefaultViewport(canvas, image);
 
             // merge viewportOptions into this viewport
             if(viewportOptions) {
@@ -55,6 +59,7 @@ var cornerstone = (function (cornerstone) {
             el.viewport = viewport;
             cornerstone.updateImage(element);
 
+            // fire an event indicating the viewport has been changed
             var event = new CustomEvent(
                 "CornerstoneViewportUpdated",
                 {
@@ -68,6 +73,7 @@ var cornerstone = (function (cornerstone) {
             );
             element.dispatchEvent(event);
 
+            // Fire an event indicating a new image has been loaded
             event = new CustomEvent(
                 "CornerstoneNewImage",
                 {

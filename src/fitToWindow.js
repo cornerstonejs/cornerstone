@@ -1,3 +1,7 @@
+/**
+ * This module will fit an image to fit inside the canvas displaying it such that all pixels
+ * in the image are viewable
+ */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -6,20 +10,18 @@ var cornerstone = (function (cornerstone) {
         cornerstone = {};
     }
 
-    function fitToWindow(e)
+    /**
+     * Adjusts an images scale and center so all pixels are viewable and the image is centered.
+     * @param element
+     */
+    function fitToWindow(element)
     {
-        var ee = cornerstone.getEnabledElement(e);
-        var verticalScale = ee.canvas.height / ee.image.rows;
-        var horizontalScale= ee.canvas.width / ee.image.columns;
-        if(horizontalScale < verticalScale) {
-            ee.viewport.scale = horizontalScale;
-        }
-        else {
-            ee.viewport.scale = verticalScale;
-        }
-        ee.viewport.centerX = 0;
-        ee.viewport.centerY = 0;
-        cornerstone.updateImage(e);
+        var enabledElement = cornerstone.getEnabledElement(element);
+        var defaultViewport = cornerstone.getDefaultViewport(enabledElement.canvas, enabledElement.image);
+        enabledElement.viewport.scale = defaultViewport.scale;
+        enabledElement.viewport.centerX = defaultViewport.centerX;
+        enabledElement.viewport.centerY = defaultViewport.centerY;
+        cornerstone.updateImage(element);
     }
 
     cornerstone.fitToWindow = fitToWindow;

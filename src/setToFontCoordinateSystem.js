@@ -1,3 +1,7 @@
+/**
+ * This module sets the transformation matrix for a canvas context so it displays fonts
+ * smoothly even when the image is highly scaled up
+ */
 
 var cornerstone = (function (cornerstone) {
 
@@ -7,6 +11,17 @@ var cornerstone = (function (cornerstone) {
         cornerstone = {};
     }
 
+    /**
+     * Sets the canvas context transformation matrix so it is scaled to show text
+     * more cleanly even if the image is scaled up.  See
+     * https://github.com/chafey/cornerstoneTools/wiki/DrawingText
+     * for more information
+     *
+     * @param ee
+     * @param context
+     * @param fontSize
+     * @returns {{fontSize: number, lineHeight: number, fontScale: number}}
+     */
     function setToFontCoordinateSystem(ee, context, fontSize)
     {
         // reset the transformation matrix

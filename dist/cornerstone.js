@@ -1,11 +1,12 @@
-/*! cornerstone - v0.0.1 - 2014-04-09 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
-
+/*! cornerstone - v0.0.1 - 2014-04-10 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 (function () {
 
     "use strict";
 
+    // Turn off jshint warnings about new Number() in borrowed code below
     /*jshint -W053 */
 
+    // Taken from : http://stackoverflow.com/questions/17907445/how-to-detect-ie11
     function ie_ver(){
         var iev=0;
         var ieold = (/MSIE (\d+\.\d+);/.test(navigator.userAgent));
@@ -19,6 +20,7 @@
         return iev;
     }
 
+    // Taken from: http://stackoverflow.com/questions/14358599/object-doesnt-support-this-action-ie9-with-customevent-initialization
     var ieVer = ie_ver();
     if(ieVer <= 11) {
         (function () {
@@ -37,6 +39,9 @@
 
 }());
 
+/**
+ * This module is responsible for drawing an image to an enabled elements canvas element
+ */
 
 var cornerstone = (function (cornerstone) {
 
@@ -68,18 +73,21 @@ var cornerstone = (function (cornerstone) {
     {
         // if we have a cached lut and it has the right values, return it immediately
         if(image.lut !== undefined && image.lut.windowCenter === viewport.windowCenter && image.lut.windowWidth === viewport.windowWidth) {
-            //console.log('using cached lut');
             return image.lut;
         }
 
         // lut is invalid or not present, regenerate it and cache it
-        //console.log('generating lut');
         image.lut = cornerstone.generateLut(image, viewport.windowWidth, viewport.windowCenter, viewport.invert);
         image.lut.windowWidth = viewport.windowWidth;
         image.lut.windowCenter = viewport.windowCenter;
         return image.lut;
     }
 
+    /**
+     * Draws an image to a given enabled element
+     * @param ee
+     * @param image
+     */
     function drawImage(ee, image) {
 
         // get the canvas context and reset the transform
@@ -91,8 +99,8 @@ var cornerstone = (function (cornerstone) {
         context.fillRect(0,0, ee.canvas.width, ee.canvas.height);
 
         // If our render canvas does not match the size of this image reset it
-        // NOTE: This will be inefficient if we are updating multiple images of different
-        // sizes frequently, but I don't know how much...
+        // NOTE: This might be inefficient if we are updating multiple images of different
+        // sizes frequently.
         if(renderCanvas.width !== image.width || renderCanvas.height != image.height) {
             initializeRenderCanvas(image);
         }
@@ -101,17 +109,19 @@ var cornerstone = (function (cornerstone) {
         context.save();
         cornerstone.setToPixelCoordinateSystem(ee, context);
 
-        // generate the lut
+        // get the lut to use
         var lut = getLut(image, ee.viewport);
 
         // apply the lut to the stored pixel data onto the render canvas
         cornerstone.storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
         renderCanvasContext.putImageData(renderCanvasData, 0, 0);
 
-        var scaler = ee.viewport.scale;
+        // turn off image smooth/interpolation if pixelReplication is set in the viewport
+        if(ee.viewport.pixelReplication === true) {
+            context.webkitImageSmoothingEnabled = false;
+        }
 
         // Draw the render canvas half the image size (because we set origin to the middle of the canvas above)
-        //context.webkitImageSmoothingEnabled = false;
         context.drawImage(renderCanvas, 0,0, image.columns, image.rows, 0, 0, image.columns, image.rows);
 
         context.restore();
@@ -124,7 +134,7 @@ var cornerstone = (function (cornerstone) {
                     viewport: ee.viewport,
                     image: ee.image,
                     element: ee.element,
-                    enabledElement: ee,
+                    enabledElement: ee
                 },
                 bubbles: false,
                 cancelable: false
@@ -138,6 +148,9 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+/**
+ * This module is responsible for enabling an element to display images with cornerstone
+ */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -148,6 +161,7 @@ var cornerstone = (function (cornerstone) {
 
     function enable(element, imageId, viewportOptions) {
         var canvas = document.createElement('canvas');
+
         // Set the size of canvas and take retina into account
         var retina = window.devicePixelRatio > 1;
         if(retina) {
@@ -179,7 +193,7 @@ var cornerstone = (function (cornerstone) {
 
         var loadImageDeferred = cornerstone.loadImage(imageId);
         loadImageDeferred.then(function(image){
-            var viewport = cornerstone.resetViewport(element, canvas, image);
+            var viewport = cornerstone.getDefaultViewport(canvas, image);
 
             // merge viewportOptions into this viewport
             if(viewportOptions) {
@@ -195,6 +209,7 @@ var cornerstone = (function (cornerstone) {
             el.viewport = viewport;
             cornerstone.updateImage(element);
 
+            // fire an event indicating the viewport has been changed
             var event = new CustomEvent(
                 "CornerstoneViewportUpdated",
                 {
@@ -208,6 +223,7 @@ var cornerstone = (function (cornerstone) {
             );
             element.dispatchEvent(event);
 
+            // Fire an event indicating a new image has been loaded
             event = new CustomEvent(
                 "CornerstoneNewImage",
                 {
@@ -232,6 +248,11 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+/**
+ * This module looks for elements in the document that have cornerstone markup attributes
+ * and applies them.  It also registers a window.onload handle to automatically do this
+ * after the document has been loaded
+ */
 var cornerstone = (function (cs) {
 
     "use strict";
@@ -335,6 +356,10 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+/**
+ * This module will fit an image to fit inside the canvas displaying it such that all pixels
+ * in the image are viewable
+ */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -343,26 +368,27 @@ var cornerstone = (function (cornerstone) {
         cornerstone = {};
     }
 
-    function fitToWindow(e)
+    /**
+     * Adjusts an images scale and center so all pixels are viewable and the image is centered.
+     * @param element
+     */
+    function fitToWindow(element)
     {
-        var ee = cornerstone.getEnabledElement(e);
-        var verticalScale = ee.canvas.height / ee.image.rows;
-        var horizontalScale= ee.canvas.width / ee.image.columns;
-        if(horizontalScale < verticalScale) {
-            ee.viewport.scale = horizontalScale;
-        }
-        else {
-            ee.viewport.scale = verticalScale;
-        }
-        ee.viewport.centerX = 0;
-        ee.viewport.centerY = 0;
-        cornerstone.updateImage(e);
+        var enabledElement = cornerstone.getEnabledElement(element);
+        var defaultViewport = cornerstone.getDefaultViewport(enabledElement.canvas, enabledElement.image);
+        enabledElement.viewport.scale = defaultViewport.scale;
+        enabledElement.viewport.centerX = defaultViewport.centerX;
+        enabledElement.viewport.centerY = defaultViewport.centerY;
+        cornerstone.updateImage(element);
     }
 
     cornerstone.fitToWindow = fitToWindow;
 
     return cornerstone;
 }(cornerstone));
+/**
+ * This module generates a lut for an image
+ */
 
 var cornerstone = (function (cornerstone) {
 
@@ -423,6 +449,11 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+/**
+ * This module contains a function to get a default viewport for an image given
+ * a canvas element to display it in
+ *
+ */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -431,8 +462,59 @@ var cornerstone = (function (cornerstone) {
         cornerstone = {};
     }
 
-    // returns an array of stored pixels given an image pixel x,y
-    // and width/height
+    /**
+     * Creates a new viewport object containing default values for the image and canvas
+     * @param canvas
+     * @param image
+     * @returns {{scale: number, centerX: number, centerY: number, windowWidth: (image.windowWidth|*), windowCenter: (image.windowCenter|*), invert: *}}
+     */
+    function getDefaultViewport(canvas, image) {
+        var viewport = {
+            scale : 1.0,
+            centerX : 0,
+            centerY: 0,
+            windowWidth: image.windowWidth,
+            windowCenter: image.windowCenter,
+            invert: image.invert
+        };
+
+        // fit image to window
+        var verticalScale = canvas.height / image.rows;
+        var horizontalScale= canvas.width / image.columns;
+        if(horizontalScale < verticalScale) {
+            viewport.scale = horizontalScale;
+        }
+        else {
+            viewport.scale = verticalScale;
+        }
+        return viewport;
+    }
+
+    // module/private exports
+    cornerstone.getDefaultViewport = getDefaultViewport;
+
+    return cornerstone;
+}(cornerstone));
+/**
+ * This module returns a subset of the stored pixels of an image
+ */
+var cornerstone = (function (cornerstone) {
+
+    "use strict";
+
+    if(cornerstone === undefined) {
+        cornerstone = {};
+    }
+
+    /**
+     * Returns an array of stored pixels given a rectangle in the image
+     * @param element
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @returns {Array}
+     */
     function getStoredPixels(element, x, y, width, height) {
         x = Math.round(x);
         y = Math.round(y);
@@ -453,6 +535,10 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+/**
+ * This module deals with ImageLoaders, loading images and caching images
+ */
+
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -518,6 +604,9 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+/**
+ * This module contains a helper function to covert page coordinates to pixel coordinates
+ */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -526,8 +615,15 @@ var cornerstone = (function (cornerstone) {
         cornerstone = {};
     }
 
-    // converts pageX and pageY coordinates in an image enabled element
-    // to image coordinates
+    /**
+     * Converts a point in the page coordinate system to the pixel coordinate
+     * system
+     * @param element
+     * @param pageX
+     * @param pageY
+     * @returns {{x: number, y: number}}
+     */
+
     function pageToImage(element, pageX, pageY) {
         var ee = cornerstone.getEnabledElement(element);
 
@@ -571,41 +667,10 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
-var cornerstone = (function (cornerstone) {
-
-    "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
-
-    function resetViewport(element, canvas, image) {
-        var viewport = {
-            scale : 1.0,
-            centerX : 0,
-            centerY: 0,
-            windowWidth: image.windowWidth,
-            windowCenter: image.windowCenter,
-            invert: image.invert
-        };
-
-        // fit image to window
-        var verticalScale = canvas.height / image.rows;
-        var horizontalScale= canvas.width / image.columns;
-        if(horizontalScale < verticalScale) {
-            viewport.scale = horizontalScale;
-        }
-        else {
-            viewport.scale = verticalScale;
-        }
-        return viewport;
-    }
-
-    // module/private exports
-    cornerstone.resetViewport = resetViewport;
-
-    return cornerstone;
-}(cornerstone));
+/**
+ * This module sets the transformation matrix for a canvas context so it displays fonts
+ * smoothly even when the image is highly scaled up
+ */
 
 var cornerstone = (function (cornerstone) {
 
@@ -615,6 +680,17 @@ var cornerstone = (function (cornerstone) {
         cornerstone = {};
     }
 
+    /**
+     * Sets the canvas context transformation matrix so it is scaled to show text
+     * more cleanly even if the image is scaled up.  See
+     * https://github.com/chafey/cornerstoneTools/wiki/DrawingText
+     * for more information
+     *
+     * @param ee
+     * @param context
+     * @param fontSize
+     * @returns {{fontSize: number, lineHeight: number, fontScale: number}}
+     */
     function setToFontCoordinateSystem(ee, context, fontSize)
     {
         // reset the transformation matrix
@@ -650,6 +726,10 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+/**
+ * This module contains a function that will set the canvas context to the pixel coordinates system
+ * making it easy to draw geometry on the image
+ */
 
 var cornerstone = (function (cornerstone) {
 
@@ -659,6 +739,12 @@ var cornerstone = (function (cornerstone) {
         cornerstone = {};
     }
 
+    /**
+     * Sets the canvas context transformation matrix to the pixel coordinate system.  This allows
+     * geometry to be driven using the canvas context using coordinates in the pixel coordinate system
+     * @param ee
+     * @param context
+     */
     function setToPixelCoordinateSystem(ee, context)
     {
         // reset the transformation matrix
@@ -678,16 +764,24 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+/**
+ * This module contains functions that deal with changing the image displays in an enabled element
+ */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
-
 
     if(cornerstone === undefined) {
         cornerstone = {};
     }
 
-    // Shows a new image in the existing stack
+    /**
+     * Shows a new image in an existing stack
+     * TODO: cornerstone doesn't know anything about stacks, move this to tools library
+     * @param element
+     * @param imageId
+     * @param viewportOptions
+     */
     function newStackImage(element, imageId, viewportOptions)
     {
         var enabledElement = cornerstone.getEnabledElement(element);
@@ -724,7 +818,13 @@ var cornerstone = (function (cornerstone) {
         });
     }
 
-    // shows a new stack
+    /**
+     * shows an entirely new stack
+     * TODO: cornerstone doesn't know anything about stacks, move this to tools library
+     * @param element
+     * @param imageId
+     * @param viewportOptions
+     */
     function newStack(element, imageId, viewportOptions)
     {
         var enabledElement = cornerstone.getEnabledElement(element);
@@ -734,7 +834,7 @@ var cornerstone = (function (cornerstone) {
         loadImageDeferred.done(function(image) {
             enabledElement.image = image;
 
-            enabledElement.viewport = cornerstone.resetViewport(enabledElement.element, enabledElement.canvas, enabledElement.image);
+            enabledElement.viewport = cornerstone.getDefaultViewport(enabledElement.canvas, enabledElement.image);
 
             // merge
             if(viewportOptions) {
@@ -764,8 +864,13 @@ var cornerstone = (function (cornerstone) {
         });
     }
 
-    // This function changes the image while preserving viewport settings.  This is appropriate
-    // when changing to a different image in the same stack/series
+    /**
+     * This function changes the image while preserving viewport settings.  This is appropriate
+     * when changing to a different image in the same stack/series
+     * @param element
+     * @param imageId
+     * @param viewportOptions
+     */
     cornerstone.showImage = function (element, imageId, viewportOptions) {
         var enabledElement = cornerstone.getEnabledElement(element);
         enabledElement.ids.imageId = imageId;
@@ -803,9 +908,15 @@ var cornerstone = (function (cornerstone) {
         });
     };
 
-    // this function completely replaces an image with a new one losing all tool state
-    // and viewport settings.  This is appropriate when changing to an image that is not part
-    // of the same stack
+    /**
+     * this function completely replaces an image with a new one losing all tool state
+     * and viewport settings.  This is appropriate when changing to an image that is not part
+     * of the same stack
+     *
+     * @param element
+     * @param imageId
+     * @param viewportOptions
+     */
     cornerstone.replaceImage = function(element, imageId, viewportOptions)
     {
         cornerstone.removeEnabledElement(element);
@@ -816,6 +927,9 @@ var cornerstone = (function (cornerstone) {
     cornerstone.newStack = newStack;
     return cornerstone;
 }(cornerstone));
+/**
+ * This module contains a function to convert stored pixel values to display pixel values using a LUT
+ */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -831,6 +945,8 @@ var cornerstone = (function (cornerstone) {
      * use the alpha channel only to control the luminance rather than the red, green and
      * blue channels which makes it over 3x faster.  The canvasImageDataData buffer needs
      * to be previously filled with white pixels.
+     *
+     * NOTE: Attribution would be appreciated if you use this technique!
      *
      * @param image the image object
      * @param lut the lut
@@ -855,6 +971,9 @@ var cornerstone = (function (cornerstone) {
 
    return cornerstone;
 }(cornerstone));
+/**
+ * This module contains a function to immediately redraw an image
+ */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -863,6 +982,10 @@ var cornerstone = (function (cornerstone) {
         cornerstone = {};
     }
 
+    /**
+     * Forces the image to be updated/redrawn for the specified enabled element
+     * @param element
+     */
     function updateImage(element) {
         var ee = cornerstone.getEnabledElement(element);
         var image = ee.image;
@@ -877,6 +1000,9 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+/**
+ * This module contains functions to deal with getting and setting the viewport for an enabled element
+ */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -886,16 +1012,26 @@ var cornerstone = (function (cornerstone) {
     }
 
     function setViewport(element, viewport) {
+
         var enabledElement = cornerstone.getEnabledElement(element);
+
+        // prevent window width from being < 1
         if(viewport.windowWidth < 1) {
             viewport.windowWidth = 1;
         }
+        // prevent scale from getting too small
         if(viewport.scale < 0.0001) {
             viewport.scale = 0.25;
         }
+
         enabledElement.viewport = viewport;
+
+        // Force the image to be updated since the viewport has been modified
         cornerstone.updateImage(element);
 
+
+        // Fire an event letting others know that the viewort has been updated so they
+        // can take the appropriate action
         var event = new CustomEvent(
             "CornerstoneViewportUpdated",
             {
@@ -910,13 +1046,16 @@ var cornerstone = (function (cornerstone) {
             }
         );
         element.dispatchEvent(event);
-
     }
 
+    /**
+     * Returns the viewport for the specified enabled element
+     * @param element
+     * @returns {*}
+     */
     function getViewport(element) {
         return cornerstone.getEnabledElement(element).viewport;
     }
-
 
     // module/private exports
     cornerstone.getViewport = getViewport;

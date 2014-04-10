@@ -10,10 +10,21 @@ module.exports = function(grunt) {
                 ]
             }
         },
+
         concat: {
             build: {
                 src : ['src/*.js'],
                 dest: 'build/built.js'
+            },
+            css: {
+                options: {
+                    stripBanners: true,
+                    banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+                        '<%= grunt.template.today("yyyy-mm-dd") %> ' +
+                        '| (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */\n'
+                },
+                src: ['src/cornerstone.css'],
+                dest: 'dist/cornerstone.css',
             },
             dist: {
                 options: {
@@ -52,19 +63,19 @@ module.exports = function(grunt) {
                 tasks: ['buildAll']
             }
         },
+        cssmin: {
+            dist: {
+                files: {
+                    'dist/cornerstone.min.css': ['dist/cornerstone.css']
+                }
+            }
+        }
 
     });
 
-    grunt.loadNpmTasks("grunt-contrib-copy");
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-qunit');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
+    require('load-grunt-tasks')(grunt);
 
-    grunt.registerTask('buildAll', ['concat', 'uglify', 'jshint']);
-
+    grunt.registerTask('buildAll', ['concat', 'uglify', 'jshint', 'cssmin']);
     grunt.registerTask('default', ['clean', 'buildAll']);
 };
 

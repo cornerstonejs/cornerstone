@@ -1,3 +1,7 @@
+/**
+ * This module contains a function that will set the canvas context to the pixel coordinates system
+ * making it easy to draw geometry on the image
+ */
 
 var cornerstone = (function (cornerstone) {
 
@@ -7,6 +11,12 @@ var cornerstone = (function (cornerstone) {
         cornerstone = {};
     }
 
+    /**
+     * Sets the canvas context transformation matrix to the pixel coordinate system.  This allows
+     * geometry to be driven using the canvas context using coordinates in the pixel coordinate system
+     * @param ee
+     * @param context
+     */
     function setToPixelCoordinateSystem(ee, context)
     {
         // reset the transformation matrix

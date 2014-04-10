@@ -1,3 +1,6 @@
+/**
+ * This module is responsible for drawing an image to an enabled elements canvas element
+ */
 
 var cornerstone = (function (cornerstone) {
 
@@ -29,18 +32,21 @@ var cornerstone = (function (cornerstone) {
     {
         // if we have a cached lut and it has the right values, return it immediately
         if(image.lut !== undefined && image.lut.windowCenter === viewport.windowCenter && image.lut.windowWidth === viewport.windowWidth) {
-            //console.log('using cached lut');
             return image.lut;
         }
 
         // lut is invalid or not present, regenerate it and cache it
-        //console.log('generating lut');
         image.lut = cornerstone.generateLut(image, viewport.windowWidth, viewport.windowCenter, viewport.invert);
         image.lut.windowWidth = viewport.windowWidth;
         image.lut.windowCenter = viewport.windowCenter;
         return image.lut;
     }
 
+    /**
+     * Draws an image to a given enabled element
+     * @param ee
+     * @param image
+     */
     function drawImage(ee, image) {
 
         // get the canvas context and reset the transform
@@ -52,8 +58,8 @@ var cornerstone = (function (cornerstone) {
         context.fillRect(0,0, ee.canvas.width, ee.canvas.height);
 
         // If our render canvas does not match the size of this image reset it
-        // NOTE: This will be inefficient if we are updating multiple images of different
-        // sizes frequently, but I don't know how much...
+        // NOTE: This might be inefficient if we are updating multiple images of different
+        // sizes frequently.
         if(renderCanvas.width !== image.width || renderCanvas.height != image.height) {
             initializeRenderCanvas(image);
         }
@@ -62,17 +68,19 @@ var cornerstone = (function (cornerstone) {
         context.save();
         cornerstone.setToPixelCoordinateSystem(ee, context);
 
-        // generate the lut
+        // get the lut to use
         var lut = getLut(image, ee.viewport);
 
         // apply the lut to the stored pixel data onto the render canvas
         cornerstone.storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
         renderCanvasContext.putImageData(renderCanvasData, 0, 0);
 
-        var scaler = ee.viewport.scale;
+        // turn off image smooth/interpolation if pixelReplication is set in the viewport
+        if(ee.viewport.pixelReplication === true) {
+            context.webkitImageSmoothingEnabled = false;
+        }
 
         // Draw the render canvas half the image size (because we set origin to the middle of the canvas above)
-        //context.webkitImageSmoothingEnabled = false;
         context.drawImage(renderCanvas, 0,0, image.columns, image.rows, 0, 0, image.columns, image.rows);
 
         context.restore();
@@ -85,7 +93,7 @@ var cornerstone = (function (cornerstone) {
                     viewport: ee.viewport,
                     image: ee.image,
                     element: ee.element,
-                    enabledElement: ee,
+                    enabledElement: ee
                 },
                 bubbles: false,
                 cancelable: false

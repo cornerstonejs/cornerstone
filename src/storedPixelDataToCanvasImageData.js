@@ -1,3 +1,6 @@
+/**
+ * This module contains a function to convert stored pixel values to display pixel values using a LUT
+ */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -13,6 +16,8 @@ var cornerstone = (function (cornerstone) {
      * use the alpha channel only to control the luminance rather than the red, green and
      * blue channels which makes it over 3x faster.  The canvasImageDataData buffer needs
      * to be previously filled with white pixels.
+     *
+     * NOTE: Attribution would be appreciated if you use this technique!
      *
      * @param image the image object
      * @param lut the lut
