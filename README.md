@@ -101,26 +101,31 @@ Links
 
 [cornerstoneWADOImageLoader ](https://github.com/chafey/cornerstoneWADOImageLoader) - A cornerstone Image Loader that works with WADO
 
-[dicomParser ](https://github.com/chafey/dicomParser) - A javascript library designed to parse DICOM for web browsers
+[dicomParser ](https://github.com/chafey/dicomParser) - A JavaScript library designed to parse DICOM for web browsers
 
 FAQ
 ===
 
 _Why did you decide to license this library using the open source MIT license?_
 
-The main reason this library is released as open source is that I believe that medical imaging in particular
-can do more to improve patient outcomes and the lack of open source libraries is a major obstacle.  The old adage
-[a picture is worth a thousand words](http://en.wikipedia.org/wiki/A_picture_is_worth_a_thousand_words)
-is very true in medical imaging.  When a patient is going through a disease process, they are often
-filled with fear and confusion.  Medical terminology is complex and imaging provides a connection between people
-unlike any other medium.  By helping a patient (and its supporting friends/family) connect with the disease
-visually through images, it is believed that fear, anxiety and confusion will all be reduced and this will result
-in better outcomes.
+The main reason this library is released as [open source](http://en.wikipedia.org/wiki/Open_source) is
+that I believe that medical imaging in particular can do a lot more to improve patient outcomes
+but the cost of doing so is prohibitive.  Making this library open source removes the cost barrier and will
+hopefully usher in a new set of medical imaging based applications.
 
-Because of this belief, it is my hope that this library be used to build a variety of applications and experiences
-to deliver on this vision.  The MIT library allows this library to be used in any type of application - personal,
-open source and commercial and is therefore necessary to achieve this goal.  If you are reading this,
-I hope you can join me in this quest as I believe there is much good work remaining to be done.
+The old adage [a picture is worth a thousand words](http://en.wikipedia.org/wiki/A_picture_is_worth_a_thousand_words)
+is very true in medical imaging.  When a patient is going through a disease process, they often face fear
+and confusion.  Medical terminology amplifies these issues as it is hard to understand and therefore
+disempowering.  Medical imaging allows a mysterious health issue to be visualized and therefore brings a
+level of understanding that just can't be accomplished via textual information found in lab or radiology
+reports.  By helping a patient (and its supporting friends/family) connect with the disease visually through
+images, it is believed that fear, anxiety and confusion will all be reduced which
+will increase optimism and therefore patient outcomes.
+
+It is my hope that this library be used to build a variety of applications and experiences
+to deliver on this vision.  The MIT license allows this library to be used in any type of application - personal,
+open source and commercial and is therefore appropriate to support this vision.  If you are reading this,
+I hope you can join me in this mission as there is still a lot to be done.
 
 _Why doesn't cornerstone natively support the display of DICOM images?_
 
@@ -128,11 +133,12 @@ While DICOM has support for just about every type of medical image, there are ma
 are not stored in DICOM format.  A good example of this is dermatology where images are often taken using standard
 digital cameras and are stored as JPEG not DICOM.  The main reason this library is not based around DICOM is
 that it wants to reach the widest possible adoption and that will be accomplished by supporting as many types
-of image containers and transports possible.  Note that it is expected that most images displayed using this
-library will be DICOM images.  Another side effect of this approach is that the code base is
-smaller and easier to understand since it is focused on doing exactly one thing.  Display of DICOM images can
-be accomplished using the separate [cornerstoneWADOImageLoader](https://github.com/chafey/cornerstoneWADOImageLoader)
-library.
+of image containers and transports possible.  That being said, it is is expected that the majority of images
+displayed using this library will be DICOM images and therefore important to make sure that there are no limitations
+in this regard.  Another side effect of this approach is that the code base is smaller and easier to understand
+since it is focused on doing exactly one thing.  Note that a separate
+[cornerstoneWADOImageLoader](https://github.com/chafey/cornerstoneWADOImageLoader) library exists to support loading
+DICOM images via WADO.
 
 _Why doesn't cornerstone include basic tools like ww/wc using the mouse?_
 
@@ -155,6 +161,24 @@ of 2015 and 90% by 2017.  The library made a tradeoff to focus on the future pla
 simple and avoid compromises related to older browser technology.  Note that it may be possible to get
 this library to work on IE8 using [excanvas](https://code.google.com/p/explorercanvas/) but I haven't tried
 it yet.
+
+_Why doesn't this library support stacks of images?_
+
+Images stack functionality such as a CT series or MRI series can actually be quite complex.  Regardless of
+what stack functionality is desired, all stacks ultimately need to be able to display a single image and that
+is what this library is focused on doing.  Stack functionality is therefore pushed up to a higher layer.  The
+[cornerstoneTools](https://github.com/chafey/cornerstoneTools) contains stack functionality and is a good place
+to look to see how various stack related functionality is implemented.
+
+_How do you envision this library supporting 3D functionality such as MPR, MIP and VR?_
+
+This library would be responsible for displaying the rendered image to the user.  The rendering of the
+3D image would be done by some other library - perhaps on the server side.  This library is purely 2D and has
+no knowledge of 3D image space.  It will probalby make sense to have several layers on top of this library
+to provide 3D functionality.  For example, one layer that has a 3D viewport with properties such as transformation
+matrix, slice thickness, transfer function/LUT, segmentation masks, etc.  And another 3D tools layer that provides
+various tools on top of the 3d viewport (rotate, zoom, segment, scroll, etc).  I haven't thought too much about this
+yet but am hoping to make progress on this in the latter half of 2014.
 
 
 Copyright
