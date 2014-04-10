@@ -5,11 +5,12 @@ Phase 3 (in progress)
 ---------------------
  * Code cleanup / refactoring / documentation (in progress)
  * run jshint on build (done)
- * ImageLoader design (in wiki)
- * ImageLoader API Documentation (in wiki)
- * WADO ImageLoader plugin (now cornerstoneWADOImageLoader project)
- * Extract tools to separate library (now cornerstoneTools project)
- * Optimize image display (lut generation, stored pixel data -> canvas, etc) (done)
+ * ImageLoader design (done - in wiki)
+ * ImageLoader API Documentation (done - in wiki)
+ * WADO ImageLoader plugin (done - now cornerstoneWADOImageLoader project)
+ * Extract tools to separate library (done - now cornerstoneTools project)
+ * Optimize image display (done - lut generation, stored pixel data -> canvas, etc) (done)
+ * Invert image (done - need example though)
 
 Phase 2 (complete)
 ------------------
