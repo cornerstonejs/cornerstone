@@ -15,8 +15,8 @@ var cornerstone = (function (cornerstone) {
         // Set the size of canvas and take retina into account
         var retina = window.devicePixelRatio > 1;
         if(retina) {
-            canvas.width = element.clientWidth * 2;
-            canvas.height = element.clientHeight * 2;
+            canvas.width = element.clientWidth * window.devicePixelRatio;
+            canvas.height = element.clientHeight * window.devicePixelRatio;
             canvas.style.width = element.clientWidth + "px";
             canvas.style.height = element.clientHeight + "px";
         }

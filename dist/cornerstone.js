@@ -1,4 +1,4 @@
-/*! cornerstone - v0.0.1 - 2014-04-10 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.0.1 - 2014-04-11 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 (function () {
 
     "use strict";
@@ -84,7 +84,7 @@ var cornerstone = (function (cornerstone) {
     }
 
     /**
-     * Draws an image to a given enabled element
+     * Internal API function to draw an image to a given enabled element
      * @param ee
      * @param image
      */
@@ -165,8 +165,8 @@ var cornerstone = (function (cornerstone) {
         // Set the size of canvas and take retina into account
         var retina = window.devicePixelRatio > 1;
         if(retina) {
-            canvas.width = element.clientWidth * 2;
-            canvas.height = element.clientHeight * 2;
+            canvas.width = element.clientWidth * window.devicePixelRatio;
+            canvas.height = element.clientHeight * window.devicePixelRatio;
             canvas.style.width = element.clientWidth + "px";
             canvas.style.height = element.clientHeight + "px";
         }
@@ -307,6 +307,34 @@ var cornerstone = (function (cornerstone) {
         cornerstone = {};
     }
 
+    function getElementData(el, dataType) {
+        var ee = cornerstone.getEnabledElement(el);
+        if(ee.data.hasOwnProperty(dataType) === false)
+        {
+            ee.data[dataType] = {};
+        }
+        return ee.data[dataType];
+    }
+
+    function removeElementData(el, dataType) {
+        var ee = cornerstone.getEnabledElement(el);
+        delete ee.data[dataType];
+    }
+
+    // module/private exports
+    cornerstone.getElementData = getElementData;
+    cornerstone.removeElementData = removeElementData;
+
+    return cornerstone;
+}(cornerstone));
+var cornerstone = (function (cornerstone) {
+
+    "use strict";
+
+    if(cornerstone === undefined) {
+        cornerstone = {};
+    }
+
     var enabledElements = [];
 
     function getEnabledElement(element) {
@@ -332,27 +360,10 @@ var cornerstone = (function (cornerstone) {
         }
     }
 
-    function getElementData(el, dataType) {
-        var ee = getEnabledElement(el);
-        if(ee.data.hasOwnProperty(dataType) === false)
-        {
-            ee.data[dataType] = {};
-        }
-        return ee.data[dataType];
-    }
-
-    function removeElementData(el, dataType) {
-        var ee = getEnabledElement(el);
-        delete ee.data[dataType];
-    }
-
-
     // module/private exports
     cornerstone.getEnabledElement = getEnabledElement;
     cornerstone.addEnabledElement = addEnabledElement;
     cornerstone.removeEnabledElement = removeEnabledElement ;
-    cornerstone.getElementData = getElementData;
-    cornerstone.removeElementData = removeElementData;
 
     return cornerstone;
 }(cornerstone));
@@ -624,7 +635,7 @@ var cornerstone = (function (cornerstone) {
      * @returns {{x: number, y: number}}
      */
 
-    function pageToImage(element, pageX, pageY) {
+    function pageToPixel(element, pageX, pageY) {
         var ee = cornerstone.getEnabledElement(element);
 
         if(ee.image === undefined) {
@@ -663,7 +674,7 @@ var cornerstone = (function (cornerstone) {
     }
 
     // module/private exports
-    cornerstone.pageToImage=pageToImage;
+    cornerstone.pageToPixel = pageToPixel;
 
     return cornerstone;
 }(cornerstone));
@@ -776,102 +787,13 @@ var cornerstone = (function (cornerstone) {
     }
 
     /**
-     * Shows a new image in an existing stack
-     * TODO: cornerstone doesn't know anything about stacks, move this to tools library
-     * @param element
-     * @param imageId
-     * @param viewportOptions
-     */
-    function newStackImage(element, imageId, viewportOptions)
-    {
-        var enabledElement = cornerstone.getEnabledElement(element);
-        enabledElement.ids.imageId = imageId;
-        var loadImageDeferred = cornerstone.loadImage(imageId);
-
-        loadImageDeferred.done(function(image) {
-            enabledElement.image = image;
-            // merge
-            if(viewportOptions) {
-                for(var attrname in viewportOptions)
-                {
-                    if(viewportOptions[attrname] !== null) {
-                        enabledElement.viewport[attrname] = viewportOptions[attrname];
-                    }
-                }
-            }
-            cornerstone.updateImage(element);
-
-            var event = new CustomEvent(
-                "CornerstoneNewImage",
-                {
-                    detail: {
-                        viewport: enabledElement.viewport,
-                        element: element,
-                        image: enabledElement.image
-
-                    },
-                    bubbles: false,
-                    cancelable: false
-                }
-            );
-            element.dispatchEvent(event);
-        });
-    }
-
-    /**
-     * shows an entirely new stack
-     * TODO: cornerstone doesn't know anything about stacks, move this to tools library
-     * @param element
-     * @param imageId
-     * @param viewportOptions
-     */
-    function newStack(element, imageId, viewportOptions)
-    {
-        var enabledElement = cornerstone.getEnabledElement(element);
-        enabledElement.ids.imageId = imageId;
-        var loadImageDeferred = cornerstone.loadImage(imageId);
-
-        loadImageDeferred.done(function(image) {
-            enabledElement.image = image;
-
-            enabledElement.viewport = cornerstone.getDefaultViewport(enabledElement.canvas, enabledElement.image);
-
-            // merge
-            if(viewportOptions) {
-                for(var attrname in viewportOptions)
-                {
-                    if(viewportOptions[attrname] !== null) {
-                        enabledElement.viewport[attrname] = viewportOptions[attrname];
-                    }
-                }
-            }
-            cornerstone.updateImage(element);
-
-            var event = new CustomEvent(
-                "CornerstoneNewImage",
-                {
-                    detail: {
-                        viewport: enabledElement.viewport,
-                        element: element,
-                        image: enabledElement.image
-
-                    },
-                    bubbles: false,
-                    cancelable: false
-                }
-            );
-            element.dispatchEvent(event);
-        });
-    }
-
-    /**
      * This function changes the image while preserving viewport settings.  This is appropriate
      * when changing to a different image in the same stack/series
      * @param element
      * @param imageId
      * @param viewportOptions
      */
-    cornerstone.showImage = function (element, imageId, viewportOptions) {
+    function showImage(element, imageId, viewportOptions) {
         var enabledElement = cornerstone.getEnabledElement(element);
         enabledElement.ids.imageId = imageId;
         var loadImageDeferred = cornerstone.loadImage(imageId);
@@ -906,25 +828,10 @@ var cornerstone = (function (cornerstone) {
             element.dispatchEvent(event);
 
         });
-    };
+    }
 
-    /**
-     * this function completely replaces an image with a new one losing all tool state
-     * and viewport settings.  This is appropriate when changing to an image that is not part
-     * of the same stack
-     *
-     * @param element
-     * @param imageId
-     * @param viewportOptions
-     */
-    cornerstone.replaceImage = function(element, imageId, viewportOptions)
-    {
-        cornerstone.removeEnabledElement(element);
-        cornerstone.enable(element, imageId, viewportOptions);
-    };
-
-    cornerstone.newStackImage = newStackImage;
-    cornerstone.newStack = newStack;
+    // module exports
+    cornerstone.showImage = showImage;
     return cornerstone;
 }(cornerstone));
 /**

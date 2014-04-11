@@ -11,6 +11,7 @@ Phase 3 (in progress)
  * Extract tools to separate library (done - now cornerstoneTools project)
  * Optimize image display (done - lut generation, stored pixel data -> canvas, etc) (done)
  * Invert image (done - need example though)
+ * Support for high dpi displays (e.g. retina) (done)
 
 Phase 2 (complete)
 ------------------

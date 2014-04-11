@@ -18,7 +18,7 @@ var cornerstone = (function (cornerstone) {
      * @returns {{x: number, y: number}}
      */
 
-    function pageToImage(element, pageX, pageY) {
+    function pageToPixel(element, pageX, pageY) {
         var ee = cornerstone.getEnabledElement(element);
 
         if(ee.image === undefined) {
@@ -57,7 +57,7 @@ var cornerstone = (function (cornerstone) {
     }
 
     // module/private exports
-    cornerstone.pageToImage=pageToImage;
+    cornerstone.pageToPixel = pageToPixel;
 
     return cornerstone;
 }(cornerstone));

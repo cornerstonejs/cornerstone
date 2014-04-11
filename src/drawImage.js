@@ -43,7 +43,7 @@ var cornerstone = (function (cornerstone) {
     }
 
     /**
-     * Draws an image to a given enabled element
+     * Internal API function to draw an image to a given enabled element
      * @param ee
      * @param image
      */
