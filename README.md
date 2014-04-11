@@ -1,33 +1,37 @@
-cornerstone
+Cornerstone
 ===========
 
-cornerstone is a lightweight JavaScript library for displaying medical images in modern web browsers that support
+Cornerstone is a lightweight JavaScript library for displaying medical images in modern web browsers that support
 the HTML5 canvas element .  It is not meant to be a complete application itself, but instead a component
-that can be used to build a variety of complex applications from.  See the
-[cornerstoneDemo](https://github.com/chafey/cornerstoneDemo) for an example of using the various cornerstone
+that can be used as part of larger more complex applications.  See the
+[CornerstoneDemo](https://github.com/chafey/cornerstoneDemo) for an example of using the various Cornerstone
 libraries to build a simple study viewer.
 
-cornerstone is agnostic to the actual container used to store image pixels as well as the transport mechanism
-used to get the image data.  In fact, cornerstone by itself has no ability to display any type of images but instead
-depends on an [ImageLoader](https://github.com/chafey/cornerstone/wiki/ImageLoader) for this.  The goal here is
-to avoid constraining developers to specific image containers or transport mechanisms.  It is hoped that developers
-feel empowered to load images from any type of image container using any kind of transport.  See the
-[cornerstoneWADOImageLoader](https://github.com/chafey/cornerstoneWADOImageLoader) project for an example
+Cornerstone is agnostic to the actual container used to store image pixels as well as the transport mechanism
+used to get the image data.  In fact, Cornerstone itself has no ability to read/parse or load images and instead
+depends on one or more [ImageLoaders](https://github.com/chafey/cornerstone/wiki/ImageLoader) to function.
+The goal here is to avoid constraining developers to work within a single container and transport (e.g. DICOM) since
+images are stored in a variety of formats (including proprietary).  By providing flexibility with respect to the
+container and transport, the highest performance image display may be obtained as no conversion to an alternate
+container or transport is required.  It is hoped that developers feel empowered to load images from any type of image
+container using any kind of transport.  See the
+[CornerstoneWADOImageLoader](https://github.com/chafey/cornerstoneWADOImageLoader) project for an example
 of a DICOM WADO based Image Loader.
 
-cornerstone is agnostic to the exact interaction paradigm being used.  It does not include any mouse, touch or
+Cornerstone is agnostic to the exact interaction paradigm being used.  It does not include any mouse, touch or
 keyboard bindings to manipulate the various image properties such as scale, translation or ww/wc.  The goal here
 is to avoid constraining developers using this library to fit into a given ui paradigm.  It is hoped that developers
-are empowered to create new paradigms possibly using new input mechanisms to interact with medical images (e.g. kinect,
-accelerometer).  cornerstone does provide a set of API's allowing manipulation of the image properoties via javascript.
-See the [cornerstoneTools](https://github.com/chafey/cornerstoneTools) library for an example of common tools built on top of
-cornerstone.
+are empowered to create new paradigms possibly using new input mechanisms to interact with medical images (e.g.
+[Kinect](http://en.wikipedia.org/wiki/Kinect) or [Accelerometer](http://en.wikipedia.org/wiki/Accelerometer).
+Cornerstone does provide a set of API's allowing manipulation of the image properoties via javascript.
+See the [CornerstoneTools](https://github.com/chafey/cornerstoneTools) library for an example of common tools built on top of
+Cornerstone.
 
 Live Examples
 ---------------
 The best way to see the power of this library is to actually see it in use.
 
-[Click here for a list of examples of using the cornerstone library.](https://rawgithub.com/chafey/cornerstone/master/example/index.html)
+[Click here for a list of examples of using the Cornerstone library.](https://rawgithub.com/chafey/cornerstone/master/example/index.html)
 
 Install
 -------
@@ -97,9 +101,9 @@ Links
 
 [Trello](https://trello.com/b/tGTDIyt4/cornerstone)
 
-[cornerstoneTools](https://github.com/chafey/cornerstoneTools) - A library of common tools that can be used with cornerstone
+[CornerstoneTools](https://github.com/chafey/cornerstoneTools) - A library of common tools that can be used with Cornerstone
 
-[cornerstoneWADOImageLoader ](https://github.com/chafey/cornerstoneWADOImageLoader) - A cornerstone Image Loader that works with WADO
+[CornerstoneWADOImageLoader ](https://github.com/chafey/cornerstoneWADOImageLoader) - A Cornerstone Image Loader that works with WADO
 
 [dicomParser ](https://github.com/chafey/dicomParser) - A JavaScript library designed to parse DICOM for web browsers
 
@@ -127,20 +131,26 @@ to deliver on this vision.  The MIT license allows this library to be used in an
 open source and commercial and is therefore appropriate to support this vision.  If you are reading this,
 I hope you can join me in this mission as there is still a lot to be done.
 
-_Why doesn't cornerstone natively support the display of DICOM images?_
+_Why doesn't Cornerstone natively support the display of DICOM images?_
 
 While DICOM has support for just about every type of medical image, there are many cases where medical images
-are not stored in DICOM format.  A good example of this is dermatology where images are often taken using standard
-digital cameras and are stored as JPEG not DICOM.  The main reason this library is not based around DICOM is
-that it wants to reach the widest possible adoption and that will be accomplished by supporting as many types
-of image containers and transports possible.  That being said, it is is expected that the majority of images
-displayed using this library will be DICOM images and therefore important to make sure that there are no limitations
-in this regard.  Another side effect of this approach is that the code base is smaller and easier to understand
-since it is focused on doing exactly one thing.  Note that a separate
-[cornerstoneWADOImageLoader](https://github.com/chafey/cornerstoneWADOImageLoader) library exists to support loading
-DICOM images via WADO.
+are not stored in DICOM format.  In many cases, a PACS may receive DICOM images but store them in a proprietary
+format on disk.  In this case, it can be faster to access images by having an image loader that works with
+a proprietary PACS interface that would not require conversion from the proprietary format into a standard format
+like DICOM.  Another example of this is is dermatology where images are often taken using standard
+digital cameras and are stored as JPEG not DICOM.
 
-_Why doesn't cornerstone include basic tools like ww/wc using the mouse?_
+The main reason this library is not based around DICOM is that it wants to reach the widest possible adoption
+and that will be accomplished by supporting as many types of image containers and transports possible.
+Another side effect of this approach is that the code base is smaller and easier to understand since
+it is focused on doing exactly one thing.  That being said, it is is expected that the majority of images
+displayed using this library will have originated as DICOM images.  It is therefore important to make sure
+that there are no limitations with respect to displaying the different types of DICOM images and have robust
+supporting libraries for DICOM.  Separate libraries to add DICOM specific support already exist, check out the
+[CornerstoneWADOImageLoader](https://github.com/chafey/cornerstoneWADOImageLoader) library and
+the (dicomParser)[https://github.com/chafey/dicomParser] library.
+
+_Why doesn't Cornerstone include basic tools like ww/wc using the mouse?_
 
 There is no standard for user interaction in medical imaging and a wide variety of interaction paradigms exist.
 For example, one medical imaging application may use the left mouse button to adjust ww/wc and another may use the
@@ -148,9 +158,10 @@ right mouse button.  The main reason this library does not include tools is that
 adoption and that will only be accomplished by making any interaction paradigm possible.  No tools
 are therefore provided with this library allowing users of the library to choose
 whatever interaction paradigm they like.  It is also hoped that this approach will make it easier for developers
-to experiment with new user input mechanisms like Kinect or Accelerometers.  Another side effect of this
+to experiment with new user input mechanisms like [Kinect](http://en.wikipedia.org/wiki/Kinect) or
+[Accelerometer](http://en.wikipedia.org/wiki/Accelerometer).  Another side effect of this
 approach is that the code base is smaller and easier to understand since it is focused on doing exactly one
-thing.  Tools are provided using the separate [cornerstoneTools](https://github.com/chafey/cornerstoneTools)
+thing.  Tools are provided using the separate [CornerstoneTools](https://github.com/chafey/cornerstoneTools)
 if desired.
 
 _Why does this library require HTML5 canvas when IE8 is the main browser used in healthcare?_
@@ -167,14 +178,14 @@ _Why doesn't this library support stacks of images?_
 Images stack functionality such as a CT series or MRI series can actually be quite complex.  Regardless of
 what stack functionality is desired, all stacks ultimately need to be able to display a single image and that
 is what this library is focused on doing.  Stack functionality is therefore pushed up to a higher layer.  The
-[cornerstoneTools](https://github.com/chafey/cornerstoneTools) contains stack functionality and is a good place
+[CornerstoneTools](https://github.com/chafey/cornerstoneTools) contains stack functionality and is a good place
 to look to see how various stack related functionality is implemented.
 
 _How do you envision this library supporting 3D functionality such as MPR, MIP and VR?_
 
 This library would be responsible for displaying the rendered image to the user.  The rendering of the
 3D image would be done by some other library - perhaps on the server side.  This library is purely 2D and has
-no knowledge of 3D image space.  It will probalby make sense to have several layers on top of this library
+no knowledge of 3D image space.  It will probably make sense to have several layers on top of this library
 to provide 3D functionality.  For example, one layer that has a 3D viewport with properties such as transformation
 matrix, slice thickness, transfer function/LUT, segmentation masks, etc.  And another 3D tools layer that provides
 various tools on top of the 3d viewport (rotate, zoom, segment, scroll, etc).  I haven't thought too much about this

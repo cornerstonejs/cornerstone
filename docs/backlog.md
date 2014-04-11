@@ -1,7 +1,7 @@
 Backlog:
 ========
 
-V1.0
+V1.0 (target to release by May 15 for SIIM 2014
 ------------
  * API documentation
  * Testing for other browsers and platforms (automated if possible)
