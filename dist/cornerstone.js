@@ -183,63 +183,13 @@ var cornerstone = (function (cornerstone) {
         var el = {
             element: element,
             canvas: canvas,
-            ids : {
-                imageId: imageId
-            },
+            imageId: "",
+            imageIdHistory: [],
             data : {}
         };
         cornerstone.addEnabledElement(el);
 
-
-        var loadImageDeferred = cornerstone.loadImage(imageId);
-        loadImageDeferred.then(function(image){
-            var viewport = cornerstone.getDefaultViewport(canvas, image);
-
-            // merge viewportOptions into this viewport
-            if(viewportOptions) {
-                for(var property in viewport)
-                {
-                    if(viewportOptions[property] !== null) {
-                        viewport[property] = viewportOptions[property];
-                    }
-                }
-            }
-
-            el.image = image;
-            el.viewport = viewport;
-            cornerstone.updateImage(element);
-
-            // fire an event indicating the viewport has been changed
-            var event = new CustomEvent(
-                "CornerstoneViewportUpdated",
-                {
-                    detail: {
-                        viewport: viewport,
-                        element: element,
-                    },
-                    bubbles: false,
-                    cancelable: false
-                }
-            );
-            element.dispatchEvent(event);
-
-            // Fire an event indicating a new image has been loaded
-            event = new CustomEvent(
-                "CornerstoneNewImage",
-                {
-                    detail: {
-                        viewport: viewport,
-                        element: element,
-                        image: image
-
-                    },
-                    bubbles: false,
-                    cancelable: false
-                }
-            );
-            element.dispatchEvent(event);
-        });
-
+        cornerstone.showImage(element, imageId, viewportOptions);
     }
 
 
@@ -795,38 +745,67 @@ var cornerstone = (function (cornerstone) {
      */
     function showImage(element, imageId, viewportOptions) {
         var enabledElement = cornerstone.getEnabledElement(element);
-        enabledElement.ids.imageId = imageId;
+        enabledElement.imageIdHistory.unshift(imageId);
         var loadImageDeferred = cornerstone.loadImage(imageId);
-
         loadImageDeferred.done(function(image) {
-            enabledElement.image = image;
+            // scan through the imageIdHistory to see if this imageId should be displayed
+            for(var i=0; i < enabledElement.imageIdHistory.length; i++)
+            {
+                if(enabledElement.imageIdHistory[i] === image.imageId) {
+                    enabledElement.imageId = imageId;
+                    // remove all imageId's after this one
+                    var numToRemove = enabledElement.imageIdHistory.length - i;
+                    //console.log('removing ' + numToRemove + " stale entries from imageIdHistory, " + (enabledElement.imageIdHistory.length - numToRemove) + " remaining");
+                    enabledElement.imageIdHistory.splice(i, numToRemove );
 
-            // merge
-            if(viewportOptions) {
-                for(var attrname in viewportOptions)
-                {
-                    if(viewportOptions[attrname] !== null) {
-                        enabledElement.viewport[attrname] = viewportOptions[attrname];
+                    enabledElement.image = image;
+
+                    if(enabledElement.viewport === undefined) {
+                        enabledElement.viewport = cornerstone.getDefaultViewport(enabledElement.canvas, image);
                     }
+
+                    // merge
+                    if(viewportOptions) {
+                        for(var attrname in viewportOptions)
+                        {
+                            if(viewportOptions[attrname] !== null) {
+                                enabledElement.viewport[attrname] = viewportOptions[attrname];
+                            }
+                        }
+                    }
+                    cornerstone.updateImage(element);
+
+                    // fire an event indicating the viewport has been changed
+                    var event = new CustomEvent(
+                        "CornerstoneViewportUpdated",
+                        {
+                            detail: {
+                                viewport: enabledElement.viewport,
+                                element: element,
+                                image: enabledElement.image
+                            },
+                            bubbles: false,
+                            cancelable: false
+                        }
+                    );
+                    element.dispatchEvent(event);
+
+                    event = new CustomEvent(
+                        "CornerstoneNewImage",
+                        {
+                            detail: {
+                                viewport: enabledElement.viewport,
+                                element: element,
+                                image: enabledElement.image
+                            },
+                            bubbles: false,
+                            cancelable: false
+                        }
+                    );
+                    element.dispatchEvent(event);
+                    return;
                 }
             }
-            cornerstone.updateImage(element);
-
-            var event = new CustomEvent(
-                "CornerstoneNewImage",
-                {
-                    detail: {
-                        viewport: enabledElement.viewport,
-                        element: element,
-                        image: enabledElement.image
-
-                    },
-                    bubbles: false,
-                    cancelable: false
-                }
-            );
-            element.dispatchEvent(event);
-
         });
     }
 

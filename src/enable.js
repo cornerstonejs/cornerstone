@@ -33,63 +33,13 @@ var cornerstone = (function (cornerstone) {
         var el = {
             element: element,
             canvas: canvas,
-            ids : {
-                imageId: imageId
-            },
+            imageId: "",
+            imageIdHistory: [],
             data : {}
         };
         cornerstone.addEnabledElement(el);
 
-
-        var loadImageDeferred = cornerstone.loadImage(imageId);
-        loadImageDeferred.then(function(image){
-            var viewport = cornerstone.getDefaultViewport(canvas, image);
-
-            // merge viewportOptions into this viewport
-            if(viewportOptions) {
-                for(var property in viewport)
-                {
-                    if(viewportOptions[property] !== null) {
-                        viewport[property] = viewportOptions[property];
-                    }
-                }
-            }
-
-            el.image = image;
-            el.viewport = viewport;
-            cornerstone.updateImage(element);
-
-            // fire an event indicating the viewport has been changed
-            var event = new CustomEvent(
-                "CornerstoneViewportUpdated",
-                {
-                    detail: {
-                        viewport: viewport,
-                        element: element,
-                    },
-                    bubbles: false,
-                    cancelable: false
-                }
-            );
-            element.dispatchEvent(event);
-
-            // Fire an event indicating a new image has been loaded
-            event = new CustomEvent(
-                "CornerstoneNewImage",
-                {
-                    detail: {
-                        viewport: viewport,
-                        element: element,
-                        image: image
-
-                    },
-                    bubbles: false,
-                    cancelable: false
-                }
-            );
-            element.dispatchEvent(event);
-        });
-
+        cornerstone.showImage(element, imageId, viewportOptions);
     }
 
 
