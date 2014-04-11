@@ -3,8 +3,6 @@ Backlog:
 
 V1.0
 ------------
- * Create a CustomElement for cornerstone images http://www.html5rocks.com/en/tutorials/webcomponents/customelements/
-   * use http://www.polymer-project.org/ to polyfill
  * API documentation
  * Testing for other browsers and platforms (automated if possible)
  * Image support
@@ -13,12 +11,7 @@ V1.0
  * Pixel data management
      * image cache management
  * Packaging/build related
-     * packaged as a bower module
      * AMD wrapper to make it easier to use with AMD loaders
- * Consider moving setToFontCoordinateSystem and setToPixelCoordinateSystem to tools library?
-   * might be best to consolidate them into one function and provide an optional fontScale
-     parameter to trigger font scaling?
- * Consider moving the markup functionality to another library
 
 Beyond v1.0:
 ------------

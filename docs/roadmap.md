@@ -1,9 +1,23 @@
-Roadmap
-========
+Roadmap/Status
+==============
 
-Phase 3 (in progress)
+Alpha but stable
+
+Phase 4 (in progress)
 ---------------------
- * Code cleanup / refactoring / documentation (in progress)
+ * Code cleanup / refactoring / documentation
+ * Create a CustomElement for cornerstone images http://www.html5rocks.com/en/tutorials/webcomponents/customelements/
+   * use http://www.polymer-project.org/ to polyfill
+ * Consider moving setToFontCoordinateSystem and setToPixelCoordinateSystem to tools library?
+   * might be best to consolidate them into one function and provide an optional fontScale
+     parameter to trigger font scaling?
+ * Consider moving the markup functionality to another library
+ * Packaging/build related
+     * packaged as a bower module
+
+Phase 3 (completed April 11, 2014)
+---------------------
+ * Code cleanup / refactoring / documentation (done)
  * run jshint on build (done)
  * ImageLoader design (done - in wiki)
  * ImageLoader API Documentation (done - in wiki)
@@ -13,7 +27,7 @@ Phase 3 (in progress)
  * Invert image (done - need example though)
  * Support for high dpi displays (e.g. retina) (done)
 
-Phase 2 (complete)
+Phase 2 (completed March 27, 2014)
 ------------------
  * Tool framework
    * Data management
@@ -38,7 +52,7 @@ Phase 2 (complete)
  * Viewport Event - fired every time a viewport property changes
  * Render Event - fired every time the image is rendered (useful for generating overlays)
 
-Phase 1 / proof of concept (DONE!)
+Phase 1 / proof of concept (completed March 19, 2014)
 ----------------------------------
  * Target browser OS: Mac OS X (desktop)
  * Target browser: Google Chrome
