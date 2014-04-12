@@ -10,13 +10,13 @@ var cornerstone = (function (cornerstone) {
     }
 
     /**
-     * This function changes the image while preserving viewport settings.  This is appropriate
-     * when changing to a different image in the same stack/series
+     * This function changes the imageId displayed in the enabled element and applies the properties
+     * in viewport.  If viewport is not supplied, the default viewport is used.
      * @param element
      * @param imageId
-     * @param viewportOptions
+     * @param viewport
      */
-    function showImage(element, imageId, viewportOptions) {
+    function showImage(element, imageId, viewport) {
         var enabledElement = cornerstone.getEnabledElement(element);
         enabledElement.imageIdHistory.unshift(imageId);
         var loadImageDeferred = cornerstone.loadImage(imageId);
@@ -37,12 +37,14 @@ var cornerstone = (function (cornerstone) {
                         enabledElement.viewport = cornerstone.getDefaultViewport(enabledElement.canvas, image);
                     }
 
+                    enabledElement.viewport = cornerstone.getDefaultViewport(enabledElement.canvas, image);
+
                     // merge
-                    if(viewportOptions) {
-                        for(var attrname in viewportOptions)
+                    if(viewport) {
+                        for(var attrname in viewport)
                         {
-                            if(viewportOptions[attrname] !== null) {
-                                enabledElement.viewport[attrname] = viewportOptions[attrname];
+                            if(viewport[attrname] !== null) {
+                                enabledElement.viewport[attrname] = viewport[attrname];
                             }
                         }
                     }
