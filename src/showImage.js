@@ -28,7 +28,7 @@ var cornerstone = (function (cornerstone) {
                     enabledElement.imageId = imageId;
                     // remove all imageId's after this one
                     var numToRemove = enabledElement.imageIdHistory.length - i;
-                    console.log('removing ' + numToRemove + " stale entries from imageIdHistory, " + (enabledElement.imageIdHistory.length - numToRemove) + " remaining");
+                    //console.log('removing ' + numToRemove + " stale entries from imageIdHistory, " + (enabledElement.imageIdHistory.length - numToRemove) + " remaining");
                     enabledElement.imageIdHistory.splice(i, numToRemove );
 
                     enabledElement.image = image;

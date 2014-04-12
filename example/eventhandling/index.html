@@ -44,7 +44,7 @@
             Patient Name
         </div>
         <div id="topright" style="position: absolute;top:0px; right:0px">
-            Hospital
+            Render Time:
         </div>
         <div id="bottomright" style="position: absolute;bottom:0px; right:0px">
             Zoom:
@@ -77,7 +77,7 @@ is used by our example image loader-->
     function onViewportUpdated(e) {
         $('#bottomleft').text("WW/WL:" + Math.round(e.detail.viewport.windowWidth) + "/" + Math.round(e.detail.viewport.windowCenter));
         $('#bottomright').text("Zoom:" + e.detail.viewport.scale.toFixed(2));
-    };
+    }
 
     element.addEventListener("CornerstoneViewportUpdated", onViewportUpdated, false);
 
@@ -97,7 +97,10 @@ is used by our example image loader-->
         context.fillStyle = "white";
         context.font = "6px Arial";
         context.fillText("Tumor Here", 128, 85);
-    };
+
+        $('#topright').text("Render Time:" + cornerstone.lastRenderTimeInMs + " ms");
+
+    }
 
     element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
 

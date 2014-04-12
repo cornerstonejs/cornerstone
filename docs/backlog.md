@@ -15,6 +15,9 @@ V1.0 (target to release by May 15 for SIIM 2014
 
 Beyond v1.0:
 ------------
+ * [ASM.JS](http://asmjs.org/) version of storedPixelDataToCanvasImageData and generateLut
+ * [Native Client](https://developers.google.com/native-client/dev/) version of storedPixelDataToCanvasImageData
+   and generateLut
  * Cine clip support via HTML5 video tag
  * Image support
     * Very large image support (e.g. pathology > 4kx4k resolution)

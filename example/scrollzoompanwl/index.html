@@ -43,7 +43,7 @@
             Patient Name
         </div>
         <div id="topright" style="position: absolute;top:0px; right:0px">
-            Hospital
+            Render Time:
         </div>
         <div id="bottomright" style="position: absolute;bottom:0px; right:0px">
             Zoom:
@@ -83,11 +83,19 @@ is used by our example image loader-->
         $('#bottomleft').text("WW/WC:" + Math.round(viewport.windowWidth) + "/" + Math.round(viewport.windowCenter));
     };
 
+
     var element = $('#dicomImage').get(0);
     cornerstone.enable(element, imageIds[currentImageIndex]);
     var viewport = cornerstone.getViewport(element);
     $('#bottomright').text("Zoom: " + viewport.scale.toFixed(2) + "x");
     $('#bottomleft').text("WW/WC:" + Math.round(viewport.windowWidth) + "/" + Math.round(viewport.windowCenter));
+
+
+    function onImageRendered(e) {
+        $('#topright').text("Render Time:" + cornerstone.lastRenderTimeInMs + " ms");
+
+    }
+    element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
 
 
     // add event handlers to pan image on mouse move

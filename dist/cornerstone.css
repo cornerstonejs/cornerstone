@@ -1,4 +1,4 @@
-/*! cornerstone - v0.0.1 - 2014-04-11 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.0.1 - 2014-04-12 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 /* http://stackoverflow.com/questions/7615009/disable-interpolation-when-scaling-a-canvas*/
 .cornerstone-disable-interpolation {
     image-rendering: optimizeSpeed;             // Older versions of FF

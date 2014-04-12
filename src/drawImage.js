@@ -13,6 +13,8 @@ var cornerstone = (function (cornerstone) {
     var renderCanvas = document.createElement('canvas');
     var renderCanvasContext;
     var renderCanvasData;
+    var lastRenderedImageId;
+    var lastRenderedViewport = {};
 
     function initializeRenderCanvas(image)
     {
@@ -42,12 +44,28 @@ var cornerstone = (function (cornerstone) {
         return image.lut;
     }
 
+    function doesImageNeedToBeRendered(ee, image)
+    {
+        if(image.imageId !== lastRenderedImageId ||
+           lastRenderedViewport.windowCenter !== ee.viewport.windowCenter ||
+           lastRenderedViewport.windowWidth !== ee.viewport.windowWidth ||
+           lastRenderedViewport.invert !== ee.viewport.invert)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Internal API function to draw an image to a given enabled element
      * @param ee
      * @param image
      */
     function drawImage(ee, image) {
+
+        var start = new Date();
+
 
         // get the canvas context and reset the transform
         var context = ee.canvas.getContext('2d');
@@ -57,23 +75,34 @@ var cornerstone = (function (cornerstone) {
         context.fillStyle = 'black';
         context.fillRect(0,0, ee.canvas.width, ee.canvas.height);
 
-        // If our render canvas does not match the size of this image reset it
-        // NOTE: This might be inefficient if we are updating multiple images of different
-        // sizes frequently.
-        if(renderCanvas.width !== image.width || renderCanvas.height != image.height) {
-            initializeRenderCanvas(image);
-        }
-
         // save the canvas context state and apply the viewport properties
         context.save();
         cornerstone.setToPixelCoordinateSystem(ee, context);
 
-        // get the lut to use
-        var lut = getLut(image, ee.viewport);
 
-        // apply the lut to the stored pixel data onto the render canvas
-        cornerstone.storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
-        renderCanvasContext.putImageData(renderCanvasData, 0, 0);
+        // check to see if the image in renderedCanvas needs to be rerendered or not
+        if(doesImageNeedToBeRendered(ee, image))
+        {
+            // If our render canvas does not match the size of this image reset it
+            // NOTE: This might be inefficient if we are updating multiple images of different
+            // sizes frequently.
+            if(renderCanvas.width !== image.width || renderCanvas.height != image.height) {
+                initializeRenderCanvas(image);
+            }
+
+            // get the lut to use
+            var lut = getLut(image, ee.viewport);
+
+            // apply the lut to the stored pixel data onto the render canvas
+            cornerstone.storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
+            renderCanvasContext.putImageData(renderCanvasData, 0, 0);
+
+            lastRenderedImageId = image.imageId;
+            lastRenderedViewport.windowCenter = ee.viewport.windowCenter;
+            lastRenderedViewport.windowWidth = ee.viewport.windowWidth;
+            lastRenderedViewport.invert = ee.viewport.invert;
+        }
+
 
         // turn off image smooth/interpolation if pixelReplication is set in the viewport
         if(ee.viewport.pixelReplication === true) {
@@ -84,6 +113,10 @@ var cornerstone = (function (cornerstone) {
         context.drawImage(renderCanvas, 0,0, image.columns, image.rows, 0, 0, image.columns, image.rows);
 
         context.restore();
+
+        var end = new Date();
+        var diff = end - start;
+        cornerstone.lastRenderTimeInMs = diff;
 
         var event = new CustomEvent(
             "CornerstoneImageRendered",
@@ -100,6 +133,8 @@ var cornerstone = (function (cornerstone) {
             }
         );
         ee.element.dispatchEvent(event);
+
+
     }
 
     // Module exports
