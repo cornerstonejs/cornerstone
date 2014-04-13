@@ -86,8 +86,8 @@ by the developer
             lastY = e.pageY;
 
             var viewport = cornerstone.getViewport(element);
-            viewport.centerX += (deltaX / viewport.scale);
-            viewport.centerY += (deltaY / viewport.scale);
+            viewport.translation.x += (deltaX / viewport.scale);
+            viewport.translation.y += (deltaY / viewport.scale);
             cornerstone.setViewport(element, viewport);
         });
 

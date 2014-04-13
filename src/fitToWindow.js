@@ -19,8 +19,8 @@ var cornerstone = (function (cornerstone) {
         var enabledElement = cornerstone.getEnabledElement(element);
         var defaultViewport = cornerstone.getDefaultViewport(enabledElement.canvas, enabledElement.image);
         enabledElement.viewport.scale = defaultViewport.scale;
-        enabledElement.viewport.centerX = defaultViewport.centerX;
-        enabledElement.viewport.centerY = defaultViewport.centerY;
+        enabledElement.viewport.translation.x = defaultViewport.translation.x;
+        enabledElement.viewport.translation.y = defaultViewport.translation.y;
         cornerstone.updateImage(element);
     }
 

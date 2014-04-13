@@ -37,7 +37,7 @@ var cornerstone = (function (cornerstone) {
         context.scale(widthScale, heightScale);
 
         // apply the pan offset
-        context.translate(ee.viewport.centerX, ee.viewport.centerY);
+        context.translate(ee.viewport.translation.x, ee.viewport.translation.y);
 
         if(scale === undefined) {
             scale = 1.0;

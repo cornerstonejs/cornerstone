@@ -314,8 +314,8 @@ var cornerstone = (function (cornerstone) {
         var enabledElement = cornerstone.getEnabledElement(element);
         var defaultViewport = cornerstone.getDefaultViewport(enabledElement.canvas, enabledElement.image);
         enabledElement.viewport.scale = defaultViewport.scale;
-        enabledElement.viewport.centerX = defaultViewport.centerX;
-        enabledElement.viewport.centerY = defaultViewport.centerY;
+        enabledElement.viewport.translation.x = defaultViewport.translation.x;
+        enabledElement.viewport.translation.y = defaultViewport.translation.y;
         cornerstone.updateImage(element);
     }
 
@@ -403,13 +403,15 @@ var cornerstone = (function (cornerstone) {
      * Creates a new viewport object containing default values for the image and canvas
      * @param canvas
      * @param image
-     * @returns {{scale: number, centerX: number, centerY: number, windowWidth: (image.windowWidth|*), windowCenter: (image.windowCenter|*), invert: *}}
+     * @returns viewport object
      */
     function getDefaultViewport(canvas, image) {
         var viewport = {
             scale : 1.0,
-            centerX : 0,
-            centerY: 0,
+            translation : {
+                x : 0,
+                y : 0
+            },
             windowWidth: image.windowWidth,
             windowCenter: image.windowCenter,
             invert: image.invert,
@@ -598,8 +600,8 @@ var cornerstone = (function (cornerstone) {
         var scaledMiddleY = middleY / heightScale;
 
         // apply pan offset
-        var imageX = scaledMiddleX - viewport.centerX;
-        var imageY = scaledMiddleY - viewport.centerY;
+        var imageX = scaledMiddleX - viewport.translation.x;
+        var imageY = scaledMiddleY - viewport.translation.y;
 
         // translate to image top left
         imageX += ee.image.columns / 2;
@@ -707,7 +709,7 @@ var cornerstone = (function (cornerstone) {
         context.scale(widthScale, heightScale);
 
         // apply the pan offset
-        context.translate(ee.viewport.centerX, ee.viewport.centerY);
+        context.translate(ee.viewport.translation.x, ee.viewport.translation.y);
 
         if(scale === undefined) {
             scale = 1.0;

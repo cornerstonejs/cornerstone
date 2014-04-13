@@ -15,13 +15,15 @@ var cornerstone = (function (cornerstone) {
      * Creates a new viewport object containing default values for the image and canvas
      * @param canvas
      * @param image
-     * @returns {{scale: number, centerX: number, centerY: number, windowWidth: (image.windowWidth|*), windowCenter: (image.windowCenter|*), invert: *}}
+     * @returns viewport object
      */
     function getDefaultViewport(canvas, image) {
         var viewport = {
             scale : 1.0,
-            centerX : 0,
-            centerY: 0,
+            translation : {
+                x : 0,
+                y : 0
+            },
             windowWidth: image.windowWidth,
             windowCenter: image.windowCenter,
             invert: image.invert,

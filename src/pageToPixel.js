@@ -54,8 +54,8 @@ var cornerstone = (function (cornerstone) {
         var scaledMiddleY = middleY / heightScale;
 
         // apply pan offset
-        var imageX = scaledMiddleX - viewport.centerX;
-        var imageY = scaledMiddleY - viewport.centerY;
+        var imageX = scaledMiddleX - viewport.translation.x;
+        var imageY = scaledMiddleY - viewport.translation.y;
 
         // translate to image top left
         imageX += ee.image.columns / 2;
