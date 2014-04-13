@@ -19,27 +19,21 @@
     <br>
     <br>
 
-    <div style="width:256px;height:256px;display:inline-block;"
-         data-cornerstoneEnabled="true"
-         data-cornerstoneImageId="example://1"
+    <div id="mr1" style="width:256px;height:256px;display:inline-block;"
          class="cornerstone-enabled-image"
          oncontextmenu="return false"
          unselectable='on'
          onselectstart='return false;'
          onmousedown='return false;'>
     </div>
-    <div style="width:256px;height:256px;display:inline-block;"
-         data-cornerstoneEnabled="true"
-         data-cornerstoneImageId="example://2"
+    <div id="mr2" style="width:256px;height:256px;display:inline-block;"
          class="cornerstone-enabled-image"
          oncontextmenu="return false"
          unselectable='on'
          onselectstart='return false;'
          onmousedown='return false;'>
     </div>
-    <div style="width:512px;height:512px;"
-         data-cornerstoneEnabled="true"
-         data-cornerstoneImageId="ctexample://1"
+    <div id="ct1" style="width:512px;height:512px;"
          class="cornerstone-enabled-image"
          oncontextmenu="return false"
          unselectable='on'
@@ -61,4 +55,12 @@ is used by our example image loader-->
 
 <!-- include special code for these examples which provides images -->
 <script src="../exampleImageIdLoaderCt.js"></script>
+
+<script>
+    cornerstone.enable(document.getElementById('mr1'), "example://1");
+    cornerstone.enable(document.getElementById('mr2'), "example://2");
+    cornerstone.enable(document.getElementById('ct1'), "ctexample://1");
+
+</script>
+
 </html>

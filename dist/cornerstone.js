@@ -148,7 +148,6 @@ var cornerstone = (function (cornerstone) {
             lastRenderedViewport.invert = ee.viewport.invert;
         }
 
-
         // turn off image smooth/interpolation if pixelReplication is set in the viewport
         if(ee.viewport.pixelReplication === true) {
             context.imageSmoothingEnabled = false;
@@ -183,8 +182,6 @@ var cornerstone = (function (cornerstone) {
             }
         );
         ee.element.dispatchEvent(event);
-
-
     }
 
     // Module exports
@@ -239,57 +236,6 @@ var cornerstone = (function (cornerstone) {
 
     // module/private exports
     cornerstone.enable = enable;
-
-    return cornerstone;
-}(cornerstone));
-/**
- * This module looks for elements in the document that have cornerstone markup attributes
- * and applies them.  It also registers a window.onload handle to automatically do this
- * after the document has been loaded
- */
-var cornerstone = (function (cs) {
-
-    "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
-
-    function getAttribute(ee, attrName) {
-        var attr = ee.getAttribute(attrName);
-        if(attr === undefined) {
-            return undefined;
-        }
-        return attr;
-    }
-
-    function enableAllElements()
-    {
-        var ees = document.querySelectorAll('[data-cornerstoneEnabled]');
-        for(var i=0; i < ees.length; i++) {
-            var ee = ees[i];
-            var imageId = ee.getAttribute('data-cornerstoneImageId');
-
-            var viewport =
-            {
-                scale : getAttribute(ee, 'data-cornerstoneViewportScale'),
-                centerX : getAttribute(ee, 'data-cornerstoneViewportCenterX'),
-                centerY : getAttribute(ee, 'data-cornerstoneViewportCenterY'),
-                windowWidth : getAttribute(ee, 'data-cornerstoneViewportWindowWidth'),
-                windowCenter : getAttribute(ee, 'data-cornerstoneViewportWindowCenter')
-            };
-            cornerstone.enable(ee, imageId, viewport);
-        }
-    }
-
-
-    var oldOnLoad = window.onload;
-    window.onload = function() {
-        if(typeof oldOnLoad == 'function') {oldOnLoad();}
-        enableAllElements();
-    };
-
-    cornerstone.enableAllElements = enableAllElements;
 
     return cornerstone;
 }(cornerstone));
@@ -480,7 +426,8 @@ var cornerstone = (function (cornerstone) {
             centerY: 0,
             windowWidth: image.windowWidth,
             windowCenter: image.windowCenter,
-            invert: image.invert
+            invert: image.invert,
+            pixelReplication: false
         };
 
         // fit image to window

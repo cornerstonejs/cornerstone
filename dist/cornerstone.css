@@ -1,16 +1,4 @@
 /*! cornerstone - v0.0.1 - 2014-04-13 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
-/* http://stackoverflow.com/questions/7615009/disable-interpolation-when-scaling-a-canvas*/
-.cornerstone-disable-interpolation {
-    image-rendering: optimizeSpeed;             // Older versions of FF
-    image-rendering: -moz-crisp-edges;          // FF 6.0+
-    image-rendering: -webkit-optimize-contrast; // Webkit
-    //  (Safari now, Chrome soon)
-    image-rendering: -o-crisp-edges;            // OS X & Windows Opera (12.02+)
-    image-rendering: optimize-contrast;         // Possible future browsers.
-    -ms-interpolation-mode: nearest-neighbor;   // IE
-}
-
-/* apply this to image enabled divs */
 .cornerstone-enabled-image {
 
     /* prevent text selection from occurring when dragging the mouse on the div */

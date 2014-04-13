@@ -25,6 +25,7 @@ Beyond v1.0:
      * Rotation (90, 180, 270, 0)
      * Flip (Horizontal / Vertical)
      * Non linear LUTs (modality & voi)
+     * pseudo color tables (for PET, MRI)
  * Performance related
    * switch to lower resolution image during ww/wc operation to improve framerate
    * only regenerate the part of the rendered image that is actually visible - perhaps by tiling it

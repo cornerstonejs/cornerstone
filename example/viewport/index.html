@@ -12,39 +12,20 @@
 <div class="container">
 
     <h1>
-        markup/index.html
+        viewport/index.html
     </h1>
-    This example demonstrates setting various viewport settings through markup.  In this case,
-    we present a better view of the tumor by zooming in on it and applying a ww/wc value that
-    makes it clearer.
-    <br>
-    <br>
-    TODO:
-    <ul>
-        <li>data-cornerstoneViewportWindowWidthWindowCenter = "1024,512" vs two attributes</li>
-        <li>data-cornerstoneViewportCenter = "110,150" vs two attributes</li>
-    </ul>
-
+    This example demonstrates setting various viewport settings when the image is first enabled to
+    focus on a tumor in the image.
     <br>
     <br>
 
     <div id="dicomImage" style="width:512px;height:512px;"
-         data-cornerstoneEnabled="true"
-         data-cornerstoneImageId="example://1"
-         data-cornerstoneViewportWindowWidth="89"
-         data-cornerstoneViewportWindowCenter="159"
-         data-cornerstoneViewportScale="4.0"
-         data-cornerstoneViewportCenterX="-24"
-         data-cornerstoneViewportCenterY="10"
          class="cornerstone-enabled-image"
          oncontextmenu="return false"
          unselectable='on'
          onselectstart='return false;'
          onmousedown='return false;'>
-
     </div>
-
-
 
 </div>
 </body>
@@ -57,4 +38,20 @@ is used by our example image loader-->
 
 <!-- include special code for these examples which provides images -->
 <script src="../exampleImageIdLoader.js"></script>
+
+<script>
+    var viewportOptions = {
+        scale : 6.0,
+        centerX : -24,
+        centerY: 10,
+        windowWidth: 89,
+        windowCenter: 150,
+        invert: false,
+        pixelReplication: false
+    };
+
+    cornerstone.enable(document.getElementById('dicomImage'), "example://1", viewportOptions);
+
+</script>
+
 </html>

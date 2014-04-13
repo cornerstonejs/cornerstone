@@ -9,11 +9,11 @@ Phase 4 (in progress)
  * Performance optimization for zoom/pan operations (DONE)
  * Example for invert functionality (DONE)
  * Example for interpolation on/off (DONE)
+ * Consider moving the markup functionality to another library (DONE - Deleted for now)
  * Code cleanup / refactoring / documentation
  * Consider moving setToFontCoordinateSystem and setToPixelCoordinateSystem to tools library?
    * might be best to consolidate them into one function and provide an optional fontScale
      parameter to trigger font scaling?
- * Consider moving the markup functionality to another library
  * Packaging/build related
      * packaged as a bower module
  * Rendering of non square pixels (pixel spacing is not the same vertically and horizontally)

@@ -21,8 +21,6 @@
     <br>
 
     <div id="dicomImage" style="width:512px;height:512px;"
-         data-cornerstoneEnabled="true"
-         data-cornerstoneImageId="myImageLoader://1"
          class="cornerstone-enabled-image"
          oncontextmenu="return false"
          unselectable='on'
@@ -48,6 +46,7 @@ is used by our example image loader-->
     function loadImage(imageId) {
 
         var image = {
+            imageId : imageId,
             minPixelValue : 0,
             maxPixelValue : 255,
             slope: 1.0,
@@ -61,7 +60,8 @@ is used by our example image loader-->
             width: 256,
             color: false,
             columnPixelSpacing: 1.0,
-            rowPixelSpacing: 1.0
+            rowPixelSpacing: 1.0,
+            invert: false
         };
 
         var index=0;
@@ -79,9 +79,13 @@ is used by our example image loader-->
         var deferred = $.Deferred();
         deferred.resolve(image);
         return deferred;
-    };
+    }
 
     cornerstone.registerImageLoader('myImageLoader', loadImage);
+
+    var imageId = "myImageLoader://1";
+    var element = document.getElementById('dicomImage');
+    cornerstone.enable(element, imageId);
 
 </script>
 </html>

@@ -107,7 +107,6 @@ var cornerstone = (function (cornerstone) {
             lastRenderedViewport.invert = ee.viewport.invert;
         }
 
-
         // turn off image smooth/interpolation if pixelReplication is set in the viewport
         if(ee.viewport.pixelReplication === true) {
             context.imageSmoothingEnabled = false;
@@ -142,8 +141,6 @@ var cornerstone = (function (cornerstone) {
             }
         );
         ee.element.dispatchEvent(event);
-
-
     }
 
     // Module exports
