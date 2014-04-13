@@ -39,8 +39,19 @@ var cornerstone = (function (cornerstone) {
 
         // scale to image coordinates middleX/middleY
         var viewport = ee.viewport;
-        var scaledMiddleX = middleX / viewport.scale;
-        var scaledMiddleY = middleY / viewport.scale;
+
+        // apply the scale
+        var widthScale = ee.viewport.scale;
+        var heightScale = ee.viewport.scale;
+        if(ee.image.rowPixelSpacing < ee.image.columnPixelSpacing) {
+            widthScale = widthScale * (ee.image.columnPixelSpacing / ee.image.rowPixelSpacing);
+        }
+        else if(ee.image.columnPixelSpacing < ee.image.rowPixelSpacing) {
+            heightScale = heightScale * (ee.image.rowPixelSpacing / ee.image.columnPixelSpacing);
+        }
+
+        var scaledMiddleX = middleX / widthScale;
+        var scaledMiddleY = middleY / heightScale;
 
         // apply pan offset
         var imageX = scaledMiddleX - viewport.centerX;

@@ -29,7 +29,15 @@ var cornerstone = (function (cornerstone) {
         // move origin to center of canvas
         context.translate(ee.canvas.width/2, ee.canvas.height / 2);
         // apply the scale
-        context.scale(ee.viewport.scale, ee.viewport.scale);
+        var widthScale = ee.viewport.scale;
+        var heightScale = ee.viewport.scale;
+        if(ee.image.rowPixelSpacing < ee.image.columnPixelSpacing) {
+            widthScale = widthScale * (ee.image.columnPixelSpacing / ee.image.rowPixelSpacing);
+        }
+        else if(ee.image.columnPixelSpacing < ee.image.rowPixelSpacing) {
+            heightScale = heightScale * (ee.image.rowPixelSpacing / ee.image.columnPixelSpacing);
+        }
+
         // apply the pan offset
         context.translate(ee.viewport.centerX, ee.viewport.centerY);
 

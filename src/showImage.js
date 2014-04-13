@@ -48,6 +48,7 @@ var cornerstone = (function (cornerstone) {
                             }
                         }
                     }
+
                     cornerstone.updateImage(element);
 
                     // fire an event indicating the viewport has been changed

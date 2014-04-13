@@ -118,7 +118,7 @@ var cornerstone = (function (cornerstone) {
         }
 
         // Draw the render canvas half the image size (because we set origin to the middle of the canvas above)
-        context.drawImage(renderCanvas, 0,0, image.columns, image.rows, 0, 0, image.columns, image.rows);
+        context.drawImage(renderCanvas, 0,0, image.width, image.height, 0, 0, image.width, image.height);
 
         context.restore();
 
