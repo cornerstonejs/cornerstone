@@ -12,10 +12,8 @@ Phase 4 (in progress)
  * Consider moving the markup functionality to another library (DONE - Deleted for now)
  * Add support for resizing the enabled image (DONE)
  * Rendering of images with non square pixels (rowPixelSpacing != columnPixelSpacing) (DONE)
+ * Consider moving setToFontCoordinateSystem and setToPixelCoordinateSystem to tools library? (DONE - moved setToFontCoordinateSystem to tools lib as setContextToDisplayFontSize)
  * Code cleanup / refactoring / documentation
- * Consider moving setToFontCoordinateSystem and setToPixelCoordinateSystem to tools library?
-   * might be best to consolidate them into one function and provide an optional fontScale
-     parameter to trigger font scaling?
  * Packaging/build related
      * packaged as a bower module
 

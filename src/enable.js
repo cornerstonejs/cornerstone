@@ -24,7 +24,7 @@ var cornerstone = (function (cornerstone) {
         };
         cornerstone.addEnabledElement(el);
 
-        cornerstone.resize(element);
+        cornerstone.resize(element, true);
 
         cornerstone.showImage(element, imageId, viewportOptions);
     }

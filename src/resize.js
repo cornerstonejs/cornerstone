@@ -24,14 +24,24 @@ var cornerstone = (function (cornerstone) {
         canvas.style.height = element.clientHeight + "px";
     }
 
-    function resize(element) {
+    /**
+     * resizes an enabled element and optionally fits the image to window
+     * @param element
+     * @param fitToWindow
+     */
+    function resize(element, fitToWindow) {
 
         var enabledElement = cornerstone.getEnabledElement(element);
 
         setCanvasSize(element, enabledElement.canvas);
 
-        if(enabledElement.image !== undefined) {
-            cornerstone.fitToWindow(element);
+        if(enabledElement.image !== undefined ) {
+            if(fitToWindow === true) {
+                cornerstone.fitToWindow(element);
+            }
+            else {
+                cornerstone.updateImage(element);
+            }
         }
     }
 

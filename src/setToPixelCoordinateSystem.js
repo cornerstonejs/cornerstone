@@ -16,8 +16,9 @@ var cornerstone = (function (cornerstone) {
      * geometry to be driven using the canvas context using coordinates in the pixel coordinate system
      * @param ee
      * @param context
+     * @param scale optional scaler to apply
      */
-    function setToPixelCoordinateSystem(ee, context)
+    function setToPixelCoordinateSystem(ee, context, scale)
     {
         // reset the transformation matrix
         context.setTransform(1, 0, 0, 1, 0, 0);
@@ -34,10 +35,19 @@ var cornerstone = (function (cornerstone) {
             heightScale = heightScale * (ee.image.rowPixelSpacing / ee.image.columnPixelSpacing);
         }
         context.scale(widthScale, heightScale);
+
         // apply the pan offset
         context.translate(ee.viewport.centerX, ee.viewport.centerY);
+
+        if(scale === undefined) {
+            scale = 1.0;
+        } else {
+            // apply the font scale
+            context.scale(scale, scale);
+        }
+
         // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
-        context.translate(-ee.image.width /2, -ee.image.height/2);
+        context.translate(-ee.image.width / 2 / scale, -ee.image.height/ 2 / scale);
     }
 
     // Module exports

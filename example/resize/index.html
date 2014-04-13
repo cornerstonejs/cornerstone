@@ -26,6 +26,12 @@
 
     <button id="x256" class="btn">256x256</button>
     <button id="x512" class="btn">512x512</button>
+    <div class="checkbox">
+        <label>
+            <input id="fitToWindow" type="checkbox"> Fit To Window
+        </label>
+    </div>
+
 
     <div id="dicomImage" style="width:512px;height:512px"
          class="cornerstone-enabled-image"
@@ -57,12 +63,16 @@
     // Add event handler to the ww/wc apply button
     $('#x256').click(function(e) {
         $('#dicomImage').width(256).height(256);
-        cornerstone.resize(element);
+        var fitToWindowVal = $('#fitToWindow').is(":checked");
+        var fitToWindow = fitToWindowVal;
+        cornerstone.resize(element, fitToWindow);
     });
 
     $('#x512').click(function(e) {
         $('#dicomImage').width(512).height(512);
-        cornerstone.resize(element);
+        var fitToWindowVal = $('#fitToWindow').is(":checked");
+        var fitToWindow = fitToWindowVal;
+        cornerstone.resize(element, fitToWindow);
     });
 
 </script>
