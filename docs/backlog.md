@@ -24,12 +24,9 @@ Beyond v1.0:
  * more viewport functionality
      * Rotation (90, 180, 270, 0)
      * Flip (Horizontal / Vertical)
-     * non square pixels (pixel spacing is not the same vertically and horizontally)
      * Non linear LUTs (modality & voi)
-     * Turn on/off interpolation of image pixels
  * Performance related
    * switch to lower resolution image during ww/wc operation to improve framerate
-   * only regenerate rendered image if ww/wc changes - that way pan/zoom is faster
    * only regenerate the part of the rendered image that is actually visible - perhaps by tiling it
  * Pixel data management
      * Caching of pixel data to HTML5 local storage?
@@ -37,3 +34,5 @@ Beyond v1.0:
      * jquery plugin wrapper to make it easier to use with jquery
   * 3D functionality - MPR, MIP, Volume Rendering
   * Fusion (e.g. PET/CT, CT/MR)
+ * Create a CustomElement for cornerstone images http://www.html5rocks.com/en/tutorials/webcomponents/customelements/
+   * use http://www.polymer-project.org/ to polyfill

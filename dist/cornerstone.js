@@ -1,4 +1,4 @@
-/*! cornerstone - v0.0.1 - 2014-04-12 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.0.1 - 2014-04-13 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 (function () {
 
     "use strict";
@@ -74,7 +74,10 @@ var cornerstone = (function (cornerstone) {
     function getLut(image, viewport)
     {
         // if we have a cached lut and it has the right values, return it immediately
-        if(image.lut !== undefined && image.lut.windowCenter === viewport.windowCenter && image.lut.windowWidth === viewport.windowWidth) {
+        if(image.lut !== undefined &&
+           image.lut.windowCenter === viewport.windowCenter &&
+            image.lut.windowWidth === viewport.windowWidth &&
+            image.lut.invert === viewport.invert) {
             return image.lut;
         }
 
@@ -82,6 +85,7 @@ var cornerstone = (function (cornerstone) {
         image.lut = cornerstone.generateLut(image, viewport.windowWidth, viewport.windowCenter, viewport.invert);
         image.lut.windowWidth = viewport.windowWidth;
         image.lut.windowCenter = viewport.windowCenter;
+        image.lut.invert = viewport.invert;
         return image.lut;
     }
 
@@ -147,7 +151,12 @@ var cornerstone = (function (cornerstone) {
 
         // turn off image smooth/interpolation if pixelReplication is set in the viewport
         if(ee.viewport.pixelReplication === true) {
-            context.webkitImageSmoothingEnabled = false;
+            context.imageSmoothingEnabled = false;
+            context.mozImageSmoothingEnabled = false; // firefox doesn't support imageSmoothingEnabled yet
+        }
+        else {
+            context.imageSmoothingEnabled = true;
+            context.mozImageSmoothingEnabled = true;
         }
 
         // Draw the render canvas half the image size (because we set origin to the middle of the canvas above)

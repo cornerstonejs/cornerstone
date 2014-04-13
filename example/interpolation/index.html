@@ -11,17 +11,10 @@
 <div class="container">
 
     <h1>
-        windowlevel/index.html
+        interpolation/index.html
     </h1>
 
-    This is an example of interactive window/level
-
-    <br>
-    <br>
-
-    In this example, the mousemove is captured and adjusts the window/center.  You can also manually set the window/center
-    by entering the values in the input elements and hitting apply.  Press the Invert button to toggle invert
-    for the image.
+    This is an example of turning on/off interpolation
 
     <br>
     <br>
@@ -34,12 +27,7 @@
          onmousedown='return false;'>
     </div>
 
-    <label>Window Width</label>
-    <input id="ww" type="text" placeholder="e.g. 1000">
-    <label>Window Center</label>
-    <input id="wc" type="text" placeholder="e.g. 500">
-    <button id="apply" class="btn">Apply</button>
-    <button id="invert" class="btn">Invert</button>
+    <button id="interpolation" class="btn">Toggle Interpolation</button>
 
 </div>
 </body>
@@ -57,25 +45,17 @@
     // image enable the dicomImage element
     var imageId = 'example://1';
     var element = $('#dicomImage').get(0);
-    cornerstone.enable(element, imageId);
-    var viewport = cornerstone.getViewport(element);
-    $('#ww').val(viewport.windowWidth);
-    $('#wc').val(viewport.windowCenter);
+    var viewportOptions = {
+        scale : 6.0
+    }
+    cornerstone.enable(element, imageId, viewportOptions);
 
-    // Add event handler to the ww/wc apply button
-    $('#apply').click(function(e) {
+    $('#interpolation').click(function(e) {
         var viewport = cornerstone.getViewport(element);
-        viewport.windowWidth = parseFloat($('#ww').val());
-        viewport.windowCenter = parseFloat($('#wc').val());
-        cornerstone.setViewport(element, viewport);
-    });
-
-    $('#invert').click(function(e) {
-        var viewport = cornerstone.getViewport(element);
-        if(viewport.invert === true) {
-            viewport.invert = false;
+        if(viewport.pixelReplication === true) {
+            viewport.pixelReplication = false;
         } else {
-            viewport.invert = true;
+            viewport.pixelReplication = true;
         }
         cornerstone.setViewport(element, viewport);
     });
