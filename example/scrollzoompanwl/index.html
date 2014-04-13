@@ -30,7 +30,12 @@
         <li>Mouse wheel - scroll images</li>
     </ul>
 
-    <div style="width:512px;height:512px;position:relative;color: white;"
+    <button id="x256" class="btn">256x256</button>
+    <button id="x512" class="btn">512x512</button>
+    <button id="invert" class="btn">Toggle Invert</button>
+    <button id="interpolation" class="btn">Toggle Interpolation</button>
+
+    <div id="dicomImageWrapper" style="width:512px;height:512px;position:relative;color: white;"
          class="cornerstone-enabled-image"
          oncontextmenu="return false"
          unselectable='on'
@@ -77,8 +82,9 @@ is used by our example image loader-->
     function updateTheImage(imageIndex) {
         currentImageIndex = imageIndex;
         var element = $('#dicomImage').get(0);
-        cornerstone.showImage(element, imageIds[currentImageIndex]);
         var viewport = cornerstone.getViewport(element);
+        cornerstone.showImage(element, imageIds[currentImageIndex], viewport);
+        viewport = cornerstone.getViewport(element);
         $('#bottomright').text("Zoom: " + viewport.scale.toFixed(2)+ "x");
         $('#bottomleft').text("WW/WC:" + Math.round(viewport.windowWidth) + "/" + Math.round(viewport.windowCenter));
     };
@@ -154,5 +160,36 @@ is used by our example image loader-->
         return false;
     });
 
+    // Add event handler to the ww/wc apply button
+    $('#x256').click(function(e) {
+        $('#dicomImage').width(256).height(256);
+        $('#dicomImageWrapper').width(256).height(256);
+        cornerstone.resize(element);
+    });
+
+    $('#x512').click(function(e) {
+        $('#dicomImage').width(512).height(512);
+        $('#dicomImageWrapper').width(512).height(512);
+        cornerstone.resize(element);
+    });
+
+    $('#invert').click(function(e) {
+        var viewport = cornerstone.getViewport(element);
+        if(viewport.invert === true) {
+            viewport.invert = false;
+        } else {
+            viewport.invert = true;
+        }
+        cornerstone.setViewport(element, viewport);
+    });
+    $('#interpolation').click(function(e) {
+        var viewport = cornerstone.getViewport(element);
+        if(viewport.pixelReplication === true) {
+            viewport.pixelReplication = false;
+        } else {
+            viewport.pixelReplication = true;
+        }
+        cornerstone.setViewport(element, viewport);
+    });
 </script>
 </html>

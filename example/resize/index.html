@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- cornerstone css - provides some useful css classes -->
+    <link href="../../dist/cornerstone.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+
+    <h1>
+        resize/index.html
+    </h1>
+
+    This is an example of resizing the enabled image
+
+    <br>
+    <br>
+    When the enabled element's width or height changes, you must call resize() so cornerstone can update
+    the canvas width and height.  Resizing will recenter the image and scale it so all pixels are visible.
+    <br>
+    <br>
+
+
+    <button id="x256" class="btn">256x256</button>
+    <button id="x512" class="btn">512x512</button>
+
+    <div id="dicomImage" style="width:512px;height:512px"
+         class="cornerstone-enabled-image"
+         oncontextmenu="return false"
+         unselectable='on'
+         onselectstart='return false;'
+         onmousedown='return false;'>
+    </div>
+
+
+</div>
+</body>
+<!-- include the cornerstone library -->
+<script src="../../dist/cornerstone.js"></script>
+
+<!-- include special code for these examples which provides images -->
+<script src="../exampleImageIdLoader.js"></script>
+
+<!-- jquery - included to make things easier to demo, not needed or used by cornerstone -->
+<script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
+
+<script>
+
+    // image enable the dicomImage element
+    var imageId = 'example://1';
+    var element = $('#dicomImage').get(0);
+    cornerstone.enable(element, imageId);
+
+    // Add event handler to the ww/wc apply button
+    $('#x256').click(function(e) {
+        $('#dicomImage').width(256).height(256);
+        cornerstone.resize(element);
+    });
+
+    $('#x512').click(function(e) {
+        $('#dicomImage').width(512).height(512);
+        cornerstone.resize(element);
+    });
+
+</script>
+</html>

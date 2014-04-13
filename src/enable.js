@@ -12,36 +12,22 @@ var cornerstone = (function (cornerstone) {
     function enable(element, imageId, viewportOptions) {
         var canvas = document.createElement('canvas');
 
-        // Set the size of canvas and take retina into account
-        var retina = window.devicePixelRatio > 1;
-        if(retina) {
-            canvas.width = element.clientWidth * window.devicePixelRatio;
-            canvas.height = element.clientHeight * window.devicePixelRatio;
-            canvas.style.width = element.clientWidth + "px";
-            canvas.style.height = element.clientHeight + "px";
-        }
-        else
-        {
-            canvas.width = element.clientWidth;
-            canvas.height = element.clientHeight;
-            canvas.style.width = element.clientWidth + "px";
-            canvas.style.height = element.clientHeight + "px";
-        }
-
         element.appendChild(canvas);
 
         var el = {
             element: element,
             canvas: canvas,
+            image : undefined, // will be set once image is loaded
             imageId: "",
             imageIdHistory: [],
             data : {}
         };
         cornerstone.addEnabledElement(el);
 
+        cornerstone.resize(element);
+
         cornerstone.showImage(element, imageId, viewportOptions);
     }
-
 
     // module/private exports
     cornerstone.enable = enable;

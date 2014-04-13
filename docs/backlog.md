@@ -29,6 +29,7 @@ Beyond v1.0:
  * Performance related
    * switch to lower resolution image during ww/wc operation to improve framerate
    * only regenerate the part of the rendered image that is actually visible - perhaps by tiling it
+   * Consider having multiple renderCanvas or one per enabled element
  * Pixel data management
      * Caching of pixel data to HTML5 local storage?
  * Packaging/build related

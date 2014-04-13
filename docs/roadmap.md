@@ -10,6 +10,7 @@ Phase 4 (in progress)
  * Example for invert functionality (DONE)
  * Example for interpolation on/off (DONE)
  * Consider moving the markup functionality to another library (DONE - Deleted for now)
+ * Add support for resizing the enabled image (DONE)
  * Code cleanup / refactoring / documentation
  * Consider moving setToFontCoordinateSystem and setToPixelCoordinateSystem to tools library?
    * might be best to consolidate them into one function and provide an optional fontScale
