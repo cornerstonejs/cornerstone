@@ -1,8 +1,12 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
+    <!-- twitter bootstrap CSS stylesheet - included to make things pretty, not needed or used by cornerstone -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- cornerstone css - provides some useful css classes -->
+    <link href="../../dist/cornerstone.css" rel="stylesheet">
+
 </head>
 <body>
 <div class="container">
@@ -10,15 +14,21 @@
     <h1>
         nonSquarePixels/index.html
     </h1>
-
-    This is an example of displaying an image with non square pixels.  For this example
-    we are changing the rowPixelSpacing for an image with square pixels so it is half what
-    it should be.  This should result in a squished image
+    This example shows an image with non square pixels.  The image is 256x512 and has a column and row pixel spacing
+    of 1.0/0.5 respectively.  The image will display a square if non square pixels is being applied properly
+    or a tall rectangle if not.
     <br>
     <br>
 
-    <div id="dicomImage" style="width:512px;height:512px;">
+    <div id="dicomImage" style="width:512px;height:512px;"
+         class="cornerstone-enabled-image"
+         oncontextmenu="return false"
+         unselectable='on'
+         onselectstart='return false;'
+         onmousedown='return false;'>
     </div>
+
+
 
 </div>
 </body>
@@ -29,20 +39,68 @@
 is used by our example image loader-->
 <script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
 
-<!-- include special code for these examples which provides images -->
-<script src="../exampleImageIdLoader.js"></script>
 
 <script>
-    var imageId = 'example://1';
+
+    // Loads an image given an imageId
+    function loadImage(imageId) {
+
+        var image = {
+            imageId : imageId,
+            minPixelValue : 0,
+            maxPixelValue : 255,
+            slope: 1.0,
+            intercept: 0,
+            windowCenter : 127,
+            windowWidth : 256,
+            storedPixelData: [], // generated below
+            rows: 512,
+            columns: 256,
+            height: 512,
+            width: 256,
+            color: false,
+            columnPixelSpacing: 1.0,
+            rowPixelSpacing:0.5,
+            invert: false
+        };
+
+        var left = 10;
+        var top = 20;
+        var width = 100;
+        var height = 200;
+        var index = 0;
+        for(var row=0; row < image.rows; row++) {
+            for(var column=0; column < image.columns; column++) {
+                image.storedPixelData[index] = 0;
+                index++;
+            }
+        }
+        for(var row=top; row < top + height; row++) {
+            var rowOffset = row * image.width;
+            image.storedPixelData[rowOffset + left] = 255;
+            image.storedPixelData[rowOffset + left + width] = 255;
+        }
+        var topRowOffset = top * image.width;
+        var bottomRowOffset = (top+height)* image.width;
+        for(var column = left; column < left + width; column++) {
+            image.storedPixelData[topRowOffset + column] = 255;
+            image.storedPixelData[bottomRowOffset + column] = 255;
+        }
+
+
+        // Create a deferred object, resolve it with the image object we just created and return the
+        // deferred to cornerstone.  Cornerstone will get the image object by calling then() on the
+        // deferred
+        var deferred = $.Deferred();
+        deferred.resolve(image);
+        return deferred;
+    }
+
+    cornerstone.registerImageLoader('myImageLoader', loadImage);
+
+    var imageId = "myImageLoader://1";
     var element = document.getElementById('dicomImage');
-    var viewportOptions = {
-      scale: 1.0
-    };
-    cornerstone.enable(element, imageId, viewportOptions);
-    var imageDeferred = cornerstone.loadImage(imageId);
-    imageDeferred.done(function(image) {
-        image.rowPixelSpacing = image.rowPixelSpacing / 2.0;
-        cornerstone.updateImage(element);
-    });
+    cornerstone.enable(element, imageId);
+
 </script>
 </html>

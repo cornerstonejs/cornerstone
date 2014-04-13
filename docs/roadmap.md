@@ -14,8 +14,16 @@ Phase 4 (in progress)
  * Rendering of images with non square pixels (rowPixelSpacing != columnPixelSpacing) (DONE)
  * Consider moving setToFontCoordinateSystem and setToPixelCoordinateSystem to tools library? (DONE - moved setToFontCoordinateSystem to tools lib as setContextToDisplayFontSize)
  * Code cleanup / refactoring / documentation
+   * rename viewport.centerX and viewport.centerY to be viewport.translation.x and viewport.translation.y
+   * rename viewport.windowWidth and viewport.windowCenter to be viewport.window.width  and viewport.window.center
+   * replace customEventPolyFill with our own event implementation so we don't cause side effects in other libraries
+       that might try to do the same
+   * Consider making enable() not take an imageId or viewport and leave that up to showImage() instead
+   * getViewport() to return a copy
+   * setViewport() to make a copy
  * Packaging/build related
      * packaged as a bower module
+
 
 Phase 3 (completed April 11, 2014)
 ---------------------
