@@ -64,7 +64,7 @@ is used by our example image loader-->
     cornerstone.enable(element, imageId);
     var viewport = cornerstone.getViewport(element);
     $('#bottomright').text("Zoom: " + viewport.scale + "x");
-    $('#bottomleft').text("WW/WC:" + Math.round(viewport.windowWidth) + "/" + Math.round(viewport.windowCenter));
+    $('#bottomleft').text("WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
 
     // add event handlers to mouse move to adjust window/center
     $('#dicomImage').mousedown(function(e) {
@@ -78,11 +78,11 @@ is used by our example image loader-->
             lastY = e.pageY;
 
             var viewport = cornerstone.getViewport(element);
-            viewport.windowWidth += (deltaX / viewport.scale);
-            viewport.windowCenter += (deltaY / viewport.scale);
+            viewport.voi.windowWidth += (deltaX / viewport.scale);
+            viewport.voi.windowCenter += (deltaY / viewport.scale);
             cornerstone.setViewport(element, viewport);
 
-            $('#bottomleft').text("WW/WL:" + Math.round(viewport.windowWidth) + "/" + Math.round(viewport.windowCenter));
+            $('#bottomleft').text("WW/WL:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
         });
 
         $('#dicomImage').mouseup(function(e) {

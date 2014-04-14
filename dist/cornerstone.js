@@ -75,16 +75,16 @@ var cornerstone = (function (cornerstone) {
     {
         // if we have a cached lut and it has the right values, return it immediately
         if(image.lut !== undefined &&
-           image.lut.windowCenter === viewport.windowCenter &&
-            image.lut.windowWidth === viewport.windowWidth &&
+           image.lut.windowCenter === viewport.voi.windowCenter &&
+            image.lut.windowWidth === viewport.voi.windowWidth &&
             image.lut.invert === viewport.invert) {
             return image.lut;
         }
 
         // lut is invalid or not present, regenerate it and cache it
-        image.lut = cornerstone.generateLut(image, viewport.windowWidth, viewport.windowCenter, viewport.invert);
-        image.lut.windowWidth = viewport.windowWidth;
-        image.lut.windowCenter = viewport.windowCenter;
+        image.lut = cornerstone.generateLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert);
+        image.lut.windowWidth = viewport.voi.windowWidth;
+        image.lut.windowCenter = viewport.voi.windowCenter;
         image.lut.invert = viewport.invert;
         return image.lut;
     }
@@ -92,8 +92,8 @@ var cornerstone = (function (cornerstone) {
     function doesImageNeedToBeRendered(ee, image)
     {
         if(image.imageId !== lastRenderedImageId ||
-           lastRenderedViewport.windowCenter !== ee.viewport.windowCenter ||
-           lastRenderedViewport.windowWidth !== ee.viewport.windowWidth ||
+           lastRenderedViewport.windowCenter !== ee.viewport.voi.windowCenter ||
+           lastRenderedViewport.windowWidth !== ee.viewport.voi.windowWidth ||
            lastRenderedViewport.invert !== ee.viewport.invert)
         {
             return true;
@@ -143,8 +143,8 @@ var cornerstone = (function (cornerstone) {
             renderCanvasContext.putImageData(renderCanvasData, 0, 0);
 
             lastRenderedImageId = image.imageId;
-            lastRenderedViewport.windowCenter = ee.viewport.windowCenter;
-            lastRenderedViewport.windowWidth = ee.viewport.windowWidth;
+            lastRenderedViewport.windowCenter = ee.viewport.voi.windowCenter;
+            lastRenderedViewport.windowWidth = ee.viewport.voi.windowWidth;
             lastRenderedViewport.invert = ee.viewport.invert;
         }
 
@@ -412,8 +412,10 @@ var cornerstone = (function (cornerstone) {
                 x : 0,
                 y : 0
             },
-            windowWidth: image.windowWidth,
-            windowCenter: image.windowCenter,
+            voi : {
+                windowWidth: image.windowWidth,
+                windowCenter: image.windowCenter,
+            },
             invert: image.invert,
             pixelReplication: false
         };
@@ -907,8 +909,8 @@ var cornerstone = (function (cornerstone) {
         var enabledElement = cornerstone.getEnabledElement(element);
 
         // prevent window width from being < 1
-        if(viewport.windowWidth < 1) {
-            viewport.windowWidth = 1;
+        if(viewport.voi.windowWidth < 1) {
+            viewport.voi.windowWidth = 1;
         }
         // prevent scale from getting too small
         if(viewport.scale < 0.0001) {

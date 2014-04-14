@@ -75,7 +75,7 @@ is used by our example image loader-->
     var element = $('#dicomImage').get(0);
 
     function onViewportUpdated(e) {
-        $('#bottomleft').text("WW/WL:" + Math.round(e.detail.viewport.windowWidth) + "/" + Math.round(e.detail.viewport.windowCenter));
+        $('#bottomleft').text("WW/WL:" + Math.round(e.detail.viewport.voi.windowWidth) + "/" + Math.round(e.detail.viewport.voi.windowCenter));
         $('#bottomright').text("Zoom:" + e.detail.viewport.scale.toFixed(2));
     }
 
@@ -121,10 +121,10 @@ is used by our example image loader-->
 
             if(mouseButton == 1) {
                 var viewport = cornerstone.getViewport(element);
-                viewport.windowWidth += (deltaX / viewport.scale);
-                viewport.windowCenter += (deltaY / viewport.scale);
+                viewport.voi.windowWidth += (deltaX / viewport.scale);
+                viewport.voi.windowCenter += (deltaY / viewport.scale);
                 cornerstone.setViewport(element, viewport);
-                $('#bottomleft').text("WW/WL:" + Math.round(viewport.windowWidth) + "/" + Math.round(viewport.windowCenter));
+                $('#bottomleft').text("WW/WL:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
             }
             else if(mouseButton == 2) {
                 var viewport = cornerstone.getViewport(element);

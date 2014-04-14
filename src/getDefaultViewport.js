@@ -24,8 +24,10 @@ var cornerstone = (function (cornerstone) {
                 x : 0,
                 y : 0
             },
-            windowWidth: image.windowWidth,
-            windowCenter: image.windowCenter,
+            voi : {
+                windowWidth: image.windowWidth,
+                windowCenter: image.windowCenter,
+            },
             invert: image.invert,
             pixelReplication: false
         };

@@ -71,27 +71,27 @@ is used by our example image loader-->
     cornerstone.enable(element, imageId);
     var viewport = cornerstone.getViewport(element);
     $('#bottomright').text("Zoom: " + viewport.scale + "x");
-    $('#bottomleft').text("WW/WC:" + Math.round(viewport.windowWidth) + "/" + Math.round(viewport.windowCenter));
+    $('#bottomleft').text("WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
 
     // Add event handler for the ww/wc presets
     $('#softTissue').click(function(e) {
         var viewport = cornerstone.getViewport(element);
-        viewport.windowWidth = 400;
-        viewport.windowCenter = 20;
+        viewport.voi.windowWidth = 400;
+        viewport.voi.windowCenter = 20;
         cornerstone.setViewport(element, viewport);
     });
 
     $('#lung').click(function(e) {
         var viewport = cornerstone.getViewport(element);
-        viewport.windowWidth = 1600;
-        viewport.windowCenter = -600;
+        viewport.voi.windowWidth = 1600;
+        viewport.voi.windowCenter = -600;
         cornerstone.setViewport(element, viewport);
     });
 
     $('#bone').click(function(e) {
         var viewport = cornerstone.getViewport(element);
-        viewport.windowWidth = 2000;
-        viewport.windowCenter = 300;
+        viewport.voi.windowWidth = 2000;
+        viewport.voi.windowCenter = 300;
         cornerstone.setViewport(element, viewport);
     });
 
@@ -108,10 +108,10 @@ is used by our example image loader-->
             lastY = e.pageY;
 
             var viewport = cornerstone.getViewport(element);
-            viewport.windowWidth += (deltaX / viewport.scale);
-            viewport.windowCenter += (deltaY / viewport.scale);
+            viewport.voi.windowWidth += (deltaX / viewport.scale);
+            viewport.voi.windowCenter += (deltaY / viewport.scale);
             cornerstone.setViewport(element, viewport);
-            $('#bottomleft').text("WW/WL:" + Math.round(viewport.windowWidth) + "/" + Math.round(viewport.windowCenter));
+            $('#bottomleft').text("WW/WL:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
         });
 
         $(document).mouseup(function(e) {

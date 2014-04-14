@@ -72,8 +72,8 @@
             lastY = e.pageY;
 
             var viewport = cornerstone.getViewport(element);
-            viewport.windowWidth += (deltaX / viewport.scale);
-            viewport.windowCenter += (deltaY / viewport.scale);
+            viewport.voi.windowWidth += (deltaX / viewport.scale);
+            viewport.voi.windowCenter += (deltaY / viewport.scale);
             cornerstone.setViewport(element, viewport);
         });
 

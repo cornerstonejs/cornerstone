@@ -59,14 +59,14 @@
     var element = $('#dicomImage').get(0);
     cornerstone.enable(element, imageId);
     var viewport = cornerstone.getViewport(element);
-    $('#ww').val(viewport.windowWidth);
-    $('#wc').val(viewport.windowCenter);
+    $('#ww').val(viewport.voi.windowWidth);
+    $('#wc').val(viewport.voi.windowCenter);
 
     // Add event handler to the ww/wc apply button
     $('#apply').click(function(e) {
         var viewport = cornerstone.getViewport(element);
-        viewport.windowWidth = parseFloat($('#ww').val());
-        viewport.windowCenter = parseFloat($('#wc').val());
+        viewport.voi.windowWidth = parseFloat($('#ww').val());
+        viewport.voi.windowCenter = parseFloat($('#wc').val());
         cornerstone.setViewport(element, viewport);
     });
 
@@ -92,8 +92,8 @@
             lastY = e.pageY;
 
             var viewport = cornerstone.getViewport(element);
-            viewport.windowWidth += (deltaX / viewport.scale);
-            viewport.windowCenter += (deltaY / viewport.scale);
+            viewport.voi.windowWidth += (deltaX / viewport.scale);
+            viewport.voi.windowCenter += (deltaY / viewport.scale);
             cornerstone.setViewport(element, viewport);
         });
 

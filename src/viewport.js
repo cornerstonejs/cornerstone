@@ -14,8 +14,8 @@ var cornerstone = (function (cornerstone) {
         var enabledElement = cornerstone.getEnabledElement(element);
 
         // prevent window width from being < 1
-        if(viewport.windowWidth < 1) {
-            viewport.windowWidth = 1;
+        if(viewport.voi.windowWidth < 1) {
+            viewport.voi.windowWidth = 1;
         }
         // prevent scale from getting too small
         if(viewport.scale < 0.0001) {
