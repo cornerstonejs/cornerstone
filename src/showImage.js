@@ -35,9 +35,9 @@ var cornerstone = (function (cornerstone) {
 
                     if(enabledElement.viewport === undefined) {
                         enabledElement.viewport = cornerstone.getDefaultViewport(enabledElement.canvas, image);
+                    } else if(viewport === undefined) {
+                        enabledElement.viewport = cornerstone.getDefaultViewport(enabledElement.canvas, image);
                     }
-
-                    enabledElement.viewport = cornerstone.getDefaultViewport(enabledElement.canvas, image);
 
                     // merge
                     if(viewport) {

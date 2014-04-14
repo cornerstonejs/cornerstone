@@ -802,9 +802,9 @@ var cornerstone = (function (cornerstone) {
 
                     if(enabledElement.viewport === undefined) {
                         enabledElement.viewport = cornerstone.getDefaultViewport(enabledElement.canvas, image);
+                    } else if(viewport === undefined) {
+                        enabledElement.viewport = cornerstone.getDefaultViewport(enabledElement.canvas, image);
                     }
-
-                    enabledElement.viewport = cornerstone.getDefaultViewport(enabledElement.canvas, image);
 
                     // merge
                     if(viewport) {
@@ -919,16 +919,22 @@ var cornerstone = (function (cornerstone) {
 
         var enabledElement = cornerstone.getEnabledElement(element);
 
+        enabledElement.viewport.scale = viewport.scale;
+        enabledElement.viewport.translation.x = viewport.translation.x;
+        enabledElement.viewport.translation.y = viewport.translation.y;
+        enabledElement.viewport.voi.windowWidth = viewport.voi.windowWidth;
+        enabledElement.viewport.voi.windowCenter = viewport.voi.windowCenter;
+        enabledElement.viewport.invert = viewport.invert;
+        enabledElement.viewport.pixelReplication = viewport.pixelReplication;
+
         // prevent window width from being < 1
-        if(viewport.voi.windowWidth < 1) {
-            viewport.voi.windowWidth = 1;
+        if(enabledElement.viewport.voi.windowWidth < 1) {
+            enabledElement.viewport.voi.windowWidth = 1;
         }
         // prevent scale from getting too small
-        if(viewport.scale < 0.0001) {
-            viewport.scale = 0.25;
+        if(enabledElement.viewport.scale < 0.0001) {
+            enabledElement.viewport.scale = 0.25;
         }
-
-        enabledElement.viewport = viewport;
 
         // Force the image to be updated since the viewport has been modified
         cornerstone.updateImage(element);
@@ -942,7 +948,21 @@ var cornerstone = (function (cornerstone) {
      * @returns {*}
      */
     function getViewport(element) {
-        return cornerstone.getEnabledElement(element).viewport;
+        var enabledElement = cornerstone.getEnabledElement(element);
+        var viewport = enabledElement.viewport;
+        return {
+            scale : viewport.scale,
+            translation : {
+                x : viewport.translation.x,
+                y : viewport.translation.y
+            },
+            voi : {
+                windowWidth: viewport.voi.windowWidth,
+                windowCenter : viewport.voi.windowCenter
+            },
+            invert : viewport.invert,
+            pixelReplication: viewport.pixelReplication
+        };
     }
 
     // module/private exports

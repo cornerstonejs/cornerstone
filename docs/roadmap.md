@@ -19,8 +19,8 @@ Phase 4 (in progress)
    * replace customEventPolyFill with our own event implementation so we don't cause side effects in other libraries
        that might try to do the same (DONE)
    * Consider making enable() not take an imageId or viewport and leave that up to showImage() instead
-   * getViewport() to return a copy
-   * setViewport() to make a copy
+   * getViewport() to return a copy (DONE)
+   * setViewport() to make a copy (DONE)
  * Packaging/build related
      * packaged as a bower module
 
