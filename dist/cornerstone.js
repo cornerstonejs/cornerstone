@@ -1,4 +1,4 @@
-/*! cornerstone - v0.1.0 - 2014-04-13 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.1.2 - 2014-04-13 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
