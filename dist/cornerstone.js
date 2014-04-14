@@ -1,7 +1,11 @@
 /*! cornerstone - v0.0.1 - 2014-04-13 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
-(function () {
+var cornerstone = (function (cornerstone) {
 
     "use strict";
+
+    if(cornerstone === undefined) {
+        cornerstone = {};
+    }
 
     // Turn off jshint warnings about new Number() in borrowed code below
     /*jshint -W053 */
@@ -20,25 +24,71 @@
         return iev;
     }
 
-    // Taken from: http://stackoverflow.com/questions/14358599/object-doesnt-support-this-action-ie9-with-customevent-initialization
-    var ieVer = ie_ver();
-    if(ieVer <= 11) {
-        (function () {
-            function CustomEvent ( event, params ) {
-                params = params || { bubbles: false, cancelable: false, detail: undefined };
-                var evt = document.createEvent( 'CustomEvent' );
-                evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
-                return evt;
-            }
+    // module/private exports
+    cornerstone.ieVersion = ie_ver;
 
-            CustomEvent.prototype = window.Event.prototype;
+    return cornerstone;
+}(cornerstone));
+/**
+ * This module handles event dispatching
+ */
+var cornerstone = (function (cornerstone) {
 
-            window.CustomEvent = CustomEvent;
-        })();
+    "use strict";
+
+    if(cornerstone === undefined) {
+        cornerstone = {};
     }
 
-}());
+    var ieVersion = cornerstone.ieVersion();
 
+    function CustomEventIe ( event, params ) {
+        params = params || { bubbles: false, cancelable: false, detail: undefined };
+        var evt = document.createEvent( 'CustomEvent' );
+        evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+        return evt;
+    }
+
+    CustomEventIe.prototype = window.Event.prototype;
+
+    function cornerstoneEvent(enabledElement, eventName) {
+        var event;
+        if(ieVersion <= 11) {
+            event = new CustomEventIe(
+                eventName,
+                {
+                    detail: {
+                        viewport: enabledElement.viewport,
+                        element: enabledElement.element,
+                        image: enabledElement.image
+                    },
+                    bubbles: false,
+                    cancelable: false
+                }
+            );
+        } else {
+            event = new CustomEvent(
+                eventName,
+                {
+                    detail: {
+                        viewport: enabledElement.viewport,
+                        element: enabledElement.element,
+                        image: enabledElement.image
+
+                    },
+                    bubbles: false,
+                    cancelable: false
+                }
+            );
+        }
+        enabledElement.element.dispatchEvent(event);
+    }
+
+    // module/private exports
+    cornerstone.event = cornerstoneEvent;
+
+    return cornerstone;
+}(cornerstone));
 /**
  * This module is responsible for drawing an image to an enabled elements canvas element
  */
@@ -89,12 +139,12 @@ var cornerstone = (function (cornerstone) {
         return image.lut;
     }
 
-    function doesImageNeedToBeRendered(ee, image)
+    function doesImageNeedToBeRendered(enabledElement, image)
     {
         if(image.imageId !== lastRenderedImageId ||
-           lastRenderedViewport.windowCenter !== ee.viewport.voi.windowCenter ||
-           lastRenderedViewport.windowWidth !== ee.viewport.voi.windowWidth ||
-           lastRenderedViewport.invert !== ee.viewport.invert)
+           lastRenderedViewport.windowCenter !== enabledElement.viewport.voi.windowCenter ||
+           lastRenderedViewport.windowWidth !== enabledElement.viewport.voi.windowWidth ||
+           lastRenderedViewport.invert !== enabledElement.viewport.invert)
         {
             return true;
         }
@@ -104,29 +154,29 @@ var cornerstone = (function (cornerstone) {
 
     /**
      * Internal API function to draw an image to a given enabled element
-     * @param ee
+     * @param enabledElement
      * @param image
      */
-    function drawImage(ee, image) {
+    function drawImage(enabledElement, image) {
 
         var start = new Date();
 
 
         // get the canvas context and reset the transform
-        var context = ee.canvas.getContext('2d');
+        var context = enabledElement.canvas.getContext('2d');
         context.setTransform(1, 0, 0, 1, 0, 0);
 
         // clear the canvas
         context.fillStyle = 'black';
-        context.fillRect(0,0, ee.canvas.width, ee.canvas.height);
+        context.fillRect(0,0, enabledElement.canvas.width, enabledElement.canvas.height);
 
         // save the canvas context state and apply the viewport properties
         context.save();
-        cornerstone.setToPixelCoordinateSystem(ee, context);
+        cornerstone.setToPixelCoordinateSystem(enabledElement, context);
 
 
         // check to see if the image in renderedCanvas needs to be rerendered or not
-        if(doesImageNeedToBeRendered(ee, image))
+        if(doesImageNeedToBeRendered(enabledElement, image))
         {
             // If our render canvas does not match the size of this image reset it
             // NOTE: This might be inefficient if we are updating multiple images of different
@@ -136,20 +186,20 @@ var cornerstone = (function (cornerstone) {
             }
 
             // get the lut to use
-            var lut = getLut(image, ee.viewport);
+            var lut = getLut(image, enabledElement.viewport);
 
             // apply the lut to the stored pixel data onto the render canvas
             cornerstone.storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
             renderCanvasContext.putImageData(renderCanvasData, 0, 0);
 
             lastRenderedImageId = image.imageId;
-            lastRenderedViewport.windowCenter = ee.viewport.voi.windowCenter;
-            lastRenderedViewport.windowWidth = ee.viewport.voi.windowWidth;
-            lastRenderedViewport.invert = ee.viewport.invert;
+            lastRenderedViewport.windowCenter = enabledElement.viewport.voi.windowCenter;
+            lastRenderedViewport.windowWidth = enabledElement.viewport.voi.windowWidth;
+            lastRenderedViewport.invert = enabledElement.viewport.invert;
         }
 
         // turn off image smooth/interpolation if pixelReplication is set in the viewport
-        if(ee.viewport.pixelReplication === true) {
+        if(enabledElement.viewport.pixelReplication === true) {
             context.imageSmoothingEnabled = false;
             context.mozImageSmoothingEnabled = false; // firefox doesn't support imageSmoothingEnabled yet
         }
@@ -167,21 +217,7 @@ var cornerstone = (function (cornerstone) {
         var diff = end - start;
         cornerstone.lastRenderTimeInMs = diff;
 
-        var event = new CustomEvent(
-            "CornerstoneImageRendered",
-            {
-                detail: {
-                    canvasContext: context,
-                    viewport: ee.viewport,
-                    image: ee.image,
-                    element: ee.element,
-                    enabledElement: ee
-                },
-                bubbles: false,
-                cancelable: false
-            }
-        );
-        ee.element.dispatchEvent(event);
+        cornerstone.event(enabledElement, "CornerstoneImageRendered");
     }
 
     // Module exports
@@ -782,34 +818,9 @@ var cornerstone = (function (cornerstone) {
 
                     cornerstone.updateImage(element);
 
-                    // fire an event indicating the viewport has been changed
-                    var event = new CustomEvent(
-                        "CornerstoneViewportUpdated",
-                        {
-                            detail: {
-                                viewport: enabledElement.viewport,
-                                element: element,
-                                image: enabledElement.image
-                            },
-                            bubbles: false,
-                            cancelable: false
-                        }
-                    );
-                    element.dispatchEvent(event);
+                    cornerstone.event(enabledElement, "CornerstoneViewportUpdated");
+                    cornerstone.event(enabledElement, "CornerstoneNewImage");
 
-                    event = new CustomEvent(
-                        "CornerstoneNewImage",
-                        {
-                            detail: {
-                                viewport: enabledElement.viewport,
-                                element: element,
-                                image: enabledElement.image
-                            },
-                            bubbles: false,
-                            cancelable: false
-                        }
-                    );
-                    element.dispatchEvent(event);
                     return;
                 }
             }
@@ -922,23 +933,7 @@ var cornerstone = (function (cornerstone) {
         // Force the image to be updated since the viewport has been modified
         cornerstone.updateImage(element);
 
-
-        // Fire an event letting others know that the viewort has been updated so they
-        // can take the appropriate action
-        var event = new CustomEvent(
-            "CornerstoneViewportUpdated",
-            {
-                detail: {
-                    viewport: viewport,
-                    element: element,
-                    image: enabledElement.image
-
-                },
-                bubbles: false,
-                cancelable: false
-            }
-        );
-        element.dispatchEvent(event);
+        cornerstone.event(enabledElement, "CornerstoneViewportUpdated");
     }
 
     /**

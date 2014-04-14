@@ -51,34 +51,9 @@ var cornerstone = (function (cornerstone) {
 
                     cornerstone.updateImage(element);
 
-                    // fire an event indicating the viewport has been changed
-                    var event = new CustomEvent(
-                        "CornerstoneViewportUpdated",
-                        {
-                            detail: {
-                                viewport: enabledElement.viewport,
-                                element: element,
-                                image: enabledElement.image
-                            },
-                            bubbles: false,
-                            cancelable: false
-                        }
-                    );
-                    element.dispatchEvent(event);
+                    cornerstone.event(enabledElement, "CornerstoneViewportUpdated");
+                    cornerstone.event(enabledElement, "CornerstoneNewImage");
 
-                    event = new CustomEvent(
-                        "CornerstoneNewImage",
-                        {
-                            detail: {
-                                viewport: enabledElement.viewport,
-                                element: element,
-                                image: enabledElement.image
-                            },
-                            bubbles: false,
-                            cancelable: false
-                        }
-                    );
-                    element.dispatchEvent(event);
                     return;
                 }
             }

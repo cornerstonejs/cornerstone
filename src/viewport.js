@@ -27,23 +27,7 @@ var cornerstone = (function (cornerstone) {
         // Force the image to be updated since the viewport has been modified
         cornerstone.updateImage(element);
 
-
-        // Fire an event letting others know that the viewort has been updated so they
-        // can take the appropriate action
-        var event = new CustomEvent(
-            "CornerstoneViewportUpdated",
-            {
-                detail: {
-                    viewport: viewport,
-                    element: element,
-                    image: enabledElement.image
-
-                },
-                bubbles: false,
-                cancelable: false
-            }
-        );
-        element.dispatchEvent(event);
+        cornerstone.event(enabledElement, "CornerstoneViewportUpdated");
     }
 
     /**
