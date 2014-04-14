@@ -44,7 +44,7 @@ Get a packaged source file:
 * [cornerstone.js](https://raw.githubusercontent.com/chafey/cornerstone/master/dist/cornerstone.js)
 * [cornerstone.min.js](https://raw.githubusercontent.com/chafey/cornerstone/master/dist/cornerstone.min.js)
 
-Or install via [Bower](http://bower.io/): (NOTE: Bower support not yet available but coming soon!)
+Or install via [Bower](http://bower.io/):
 
 > bower install cornerstone
 
