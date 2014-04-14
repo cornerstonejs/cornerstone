@@ -18,7 +18,7 @@ Phase 4 (in progress)
    * rename viewport.windowWidth and viewport.windowCenter to be viewport.window.width  and viewport.window.center (DONE)
    * replace customEventPolyFill with our own event implementation so we don't cause side effects in other libraries
        that might try to do the same (DONE)
-   * Consider making enable() not take an imageId or viewport and leave that up to showImage() instead
+   * Consider making enable() not take an imageId or viewport and leave that up to showImage() instead (DONE - current api is fine, not doing this)
    * getViewport() to return a copy (DONE)
    * setViewport() to make a copy (DONE)
  * Packaging/build related
