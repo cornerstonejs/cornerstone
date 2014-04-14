@@ -126,7 +126,7 @@ var cornerstone = (function (cornerstone) {
         var diff = end - start;
         cornerstone.lastRenderTimeInMs = diff;
 
-        cornerstone.event(enabledElement, "CornerstoneImageRendered");
+        cornerstone.event(enabledElement, "CornerstoneImageRendered", {canvasContext: context});
     }
 
     // Module exports

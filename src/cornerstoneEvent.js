@@ -20,17 +20,22 @@ var cornerstone = (function (cornerstone) {
 
     CustomEventIe.prototype = window.Event.prototype;
 
-    function cornerstoneEvent(enabledElement, eventName) {
+    function cornerstoneEvent(enabledElement, eventName, obj) {
+        if(obj === undefined) {
+            obj = {};
+        }
+
+        obj.viewport = enabledElement.viewport;
+        obj.element = enabledElement.element;
+        obj.image = enabledElement.image;
+        obj.enabledElement = enabledElement;
+
         var event;
         if(ieVersion <= 11) {
             event = new CustomEventIe(
                 eventName,
                 {
-                    detail: {
-                        viewport: enabledElement.viewport,
-                        element: enabledElement.element,
-                        image: enabledElement.image
-                    },
+                    detail: obj,
                     bubbles: false,
                     cancelable: false
                 }
@@ -39,12 +44,7 @@ var cornerstone = (function (cornerstone) {
             event = new CustomEvent(
                 eventName,
                 {
-                    detail: {
-                        viewport: enabledElement.viewport,
-                        element: enabledElement.element,
-                        image: enabledElement.image
-
-                    },
+                    detail: obj,
                     bubbles: false,
                     cancelable: false
                 }
