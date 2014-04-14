@@ -3,7 +3,16 @@ Roadmap/Status
 
 Alpha but stable
 
-Phase 4 (in progress)
+Phase 5 (in progress)
+---------------------
+ * Image support
+    * color image support
+ * Pixel data management
+     * image cache management
+ * Code cleanup / refactoring / documentation
+
+
+Phase 4 (completed April 13, 2014)
 ---------------------
  * Turn on/off interpolation of image pixels (DONE)
  * Performance optimization for zoom/pan operations (DONE)

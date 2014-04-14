@@ -6,10 +6,7 @@ V1.0 (target to release by May 15 for SIIM 2014
  * API documentation
  * Testing for other browsers and platforms (automated if possible)
  * Image support
-    * color image support
     * Large image support (e.g. mammo, large CR > 512x512 resolution )
- * Pixel data management
-     * image cache management
  * Packaging/build related
      * AMD wrapper to make it easier to use with AMD loaders
 
