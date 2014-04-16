@@ -6,7 +6,7 @@ Alpha but stable
 Phase 5 (in progress)
 ---------------------
  * Image support
-    * color image support
+    * color image support (DONE)
  * Pixel data management
      * image cache management
  * Code cleanup / refactoring / documentation

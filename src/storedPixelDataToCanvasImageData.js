@@ -37,8 +37,25 @@ var cornerstone = (function (cornerstone) {
         }
     }
 
+    function storedColorPixelDataToCanvasImageData(image, lut, canvasImageDataData)
+    {
+        var canvasImageDataIndex = 0;
+        var storedPixelDataIndex = 0;
+        var numPixels = image.width * image.height * 3;
+        var storedPixelData = image.storedPixelData;
+        var localLut = lut;
+        var localCanvasImageDataData = canvasImageDataData;
+        while(storedPixelDataIndex < numPixels) {
+            localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // red
+            localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // green
+            localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // blue
+            canvasImageDataIndex++;
+        }
+    }
+
     // Module exports
     cornerstone.storedPixelDataToCanvasImageData = storedPixelDataToCanvasImageData;
+    cornerstone.storedColorPixelDataToCanvasImageData = storedColorPixelDataToCanvasImageData;
 
    return cornerstone;
 }(cornerstone));

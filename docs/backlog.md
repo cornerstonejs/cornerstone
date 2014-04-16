@@ -9,6 +9,8 @@ V1.0 (target to release by May 15 for SIIM 2014
     * Large image support (e.g. mammo, large CR > 512x512 resolution )
  * Packaging/build related
      * AMD wrapper to make it easier to use with AMD loaders
+ * Prioritized image loading (primary, secondary, thumbnail, prefetch)
+ * Design for handling images currently being loaded
 
 Beyond v1.0:
 ------------

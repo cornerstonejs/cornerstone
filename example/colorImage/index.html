@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- twitter bootstrap CSS stylesheet - included to make things pretty, not needed or used by cornerstone -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- cornerstone css - provides some useful css classes -->
+    <link href="../../dist/cornerstone.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="container">
+
+    <h1>
+        colorImage/index.html
+    </h1>
+    This example shows how cornerstone can display color images.  It uses a custom image loader
+    that returns a color image
+    <br>
+    <br>
+
+    <div id="dicomImage" style="width:512px;height:512px;"
+         class="cornerstone-enabled-image"
+         oncontextmenu="return false"
+         unselectable='on'
+         onselectstart='return false;'
+         onmousedown='return false;'>
+    </div>
+
+
+
+</div>
+</body>
+<!-- include the cornerstone library -->
+<script src="../../dist/cornerstone.js"></script>
+
+<!-- jquery - included to make things easier to demo, not needed or used by the cornerstone library but
+is used by our example image loader-->
+<script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
+
+
+<script>
+
+    // Loads an image given an imageId
+    function loadImage(imageId) {
+
+        var image = {
+            imageId : imageId,
+            minPixelValue : 0,
+            maxPixelValue : 255,
+            slope: 1.0,
+            intercept: 0,
+            windowCenter : 127,
+            windowWidth : 256,
+            storedPixelData: [], // generated below
+            rows: 256,
+            columns: 256,
+            height: 256,
+            width: 256,
+            color: true,
+            columnPixelSpacing: 1.0,
+            rowPixelSpacing: 1.0,
+            invert: false
+        };
+
+        var index=0;
+        var rnd = Math.round(Math.random() * 255);
+        for(var row=0; row < image.rows; row++) {
+            for(var column=0; column < image.columns; column++) {
+                image.storedPixelData[index++] = (column + rnd) % 256; // red
+                image.storedPixelData[index++] = 0; // green
+                image.storedPixelData[index++] = 0; // blue
+            }
+        }
+
+        // Create a deferred object, resolve it with the image object we just created and return the
+        // deferred to cornerstone.  Cornerstone will get the image object by calling then() on the
+        // deferred
+        var deferred = $.Deferred();
+        deferred.resolve(image);
+        return deferred;
+    }
+
+    cornerstone.registerImageLoader('colorImageLoader', loadImage);
+
+    var imageId = "colorImageLoader://1";
+    var element = document.getElementById('dicomImage');
+    cornerstone.enable(element, imageId);
+
+    // add event handlers to mouse move to adjust window/center
+    $('#dicomImage').mousedown(function(e) {
+        var lastX = e.pageX;
+        var lastY = e.pageY;
+
+        $(document).mousemove(function(e) {
+            var deltaX = e.pageX - lastX,
+                    deltaY = e.pageY - lastY ;
+            lastX = e.pageX;
+            lastY = e.pageY;
+
+            var viewport = cornerstone.getViewport(element);
+            viewport.voi.windowWidth += (deltaX / viewport.scale);
+            viewport.voi.windowCenter += (deltaY / viewport.scale);
+            cornerstone.setViewport(element, viewport);
+        });
+
+        $(document).mouseup(function(e) {
+            $(document).unbind('mousemove');
+            $(document).unbind('mouseup');
+        });
+    });
+
+
+</script>
+</html>

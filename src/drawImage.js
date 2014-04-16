@@ -70,7 +70,6 @@ var cornerstone = (function (cornerstone) {
 
         var start = new Date();
 
-
         // get the canvas context and reset the transform
         var context = enabledElement.canvas.getContext('2d');
         context.setTransform(1, 0, 0, 1, 0, 0);
@@ -98,7 +97,11 @@ var cornerstone = (function (cornerstone) {
             var lut = getLut(image, enabledElement.viewport);
 
             // apply the lut to the stored pixel data onto the render canvas
-            cornerstone.storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
+            if(image.color) {
+                cornerstone.storedColorPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
+            } else {
+                cornerstone.storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
+            }
             renderCanvasContext.putImageData(renderCanvasData, 0, 0);
 
             lastRenderedImageId = image.imageId;

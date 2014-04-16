@@ -1,4 +1,4 @@
-/*! cornerstone - v0.1.3 - 2014-04-13 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.1.3 - 2014-04-16 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -161,7 +161,6 @@ var cornerstone = (function (cornerstone) {
 
         var start = new Date();
 
-
         // get the canvas context and reset the transform
         var context = enabledElement.canvas.getContext('2d');
         context.setTransform(1, 0, 0, 1, 0, 0);
@@ -189,7 +188,11 @@ var cornerstone = (function (cornerstone) {
             var lut = getLut(image, enabledElement.viewport);
 
             // apply the lut to the stored pixel data onto the render canvas
-            cornerstone.storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
+            if(image.color) {
+                cornerstone.storedColorPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
+            } else {
+                cornerstone.storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
+            }
             renderCanvasContext.putImageData(renderCanvasData, 0, 0);
 
             lastRenderedImageId = image.imageId;
@@ -870,8 +873,25 @@ var cornerstone = (function (cornerstone) {
         }
     }
 
+    function storedColorPixelDataToCanvasImageData(image, lut, canvasImageDataData)
+    {
+        var canvasImageDataIndex = 0;
+        var storedPixelDataIndex = 0;
+        var numPixels = image.width * image.height * 3;
+        var storedPixelData = image.storedPixelData;
+        var localLut = lut;
+        var localCanvasImageDataData = canvasImageDataData;
+        while(storedPixelDataIndex < numPixels) {
+            localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // red
+            localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // green
+            localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // blue
+            canvasImageDataIndex++;
+        }
+    }
+
     // Module exports
     cornerstone.storedPixelDataToCanvasImageData = storedPixelDataToCanvasImageData;
+    cornerstone.storedColorPixelDataToCanvasImageData = storedColorPixelDataToCanvasImageData;
 
    return cornerstone;
 }(cornerstone));
