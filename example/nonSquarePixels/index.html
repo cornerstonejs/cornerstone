@@ -42,65 +42,76 @@ is used by our example image loader-->
 
 <script>
 
-    // Loads an image given an imageId
-    function loadImage(imageId) {
+    $(document).ready(function() {
 
-        var image = {
-            imageId : imageId,
-            minPixelValue : 0,
-            maxPixelValue : 255,
-            slope: 1.0,
-            intercept: 0,
-            windowCenter : 127,
-            windowWidth : 256,
-            storedPixelData: [], // generated below
-            rows: 512,
-            columns: 256,
-            height: 512,
-            width: 256,
-            color: false,
-            columnPixelSpacing: 1.0,
-            rowPixelSpacing:0.5,
-            invert: false
-        };
 
-        var left = 10;
-        var top = 20;
-        var width = 100;
-        var height = 200;
-        var index = 0;
-        for(var row=0; row < image.rows; row++) {
-            for(var column=0; column < image.columns; column++) {
-                image.storedPixelData[index] = 0;
-                index++;
+        // Loads an image given an imageId
+        function loadImage(imageId) {
+
+            var image = {
+                imageId: imageId,
+                minPixelValue: 0,
+                maxPixelValue: 255,
+                slope: 1.0,
+                intercept: 0,
+                windowCenter: 127,
+                windowWidth: 256,
+                storedPixelData: [], // generated below
+                rows: 512,
+                columns: 256,
+                height: 512,
+                width: 256,
+                color: false,
+                columnPixelSpacing: 1.0,
+                rowPixelSpacing: 0.5,
+                invert: false
+            };
+
+            var left = 10;
+            var top = 20;
+            var width = 100;
+            var height = 200;
+            var index = 0;
+            for (var row = 0; row < image.rows; row++) {
+                for (var column = 0; column < image.columns; column++) {
+                    image.storedPixelData[index] = 0;
+                    index++;
+                }
             }
+            for (var row = top; row < top + height; row++) {
+                var rowOffset = row * image.width;
+                image.storedPixelData[rowOffset + left] = 255;
+                image.storedPixelData[rowOffset + left + width] = 255;
+            }
+            var topRowOffset = top * image.width;
+            var bottomRowOffset = (top + height) * image.width;
+            for (var column = left; column < left + width; column++) {
+                image.storedPixelData[topRowOffset + column] = 255;
+                image.storedPixelData[bottomRowOffset + column] = 255;
+            }
+
+
+            // Create a deferred object, resolve it with the image object we just created and return the
+            // deferred to cornerstone.  Cornerstone will get the image object by calling then() on the
+            // deferred
+            var deferred = $.Deferred();
+            deferred.resolve(image);
+            return deferred;
         }
-        for(var row=top; row < top + height; row++) {
-            var rowOffset = row * image.width;
-            image.storedPixelData[rowOffset + left] = 255;
-            image.storedPixelData[rowOffset + left + width] = 255;
-        }
-        var topRowOffset = top * image.width;
-        var bottomRowOffset = (top+height)* image.width;
-        for(var column = left; column < left + width; column++) {
-            image.storedPixelData[topRowOffset + column] = 255;
-            image.storedPixelData[bottomRowOffset + column] = 255;
-        }
 
+        cornerstone.registerImageLoader('myImageLoader', loadImage);
 
-        // Create a deferred object, resolve it with the image object we just created and return the
-        // deferred to cornerstone.  Cornerstone will get the image object by calling then() on the
-        // deferred
-        var deferred = $.Deferred();
-        deferred.resolve(image);
-        return deferred;
-    }
+        // image enable the element
+        var element = document.getElementById('dicomImage');
+        cornerstone.enable(element);
 
-    cornerstone.registerImageLoader('myImageLoader', loadImage);
+        // load and display the image
+        var imageId = "myImageLoader://1";
+        cornerstone.loadImage(imageId).then(function(image) {
+            cornerstone.displayImage(element, image);
+        });
 
-    var imageId = "myImageLoader://1";
-    var element = document.getElementById('dicomImage');
-    cornerstone.enable(element, imageId);
+    });
 
 </script>
 </html>

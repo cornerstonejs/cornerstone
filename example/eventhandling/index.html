@@ -70,79 +70,87 @@ is used by our example image loader-->
 
 <script>
 
-    // image enable the dicomImage element
-    var imageId = 'example://1';
-    var element = $('#dicomImage').get(0);
+    $(document).ready(function() {
+        // image enable the element
+        var element = document.getElementById('dicomImage');
+        cornerstone.enable(element);
 
-    function onViewportUpdated(e) {
-        $('#bottomleft').text("WW/WL:" + Math.round(e.detail.viewport.voi.windowWidth) + "/" + Math.round(e.detail.viewport.voi.windowCenter));
-        $('#bottomright').text("Zoom:" + e.detail.viewport.scale.toFixed(2));
-    }
+        // setup handlers before we display the image
+        function onViewportUpdated(e) {
+            $('#bottomleft').text("WW/WL:" + Math.round(e.detail.viewport.voi.windowWidth) + "/" + Math.round(e.detail.viewport.voi.windowCenter));
+            $('#bottomright').text("Zoom:" + e.detail.viewport.scale.toFixed(2));
+        }
+        element.addEventListener("CornerstoneViewportUpdated", onViewportUpdated, false);
 
-    element.addEventListener("CornerstoneViewportUpdated", onViewportUpdated, false);
+        function onImageRendered(e) {
+            // set the canvas context to the image coordinate system
+            cornerstone.setToPixelCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext);
 
-    function onImageRendered(e) {
-        // set the canvas context to the image coordinate system
-        cornerstone.setToPixelCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext);
+            // NOTE: The coordinate system of the canvas is in image pixel space.  Drawing
+            // to location 0,0 will be the top left of the image and rows,columns is the bottom
+            // right.
+            var context = e.detail.canvasContext;
+            context.beginPath();
+            context.strokeStyle = 'white';
+            context.lineWidth = .5;
+            context.rect(128, 90, 50, 60);
+            context.stroke();
+            context.fillStyle = "white";
+            context.font = "6px Arial";
+            context.fillText("Tumor Here", 128, 85);
 
-        // NOTE: The coordinate system of the canvas is in image pixel space.  Drawing
-        // to location 0,0 will be the top left of the image and rows,columns is the bottom
-        // right.
-        var context = e.detail.canvasContext;
-        context.beginPath();
-        context.strokeStyle = 'white';
-        context.lineWidth = .5;
-        context.rect(128,90,50,60);
-        context.stroke();
-        context.fillStyle = "white";
-        context.font = "6px Arial";
-        context.fillText("Tumor Here", 128, 85);
+            $('#topright').text("Render Time:" + cornerstone.lastRenderTimeInMs + " ms");
 
-        $('#topright').text("Render Time:" + cornerstone.lastRenderTimeInMs + " ms");
+        }
+        element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
 
-    }
+        // load the image and display it
+        var imageId = 'example://1';
+        cornerstone.loadImage(imageId).done(function (image) {
 
-    element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
+            // Now set the image which will fire the events we are interested in
+            cornerstone.displayImage(element, image);
 
-    cornerstone.enable(element, imageId);
+            // add event handlers to pan image on mouse move
+            $('#dicomImage').mousedown(function (e) {
+                var lastX = e.pageX;
+                var lastY = e.pageY;
 
-    // add event handlers to pan image on mouse move
-    $('#dicomImage').mousedown(function(e) {
-        var lastX = e.pageX;
-        var lastY = e.pageY;
+                var mouseButton = e.which;
 
-        var mouseButton = e.which;
+                $(document).mousemove(function (e) {
+                    var deltaX = e.pageX - lastX,
+                            deltaY = e.pageY - lastY;
+                    lastX = e.pageX;
+                    lastY = e.pageY;
 
-        $(document).mousemove(function(e) {
-            var deltaX = e.pageX - lastX,
-                    deltaY = e.pageY - lastY ;
-            lastX = e.pageX;
-            lastY = e.pageY;
+                    if (mouseButton == 1) {
+                        var viewport = cornerstone.getViewport(element);
+                        viewport.voi.windowWidth += (deltaX / viewport.scale);
+                        viewport.voi.windowCenter += (deltaY / viewport.scale);
+                        cornerstone.setViewport(element, viewport);
+                        $('#bottomleft').text("WW/WL:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
+                    }
+                    else if (mouseButton == 2) {
+                        var viewport = cornerstone.getViewport(element);
+                        viewport.translation.x += (deltaX / viewport.scale);
+                        viewport.translation.y += (deltaY / viewport.scale);
+                        cornerstone.setViewport(element, viewport);
+                    }
+                    else if (mouseButton == 3) {
+                        var viewport = cornerstone.getViewport(element);
+                        viewport.scale += (deltaY / 100);
+                        cornerstone.setViewport(element, viewport);
+                        $('#bottomright').text("Zoom: " + viewport.scale.toFixed(2) + "x");
+                    }
+                });
 
-            if(mouseButton == 1) {
-                var viewport = cornerstone.getViewport(element);
-                viewport.voi.windowWidth += (deltaX / viewport.scale);
-                viewport.voi.windowCenter += (deltaY / viewport.scale);
-                cornerstone.setViewport(element, viewport);
-                $('#bottomleft').text("WW/WL:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
-            }
-            else if(mouseButton == 2) {
-                var viewport = cornerstone.getViewport(element);
-                viewport.translation.x += (deltaX / viewport.scale);
-                viewport.translation.y += (deltaY / viewport.scale);
-                cornerstone.setViewport(element, viewport);
-            }
-            else if(mouseButton == 3) {
-                var viewport = cornerstone.getViewport(element);
-                viewport.scale += (deltaY / 100);
-                cornerstone.setViewport(element, viewport);
-                $('#bottomright').text("Zoom: " + viewport.scale.toFixed(2) + "x");
-            }
-        });
+                $(document).mouseup(function (e) {
+                    $(document).unbind('mousemove');
+                    $(document).unbind('mouseup');
+                });
+            });
 
-        $(document).mouseup(function(e) {
-            $(document).unbind('mousemove');
-            $(document).unbind('mouseup');
         });
     });
 

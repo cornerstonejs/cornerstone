@@ -41,51 +41,60 @@ is used by our example image loader-->
 
 
 <script>
+    $(document).ready(function() {
 
-    // Loads an image given an imageId
-    function loadImage(imageId) {
+        // Loads an image given an imageId
+        function loadImage(imageId) {
 
-        var image = {
-            imageId : imageId,
-            minPixelValue : 0,
-            maxPixelValue : 255,
-            slope: 1.0,
-            intercept: 0,
-            windowCenter : 127,
-            windowWidth : 256,
-            storedPixelData: [], // generated below
-            rows: 256,
-            columns: 256,
-            height: 256,
-            width: 256,
-            color: false,
-            columnPixelSpacing: 1.0,
-            rowPixelSpacing: 1.0,
-            invert: false
-        };
+            var image = {
+                imageId: imageId,
+                minPixelValue: 0,
+                maxPixelValue: 255,
+                slope: 1.0,
+                intercept: 0,
+                windowCenter: 127,
+                windowWidth: 256,
+                storedPixelData: [], // generated below
+                rows: 256,
+                columns: 256,
+                height: 256,
+                width: 256,
+                color: false,
+                columnPixelSpacing: 1.0,
+                rowPixelSpacing: 1.0,
+                invert: false
+            };
 
-        var index=0;
-        var rnd = Math.round(Math.random() * 255);
-        for(var row=0; row < image.rows; row++) {
-            for(var column=0; column < image.columns; column++) {
-                image.storedPixelData[index] = (column + rnd) % 256;
-                index++;
+            var index = 0;
+            var rnd = Math.round(Math.random() * 255);
+            for (var row = 0; row < image.rows; row++) {
+                for (var column = 0; column < image.columns; column++) {
+                    image.storedPixelData[index] = (column + rnd) % 256;
+                    index++;
+                }
             }
+
+            // Create a deferred object, resolve it with the image object we just created and return the
+            // deferred to cornerstone.  Cornerstone will get the image object by calling then() on the
+            // deferred
+            var deferred = $.Deferred();
+            deferred.resolve(image);
+            return deferred;
         }
 
-        // Create a deferred object, resolve it with the image object we just created and return the
-        // deferred to cornerstone.  Cornerstone will get the image object by calling then() on the
-        // deferred
-        var deferred = $.Deferred();
-        deferred.resolve(image);
-        return deferred;
-    }
+        cornerstone.registerImageLoader('myImageLoader', loadImage);
 
-    cornerstone.registerImageLoader('myImageLoader', loadImage);
+        // image enable the element
+        var element = document.getElementById('dicomImage');
+        cornerstone.enable(element);
 
-    var imageId = "myImageLoader://1";
-    var element = document.getElementById('dicomImage');
-    cornerstone.enable(element, imageId);
+        // load the image and display it
+        var imageId = 'myImageLoader://1';
+        cornerstone.loadImage(imageId).done(function(image) {
+            cornerstone.displayImage(element, image);
+        });
+
+    });
 
 </script>
 </html>

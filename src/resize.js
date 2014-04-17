@@ -27,7 +27,7 @@ var cornerstone = (function (cornerstone) {
     /**
      * resizes an enabled element and optionally fits the image to window
      * @param element
-     * @param fitToWindow
+     * @param fitToWindow true to refit, false to leave viewport parameters as they are
      */
     function resize(element, fitToWindow) {
 
@@ -35,13 +35,15 @@ var cornerstone = (function (cornerstone) {
 
         setCanvasSize(element, enabledElement.canvas);
 
-        if(enabledElement.image !== undefined ) {
-            if(fitToWindow === true) {
-                cornerstone.fitToWindow(element);
-            }
-            else {
-                cornerstone.updateImage(element);
-            }
+        if(enabledElement.image === undefined ) {
+            return;
+        }
+
+        if(fitToWindow === true) {
+            cornerstone.fitToWindow(element);
+        }
+        else {
+            cornerstone.updateImage(element);
         }
     }
 

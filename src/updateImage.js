@@ -14,12 +14,13 @@ var cornerstone = (function (cornerstone) {
      * @param element
      */
     function updateImage(element) {
-        var ee = cornerstone.getEnabledElement(element);
-        var image = ee.image;
-        // only draw the image if it has loaded
-        if(image !== undefined) {
-            cornerstone.drawImage(ee, image);
+        var enabledElement = cornerstone.getEnabledElement(element);
+
+        if(enabledElement.image === undefined) {
+            throw "updateImage: image has not been loaded yet";
         }
+
+        cornerstone.drawImage(enabledElement);
     }
 
     // module exports

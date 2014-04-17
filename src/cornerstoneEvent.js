@@ -21,6 +21,13 @@ var cornerstone = (function (cornerstone) {
     CustomEventIe.prototype = window.Event.prototype;
 
     function cornerstoneEvent(enabledElement, eventName, obj) {
+        if(enabledElement === undefined) {
+            throw "cornerstoneEvent: parameter enabledElement cannot be undefined";
+        }
+        if(eventName === undefined) {
+            throw "cornerstoneEvent: parameter eventName cannot be undefined";
+        }
+
         if(obj === undefined) {
             obj = {};
         }

@@ -11,7 +11,7 @@ var cornerstone = (function (cornerstone) {
     }
 
     /**
-     * Adjusts an images scale and center so all pixels are viewable and the image is centered.
+     * Adjusts an images scale and center so the image is centered and completely visible
      * @param element
      */
     function fitToWindow(element)

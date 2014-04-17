@@ -38,8 +38,15 @@ is used by our example image loader-->
 <script src="../exampleImageIdLoader.js"></script>
 
 <script>
-    var imageId = 'example://1';
-    var element = document.getElementById('dicomImage');
-    cornerstone.enable(element, imageId);
+
+    $(document).ready(function() {
+        var imageId = 'example://1';
+        var element = document.getElementById('dicomImage');
+        cornerstone.enable(element);
+        cornerstone.loadImage(imageId).then(function(image) {
+            cornerstone.displayImage(element, image);
+        });
+    });
+
 </script>
 </html>

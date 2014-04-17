@@ -18,26 +18,33 @@ var cornerstone = (function (cornerstone) {
      * @param context
      * @param scale optional scaler to apply
      */
-    function setToPixelCoordinateSystem(ee, context, scale)
+    function setToPixelCoordinateSystem(enabledElement, context, scale)
     {
+        if(enabledElement === undefined) {
+            throw "setToPixelCoordinateSystem: parameter enabledElement must not be undefined";
+        }
+        if(context === undefined) {
+            throw "setToPixelCoordinateSystem: parameter context must not be undefined";
+        }
+
         // reset the transformation matrix
         context.setTransform(1, 0, 0, 1, 0, 0);
         // move origin to center of canvas
-        context.translate(ee.canvas.width/2, ee.canvas.height / 2);
+        context.translate(enabledElement.canvas.width/2, enabledElement.canvas.height / 2);
 
         // apply the scale
-        var widthScale = ee.viewport.scale;
-        var heightScale = ee.viewport.scale;
-        if(ee.image.rowPixelSpacing < ee.image.columnPixelSpacing) {
-            widthScale = widthScale * (ee.image.columnPixelSpacing / ee.image.rowPixelSpacing);
+        var widthScale = enabledElement.viewport.scale;
+        var heightScale = enabledElement.viewport.scale;
+        if(enabledElement.image.rowPixelSpacing < enabledElement.image.columnPixelSpacing) {
+            widthScale = widthScale * (enabledElement.image.columnPixelSpacing / enabledElement.image.rowPixelSpacing);
         }
-        else if(ee.image.columnPixelSpacing < ee.image.rowPixelSpacing) {
-            heightScale = heightScale * (ee.image.rowPixelSpacing / ee.image.columnPixelSpacing);
+        else if(enabledElement.image.columnPixelSpacing < enabledElement.image.rowPixelSpacing) {
+            heightScale = heightScale * (enabledElement.image.rowPixelSpacing / enabledElement.image.columnPixelSpacing);
         }
         context.scale(widthScale, heightScale);
 
         // apply the pan offset
-        context.translate(ee.viewport.translation.x, ee.viewport.translation.y);
+        context.translate(enabledElement.viewport.translation.x, enabledElement.viewport.translation.y);
 
         if(scale === undefined) {
             scale = 1.0;
@@ -47,7 +54,7 @@ var cornerstone = (function (cornerstone) {
         }
 
         // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
-        context.translate(-ee.image.width / 2 / scale, -ee.image.height/ 2 / scale);
+        context.translate(-enabledElement.image.width / 2 / scale, -enabledElement.image.height/ 2 / scale);
     }
 
     // Module exports

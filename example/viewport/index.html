@@ -40,22 +40,27 @@ is used by our example image loader-->
 <script src="../exampleImageIdLoader.js"></script>
 
 <script>
-    var viewportOptions = {
-        scale : 6.0,
-        translation : {
-            x: -24,
-            y: 10
-        },
-        voi : {
-            windowWidth: 89,
-            windowCenter: 150
-        },
-        invert: false,
-        pixelReplication: false
-    };
 
-    cornerstone.enable(document.getElementById('dicomImage'), "example://1", viewportOptions);
-
+    $(document).ready(function() {
+        var viewportOptions = {
+            scale: 6.0,
+            translation: {
+                x: -24,
+                y: 10
+            },
+            voi: {
+                windowWidth: 89,
+                windowCenter: 150
+            },
+            invert: false,
+            pixelReplication: false
+        };
+        var element = document.getElementById('dicomImage');
+        cornerstone.enable(document.getElementById('dicomImage'));
+        cornerstone.loadImage("example://1").then(function (image) {
+            cornerstone.displayImage(element, image, viewportOptions);
+        });
+    });
 </script>
 
 </html>

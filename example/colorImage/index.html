@@ -40,73 +40,58 @@ is used by our example image loader-->
 
 
 <script>
+    $(document).ready(function() {
 
-    // Loads an image given an imageId
-    function loadImage(imageId) {
+        // Loads an image given an imageId
+        function loadImage(imageId) {
 
-        var image = {
-            imageId : imageId,
-            minPixelValue : 0,
-            maxPixelValue : 255,
-            slope: 1.0,
-            intercept: 0,
-            windowCenter : 127,
-            windowWidth : 256,
-            storedPixelData: [], // generated below
-            rows: 256,
-            columns: 256,
-            height: 256,
-            width: 256,
-            color: true,
-            columnPixelSpacing: 1.0,
-            rowPixelSpacing: 1.0,
-            invert: false
-        };
+            var image = {
+                imageId: imageId,
+                minPixelValue: 0,
+                maxPixelValue: 255,
+                slope: 1.0,
+                intercept: 0,
+                windowCenter: 127,
+                windowWidth: 256,
+                storedPixelData: [], // generated below
+                rows: 256,
+                columns: 256,
+                height: 256,
+                width: 256,
+                color: true,
+                columnPixelSpacing: 1.0,
+                rowPixelSpacing: 1.0,
+                invert: false
+            };
 
-        var index=0;
-        var rnd = Math.round(Math.random() * 255);
-        for(var row=0; row < image.rows; row++) {
-            for(var column=0; column < image.columns; column++) {
-                image.storedPixelData[index++] = (column + rnd) % 256; // red
-                image.storedPixelData[index++] = 0; // green
-                image.storedPixelData[index++] = 0; // blue
+            var index = 0;
+            var rnd = Math.round(Math.random() * 255);
+            for (var row = 0; row < image.rows; row++) {
+                for (var column = 0; column < image.columns; column++) {
+                    image.storedPixelData[index++] = (column + rnd) % 256; // red
+                    image.storedPixelData[index++] = 0; // green
+                    image.storedPixelData[index++] = 0; // blue
+                }
             }
+
+            // Create a deferred object, resolve it with the image object we just created and return the
+            // deferred to cornerstone.  Cornerstone will get the image object by calling then() on the
+            // deferred
+            var deferred = $.Deferred();
+            deferred.resolve(image);
+            return deferred;
         }
 
-        // Create a deferred object, resolve it with the image object we just created and return the
-        // deferred to cornerstone.  Cornerstone will get the image object by calling then() on the
-        // deferred
-        var deferred = $.Deferred();
-        deferred.resolve(image);
-        return deferred;
-    }
+        cornerstone.registerImageLoader('colorImageLoader', loadImage);
 
-    cornerstone.registerImageLoader('colorImageLoader', loadImage);
+        // image enable the element
+        var element = document.getElementById('dicomImage');
+        cornerstone.enable(element);
 
-    var imageId = "colorImageLoader://1";
-    var element = document.getElementById('dicomImage');
-    cornerstone.enable(element, imageId);
-
-    // add event handlers to mouse move to adjust window/center
-    $('#dicomImage').mousedown(function(e) {
-        var lastX = e.pageX;
-        var lastY = e.pageY;
-
-        $(document).mousemove(function(e) {
-            var deltaX = e.pageX - lastX,
-                    deltaY = e.pageY - lastY ;
-            lastX = e.pageX;
-            lastY = e.pageY;
-
-            var viewport = cornerstone.getViewport(element);
-            viewport.voi.windowWidth += (deltaX / viewport.scale);
-            viewport.voi.windowCenter += (deltaY / viewport.scale);
-            cornerstone.setViewport(element, viewport);
-        });
-
-        $(document).mouseup(function(e) {
-            $(document).unbind('mousemove');
-            $(document).unbind('mouseup');
+        // load image and display it
+        var imageId = "colorImageLoader://1";
+        cornerstone.loadImage(imageId).then(function(image) {
+            cornerstone.displayImage(element, image);
         });
     });
 

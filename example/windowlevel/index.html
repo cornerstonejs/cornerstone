@@ -35,9 +35,9 @@
     </div>
 
     <label>Window Width</label>
-    <input id="ww" type="text" placeholder="e.g. 1000">
+    <input id="ww" type="text" placeholder="e.g. 1000" value="256">
     <label>Window Center</label>
-    <input id="wc" type="text" placeholder="e.g. 500">
+    <input id="wc" type="text" placeholder="e.g. 500" value="128">
     <button id="apply" class="btn">Apply</button>
     <button id="invert" class="btn">Invert</button>
 
@@ -54,52 +54,56 @@
 
 <script>
 
-    // image enable the dicomImage element
-    var imageId = 'example://1';
-    var element = $('#dicomImage').get(0);
-    cornerstone.enable(element, imageId);
-    var viewport = cornerstone.getViewport(element);
-    $('#ww').val(viewport.voi.windowWidth);
-    $('#wc').val(viewport.voi.windowCenter);
+    $(document).ready(function() {
+        // image enable the element
+        var element = $('#dicomImage').get(0);
+        cornerstone.enable(element);
 
-    // Add event handler to the ww/wc apply button
-    $('#apply').click(function(e) {
-        var viewport = cornerstone.getViewport(element);
-        viewport.voi.windowWidth = parseFloat($('#ww').val());
-        viewport.voi.windowCenter = parseFloat($('#wc').val());
-        cornerstone.setViewport(element, viewport);
-    });
+        // load the image and display it
+        var imageId = 'example://1';
+        cornerstone.loadImage(imageId).then(function(image) {
+           cornerstone.displayImage(element, image);
+        });
 
-    $('#invert').click(function(e) {
-        var viewport = cornerstone.getViewport(element);
-        if(viewport.invert === true) {
-            viewport.invert = false;
-        } else {
-            viewport.invert = true;
-        }
-        cornerstone.setViewport(element, viewport);
-    });
-
-    // add event handlers to mouse move to adjust window/center
-    $('#dicomImage').mousedown(function(e) {
-        var lastX = e.pageX;
-        var lastY = e.pageY;
-
-        $(document).mousemove(function(e) {
-            var deltaX = e.pageX - lastX,
-                    deltaY = e.pageY - lastY ;
-            lastX = e.pageX;
-            lastY = e.pageY;
-
+        // Add event handler to the ww/wc apply button
+        $('#apply').click(function (e) {
             var viewport = cornerstone.getViewport(element);
-            viewport.voi.windowWidth += (deltaX / viewport.scale);
-            viewport.voi.windowCenter += (deltaY / viewport.scale);
+            viewport.voi.windowWidth = parseFloat($('#ww').val());
+            viewport.voi.windowCenter = parseFloat($('#wc').val());
             cornerstone.setViewport(element, viewport);
         });
 
-        $(document).mouseup(function(e) {
-            $(document).unbind('mousemove');
-            $(document).unbind('mouseup');
+        $('#invert').click(function (e) {
+            var viewport = cornerstone.getViewport(element);
+            if (viewport.invert === true) {
+                viewport.invert = false;
+            } else {
+                viewport.invert = true;
+            }
+            cornerstone.setViewport(element, viewport);
+        });
+
+        // add event handlers to mouse move to adjust window/center
+        $('#dicomImage').mousedown(function (e) {
+            var lastX = e.pageX;
+            var lastY = e.pageY;
+
+            $(document).mousemove(function (e) {
+                var deltaX = e.pageX - lastX,
+                        deltaY = e.pageY - lastY;
+                lastX = e.pageX;
+                lastY = e.pageY;
+
+                var viewport = cornerstone.getViewport(element);
+                viewport.voi.windowWidth += (deltaX / viewport.scale);
+                viewport.voi.windowCenter += (deltaY / viewport.scale);
+                cornerstone.setViewport(element, viewport);
+            });
+
+            $(document).mouseup(function (e) {
+                $(document).unbind('mousemove');
+                $(document).unbind('mouseup');
+            });
         });
     });
 

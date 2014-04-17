@@ -55,24 +55,30 @@
 
 <script>
 
-    // image enable the dicomImage element
-    var imageId = 'example://1';
-    var element = $('#dicomImage').get(0);
-    cornerstone.enable(element, imageId);
+    $(document).ready(function() {
 
-    // Add event handler to the ww/wc apply button
-    $('#x256').click(function(e) {
-        $('#dicomImage').width(256).height(256);
-        var fitToWindowVal = $('#fitToWindow').is(":checked");
-        var fitToWindow = fitToWindowVal;
-        cornerstone.resize(element, fitToWindow);
-    });
+        // image enable the dicomImage element
+        var imageId = 'example://1';
+        var element = $('#dicomImage').get(0);
+        cornerstone.enable(element);
+        cornerstone.loadImage(imageId).done(function(image) {
+            cornerstone.displayImage(element, image);
+        });
 
-    $('#x512').click(function(e) {
-        $('#dicomImage').width(512).height(512);
-        var fitToWindowVal = $('#fitToWindow').is(":checked");
-        var fitToWindow = fitToWindowVal;
-        cornerstone.resize(element, fitToWindow);
+        // Add event handler to the ww/wc apply button
+        $('#x256').click(function (e) {
+            $('#dicomImage').width(256).height(256);
+            var fitToWindowVal = $('#fitToWindow').is(":checked");
+            var fitToWindow = fitToWindowVal;
+            cornerstone.resize(element, fitToWindow);
+        });
+
+        $('#x512').click(function (e) {
+            $('#dicomImage').width(512).height(512);
+            var fitToWindowVal = $('#fitToWindow').is(":checked");
+            var fitToWindow = fitToWindowVal;
+            cornerstone.resize(element, fitToWindow);
+        });
     });
 
 </script>

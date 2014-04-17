@@ -58,35 +58,43 @@ is used by our example image loader-->
 <script src="../exampleImageIdLoader.js"></script>
 
 <script>
+    $(document).ready(function() {
+        // image enable the element
+        var element = document.getElementById('dicomImage');
+        cornerstone.enable(element);
 
-    var imageId = 'example://1';
-    var element = document.getElementById('dicomImage');
-    cornerstone.enable(element, imageId);
-    var viewport = cornerstone.getViewport(element);
-    $('#bottomright').text("Zoom: " + viewport.scale + "x");
-    $('#bottomleft').text("WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
-
-    // add event handlers to mouse move to adjust window/center
-    $('#dicomImage').mousedown(function(e) {
-        var lastX = e.pageX;
-        var lastY = e.pageY;
-
-        $('#dicomImage').mousemove(function(e) {
-            var deltaX = e.pageX - lastX,
-                    deltaY = e.pageY - lastY ;
-            lastX = e.pageX;
-            lastY = e.pageY;
-
+        // load the image and display it
+        var imageId = 'example://1';
+        cornerstone.loadImage(imageId).done(function(image) {
+            cornerstone.displayImage(element, image);
             var viewport = cornerstone.getViewport(element);
-            viewport.voi.windowWidth += (deltaX / viewport.scale);
-            viewport.voi.windowCenter += (deltaY / viewport.scale);
-            cornerstone.setViewport(element, viewport);
-
-            $('#bottomleft').text("WW/WL:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
+            $('#bottomright').text("Zoom: " + viewport.scale + "x");
+            $('#bottomleft').text("WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
         });
 
-        $('#dicomImage').mouseup(function(e) {
-            $('#dicomImage').unbind('mousemove');
+
+        // add event handlers to mouse move to adjust window/center
+        $('#dicomImage').mousedown(function(e) {
+            var lastX = e.pageX;
+            var lastY = e.pageY;
+
+            $('#dicomImage').mousemove(function(e) {
+                var deltaX = e.pageX - lastX,
+                        deltaY = e.pageY - lastY ;
+                lastX = e.pageX;
+                lastY = e.pageY;
+
+                var viewport = cornerstone.getViewport(element);
+                viewport.voi.windowWidth += (deltaX / viewport.scale);
+                viewport.voi.windowCenter += (deltaY / viewport.scale);
+                cornerstone.setViewport(element, viewport);
+
+                $('#bottomleft').text("WW/WL:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
+            });
+
+            $('#dicomImage').mouseup(function(e) {
+                $('#dicomImage').unbind('mousemove');
+            });
         });
     });
 

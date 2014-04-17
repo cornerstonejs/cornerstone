@@ -19,6 +19,10 @@ var cornerstone = (function (cornerstone) {
      * @returns {Array}
      */
     function getStoredPixels(element, x, y, width, height) {
+        if(element === undefined) {
+            throw "getStoredPixels: parameter element must not be undefined";
+        }
+
         x = Math.round(x);
         y = Math.round(y);
         var ee = cornerstone.getEnabledElement(element);

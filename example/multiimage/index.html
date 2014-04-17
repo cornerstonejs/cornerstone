@@ -57,9 +57,24 @@ is used by our example image loader-->
 <script src="../exampleImageIdLoaderCt.js"></script>
 
 <script>
-    cornerstone.enable(document.getElementById('mr1'), "example://1");
-    cornerstone.enable(document.getElementById('mr2'), "example://2");
-    cornerstone.enable(document.getElementById('ct1'), "ctexample://1");
+    $(document).ready(function() {
+        // image enable the elements
+        var mr1 = cornerstone.enable(document.getElementById('mr1'));
+        var mr2 = cornerstone.enable(document.getElementById('mr2'));
+        var mr3 = cornerstone.enable(document.getElementById('ct1'));
+
+        // load and display the images
+        cornerstone.loadImage('example://1').then(function(image) {
+            cornerstone.displayImage(mr1, image);
+        });
+        cornerstone.loadImage('example://2').then(function(image) {
+            cornerstone.displayImage(mr2, image);
+        });
+        cornerstone.loadImage('ctexample://1').then(function(image) {
+            cornerstone.displayImage(ct1, image);
+        });
+    });
+
 
 </script>
 

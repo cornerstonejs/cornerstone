@@ -66,7 +66,14 @@ var cornerstone = (function (cornerstone) {
      * @param enabledElement
      * @param image
      */
-    function drawImage(enabledElement, image) {
+    function drawImage(enabledElement) {
+        if(enabledElement === undefined) {
+            throw "drawImage: enabledElement parameter must not be undefined";
+        }
+        var image = enabledElement.image;
+        if(image === undefined) {
+            throw "drawImage: image must be loaded before it can be drawn";
+        }
 
         var start = new Date();
 

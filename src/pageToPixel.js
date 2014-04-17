@@ -22,10 +22,9 @@ var cornerstone = (function (cornerstone) {
         var ee = cornerstone.getEnabledElement(element);
 
         if(ee.image === undefined) {
-            return {
-                x:0,
-                y:0};
+            throw "image has not been loaded yet";
         }
+
         // TODO: replace this with a transformation matrix
 
         // convert the pageX and pageY to the canvas client coordinates

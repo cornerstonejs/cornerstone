@@ -43,21 +43,10 @@ var cornerstone = (function (cornerstone) {
      */
     function getViewport(element) {
         var enabledElement = cornerstone.getEnabledElement(element);
+
         var viewport = enabledElement.viewport;
         if(viewport === undefined) {
-            return {
-                scale : 1.0,
-                translation : {
-                    x : 0,
-                    y : 0
-                },
-                voi : {
-                    windowWidth: 1,
-                    windowCenter : 0
-                },
-                invert : false,
-                pixelReplication: false
-            };
+            return undefined;
         }
         return {
             scale : viewport.scale,
@@ -73,6 +62,7 @@ var cornerstone = (function (cornerstone) {
             pixelReplication: viewport.pixelReplication
         };
     }
+
 
     // module/private exports
     cornerstone.getViewport = getViewport;

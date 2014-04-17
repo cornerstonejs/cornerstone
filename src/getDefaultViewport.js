@@ -18,6 +18,12 @@ var cornerstone = (function (cornerstone) {
      * @returns viewport object
      */
     function getDefaultViewport(canvas, image) {
+        if(canvas === undefined) {
+            throw "getDefaultViewport: parameter canvas must not be undefined";
+        }
+        if(image === undefined) {
+            throw "getDefaultViewport: parameter image must not be undefined";
+        }
         var viewport = {
             scale : 1.0,
             translation : {

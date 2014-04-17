@@ -42,44 +42,53 @@
 
 <script>
 
-    // image enable the dicomImage element
-    var imageId = 'example://1';
-    var element = $('#dicomImage').get(0);
-    var viewportOptions = {
-        scale : 6.0
-    }
-    cornerstone.enable(element, imageId, viewportOptions);
+    $(document).ready(function() {
 
-    $('#interpolation').click(function(e) {
-        var viewport = cornerstone.getViewport(element);
-        if(viewport.pixelReplication === true) {
-            viewport.pixelReplication = false;
-        } else {
-            viewport.pixelReplication = true;
-        }
-        cornerstone.setViewport(element, viewport);
-    });
+        // image enable the dicomImage element
+        var element = $('#dicomImage').get(0);
+        cornerstone.enable(element);
 
-    // add event handlers to mouse move to adjust window/center
-    $('#dicomImage').mousedown(function(e) {
-        var lastX = e.pageX;
-        var lastY = e.pageY;
+        // load the image and display it
+        var imageId = 'example://1';
+        cornerstone.loadImage(imageId).then(function(image) {
+            var viewportOptions = {
+                scale: 6.0
+            };
+            cornerstone.displayImage(element, image, viewportOptions);
+        });
 
-        $(document).mousemove(function(e) {
-            var deltaX = e.pageX - lastX,
-                    deltaY = e.pageY - lastY ;
-            lastX = e.pageX;
-            lastY = e.pageY;
 
+        $('#interpolation').click(function (e) {
             var viewport = cornerstone.getViewport(element);
-            viewport.voi.windowWidth += (deltaX / viewport.scale);
-            viewport.voi.windowCenter += (deltaY / viewport.scale);
+            if (viewport.pixelReplication === true) {
+                viewport.pixelReplication = false;
+            } else {
+                viewport.pixelReplication = true;
+            }
             cornerstone.setViewport(element, viewport);
         });
 
-        $(document).mouseup(function(e) {
-            $(document).unbind('mousemove');
-            $(document).unbind('mouseup');
+        // add event handlers to mouse move to adjust window/center
+        $('#dicomImage').mousedown(function (e) {
+            var lastX = e.pageX;
+            var lastY = e.pageY;
+
+            $(document).mousemove(function (e) {
+                var deltaX = e.pageX - lastX,
+                        deltaY = e.pageY - lastY;
+                lastX = e.pageX;
+                lastY = e.pageY;
+
+                var viewport = cornerstone.getViewport(element);
+                viewport.voi.windowWidth += (deltaX / viewport.scale);
+                viewport.voi.windowCenter += (deltaY / viewport.scale);
+                cornerstone.setViewport(element, viewport);
+            });
+
+            $(document).mouseup(function (e) {
+                $(document).unbind('mousemove');
+                $(document).unbind('mouseup');
+            });
         });
     });
 
