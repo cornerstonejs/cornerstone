@@ -15,20 +15,29 @@
         return bufView;
     }
 
-    function updatePixels(image, base64PixelData)
+    function getPixelData(base64PixelData)
     {
         var pixelDataAsString = window.atob(base64PixelData);
         var pixelData = str2ab(pixelDataAsString);
-
-        var index = 0;
-        for(var rows=0; rows < 512; rows++) {
-            for(var columns=0; columns< 512; columns++) {
-                image.storedPixelData[index] = pixelData[index++];
-            }
-        }
+        return pixelData;
     }
 
+    var image1PixelData = getPixelData(ctimage);
+
     function getExampleImage(imageId) {
+
+        var width = 512;
+        var height = 512;
+
+        function getPixelData()
+        {
+            if(imageId == 'ctexample://1')
+            {
+                return image1PixelData;
+            }
+            throw "unknown imageId";
+        }
+
         var image = {
             imageId: imageId,
             minPixelValue : 0,
@@ -37,28 +46,15 @@
             intercept : -1024,
             windowCenter : 40,
             windowWidth : 400,
-            storedPixelData: [], // generated below
-            rows: 512,
-            columns: 512,
-            height: 512,
-            width: 512,
+            getPixelData: getPixelData,
+            rows: height,
+            columns: width,
+            height: height,
+            width: width,
             color: false,
             columnPixelSpacing: 0.67578,
             rowPixelSpacing: 0.67578
         };
-
-        var index=0;
-        for(var row=0; row < image.rows; row++) {
-            for(var column=0; column < image.columns; column++) {
-                image.storedPixelData[index] = 0;
-                index++;
-            }
-        }
-
-        if(imageId == 'ctexample://1')
-        {
-            updatePixels(image, ctimage);
-        }
 
         var deferred = $.Deferred();
         deferred.resolve(image);

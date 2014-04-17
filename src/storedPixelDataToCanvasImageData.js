@@ -28,7 +28,7 @@ var cornerstone = (function (cornerstone) {
         var canvasImageDataIndex = 3;
         var storedPixelDataIndex = 0;
         var numPixels = image.width * image.height;
-        var storedPixelData = image.storedPixelData;
+        var storedPixelData = image.getPixelData();
         var localLut = lut;
         var localCanvasImageDataData = canvasImageDataData;
         while(storedPixelDataIndex < numPixels) {
@@ -42,7 +42,7 @@ var cornerstone = (function (cornerstone) {
         var canvasImageDataIndex = 0;
         var storedPixelDataIndex = 0;
         var numPixels = image.width * image.height * 3;
-        var storedPixelData = image.storedPixelData;
+        var storedPixelData = image.getPixelData();
         var localLut = lut;
         var localCanvasImageDataData = canvasImageDataData;
         while(storedPixelDataIndex < numPixels) {

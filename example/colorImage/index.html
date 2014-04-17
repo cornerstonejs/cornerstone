@@ -42,8 +42,31 @@ is used by our example image loader-->
 <script>
     $(document).ready(function() {
 
+
+
+
         // Loads an image given an imageId
         function loadImage(imageId) {
+
+            var width = 256;
+            var height = 256;
+
+            var numPixels = width * height * 3;
+            var pixelData = new Uint8Array(numPixels);
+            var index = 0;
+            var rnd = Math.round(Math.random() * 255);
+            for (var y = 0; y < height; y++) {
+                for (var x = 0; x < width; x++) {
+                    pixelData[index++] = (x + rnd) % 256; // RED
+                    pixelData[index++] = 0; // GREEN
+                    pixelData[index++] = 0; // BLUE
+                }
+            }
+
+            function getPixelData()
+            {
+                return pixelData;
+            }
 
             var image = {
                 imageId: imageId,
@@ -53,26 +76,17 @@ is used by our example image loader-->
                 intercept: 0,
                 windowCenter: 127,
                 windowWidth: 256,
-                storedPixelData: [], // generated below
-                rows: 256,
-                columns: 256,
-                height: 256,
-                width: 256,
+                getPixelData: getPixelData,
+                rows: height,
+                columns: width,
+                height: height,
+                width: width,
                 color: true,
                 columnPixelSpacing: 1.0,
                 rowPixelSpacing: 1.0,
                 invert: false
             };
 
-            var index = 0;
-            var rnd = Math.round(Math.random() * 255);
-            for (var row = 0; row < image.rows; row++) {
-                for (var column = 0; column < image.columns; column++) {
-                    image.storedPixelData[index++] = (column + rnd) % 256; // red
-                    image.storedPixelData[index++] = 0; // green
-                    image.storedPixelData[index++] = 0; // blue
-                }
-            }
 
             // Create a deferred object, resolve it with the image object we just created and return the
             // deferred to cornerstone.  Cornerstone will get the image object by calling then() on the

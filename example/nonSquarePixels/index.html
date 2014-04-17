@@ -48,6 +48,42 @@ is used by our example image loader-->
         // Loads an image given an imageId
         function loadImage(imageId) {
 
+            var width = 256;
+            var height = 512;
+
+            var numPixels = width * height;
+            var pixelData = new Uint16Array(numPixels);
+            var index = 0;
+            // clear image to black
+            for (var y = 0; y < height; y++) {
+                for (var x = 0; x < width; x++) {
+                    pixelData[index] = 0;
+                    index++;
+                }
+            }
+
+            var left = 10;
+            var top = 20;
+            var squareWidth = 100;
+            var squareHeight = 200;
+
+            for (var row = top; row < top + squareHeight; row++) {
+                var rowOffset = row * width;
+                pixelData[rowOffset + left] = 255;
+                pixelData[rowOffset + left + squareWidth] = 255;
+            }
+            var topRowOffset = top * width;
+            var bottomRowOffset = (top + squareHeight) * width;
+            for (var column = left; column < left + squareWidth; column++) {
+                pixelData[topRowOffset + column] = 255;
+                pixelData[bottomRowOffset + column] = 255;
+            }
+
+            function getPixelData()
+            {
+                return pixelData;
+            }
+
             var image = {
                 imageId: imageId,
                 minPixelValue: 0,
@@ -56,40 +92,16 @@ is used by our example image loader-->
                 intercept: 0,
                 windowCenter: 127,
                 windowWidth: 256,
-                storedPixelData: [], // generated below
-                rows: 512,
-                columns: 256,
-                height: 512,
-                width: 256,
+                getPixelData: getPixelData,
+                rows: height,
+                columns: width,
+                height: height,
+                width: width,
                 color: false,
                 columnPixelSpacing: 1.0,
                 rowPixelSpacing: 0.5,
                 invert: false
             };
-
-            var left = 10;
-            var top = 20;
-            var width = 100;
-            var height = 200;
-            var index = 0;
-            for (var row = 0; row < image.rows; row++) {
-                for (var column = 0; column < image.columns; column++) {
-                    image.storedPixelData[index] = 0;
-                    index++;
-                }
-            }
-            for (var row = top; row < top + height; row++) {
-                var rowOffset = row * image.width;
-                image.storedPixelData[rowOffset + left] = 255;
-                image.storedPixelData[rowOffset + left + width] = 255;
-            }
-            var topRowOffset = top * image.width;
-            var bottomRowOffset = (top + height) * image.width;
-            for (var column = left; column < left + width; column++) {
-                image.storedPixelData[topRowOffset + column] = 255;
-                image.storedPixelData[bottomRowOffset + column] = 255;
-            }
-
 
             // Create a deferred object, resolve it with the image object we just created and return the
             // deferred to cornerstone.  Cornerstone will get the image object by calling then() on the

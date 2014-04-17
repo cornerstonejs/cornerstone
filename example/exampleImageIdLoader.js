@@ -18,20 +18,34 @@
         return bufView;
     }
 
-    function updatePixels(image, base64PixelData)
+    function getPixelData(base64PixelData)
     {
         var pixelDataAsString = window.atob(base64PixelData);
         var pixelData = str2ab(pixelDataAsString);
-
-        var index = 0;
-        for(var rows=0; rows < 256; rows++) {
-            for(var columns=0; columns< 256; columns++) {
-                image.storedPixelData[index] = pixelData[index++];
-            }
-        }
+        return pixelData;
     }
 
+    var image1PixelData = getPixelData(image108Base64);
+    var image2PixelData = getPixelData(image109Base64);
+
     function getExampleImage(imageId) {
+
+        var width = 256;
+        var height = 256;
+
+        function getPixelData()
+        {
+            if(imageId == 'example://1')
+            {
+                return image1PixelData;
+            }
+            else if(imageId = 'example://2')
+            {
+                return image2PixelData;
+            }
+            throw "unknown imageId";
+        }
+
         var image = {
             imageId: imageId,
             minPixelValue : 0,
@@ -40,32 +54,15 @@
             intercept: 0,
             windowCenter : 127,
             windowWidth : 256,
-            storedPixelData: [], // generated below
-            rows: 256,
-            columns: 256,
-            height: 256,
-            width: 256,
+            getPixelData: getPixelData,
+            rows: height,
+            columns: width,
+            height: height,
+            width: width,
             color: false,
             columnPixelSpacing: .8984375,
             rowPixelSpacing: .8984375
         };
-
-        var index=0;
-        for(var row=0; row < image.rows; row++) {
-            for(var column=0; column < image.columns; column++) {
-                image.storedPixelData[index] = 0;
-                index++;
-            }
-        }
-
-        if(imageId == 'example://1')
-        {
-            updatePixels(image, image108Base64);
-        }
-        else if(imageId = 'example://2')
-        {
-            updatePixels(image, image109Base64);
-        }
 
         var deferred = $.Deferred();
         deferred.resolve(image);
