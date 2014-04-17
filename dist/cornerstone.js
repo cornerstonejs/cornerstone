@@ -240,6 +240,8 @@ var cornerstone = (function (cornerstone) {
         cornerstone.setToPixelCoordinateSystem(enabledElement, context);
 
 
+        var currentRenderCanvas = renderCanvas;
+
         // check to see if the image in renderedCanvas needs to be rerendered or not
         if(doesImageNeedToBeRendered(enabledElement, image))
         {
@@ -255,11 +257,26 @@ var cornerstone = (function (cornerstone) {
 
             // apply the lut to the stored pixel data onto the render canvas
             if(image.color) {
-                cornerstone.storedColorPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
+                if(enabledElement.viewport.voi.windowWidth === 256 &&
+                   enabledElement.viewport.voi.windowCenter === 127 &&
+                    enabledElement.viewport.invert === false)
+                {
+                    // the color image voi/invert has not been modified, request the canvas that contains
+                    // it so we can draw it directly to the display canvas
+                    currentRenderCanvas = image.getCanvas();
+                }
+                else
+                {
+                    // the color image voi/invert has been modified - apply the lut to the underlying
+                    // pixel data and put it into the renderCanvas
+                    cornerstone.storedColorPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
+                    renderCanvasContext.putImageData(renderCanvasData, 0, 0);
+                }
             } else {
+                // gray scale image - apply the lut and put the resulting image onto the render canvas
                 cornerstone.storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
+                renderCanvasContext.putImageData(renderCanvasData, 0, 0);
             }
-            renderCanvasContext.putImageData(renderCanvasData, 0, 0);
 
             lastRenderedImageId = image.imageId;
             lastRenderedViewport.windowCenter = enabledElement.viewport.voi.windowCenter;
@@ -278,7 +295,7 @@ var cornerstone = (function (cornerstone) {
         }
 
         // Draw the render canvas half the image size (because we set origin to the middle of the canvas above)
-        context.drawImage(renderCanvas, 0,0, image.width, image.height, 0, 0, image.width, image.height);
+        context.drawImage(currentRenderCanvas, 0,0, image.width, image.height, 0, 0, image.width, image.height);
 
         context.restore();
 
@@ -908,7 +925,7 @@ var cornerstone = (function (cornerstone) {
     {
         var canvasImageDataIndex = 0;
         var storedPixelDataIndex = 0;
-        var numPixels = image.width * image.height * 3;
+        var numPixels = image.width * image.height * 4;
         var storedPixelData = image.getPixelData();
         var localLut = lut;
         var localCanvasImageDataData = canvasImageDataData;
@@ -916,9 +933,12 @@ var cornerstone = (function (cornerstone) {
             localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // red
             localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // green
             localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // blue
-            canvasImageDataIndex++;
+            localCanvasImageDataData[canvasImageDataIndex++] = 255; // alpha
+            storedPixelDataIndex++;
+            //canvasImageDataIndex++;
         }
     }
+
 
     // Module exports
     cornerstone.storedPixelDataToCanvasImageData = storedPixelDataToCanvasImageData;

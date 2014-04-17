@@ -41,7 +41,7 @@ var cornerstone = (function (cornerstone) {
     {
         var canvasImageDataIndex = 0;
         var storedPixelDataIndex = 0;
-        var numPixels = image.width * image.height * 3;
+        var numPixels = image.width * image.height * 4;
         var storedPixelData = image.getPixelData();
         var localLut = lut;
         var localCanvasImageDataData = canvasImageDataData;
@@ -49,9 +49,12 @@ var cornerstone = (function (cornerstone) {
             localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // red
             localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // green
             localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // blue
-            canvasImageDataIndex++;
+            localCanvasImageDataData[canvasImageDataIndex++] = 255; // alpha
+            storedPixelDataIndex++;
+            //canvasImageDataIndex++;
         }
     }
+
 
     // Module exports
     cornerstone.storedPixelDataToCanvasImageData = storedPixelDataToCanvasImageData;

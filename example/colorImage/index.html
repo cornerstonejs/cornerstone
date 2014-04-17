@@ -19,12 +19,28 @@
     <br>
     <br>
 
-    <div id="dicomImage" style="width:512px;height:512px;"
+    <div style="width:512px;height:512px;position:relative;color: white;"
          class="cornerstone-enabled-image"
          oncontextmenu="return false"
          unselectable='on'
          onselectstart='return false;'
          onmousedown='return false;'>
+        <div id="dicomImage"
+             style="width:512px;height:512px;top:0px;left:0px; position:absolute">
+        </div>
+        <div id="topleft" style="position: absolute;top:0px; left:0px">
+            Patient Name
+        </div>
+        <div id="topright" style="position: absolute;top:0px; right:0px">
+            Hospital
+        </div>
+        <div id="bottomright" style="position: absolute;bottom:0px; right:0px">
+            Zoom:
+        </div>
+        <div id="bottomleft" style="position: absolute;bottom:0px; left:0px">
+            WW/WC:
+        </div>
+
     </div>
 
 
@@ -43,7 +59,7 @@ is used by our example image loader-->
     $(document).ready(function() {
 
 
-
+        var canvas = document.createElement('canvas');
 
         // Loads an image given an imageId
         function loadImage(imageId) {
@@ -51,8 +67,11 @@ is used by our example image loader-->
             var width = 256;
             var height = 256;
 
-            var numPixels = width * height * 3;
-            var pixelData = new Uint8Array(numPixels);
+            canvas.width = width;
+            canvas.height = height;
+            var canvasContext = canvas.getContext('2d');
+            var imageData = canvasContext.createImageData(width, height);
+            var pixelData = imageData.data;
             var index = 0;
             var rnd = Math.round(Math.random() * 255);
             for (var y = 0; y < height; y++) {
@@ -60,12 +79,24 @@ is used by our example image loader-->
                     pixelData[index++] = (x + rnd) % 256; // RED
                     pixelData[index++] = 0; // GREEN
                     pixelData[index++] = 0; // BLUE
+                    pixelData[index++] = 255; // ALPHA
                 }
             }
+            canvasContext.putImageData(imageData, 0, 0);
 
             function getPixelData()
             {
                 return pixelData;
+            }
+
+            function getImageData()
+            {
+                return imageData;
+            }
+
+            function getCanvas()
+            {
+                return canvas;
             }
 
             var image = {
@@ -77,6 +108,8 @@ is used by our example image loader-->
                 windowCenter: 127,
                 windowWidth: 256,
                 getPixelData: getPixelData,
+                getImageData: getImageData,
+                getCanvas: getCanvas,
                 rows: height,
                 columns: width,
                 height: height,
@@ -102,10 +135,39 @@ is used by our example image loader-->
         var element = document.getElementById('dicomImage');
         cornerstone.enable(element);
 
+        function onImageRendered(e) {
+            $('#topright').text("Render Time:" + cornerstone.lastRenderTimeInMs + " ms");
+        }
+        element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
+
         // load image and display it
         var imageId = "colorImageLoader://1";
         cornerstone.loadImage(imageId).then(function(image) {
             cornerstone.displayImage(element, image);
+
+            // add event handlers to mouse move to adjust window/center
+            $('#dicomImage').mousedown(function (e) {
+                var lastX = e.pageX;
+                var lastY = e.pageY;
+
+                $(document).mousemove(function (e) {
+                    var deltaX = e.pageX - lastX,
+                            deltaY = e.pageY - lastY;
+                    lastX = e.pageX;
+                    lastY = e.pageY;
+
+                    var viewport = cornerstone.getViewport(element);
+                    viewport.voi.windowWidth += (deltaX / viewport.scale);
+                    viewport.voi.windowCenter += (deltaY / viewport.scale);
+                    cornerstone.setViewport(element, viewport);
+                });
+
+                $(document).mouseup(function (e) {
+                    $(document).unbind('mousemove');
+                    $(document).unbind('mouseup');
+                });
+            });
+
         });
     });
 
