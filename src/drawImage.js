@@ -10,25 +10,44 @@ var cornerstone = (function (cornerstone) {
         cornerstone = {};
     }
 
-    var renderCanvas = document.createElement('canvas');
-    var renderCanvasContext;
-    var renderCanvasData;
+    var grayscaleRenderCanvas = document.createElement('canvas');
+    var grayscaleRenderCanvasContext;
+    var grayscaleRenderCanvasData;
+
+    var colorRenderCanvas = document.createElement('canvas');
+    var colorRenderCanvasContext;
+    var colorRenderCanvasData;
+
     var lastRenderedImageId;
     var lastRenderedViewport = {};
 
-    function initializeRenderCanvas(image)
+    function initializeGrayscaleRenderCanvas(image)
     {
         // Resize the canvas
-        renderCanvas.width = image.width;
-        renderCanvas.height = image.height;
+        grayscaleRenderCanvas.width = image.width;
+        grayscaleRenderCanvas.height = image.height;
 
         // NOTE - we need to fill the render canvas with white pixels since we control the luminance
         // using the alpha channel to improve rendering performance.
-        renderCanvasContext = renderCanvas.getContext('2d');
-        renderCanvasContext.fillStyle = 'white';
-        renderCanvasContext.fillRect(0,0, renderCanvas.width, renderCanvas.height);
-        renderCanvasData = renderCanvasContext.getImageData(0,0,image.width, image.height);
+        grayscaleRenderCanvasContext = grayscaleRenderCanvas.getContext('2d');
+        grayscaleRenderCanvasContext.fillStyle = 'white';
+        grayscaleRenderCanvasContext.fillRect(0,0, grayscaleRenderCanvas.width, grayscaleRenderCanvas.height);
+        grayscaleRenderCanvasData = grayscaleRenderCanvasContext.getImageData(0,0,image.width, image.height);
     }
+
+    function initializeColorRenderCanvas(image)
+    {
+        // Resize the canvas
+        colorRenderCanvas.width = image.width;
+        colorRenderCanvas.height = image.height;
+
+        // get the canvas data so we can write to it directly
+        colorRenderCanvasContext = colorRenderCanvas.getContext('2d');
+        colorRenderCanvasContext.fillStyle = 'white';
+        colorRenderCanvasContext.fillRect(0,0, colorRenderCanvas.width, colorRenderCanvas.height);
+        colorRenderCanvasData = colorRenderCanvasContext.getImageData(0,0,image.width, image.height);
+    }
+
 
     function getLut(image, viewport)
     {
@@ -61,6 +80,66 @@ var cornerstone = (function (cornerstone) {
         return false;
     }
 
+    function getRenderCanvas(enabledElement, image)
+    {
+        // apply the lut to the stored pixel data onto the render canvas
+        if(image.color) {
+
+            if(enabledElement.viewport.voi.windowWidth === 256 &&
+                enabledElement.viewport.voi.windowCenter === 127 &&
+                enabledElement.viewport.invert === false)
+            {
+                // the color image voi/invert has not been modified, request the canvas that contains
+                // it so we can draw it directly to the display canvas
+                return image.getCanvas();
+            }
+            else
+            {
+                if(doesImageNeedToBeRendered(enabledElement, image) === false) {
+                    return colorRenderCanvas;
+                }
+
+                // If our render canvas does not match the size of this image reset it
+                // NOTE: This might be inefficient if we are updating multiple images of different
+                // sizes frequently.
+                if(colorRenderCanvas.width !== image.width || colorRenderCanvas.height != image.height) {
+                    initializeColorRenderCanvas(image);
+                }
+
+                // get the lut to use
+                var colorLut = getLut(image, enabledElement.viewport);
+
+                // the color image voi/invert has been modified - apply the lut to the underlying
+                // pixel data and put it into the renderCanvas
+                cornerstone.storedColorPixelDataToCanvasImageData(image, colorLut, colorRenderCanvasData.data);
+                colorRenderCanvasContext.putImageData(colorRenderCanvasData, 0, 0);
+                return colorRenderCanvas;
+            }
+        } else {
+
+            if(doesImageNeedToBeRendered(enabledElement, image) === false) {
+                return grayscaleRenderCanvas;
+            }
+
+
+            // If our render canvas does not match the size of this image reset it
+            // NOTE: This might be inefficient if we are updating multiple images of different
+            // sizes frequently.
+            if(grayscaleRenderCanvas.width !== image.width || grayscaleRenderCanvas.height != image.height) {
+                initializeGrayscaleRenderCanvas(image);
+            }
+
+            // get the lut to use
+            var lut = getLut(image, enabledElement.viewport);
+
+            // gray scale image - apply the lut and put the resulting image onto the render canvas
+            cornerstone.storedPixelDataToCanvasImageData(image, lut, grayscaleRenderCanvasData.data);
+            grayscaleRenderCanvasContext.putImageData(grayscaleRenderCanvasData, 0, 0);
+            return grayscaleRenderCanvas;
+        }
+    }
+
+
     /**
      * Internal API function to draw an image to a given enabled element
      * @param enabledElement
@@ -89,50 +168,12 @@ var cornerstone = (function (cornerstone) {
         context.save();
         cornerstone.setToPixelCoordinateSystem(enabledElement, context);
 
+        var renderCanvas = getRenderCanvas(enabledElement, image);
 
-        var currentRenderCanvas = renderCanvas;
-
-        // check to see if the image in renderedCanvas needs to be rerendered or not
-        if(doesImageNeedToBeRendered(enabledElement, image))
-        {
-            // If our render canvas does not match the size of this image reset it
-            // NOTE: This might be inefficient if we are updating multiple images of different
-            // sizes frequently.
-            if(renderCanvas.width !== image.width || renderCanvas.height != image.height) {
-                initializeRenderCanvas(image);
-            }
-
-            // get the lut to use
-            var lut = getLut(image, enabledElement.viewport);
-
-            // apply the lut to the stored pixel data onto the render canvas
-            if(image.color) {
-                if(enabledElement.viewport.voi.windowWidth === 256 &&
-                   enabledElement.viewport.voi.windowCenter === 127 &&
-                    enabledElement.viewport.invert === false)
-                {
-                    // the color image voi/invert has not been modified, request the canvas that contains
-                    // it so we can draw it directly to the display canvas
-                    currentRenderCanvas = image.getCanvas();
-                }
-                else
-                {
-                    // the color image voi/invert has been modified - apply the lut to the underlying
-                    // pixel data and put it into the renderCanvas
-                    cornerstone.storedColorPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
-                    renderCanvasContext.putImageData(renderCanvasData, 0, 0);
-                }
-            } else {
-                // gray scale image - apply the lut and put the resulting image onto the render canvas
-                cornerstone.storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
-                renderCanvasContext.putImageData(renderCanvasData, 0, 0);
-            }
-
-            lastRenderedImageId = image.imageId;
-            lastRenderedViewport.windowCenter = enabledElement.viewport.voi.windowCenter;
-            lastRenderedViewport.windowWidth = enabledElement.viewport.voi.windowWidth;
-            lastRenderedViewport.invert = enabledElement.viewport.invert;
-        }
+        lastRenderedImageId = image.imageId;
+        lastRenderedViewport.windowCenter = enabledElement.viewport.voi.windowCenter;
+        lastRenderedViewport.windowWidth = enabledElement.viewport.voi.windowWidth;
+        lastRenderedViewport.invert = enabledElement.viewport.invert;
 
         // turn off image smooth/interpolation if pixelReplication is set in the viewport
         if(enabledElement.viewport.pixelReplication === true) {
@@ -145,7 +186,7 @@ var cornerstone = (function (cornerstone) {
         }
 
         // Draw the render canvas half the image size (because we set origin to the middle of the canvas above)
-        context.drawImage(currentRenderCanvas, 0,0, image.width, image.height, 0, 0, image.width, image.height);
+        context.drawImage(renderCanvas, 0,0, image.width, image.height, 0, 0, image.width, image.height);
 
         context.restore();
 

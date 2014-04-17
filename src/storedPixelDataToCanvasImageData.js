@@ -48,10 +48,9 @@ var cornerstone = (function (cornerstone) {
         while(storedPixelDataIndex < numPixels) {
             localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // red
             localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // green
-            localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // blue
-            localCanvasImageDataData[canvasImageDataIndex++] = 255; // alpha
-            storedPixelDataIndex++;
-            //canvasImageDataIndex++;
+            localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex]]; // blue
+            storedPixelDataIndex+=2;
+            canvasImageDataIndex+=2;
         }
     }
 
