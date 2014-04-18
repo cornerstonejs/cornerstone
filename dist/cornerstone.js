@@ -846,6 +846,10 @@ var cornerstone = (function (cornerstone) {
     // Loads an image given an imageId and returns a promise which will resolve
     // to the loaded image object or fail if an error occurred
     function loadImage(imageId) {
+        if(imageId === undefined) {
+            throw "loadImage: parameter imageId must not be undefined";
+        }
+
         var imagePromise = cornerstone.imageCache.getImagePromise(imageId);
         if(imagePromise !== undefined) {
             return imagePromise;

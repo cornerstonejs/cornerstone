@@ -55,7 +55,7 @@ Key Features
  * HTML5/Javascript based library to easily add interactive medical images to web applications
  * Serves as a foundation to build more complex medical imaging applications from - enterprise viewer, report viewer, etc.
  * Supports all HTML5 based browsers including mobile, tablet and desktop
- * Displays all common medical image formats (e.g. 8 bit grayscale, 16 bit grayscale, RGB)
+ * Displays all common medical image formats (e.g. 8 bit grayscale, 16 bit grayscale, RGB color)
  * High performance image display
  * Retrieval of images from different systems with different protocols via Image Loader plugin design
  * API support for changing viewport properties (e.g. ww/wc, zoom, pan, invert)

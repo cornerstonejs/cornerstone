@@ -1,16 +1,6 @@
 Backlog:
 ========
 
-V1.0 (target to release by May 15 for SIIM 2014
-------------
- * API documentation
- * Testing for other browsers and platforms (automated if possible)
- * Image support
-    * Large image support (e.g. mammo, large CR > 512x512 resolution )
- * Packaging/build related
-     * AMD wrapper to make it easier to use with AMD loaders
- * Prioritized image loading (primary, secondary, thumbnail, prefetch)
- * Design for handling images currently being loaded
 
 Beyond v1.0:
 ------------
@@ -24,7 +14,6 @@ Beyond v1.0:
      * Rotation (90, 180, 270, 0)
      * Flip (Horizontal / Vertical)
      * Non linear LUTs (modality & voi)
-     * pseudo color tables (for PET, MRI)
  * Performance related
    * switch to lower resolution image during ww/wc operation to improve framerate
    * only regenerate the part of the rendered image that is actually visible - perhaps by tiling it
@@ -37,3 +26,5 @@ Beyond v1.0:
   * Fusion (e.g. PET/CT, CT/MR)
  * Create a CustomElement for cornerstone images http://www.html5rocks.com/en/tutorials/webcomponents/customelements/
    * use http://www.polymer-project.org/ to polyfill
+ * Consider Prioritized image loading (primary, secondary, thumbnail, prefetch)
+   * Should take hostname into account since browsers support additional outstanding requests in that case
