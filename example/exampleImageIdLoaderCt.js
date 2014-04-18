@@ -53,7 +53,8 @@
             width: width,
             color: false,
             columnPixelSpacing: 0.67578,
-            rowPixelSpacing: 0.67578
+            rowPixelSpacing: 0.67578,
+            sizeInBytes: width * height * 2
         };
 
         var deferred = $.Deferred();

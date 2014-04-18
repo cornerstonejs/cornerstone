@@ -19,7 +19,10 @@ var cornerstone = (function (cornerstone) {
      */
     function generateLut(image, windowWidth, windowCenter, invert)
     {
-        var lut = [];
+        if(image.lut === undefined) {
+            image.lut = [];
+        }
+        var lut = image.lut;
 
         var maxPixelValue = image.maxPixelValue;
         var slope = image.slope;
@@ -50,9 +53,6 @@ var cornerstone = (function (cornerstone) {
                 lut[storedValue] = Math.round(clampedValue);
             }
         }
-
-
-        return lut;
     }
 
 

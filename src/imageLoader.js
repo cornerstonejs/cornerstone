@@ -14,37 +14,39 @@ var cornerstone = (function (cornerstone) {
 
     var unknownImageLoader;
 
-    var imageCache = {
-    };
-
     function loadImageFromImageLoader(imageId) {
         var colonIndex = imageId.indexOf(":");
         var scheme = imageId.substring(0, colonIndex);
         var loader = imageLoaders[scheme];
-        var image;
+        var imagePromise;
         if(loader === undefined || loader === null) {
             if(unknownImageLoader !== undefined) {
-                image = unknownImageLoader(imageId);
-                return image;
+                imagePromise = unknownImageLoader(imageId);
+                return imagePromise;
             }
             else {
                 return undefined;
             }
         }
-        image = loader(imageId);
-        return image;
+        imagePromise = loader(imageId);
+        return imagePromise;
     }
 
-    // Loads an image given an imageId
+    // Loads an image given an imageId and returns a promise which will resolve
+    // to the loaded image object or fail if an error occurred
     function loadImage(imageId) {
-        if(imageCache[imageId] === undefined) {
-            var image = loadImageFromImageLoader(imageId);
-            imageCache[imageId] = image;
-            return image;
+        var imagePromise = cornerstone.imageCache.getImagePromise(imageId);
+        if(imagePromise !== undefined) {
+            return imagePromise;
         }
-        else {
-            return imageCache[imageId];
+
+        imagePromise = loadImageFromImageLoader(imageId);
+        if(imagePromise === undefined) {
+            throw "loadImage: no image loader for imageId";
         }
+
+        cornerstone.imageCache.putImagePromise(imageId, imagePromise);
+        return imagePromise;
     }
 
     // registers an imageLoader plugin with cornerstone for the specified scheme

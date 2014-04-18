@@ -60,7 +60,7 @@ var cornerstone = (function (cornerstone) {
         }
 
         // lut is invalid or not present, regenerate it and cache it
-        image.lut = cornerstone.generateLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert);
+        cornerstone.generateLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert);
         image.lut.windowWidth = viewport.voi.windowWidth;
         image.lut.windowCenter = viewport.voi.windowCenter;
         image.lut.invert = viewport.invert;

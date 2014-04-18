@@ -8,7 +8,7 @@ Phase 5 (in progress)
  * Image support
     * color image support (DONE)
  * Pixel data management
-     * image cache management
+     * image cache management (DONE)
  * Code cleanup / refactoring / documentation
 
 
