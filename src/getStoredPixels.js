@@ -28,10 +28,11 @@ var cornerstone = (function (cornerstone) {
         var ee = cornerstone.getEnabledElement(element);
         var storedPixels = [];
         var index = 0;
+        var pixelData = ee.image.getPixelData();
         for(var row=0; row < height; row++) {
             for(var column=0; column < width; column++) {
                 var spIndex = ((row + y) * ee.image.columns) + (column + x);
-                storedPixels[index++] = ee.image.storedPixelData[spIndex];
+                storedPixels[index++] = pixelData[spIndex];
             }
         }
         return storedPixels;
