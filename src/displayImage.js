@@ -42,7 +42,25 @@ var cornerstone = (function (cornerstone) {
 
         cornerstone.updateImage(element);
         cornerstone.event(enabledElement, "CornerstoneViewportUpdated");
-        cornerstone.event(enabledElement, "CornerstoneNewImage");
+
+        var now = new Date();
+        var frameRate;
+        if(enabledElement.lastImageTimeStamp !== undefined) {
+            var timeSinceLastImage = now.getTime() - enabledElement.lastImageTimeStamp;
+            console.log('timeSinceLastImage = ' + timeSinceLastImage);
+            frameRate = (1000 / timeSinceLastImage).toFixed();
+        } else {
+            console.log('lastImageTimeStamp undefined');
+
+        }
+        enabledElement.lastImageTimeStamp = now.getTime();
+
+        var newImageEventData = {
+            frameRate : frameRate
+        };
+
+
+        cornerstone.event(enabledElement, "CornerstoneNewImage", newImageEventData);
     }
 
     // module/private exports

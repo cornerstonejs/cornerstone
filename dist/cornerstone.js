@@ -1,4 +1,4 @@
-/*! cornerstone - v0.3.0 - 2014-04-17 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.3.0 - 2014-04-19 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -140,7 +140,25 @@ var cornerstone = (function (cornerstone) {
 
         cornerstone.updateImage(element);
         cornerstone.event(enabledElement, "CornerstoneViewportUpdated");
-        cornerstone.event(enabledElement, "CornerstoneNewImage");
+
+        var now = new Date();
+        var frameRate;
+        if(enabledElement.lastImageTimeStamp !== undefined) {
+            var timeSinceLastImage = now.getTime() - enabledElement.lastImageTimeStamp;
+            console.log('timeSinceLastImage = ' + timeSinceLastImage);
+            frameRate = (1000 / timeSinceLastImage).toFixed();
+        } else {
+            console.log('lastImageTimeStamp undefined');
+
+        }
+        enabledElement.lastImageTimeStamp = now.getTime();
+
+        var newImageEventData = {
+            frameRate : frameRate
+        };
+
+
+        cornerstone.event(enabledElement, "CornerstoneNewImage", newImageEventData);
     }
 
     // module/private exports
@@ -342,9 +360,13 @@ var cornerstone = (function (cornerstone) {
 
         var end = new Date();
         var diff = end - start;
-        cornerstone.lastRenderTimeInMs = diff;
 
-        cornerstone.event(enabledElement, "CornerstoneImageRendered", {canvasContext: context});
+        var eventData = {
+            canvasContext: context,
+            renderTimeInMs : diff
+        };
+
+        cornerstone.event(enabledElement, "CornerstoneImageRendered", eventData);
     }
 
     // Module exports
