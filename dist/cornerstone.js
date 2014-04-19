@@ -145,11 +145,8 @@ var cornerstone = (function (cornerstone) {
         var frameRate;
         if(enabledElement.lastImageTimeStamp !== undefined) {
             var timeSinceLastImage = now.getTime() - enabledElement.lastImageTimeStamp;
-            console.log('timeSinceLastImage = ' + timeSinceLastImage);
             frameRate = (1000 / timeSinceLastImage).toFixed();
         } else {
-            console.log('lastImageTimeStamp undefined');
-
         }
         enabledElement.lastImageTimeStamp = now.getTime();
 
@@ -253,8 +250,8 @@ var cornerstone = (function (cornerstone) {
         // apply the lut to the stored pixel data onto the render canvas
         if(image.color) {
 
-            if(enabledElement.viewport.voi.windowWidth === 256 &&
-                enabledElement.viewport.voi.windowCenter === 127 &&
+            if(enabledElement.viewport.voi.windowWidth === enabledElement.image.windowWidth &&
+                enabledElement.viewport.voi.windowCenter === enabledElement.image.windowCenter &&
                 enabledElement.viewport.invert === false)
             {
                 // the color image voi/invert has not been modified, request the canvas that contains

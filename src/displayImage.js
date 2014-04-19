@@ -47,11 +47,8 @@ var cornerstone = (function (cornerstone) {
         var frameRate;
         if(enabledElement.lastImageTimeStamp !== undefined) {
             var timeSinceLastImage = now.getTime() - enabledElement.lastImageTimeStamp;
-            console.log('timeSinceLastImage = ' + timeSinceLastImage);
             frameRate = (1000 / timeSinceLastImage).toFixed();
         } else {
-            console.log('lastImageTimeStamp undefined');
-
         }
         enabledElement.lastImageTimeStamp = now.getTime();
 
