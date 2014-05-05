@@ -33,8 +33,9 @@ var cornerstone = (function (cornerstone) {
     }
 
     // Loads an image given an imageId and returns a promise which will resolve
-    // to the loaded image object or fail if an error occurred
-    function loadImage(imageId) {
+    // to the loaded image object or fail if an error occurred.  The loaded image
+    // is not stored in the cache
+    function loadImageNoCache(imageId) {
         if(imageId === undefined) {
             throw "loadImage: parameter imageId must not be undefined";
         }
@@ -49,6 +50,15 @@ var cornerstone = (function (cornerstone) {
             throw "loadImage: no image loader for imageId";
         }
 
+        return imagePromise;
+    }
+
+    // Loads an image given an imageId and returns a promise which will resolve
+    // to the loaded image object or fail if an error occurred.  The image is
+    // stored in the cache
+    function loadImage(imageId) {
+
+        var imagePromise = loadImageNoCache(imageId);
         cornerstone.imageCache.putImagePromise(imageId, imagePromise);
         return imagePromise;
     }
@@ -68,6 +78,7 @@ var cornerstone = (function (cornerstone) {
     // module exports
 
     cornerstone.loadImage = loadImage;
+    cornerstone.loadImageNoCache = loadImageNoCache;
     cornerstone.registerImageLoader = registerImageLoader;
     cornerstone.registerUnknownImageLoader = registerUnknownImageLoader;
 

@@ -80,6 +80,32 @@ var cornerstone = (function (cornerstone) {
         return false;
     }
 
+    // returns an image object that can be drawn directly to the canvas if possible or null if not possible
+    // this is a special optimization specifically for images that are in web standard format like JPEG/PNG
+    function getImageObject(enabledElement, image)
+    {
+        if(image.getImage === undefined)
+        {
+            return undefined;
+        }
+
+        // can't do this for grayscale images
+        if(image.color !== true) {
+            return undefined;
+        }
+
+
+        if(enabledElement.viewport.voi.windowWidth === enabledElement.image.windowWidth &&
+            enabledElement.viewport.voi.windowCenter === enabledElement.image.windowCenter &&
+            enabledElement.viewport.invert === false)
+        {
+            // the color image voi/invert has not been modified, request the canvas that contains
+            // it so we can draw it directly to the display canvas
+            return image.getImage();
+        }
+        return undefined;
+    }
+
     function getRenderCanvas(enabledElement, image)
     {
         // apply the lut to the stored pixel data onto the render canvas
@@ -164,17 +190,6 @@ var cornerstone = (function (cornerstone) {
         context.fillStyle = 'black';
         context.fillRect(0,0, enabledElement.canvas.width, enabledElement.canvas.height);
 
-        // save the canvas context state and apply the viewport properties
-        context.save();
-        cornerstone.setToPixelCoordinateSystem(enabledElement, context);
-
-        var renderCanvas = getRenderCanvas(enabledElement, image);
-
-        lastRenderedImageId = image.imageId;
-        lastRenderedViewport.windowCenter = enabledElement.viewport.voi.windowCenter;
-        lastRenderedViewport.windowWidth = enabledElement.viewport.voi.windowWidth;
-        lastRenderedViewport.invert = enabledElement.viewport.invert;
-
         // turn off image smooth/interpolation if pixelReplication is set in the viewport
         if(enabledElement.viewport.pixelReplication === true) {
             context.imageSmoothingEnabled = false;
@@ -185,8 +200,28 @@ var cornerstone = (function (cornerstone) {
             context.mozImageSmoothingEnabled = true;
         }
 
-        // Draw the render canvas half the image size (because we set origin to the middle of the canvas above)
-        context.drawImage(renderCanvas, 0,0, image.width, image.height, 0, 0, image.width, image.height);
+
+        // save the canvas context state and apply the viewport properties
+        context.save();
+        cornerstone.setToPixelCoordinateSystem(enabledElement, context);
+
+        var imageObject = getImageObject(enabledElement, image);
+        if(imageObject !== undefined)
+        {
+            context.drawImage(imageObject, 0, 0, image.width, image.height, 0, 0, image.width, image.height);
+        }
+        else {
+            var renderCanvas = getRenderCanvas(enabledElement, image);
+
+            // Draw the render canvas half the image size (because we set origin to the middle of the canvas above)
+            context.drawImage(renderCanvas, 0,0, image.width, image.height, 0, 0, image.width, image.height);
+        }
+
+        lastRenderedImageId = image.imageId;
+        lastRenderedViewport.windowCenter = enabledElement.viewport.voi.windowCenter;
+        lastRenderedViewport.windowWidth = enabledElement.viewport.voi.windowWidth;
+        lastRenderedViewport.invert = enabledElement.viewport.invert;
+
 
         context.restore();
 
