@@ -1,4 +1,4 @@
-/*! cornerstone - v0.4.0 - 2014-05-06 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.4.1 - 2014-05-06 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -138,9 +138,6 @@ var cornerstone = (function (cornerstone) {
             }
         }
 
-        cornerstone.updateImage(element);
-        cornerstone.event(enabledElement, "CornerstoneViewportUpdated");
-
         var now = new Date();
         var frameRate;
         if(enabledElement.lastImageTimeStamp !== undefined) {
@@ -154,8 +151,9 @@ var cornerstone = (function (cornerstone) {
             frameRate : frameRate
         };
 
-
         cornerstone.event(enabledElement, "CornerstoneNewImage", newImageEventData);
+
+        cornerstone.updateImage(element);
     }
 
     // module/private exports
@@ -502,9 +500,9 @@ var cornerstone = (function (cornerstone) {
         enabledElements.push(enabledElement);
     }
 
-    function removeEnabledElement(element) {
+    function disable(element) {
         if(element === undefined) {
-            throw "getEnabledElement: element element must not be undefined";
+            throw "disable: element element must not be undefined";
         }
 
         for(var i=0; i < enabledElements.length; i++) {
@@ -519,7 +517,7 @@ var cornerstone = (function (cornerstone) {
     // module/private exports
     cornerstone.getEnabledElement = getEnabledElement;
     cornerstone.addEnabledElement = addEnabledElement;
-    cornerstone.removeEnabledElement = removeEnabledElement ;
+    cornerstone.disable = disable;
 
     return cornerstone;
 }(cornerstone));
@@ -1282,8 +1280,6 @@ var cornerstone = (function (cornerstone) {
 
         // Force the image to be updated since the viewport has been modified
         cornerstone.updateImage(element);
-
-        cornerstone.event(enabledElement, "CornerstoneViewportUpdated");
     }
 
     /**

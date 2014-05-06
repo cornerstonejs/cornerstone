@@ -40,9 +40,6 @@ var cornerstone = (function (cornerstone) {
             }
         }
 
-        cornerstone.updateImage(element);
-        cornerstone.event(enabledElement, "CornerstoneViewportUpdated");
-
         var now = new Date();
         var frameRate;
         if(enabledElement.lastImageTimeStamp !== undefined) {
@@ -56,8 +53,9 @@ var cornerstone = (function (cornerstone) {
             frameRate : frameRate
         };
 
-
         cornerstone.event(enabledElement, "CornerstoneNewImage", newImageEventData);
+
+        cornerstone.updateImage(element);
     }
 
     // module/private exports

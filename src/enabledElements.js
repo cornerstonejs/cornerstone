@@ -29,9 +29,9 @@ var cornerstone = (function (cornerstone) {
         enabledElements.push(enabledElement);
     }
 
-    function removeEnabledElement(element) {
+    function disable(element) {
         if(element === undefined) {
-            throw "getEnabledElement: element element must not be undefined";
+            throw "disable: element element must not be undefined";
         }
 
         for(var i=0; i < enabledElements.length; i++) {
@@ -46,7 +46,7 @@ var cornerstone = (function (cornerstone) {
     // module/private exports
     cornerstone.getEnabledElement = getEnabledElement;
     cornerstone.addEnabledElement = addEnabledElement;
-    cornerstone.removeEnabledElement = removeEnabledElement ;
+    cornerstone.disable = disable;
 
     return cornerstone;
 }(cornerstone));

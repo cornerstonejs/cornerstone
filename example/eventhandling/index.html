@@ -15,9 +15,7 @@
         eventhandling/index.html
     </h1>
 
-    This is an example of event handling.  Cornerstone fires the event 'CornerstoneViewportUpdated" any time a
-    viewport property is changed.  Listen for this event and the event passed to your callback function will
-    include the element and the updated viewport.  Cornerstone first the event 'CornerstoneImageRendered'
+    This is an example of event handling.  Cornerstone fires the event 'CornerstoneImageRendered'
     everytime the image is updated.  The event includes the canvas context set to the image coordinate system
     so you can draw overlays.
     <br>
@@ -76,12 +74,6 @@ is used by our example image loader-->
         cornerstone.enable(element);
 
         // setup handlers before we display the image
-        function onViewportUpdated(e) {
-            $('#bottomleft').text("WW/WL:" + Math.round(e.detail.viewport.voi.windowWidth) + "/" + Math.round(e.detail.viewport.voi.windowCenter));
-            $('#bottomright').text("Zoom:" + e.detail.viewport.scale.toFixed(2));
-        }
-        element.addEventListener("CornerstoneViewportUpdated", onViewportUpdated, false);
-
         function onImageRendered(e) {
             // set the canvas context to the image coordinate system
             cornerstone.setToPixelCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext);
@@ -100,6 +92,8 @@ is used by our example image loader-->
             context.fillText("Tumor Here", 128, 85);
 
             $('#topright').text("Render Time:" + cornerstone.lastRenderTimeInMs + " ms");
+            $('#bottomleft').text("WW/WL:" + Math.round(e.detail.viewport.voi.windowWidth) + "/" + Math.round(e.detail.viewport.voi.windowCenter));
+            $('#bottomright').text("Zoom:" + e.detail.viewport.scale.toFixed(2));
 
         }
         element.addEventListener("CornerstoneImageRendered", onImageRendered, false);

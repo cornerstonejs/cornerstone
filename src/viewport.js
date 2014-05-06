@@ -32,8 +32,6 @@ var cornerstone = (function (cornerstone) {
 
         // Force the image to be updated since the viewport has been modified
         cornerstone.updateImage(element);
-
-        cornerstone.event(enabledElement, "CornerstoneViewportUpdated");
     }
 
     /**
