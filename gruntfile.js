@@ -81,7 +81,7 @@ module.exports = function(grunt) {
 
 
 // Release process:
-//  1) Update version numbers
+//  1) Update version numbers in package.json and bower.json
 //  2) do a build (needed to update dist versions with correct build number)
 //  3) commit changes
 //      git commit -am "Changes...."
