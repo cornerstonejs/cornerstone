@@ -36,8 +36,7 @@ The best way to see the power of this library is to actually see it in use.
 Install
 -------
 
-**NOTE: This project is still in alpha development stage, use of the library is not yet recommended as
-functionality it not complete, bugs exist, API's will change and documentation is missing or not correct**
+Project Status: BETA.  APIs are frozen for 1.0
 
 Get a packaged source file:
 
