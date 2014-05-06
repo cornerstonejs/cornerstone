@@ -4,7 +4,11 @@ Backlog:
 
 Beyond v1.0:
 ------------
- * [ASM.JS](http://asmjs.org/) version of storedPixelDataToCanvasImageData and generateLut
+  * Packaging/build related
+      * AMD wrapper to make it easier to use with AMD loaders
+  * more viewport functionality
+      * pseudo color tables (for PET, MRI)
+* [ASM.JS](http://asmjs.org/) version of storedPixelDataToCanvasImageData and generateLut
  * [Native Client](https://developers.google.com/native-client/dev/) version of storedPixelDataToCanvasImageData
    and generateLut
  * Cine clip support via HTML5 video tag

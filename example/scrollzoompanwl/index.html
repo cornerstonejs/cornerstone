@@ -83,7 +83,7 @@ is used by our example image loader-->
 
         // updates the image display
         function updateTheImage(imageIndex) {
-            return cornerstone.loadImage(imageIds[imageIndex]).then(function(image) {
+            return cornerstone.loadAndCacheImage(imageIds[imageIndex]).then(function(image) {
                 currentImageIndex = imageIndex;
                 var viewport = cornerstone.getViewport(element);
                 cornerstone.displayImage(element, image, viewport);

@@ -64,13 +64,13 @@ is used by our example image loader-->
         var mr3 = cornerstone.enable(document.getElementById('ct1'));
 
         // load and display the images
-        cornerstone.loadImage('example://1').then(function(image) {
+        cornerstone.loadAndCacheImage('example://1').then(function(image) {
             cornerstone.displayImage(mr1, image);
         });
-        cornerstone.loadImage('example://2').then(function(image) {
+        cornerstone.loadAndCacheImage('example://2').then(function(image) {
             cornerstone.displayImage(mr2, image);
         });
-        cornerstone.loadImage('ctexample://1').then(function(image) {
+        cornerstone.loadAndCacheImage('ctexample://1').then(function(image) {
             cornerstone.displayImage(ct1, image);
         });
     });

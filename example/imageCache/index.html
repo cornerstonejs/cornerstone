@@ -81,7 +81,7 @@ is used by our example image loader-->
 
         $('#addImage').click(function() {
             var imageId = "colorImageLoader://" + imageNum++;
-            cornerstone.loadImage(imageId);
+            cornerstone.loadAndCacheImage(imageId);
         });
 
         setInterval(function() {
@@ -94,7 +94,7 @@ is used by our example image loader-->
         var canvas = document.createElement('canvas');
 
         // Loads an image given an imageId
-        function loadImage(imageId) {
+        function loadImage  (imageId) {
 
             var width = 256;
             var height = 256;
@@ -175,7 +175,7 @@ is used by our example image loader-->
 
         // load image and display it
         var imageId = "colorImageLoader://1";
-        cornerstone.loadImage(imageId).then(function(image) {
+        cornerstone.loadAndCacheImage(imageId).then(function(image) {
             cornerstone.displayImage(element, image);
 
             // add event handlers to mouse move to adjust window/center

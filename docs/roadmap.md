@@ -7,12 +7,6 @@ Phase 6 (in progress - target by May 15 for SIIM)
 --------------------
  * API documentation
  * Testing for other browsers and platforms (automated if possible)
- * Packaging/build related
-     * AMD wrapper to make it easier to use with AMD loaders
- * more viewport functionality
-     * pseudo color tables (for PET, MRI)
- * Code cleanup / refactoring / documentation
-
 
 Phase 5 (completed April 17, 2014)
 ---------------------

@@ -35,7 +35,7 @@ var cornerstone = (function (cornerstone) {
     // Loads an image given an imageId and returns a promise which will resolve
     // to the loaded image object or fail if an error occurred.  The loaded image
     // is not stored in the cache
-    function loadImageNoCache(imageId) {
+    function loadImage(imageId) {
         if(imageId === undefined) {
             throw "loadImage: parameter imageId must not be undefined";
         }
@@ -56,12 +56,26 @@ var cornerstone = (function (cornerstone) {
     // Loads an image given an imageId and returns a promise which will resolve
     // to the loaded image object or fail if an error occurred.  The image is
     // stored in the cache
-    function loadImage(imageId) {
+    function loadAndCacheImage(imageId) {
+        if(imageId === undefined) {
+            throw "loadAndCacheImage: parameter imageId must not be undefined";
+        }
 
-        var imagePromise = loadImageNoCache(imageId);
+        var imagePromise = cornerstone.imageCache.getImagePromise(imageId);
+        if(imagePromise !== undefined) {
+            return imagePromise;
+        }
+
+        imagePromise = loadImageFromImageLoader(imageId);
+        if(imagePromise === undefined) {
+            throw "loadAndCacheImage: no image loader for imageId";
+        }
+
         cornerstone.imageCache.putImagePromise(imageId, imagePromise);
+
         return imagePromise;
     }
+
 
     // registers an imageLoader plugin with cornerstone for the specified scheme
     function registerImageLoader(scheme, imageLoader) {
@@ -78,7 +92,7 @@ var cornerstone = (function (cornerstone) {
     // module exports
 
     cornerstone.loadImage = loadImage;
-    cornerstone.loadImageNoCache = loadImageNoCache;
+    cornerstone.loadAndCacheImage = loadAndCacheImage;
     cornerstone.registerImageLoader = registerImageLoader;
     cornerstone.registerUnknownImageLoader = registerUnknownImageLoader;
 
