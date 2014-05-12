@@ -73,6 +73,10 @@ grunt-cli
 
 > npm install -g grunt-cli
 
+bower
+
+> npm install -g bower
+
 Common Tasks
 ------------
 
@@ -105,6 +109,11 @@ Links
 [CornerstoneWADOImageLoader ](https://github.com/chafey/cornerstoneWADOImageLoader) - A Cornerstone Image Loader that works with WADO
 
 [dicomParser ](https://github.com/chafey/dicomParser) - A JavaScript library designed to parse DICOM for web browsers
+
+Code Contributors
+=================
+Simon Rascovsky
+Don Charkowsky
 
 FAQ
 ===
