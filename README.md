@@ -31,7 +31,7 @@ Live Examples
 ---------------
 The best way to see the power of this library is to actually see it in use.
 
-[Click here for a list of examples of using the Cornerstone library.](https://rawgithub.com/chafey/cornerstone/master/example/index.html)
+[Click here for a list of examples of using the Cornerstone library.](https://rawgit.com/chafey/cornerstoneDemo/master/index.html)
 
 Install
 -------
@@ -112,8 +112,9 @@ Links
 
 Code Contributors
 =================
-Simon Rascovsky
-Don Charkowsky
+
+* Simon Rascovsky
+* Don Charkowsky
 
 FAQ
 ===
