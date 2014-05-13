@@ -1,14 +1,16 @@
-Cornerstone
-===========
+Cornerstone Core
+================
 
-Cornerstone is a lightweight JavaScript library for displaying medical images in modern web browsers that support
-the HTML5 canvas element .  It is not meant to be a complete application itself, but instead a component
+Cornerstone is an open source project with a goal to deliver a complete web based medical imaging platform.  This
+repository contains the Cornerstone Core component which is a lightweight JavaScript library for displaying
+medical images in modern web browsers that support the HTML5 canvas element.
+Cornerstone Core is not meant to be a complete application itself, but instead a component
 that can be used as part of larger more complex applications.  See the
-[CornerstoneDemo](https://github.com/chafey/cornerstoneDemo) for an example of using the various Cornerstone
+[CornerstoneDemo](http://chafey.github.io/cornerstoneDemo/) for an example of using the various Cornerstone
 libraries to build a simple study viewer.
 
-Cornerstone is agnostic to the actual container used to store image pixels as well as the transport mechanism
-used to get the image data.  In fact, Cornerstone itself has no ability to read/parse or load images and instead
+Cornerstone Core is agnostic to the actual container used to store image pixels as well as the transport mechanism
+used to get the image data.  In fact, Cornerstone Core itself has no ability to read/parse or load images and instead
 depends on one or more [ImageLoaders](https://github.com/chafey/cornerstone/wiki/ImageLoader) to function.
 The goal here is to avoid constraining developers to work within a single container and transport (e.g. DICOM) since
 images are stored in a variety of formats (including proprietary).  By providing flexibility with respect to the
@@ -18,7 +20,7 @@ container using any kind of transport.  See the
 [CornerstoneWADOImageLoader](https://github.com/chafey/cornerstoneWADOImageLoader) project for an example
 of a DICOM WADO based Image Loader.
 
-Cornerstone is agnostic to the exact interaction paradigm being used.  It does not include any mouse, touch or
+Cornerstone Core is agnostic to the exact interaction paradigm being used.  It does not include any mouse, touch or
 keyboard bindings to manipulate the various image properties such as scale, translation or ww/wc.  The goal here
 is to avoid constraining developers using this library to fit into a given ui paradigm.  It is hoped that developers
 are empowered to create new paradigms possibly using new input mechanisms to interact with medical images (e.g.
