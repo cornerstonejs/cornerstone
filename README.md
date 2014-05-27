@@ -38,7 +38,7 @@ The best way to see the power of this library is to actually see it in use.
 Install
 -------
 
-Project Status: BETA.  APIs are frozen for 1.0
+Project Status: BETA.  Existing API's are considered stable and unlikely to change
 
 Get a packaged source file:
 

@@ -43,10 +43,22 @@ var cornerstone = (function (cornerstone) {
         }
     }
 
+    function getEnabledElementsByImageId(imageId) {
+        var ees = [];
+        enabledElements.forEach(function(enabledElement) {
+            if(enabledElement.image.imageId === imageId) {
+                ees.push(enabledElement);
+            }
+        });
+        return ees;
+    }
+
+
     // module/private exports
     cornerstone.getEnabledElement = getEnabledElement;
     cornerstone.addEnabledElement = addEnabledElement;
     cornerstone.disable = disable;
+    cornerstone.getEnabledElementsByImageId = getEnabledElementsByImageId;
 
     return cornerstone;
 }(cornerstone));
