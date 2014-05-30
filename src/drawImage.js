@@ -25,6 +25,7 @@ var cornerstone = (function (cornerstone) {
 
         var end = new Date();
         var diff = end - start;
+        //console.log(diff + ' ms');
 
         var eventData = {
             canvasContext: context,

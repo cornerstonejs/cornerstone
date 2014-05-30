@@ -46,7 +46,7 @@ var cornerstone = (function (cornerstone) {
     function getEnabledElementsByImageId(imageId) {
         var ees = [];
         enabledElements.forEach(function(enabledElement) {
-            if(enabledElement.image.imageId === imageId) {
+            if(enabledElement.image && enabledElement.image.imageId === imageId) {
                 ees.push(enabledElement);
             }
         });

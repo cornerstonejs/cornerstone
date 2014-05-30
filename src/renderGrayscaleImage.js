@@ -83,7 +83,7 @@ var cornerstone = (function (cornerstone) {
         var lut = getLut(image, enabledElement.viewport, invalidated);
 
         // gray scale image - apply the lut and put the resulting image onto the render canvas
-        cornerstone.storedPixelDataToCanvasImageData(image, lut, grayscaleRenderCanvasData.data);
+        cornerstone.storedPixelDataToCanvasImageData(image.getPixelData(), lut, grayscaleRenderCanvasData.data);
         grayscaleRenderCanvasContext.putImageData(grayscaleRenderCanvasData, 0, 0);
         return grayscaleRenderCanvas;
     }

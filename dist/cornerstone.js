@@ -1,4 +1,4 @@
-/*! cornerstone - v0.4.2 - 2014-05-27 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.4.2 - 2014-05-29 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -188,6 +188,7 @@ var cornerstone = (function (cornerstone) {
 
         var end = new Date();
         var diff = end - start;
+        //console.log(diff + ' ms');
 
         var eventData = {
             canvasContext: context,
@@ -315,7 +316,7 @@ var cornerstone = (function (cornerstone) {
     function getEnabledElementsByImageId(imageId) {
         var ees = [];
         enabledElements.forEach(function(enabledElement) {
-            if(enabledElement.image.imageId === imageId) {
+            if(enabledElement.image && enabledElement.image.imageId === imageId) {
                 ees.push(enabledElement);
             }
         });
@@ -1113,7 +1114,7 @@ var cornerstone = (function (cornerstone) {
         var lut = getLut(image, enabledElement.viewport, invalidated);
 
         // gray scale image - apply the lut and put the resulting image onto the render canvas
-        cornerstone.storedPixelDataToCanvasImageData(image, lut, grayscaleRenderCanvasData.data);
+        cornerstone.storedPixelDataToCanvasImageData(image.getPixelData(), lut, grayscaleRenderCanvasData.data);
         grayscaleRenderCanvasContext.putImageData(grayscaleRenderCanvasData, 0, 0);
         return grayscaleRenderCanvas;
     }
@@ -1390,20 +1391,20 @@ var cornerstone = (function (cornerstone) {
      *
      * NOTE: Attribution would be appreciated if you use this technique!
      *
-     * @param image the image object
+     * @param pixelData the pixel data
      * @param lut the lut
      * @param canvasImageDataData a canvasImgageData.data buffer filled with white pixels
      */
-    function storedPixelDataToCanvasImageData(image, lut, canvasImageDataData)
+    function storedPixelDataToCanvasImageData(pixelData, lut, canvasImageDataData)
     {
         var canvasImageDataIndex = 3;
         var storedPixelDataIndex = 0;
-        var numPixels = image.width * image.height;
-        var storedPixelData = image.getPixelData();
+        var localNumPixels = pixelData.length;
+        var localPixelData = pixelData;
         var localLut = lut;
         var localCanvasImageDataData = canvasImageDataData;
-        while(storedPixelDataIndex < numPixels) {
-            localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex++]]; // alpha
+        while(storedPixelDataIndex < localNumPixels) {
+            localCanvasImageDataData[canvasImageDataIndex] = localLut[localPixelData[storedPixelDataIndex++]]; // alpha
             canvasImageDataIndex += 4;
         }
     }
@@ -1424,7 +1425,6 @@ var cornerstone = (function (cornerstone) {
             canvasImageDataIndex+=2;
         }
     }
-
 
     // Module exports
     cornerstone.storedPixelDataToCanvasImageData = storedPixelDataToCanvasImageData;

@@ -19,20 +19,20 @@ var cornerstone = (function (cornerstone) {
      *
      * NOTE: Attribution would be appreciated if you use this technique!
      *
-     * @param image the image object
+     * @param pixelData the pixel data
      * @param lut the lut
      * @param canvasImageDataData a canvasImgageData.data buffer filled with white pixels
      */
-    function storedPixelDataToCanvasImageData(image, lut, canvasImageDataData)
+    function storedPixelDataToCanvasImageData(pixelData, lut, canvasImageDataData)
     {
         var canvasImageDataIndex = 3;
         var storedPixelDataIndex = 0;
-        var numPixels = image.width * image.height;
-        var storedPixelData = image.getPixelData();
+        var localNumPixels = pixelData.length;
+        var localPixelData = pixelData;
         var localLut = lut;
         var localCanvasImageDataData = canvasImageDataData;
-        while(storedPixelDataIndex < numPixels) {
-            localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex++]]; // alpha
+        while(storedPixelDataIndex < localNumPixels) {
+            localCanvasImageDataData[canvasImageDataIndex] = localLut[localPixelData[storedPixelDataIndex++]]; // alpha
             canvasImageDataIndex += 4;
         }
     }
@@ -53,7 +53,6 @@ var cornerstone = (function (cornerstone) {
             canvasImageDataIndex+=2;
         }
     }
-
 
     // Module exports
     cornerstone.storedPixelDataToCanvasImageData = storedPixelDataToCanvasImageData;
