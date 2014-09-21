@@ -10,7 +10,17 @@ module.exports = function(grunt) {
                 ]
             }
         },
-
+        copy: {
+            bower: {
+                src: [
+                    'bower_components/jquery/dist/jquery.min.js',
+                    'bower_components/jquery/dist/jquery.min.map',
+                ],
+                dest: 'example',
+                expand: true,
+                flatten: true
+            }
+        },
         concat: {
             build: {
                 src : ['src/ieVer.js','src/*.js'],
@@ -75,7 +85,7 @@ module.exports = function(grunt) {
 
     require('load-grunt-tasks')(grunt);
 
-    grunt.registerTask('buildAll', ['concat', 'uglify', 'jshint', 'cssmin']);
+    grunt.registerTask('buildAll', ['copy', 'concat', 'uglify', 'jshint', 'cssmin']);
     grunt.registerTask('default', ['clean', 'buildAll']);
 };
 

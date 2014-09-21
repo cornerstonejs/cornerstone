@@ -1,9 +1,9 @@
 Roadmap/Status
 ==============
 
-Alpha but stable
+Status: Stable and in maintenance mode.  See backlog for future features that might be added
 
-Phase 6 (in progress - target by May 15 for SIIM)
+Phase 6 (completed May, 2014)
 --------------------
  * API documentation
  * Testing for other browsers and platforms (automated if possible)

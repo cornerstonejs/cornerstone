@@ -1,105 +1,5 @@
-/*! cornerstone - v0.4.2 - 2014-05-29 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
-var cornerstone = (function (cornerstone) {
-
-    "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
-
-    // Turn off jshint warnings about new Number() in borrowed code below
-    /*jshint -W053 */
-
-    // Taken from : http://stackoverflow.com/questions/17907445/how-to-detect-ie11
-    function ie_ver(){
-        var iev=0;
-        var ieold = (/MSIE (\d+\.\d+);/.test(navigator.userAgent));
-        var trident = !!navigator.userAgent.match(/Trident\/7.0/);
-        var rv=navigator.userAgent.indexOf("rv:11.0");
-
-        if (ieold) iev=new Number(RegExp.$1);
-        if (navigator.appVersion.indexOf("MSIE 10") != -1) iev=10;
-        if (trident&&rv!=-1) iev=11;
-
-        return iev;
-    }
-
-    // module/private exports
-    cornerstone.ieVersion = ie_ver;
-
-    return cornerstone;
-}(cornerstone));
-/**
- * This module handles event dispatching
- */
-var cornerstone = (function (cornerstone) {
-
-    "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
-
-    var ieVersion = cornerstone.ieVersion();
-
-    function CustomEventIe ( event, params ) {
-        params = params || { bubbles: false, cancelable: false, detail: undefined };
-        var evt = document.createEvent( 'CustomEvent' );
-        evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
-        return evt;
-    }
-
-    CustomEventIe.prototype = window.Event.prototype;
-
-    function cornerstoneEvent(enabledElement, eventName, obj) {
-        if(enabledElement === undefined) {
-            throw "cornerstoneEvent: parameter enabledElement cannot be undefined";
-        }
-        if(eventName === undefined) {
-            throw "cornerstoneEvent: parameter eventName cannot be undefined";
-        }
-
-        if(obj === undefined) {
-            obj = {};
-        }
-
-        obj.viewport = enabledElement.viewport;
-        obj.element = enabledElement.element;
-        obj.image = enabledElement.image;
-        obj.enabledElement = enabledElement;
-
-        var event;
-        if(ieVersion <= 11) {
-            event = new CustomEventIe(
-                eventName,
-                {
-                    detail: obj,
-                    bubbles: false,
-                    cancelable: false
-                }
-            );
-        } else {
-            event = new CustomEvent(
-                eventName,
-                {
-                    detail: obj,
-                    bubbles: false,
-                    cancelable: false
-                }
-            );
-        }
-        enabledElement.element.dispatchEvent(event);
-    }
-
-    // module/private exports
-    cornerstone.event = cornerstoneEvent;
-
-    return cornerstone;
-}(cornerstone));
-/**
- * This module is responsible for enabling an element to display images with cornerstone
- */
-var cornerstone = (function (cornerstone) {
+/*! cornerstone - v0.5.0 - 2014-09-21 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+var cornerstone = (function ($, cornerstone) {
 
     "use strict";
 
@@ -148,10 +48,14 @@ var cornerstone = (function (cornerstone) {
         enabledElement.lastImageTimeStamp = now.getTime();
 
         var newImageEventData = {
+            viewport : enabledElement.viewport,
+            element : enabledElement.element,
+            image : enabledElement.image,
+            enabledElement : enabledElement,
             frameRate : frameRate
         };
 
-        cornerstone.event(enabledElement, "CornerstoneNewImage", newImageEventData);
+        $(enabledElement.element).trigger("CornerstoneNewImage", newImageEventData);
 
         cornerstone.updateImage(element);
     }
@@ -160,12 +64,12 @@ var cornerstone = (function (cornerstone) {
     cornerstone.displayImage = displayImage;
 
     return cornerstone;
-}(cornerstone));
+}($, cornerstone));
 /**
  * This module is responsible for drawing an image to an enabled elements canvas element
  */
 
-var cornerstone = (function (cornerstone) {
+var cornerstone = (function ($, cornerstone) {
 
     "use strict";
 
@@ -191,18 +95,22 @@ var cornerstone = (function (cornerstone) {
         //console.log(diff + ' ms');
 
         var eventData = {
+            viewport : enabledElement.viewport,
+            element : enabledElement.element,
+            image : enabledElement.image,
+            enabledElement : enabledElement,
             canvasContext: context,
             renderTimeInMs : diff
         };
 
-        cornerstone.event(enabledElement, "CornerstoneImageRendered", eventData);
+        $(enabledElement.element).trigger("CornerstoneImageRendered", eventData);
     }
 
     // Module exports
     cornerstone.drawImage = drawImage;
 
     return cornerstone;
-}(cornerstone));
+}($, cornerstone));
 /**
  * This module is responsible for enabling an element to display images with cornerstone
  */

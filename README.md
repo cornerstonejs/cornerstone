@@ -25,9 +25,14 @@ keyboard bindings to manipulate the various image properties such as scale, tran
 is to avoid constraining developers using this library to fit into a given ui paradigm.  It is hoped that developers
 are empowered to create new paradigms possibly using new input mechanisms to interact with medical images (e.g.
 [Kinect](http://en.wikipedia.org/wiki/Kinect) or [Accelerometer](http://en.wikipedia.org/wiki/Accelerometer).
-Cornerstone does provide a set of API's allowing manipulation of the image properoties via javascript.
+Cornerstone does provide a set of API's allowing manipulation of the image properties via javascript.
 See the [CornerstoneTools](https://github.com/chafey/cornerstoneTools) library for an example of common tools built on top of
 Cornerstone.
+
+Community
+---------
+
+Have questions?  Try posting on our [google groups forum](https://groups.google.com/forum/#!forum/cornerstone-platform).
 
 Live Examples
 ---------------
@@ -37,8 +42,6 @@ The best way to see the power of this library is to actually see it in use.
 
 Install
 -------
-
-Project Status: BETA.  Existing API's are considered stable and unlikely to change
 
 Get a packaged source file:
 
@@ -202,6 +205,9 @@ matrix, slice thickness, transfer function/LUT, segmentation masks, etc.  And an
 various tools on top of the 3d viewport (rotate, zoom, segment, scroll, etc).  I haven't thought too much about this
 yet but am hoping to make progress on this in the latter half of 2014.
 
+_Why did you add jQuery as a dependency?_
+
+Primarily for its custom event handling.
 
 Copyright
 =========

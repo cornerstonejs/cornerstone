@@ -1,7 +1,7 @@
 /**
  * This module is responsible for enabling an element to display images with cornerstone
  */
-var cornerstone = (function (cornerstone) {
+var cornerstone = (function ($, cornerstone) {
 
     "use strict";
 
@@ -50,10 +50,14 @@ var cornerstone = (function (cornerstone) {
         enabledElement.lastImageTimeStamp = now.getTime();
 
         var newImageEventData = {
+            viewport : enabledElement.viewport,
+            element : enabledElement.element,
+            image : enabledElement.image,
+            enabledElement : enabledElement,
             frameRate : frameRate
         };
 
-        cornerstone.event(enabledElement, "CornerstoneNewImage", newImageEventData);
+        $(enabledElement.element).trigger("CornerstoneNewImage", newImageEventData);
 
         cornerstone.updateImage(element);
     }
@@ -62,4 +66,4 @@ var cornerstone = (function (cornerstone) {
     cornerstone.displayImage = displayImage;
 
     return cornerstone;
-}(cornerstone));
+}($, cornerstone));

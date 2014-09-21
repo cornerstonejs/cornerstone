@@ -45,12 +45,12 @@
 
 </div>
 </body>
+<!-- cornerstone depends on jQuery so it must be loaded first-->
+<script src="../jquery.min.js"></script>
+
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
 
-<!-- jquery - included to make things easier to demo, not needed or used by the cornerstone library but
-is used by our example image loader-->
-<script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
 
 
 <script>
@@ -135,10 +135,10 @@ is used by our example image loader-->
         var element = document.getElementById('dicomImage');
         cornerstone.enable(element);
 
-        function onImageRendered(e) {
-            $('#topright').text("Render Time:" + cornerstone.lastRenderTimeInMs + " ms");
+        function onImageRendered(e, eventData) {
+            $('#topright').text("Render Time:" + eventData.renderTimeInMs + " ms");
         }
-        element.addEventListener("CornerstoneImageRendered", onImageRendered, false);
+        $(element).on("CornerstoneImageRendered", onImageRendered);
 
         // load image and display it
         var imageId = "colorImageLoader://1";

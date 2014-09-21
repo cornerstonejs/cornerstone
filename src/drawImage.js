@@ -2,7 +2,7 @@
  * This module is responsible for drawing an image to an enabled elements canvas element
  */
 
-var cornerstone = (function (cornerstone) {
+var cornerstone = (function ($, cornerstone) {
 
     "use strict";
 
@@ -28,15 +28,19 @@ var cornerstone = (function (cornerstone) {
         //console.log(diff + ' ms');
 
         var eventData = {
+            viewport : enabledElement.viewport,
+            element : enabledElement.element,
+            image : enabledElement.image,
+            enabledElement : enabledElement,
             canvasContext: context,
             renderTimeInMs : diff
         };
 
-        cornerstone.event(enabledElement, "CornerstoneImageRendered", eventData);
+        $(enabledElement.element).trigger("CornerstoneImageRendered", eventData);
     }
 
     // Module exports
     cornerstone.drawImage = drawImage;
 
     return cornerstone;
-}(cornerstone));
+}($, cornerstone));
