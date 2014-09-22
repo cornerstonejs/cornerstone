@@ -1,4 +1,4 @@
-/*! cornerstone - v0.5.0 - 2014-09-21 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.5.1 - 2014-09-21 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone = (function ($, cornerstone) {
 
     "use strict";
@@ -740,8 +740,8 @@ var cornerstone = (function (cornerstone) {
 
         // convert the pageX and pageY to the canvas client coordinates
         var rect = element.getBoundingClientRect();
-        var clientX = pageX - rect.left - window.scrollX;
-        var clientY = pageY - rect.top - window.scrollY;
+        var clientX = pageX - rect.left - window.pageXOffset;
+        var clientY = pageY - rect.top - window.pageYOffset;
 
         // translate the client relative to the middle of the canvas
         var middleX = clientX - rect.width / 2.0;
