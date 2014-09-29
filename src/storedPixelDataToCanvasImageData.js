@@ -23,34 +23,54 @@ var cornerstone = (function (cornerstone) {
      * @param lut the lut
      * @param canvasImageDataData a canvasImgageData.data buffer filled with white pixels
      */
-    function storedPixelDataToCanvasImageData(pixelData, lut, canvasImageDataData)
+    function storedPixelDataToCanvasImageData(image, lut, canvasImageDataData)
     {
+        var pixelData = image.getPixelData();
+        var minPixelValue = image.minPixelValue;
         var canvasImageDataIndex = 3;
         var storedPixelDataIndex = 0;
         var localNumPixels = pixelData.length;
         var localPixelData = pixelData;
         var localLut = lut;
         var localCanvasImageDataData = canvasImageDataData;
-        while(storedPixelDataIndex < localNumPixels) {
-            localCanvasImageDataData[canvasImageDataIndex] = localLut[localPixelData[storedPixelDataIndex++]]; // alpha
-            canvasImageDataIndex += 4;
+        if(minPixelValue < 0){
+            while(storedPixelDataIndex < localNumPixels) {
+                localCanvasImageDataData[canvasImageDataIndex] = localLut[localPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // alpha
+                canvasImageDataIndex += 4;
+            }
+        }else{
+            while(storedPixelDataIndex < localNumPixels) {
+                localCanvasImageDataData[canvasImageDataIndex] = localLut[localPixelData[storedPixelDataIndex++]]; // alpha
+                canvasImageDataIndex += 4;
+            }
         }
     }
 
     function storedColorPixelDataToCanvasImageData(image, lut, canvasImageDataData)
     {
+        var minPixelValue = image.minPixelValue;
         var canvasImageDataIndex = 0;
         var storedPixelDataIndex = 0;
         var numPixels = image.width * image.height * 4;
         var storedPixelData = image.getPixelData();
         var localLut = lut;
         var localCanvasImageDataData = canvasImageDataData;
-        while(storedPixelDataIndex < numPixels) {
-            localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // red
-            localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // green
-            localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex]]; // blue
-            storedPixelDataIndex+=2;
-            canvasImageDataIndex+=2;
+        if(minPixelValue < 0){
+            while(storedPixelDataIndex < numPixels) {
+                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // red
+                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // green
+                localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex] + (-minPixelValue)]; // blue
+                storedPixelDataIndex+=2;
+                canvasImageDataIndex+=2;
+            }
+        }else{
+            while(storedPixelDataIndex < numPixels) {
+                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // red
+                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // green
+                localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex]]; // blue
+                storedPixelDataIndex+=2;
+                canvasImageDataIndex+=2;
+            }
         }
     }
 

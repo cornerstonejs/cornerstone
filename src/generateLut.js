@@ -20,11 +20,12 @@ var cornerstone = (function (cornerstone) {
     function generateLut(image, windowWidth, windowCenter, invert)
     {
         if(image.lut === undefined) {
-            image.lut = [];
+            image.lut =  new Int16Array(image.maxPixelValue - Math.min(image.minPixelValue,0));
         }
         var lut = image.lut;
 
         var maxPixelValue = image.maxPixelValue;
+        var minPixelValue = image.minPixelValue;
         var slope = image.slope;
         var intercept = image.intercept;
         var localWindowWidth = windowWidth;
@@ -41,7 +42,7 @@ var cornerstone = (function (cornerstone) {
                 modalityLutValue = storedValue * slope + intercept;
                 voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
                 clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
-                lut[storedValue] = Math.round(255 - clampedValue);
+                lut[storedValue + (-minPixelValue)] = Math.round(255 - clampedValue);
             }
         }
         else {
@@ -50,7 +51,7 @@ var cornerstone = (function (cornerstone) {
                 modalityLutValue = storedValue * slope + intercept;
                 voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
                 clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
-                lut[storedValue] = Math.round(clampedValue);
+                lut[storedValue+ (-minPixelValue)] = Math.round(clampedValue);
             }
         }
     }
