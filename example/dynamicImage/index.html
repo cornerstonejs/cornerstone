@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- twitter bootstrap CSS stylesheet - included to make things pretty, not needed or used by cornerstone -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- cornerstone css - provides some useful css classes -->
+    <link href="../../dist/cornerstone.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="container">
+
+    <h1>
+        dynamicImage/index.html
+    </h1>
+    This example shows how to integrate dynamically generated images with cornerstone.  A dynamic image generator
+    is one that can produce new images on the client side.  This could be used to do image fusion as well as
+    MPR or Volume Rendering.
+    <br>
+    <br>
+
+    <button id="opacity25" class="btn">Opacity .25</button>
+    <button id="opacity75" class="btn">Opacity .75</button>
+
+    <div id="dicomImage" style="width:512px;height:512px;"
+         class="cornerstone-enabled-image"
+         oncontextmenu="return false"
+         unselectable='on'
+         onselectstart='return false;'
+         onmousedown='return false;'>
+    </div>
+
+
+
+</div>
+</body>
+
+<!-- cornerstone depends on jQuery so it must be loaded first-->
+<script src="../jquery.min.js"></script>
+
+<!-- include the cornerstone library -->
+<script src="../../dist/cornerstone.js"></script>
+
+
+<script>
+    $(document).ready(function() {
+
+
+        function getPixelData() {
+            var width = 256;
+            var height = 256;
+
+            var numPixels = width * height;
+            var pixelData = new Uint16Array(numPixels);
+            var index = 0;
+            for (var y = 0; y < height; y++) {
+                for (var x = 0; x < width; x++) {
+                    pixelData[index] = ((x) % 256) * this.data.opacity;
+                    index++;
+                }
+            }
+            return pixelData;
+        }
+
+        var dynamicImage =
+        {
+            imageId: "notneeded",
+            minPixelValue: 0,
+            maxPixelValue: 255,
+            slope: 1.0,
+            intercept: 0,
+            windowCenter: 127,
+            windowWidth: 256,
+            render: cornerstone.renderGrayscaleImage,
+            getPixelData: getPixelData,
+            rows: 256,
+            columns: 256,
+            height: 256,
+            width: 256,
+            color: false,
+            columnPixelSpacing: 1.0,
+            rowPixelSpacing: 1.0,
+            invert: false,
+            sizeInBytes: 256 * 256 * 2,
+            data: {
+                opacity: 0.5
+            }
+         };
+
+        //cornerstone.registerImageLoader('myImageLoader', loadImage);
+
+        // image enable the element
+        var element = document.getElementById('dicomImage');
+        cornerstone.enable(element);
+        cornerstone.displayImage(element, dynamicImage);
+
+        $('#opacity25').click(function (e) {
+            dynamicImage.data.opacity = .25;
+            cornerstone.updateImage(element, true);
+        });
+
+        $('#opacity75').click(function (e) {
+            dynamicImage.data.opacity = .75;
+            cornerstone.updateImage(element, true);
+        });
+    });
+
+</script>
+</html>
