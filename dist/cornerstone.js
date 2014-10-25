@@ -1,4 +1,4 @@
-/*! cornerstone - v0.5.1 - 2014-09-21 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.5.1 - 2014-10-25 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone = (function ($, cornerstone) {
 
     "use strict";
@@ -1355,14 +1355,14 @@ var cornerstone = (function (cornerstone) {
      * Forces the image to be updated/redrawn for the specified enabled element
      * @param element
      */
-    function updateImage(element) {
+    function updateImage(element, invalidated) {
         var enabledElement = cornerstone.getEnabledElement(element);
 
         if(enabledElement.image === undefined) {
             throw "updateImage: image has not been loaded yet";
         }
 
-        cornerstone.drawImage(enabledElement);
+        cornerstone.drawImage(enabledElement, invalidated);
     }
 
     // module exports
