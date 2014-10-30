@@ -102,6 +102,44 @@ var cornerstone = (function (cornerstone) {
         });
     }
 
+    function putImage(imageId, image) {
+        if(imageId === undefined)
+        {
+            throw "putImage: imageId must not be undefined";
+        }
+        if(image === undefined)
+        {
+            throw "putImage: image must not be undefined";
+        }
+
+        if(imageCache.hasOwnProperty(imageId) === true) {
+            throw "putImage: imageId already in cache";
+        }
+
+        var cachedImage = {
+            imageId : imageId,
+            imagePromise : image,
+            timeStamp : new Date(),
+            sizeInBytes: 0
+        };
+
+        imageCache[imageId] = cachedImage;
+        cachedImages.push(cachedImage);
+
+        cachedImage.loaded = true;
+
+        if(image.sizeInBytes === undefined)
+          {
+            throw "putImagePromise: image does not have sizeInBytes property or";
+          }
+          if(image.sizeInBytes.toFixed === undefined) {
+            throw "putImagePromise: image.sizeInBytes is not a number";
+          }
+          cachedImage.sizeInBytes = image.sizeInBytes;
+          cacheSizeInBytes += cachedImage.sizeInBytes;
+          purgeCacheIfNecessary();
+    }
+
     function getImagePromise(imageId) {
         if(imageId === undefined)
         {
@@ -139,7 +177,8 @@ var cornerstone = (function (cornerstone) {
         getImagePromise: getImagePromise,
         setMaximumSizeBytes: setMaximumSizeBytes,
         getCacheInfo : getCacheInfo,
-        purgeCache: purgeCache
+        purgeCache: purgeCache,
+        putImage: putImage
     };
 
     return cornerstone;
