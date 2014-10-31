@@ -8,6 +8,7 @@ Backlog:
 * Enhance cache to work with multiframe sop instance case
 * [ASM.JS](http://asmjs.org/) version of storedPixelDataToCanvasImageData and generateLut
 * [Native Client](https://developers.google.com/native-client/dev/) version of storedPixelDataToCanvasImageData
+* [SIMD.JS](https://hacks.mozilla.org/2014/10/introducing-simd-js/) version of storedPixelDataToCanvasImageData and generateLut?
 and generateLut
 * Very large image support (e.g. pathology > 4kx4k resolution)
 * Performance related
