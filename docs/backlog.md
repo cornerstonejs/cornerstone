@@ -23,3 +23,4 @@ and generateLut
 * Consider Prioritized image loading (primary, secondary, thumbnail, prefetch)
 * Packaging/build related
   * AMD wrapper to make it easier to use with AMD loaders
+* Sharing of LUT's between multiple viewports for linked ww/wc use case
