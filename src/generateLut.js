@@ -36,6 +36,11 @@ var cornerstone = (function (cornerstone) {
         var clampedValue;
         var storedValue;
 
+        // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
+        // We improve performance by offsetting the pixel values for signed data to avoid negative indexes
+        // when generating the lut and then undo it in storedPixelDataToCanvasImagedata.  Thanks to @jpambrun
+        // for this contibution!
+
         if(invert === true) {
             for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
             {

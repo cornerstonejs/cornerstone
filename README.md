@@ -118,8 +118,10 @@ Links
 Code Contributors
 =================
 
-* Simon Rascovsky
-* Don Charkowsky
+* @simonmd - CSS improvements in the cornerstoneDemo application
+* @doncharkowsky - The angle tool in cornerstoneTools
+* @prasath-rasterimages - Touch event bindings in cornerstoneTools
+* @jpamburn - Performance optimizations for signed data
 
 FAQ
 ===

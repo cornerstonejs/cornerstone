@@ -99,7 +99,7 @@
         }
         $(element).on("CornerstoneImageRendered", onImageRendered);
 
-        $(cornerstone).bind('cornerstoneImageLoaded', function(event, image)
+        $(cornerstone).bind('CornerstoneImageLoaded', function(event, image)
         {
             // Note - we would
             $('#imageLoaded').text('Last ImageId Loaded:' + image.imageId);

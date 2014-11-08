@@ -33,7 +33,7 @@ var cornerstone = (function ($, cornerstone) {
         // broadcast an image loaded event once the image is loaded
         // This is based on the idea here: http://stackoverflow.com/questions/3279809/global-custom-events-in-jquery
         imagePromise.then(function(image) {
-            $(cornerstone).trigger('cornerstoneImageLoaded', image);
+            $(cornerstone).trigger('CornerstoneImageLoaded', image);
         });
 
         return imagePromise;
