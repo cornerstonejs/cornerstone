@@ -99,10 +99,10 @@
         }
         $(element).on("CornerstoneImageRendered", onImageRendered);
 
-        $(cornerstone).bind('CornerstoneImageLoaded', function(event, image)
+        $(cornerstone).bind('CornerstoneImageLoaded', function(event, eventData)
         {
             // Note - we would
-            $('#imageLoaded').text('Last ImageId Loaded:' + image.imageId);
+            $('#imageLoaded').text('Last ImageId Loaded:' + eventData.image.imageId);
         });
 
         // load the image and display it
