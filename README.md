@@ -118,6 +118,8 @@ Links
 Code Contributors
 =================
 
+I welcome pull requests, please see FAQ below for guidance on this.
+
 * @simonmd - CSS improvements in the cornerstoneDemo application
 * @doncharkowsky - The angle tool in cornerstoneTools
 * @prasath-rasterimages - Touch event bindings in cornerstoneTools
@@ -204,12 +206,41 @@ This library would be responsible for displaying the rendered image to the user.
 no knowledge of 3D image space.  It will probably make sense to have several layers on top of this library
 to provide 3D functionality.  For example, one layer that has a 3D viewport with properties such as transformation
 matrix, slice thickness, transfer function/LUT, segmentation masks, etc.  And another 3D tools layer that provides
-various tools on top of the 3d viewport (rotate, zoom, segment, scroll, etc).  I haven't thought too much about this
-yet but am hoping to make progress on this in the latter half of 2014.
+various tools on top of the 3d viewport (rotate, zoom, segment, scroll, etc).  I do have a working 3D server that
+is integrated with cornerstone but am keeping the code closed for now (this may change in the future - TBD).
 
 _Why did you add jQuery as a dependency?_
 
 Primarily for its custom event handling.
+
+_I would like to contribute code - how do I do this?_
+
+Fork the repository, make your change and submit a pull request.
+
+_Any guidance on submitting changes?_
+
+While I do appreciate code contributions, I will not merge it unless it meets the following criteria:
+
+*) Functionality is appropriate for the repository.  Consider posting on the forum if you are not sure
+*) Code quality is acceptable.  I don't have coding standards defined, but make sure it passes jshint and looks like
+   the rest of the code in the repository.
+*) Quality of design is acceptable.  This is a bit subjective so you should consider posting on the forum for specific guidance
+
+I will provide feedback on your pull request if it fails to meet any of the above.
+
+Please consider separate pull requests for each feature as big pull requests are very time consuming to understand.
+It is highly probably that I will reject a large pull request due to the time it would take to comprehend.
+
+_Will you add feature XYZ for me?_
+
+If it is in the roadmap, I intend to implement it some day - probably when I actually need it.  If you really need
+something now and want to pay for it, feel free to email me.
+
+_How mature is Cornerstone?_
+
+Each repository is at a different level of maturity.  There are at least 15 image viewer projects using Cornerstone
+and the feedback has been consistently strong about the architecture, design and quality.  The cornerstoneTools library
+is the least mature from a framework and breadth of functionality perspective - but the implemented features work well.
 
 Copyright
 =========
