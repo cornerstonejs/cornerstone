@@ -1,4 +1,4 @@
-/*! cornerstone - v0.5.1 - 2014-10-25 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.5.1 - 2014-11-08 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone = (function ($, cornerstone) {
 
     "use strict";
@@ -292,11 +292,12 @@ var cornerstone = (function (cornerstone) {
     function generateLut(image, windowWidth, windowCenter, invert)
     {
         if(image.lut === undefined) {
-            image.lut = [];
+            image.lut =  new Int16Array(image.maxPixelValue - Math.min(image.minPixelValue,0));
         }
         var lut = image.lut;
 
         var maxPixelValue = image.maxPixelValue;
+        var minPixelValue = image.minPixelValue;
         var slope = image.slope;
         var intercept = image.intercept;
         var localWindowWidth = windowWidth;
@@ -313,7 +314,7 @@ var cornerstone = (function (cornerstone) {
                 modalityLutValue = storedValue * slope + intercept;
                 voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
                 clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
-                lut[storedValue] = Math.round(255 - clampedValue);
+                lut[storedValue + (-minPixelValue)] = Math.round(255 - clampedValue);
             }
         }
         else {
@@ -322,7 +323,7 @@ var cornerstone = (function (cornerstone) {
                 modalityLutValue = storedValue * slope + intercept;
                 voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
                 clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
-                lut[storedValue] = Math.round(clampedValue);
+                lut[storedValue+ (-minPixelValue)] = Math.round(clampedValue);
             }
         }
     }
@@ -333,6 +334,7 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+
 /**
  * This module contains a function to get a default viewport for an image given
  * a canvas element to display it in
@@ -585,7 +587,7 @@ var cornerstone = (function (cornerstone) {
  * This module deals with ImageLoaders, loading images and caching images
  */
 
-var cornerstone = (function (cornerstone) {
+var cornerstone = (function ($, cornerstone) {
 
     "use strict";
 
@@ -612,6 +614,13 @@ var cornerstone = (function (cornerstone) {
             }
         }
         imagePromise = loader(imageId);
+
+        // broadcast an image loaded event once the image is loaded
+        // This is based on the idea here: http://stackoverflow.com/questions/3279809/global-custom-events-in-jquery
+        imagePromise.then(function(image) {
+            $(cornerstone).trigger('cornerstoneImageLoaded', image);
+        });
+
         return imagePromise;
     }
 
@@ -680,7 +689,7 @@ var cornerstone = (function (cornerstone) {
     cornerstone.registerUnknownImageLoader = registerUnknownImageLoader;
 
     return cornerstone;
-}(cornerstone));
+}($, cornerstone));
 /**
  * This module contains a function to immediately invalidate an image
  */
@@ -1020,9 +1029,8 @@ var cornerstone = (function (cornerstone) {
 
         // get the lut to use
         var lut = getLut(image, enabledElement.viewport, invalidated);
-
         // gray scale image - apply the lut and put the resulting image onto the render canvas
-        cornerstone.storedPixelDataToCanvasImageData(image.getPixelData(), lut, grayscaleRenderCanvasData.data);
+        cornerstone.storedPixelDataToCanvasImageData(image, lut, grayscaleRenderCanvasData.data);
         grayscaleRenderCanvasContext.putImageData(grayscaleRenderCanvasData, 0, 0);
         return grayscaleRenderCanvas;
     }
@@ -1079,6 +1087,7 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+
 /**
  * This module is responsible for drawing an image to an enabled elements canvas element
  */
@@ -1303,34 +1312,54 @@ var cornerstone = (function (cornerstone) {
      * @param lut the lut
      * @param canvasImageDataData a canvasImgageData.data buffer filled with white pixels
      */
-    function storedPixelDataToCanvasImageData(pixelData, lut, canvasImageDataData)
+    function storedPixelDataToCanvasImageData(image, lut, canvasImageDataData)
     {
+        var pixelData = image.getPixelData();
+        var minPixelValue = image.minPixelValue;
         var canvasImageDataIndex = 3;
         var storedPixelDataIndex = 0;
         var localNumPixels = pixelData.length;
         var localPixelData = pixelData;
         var localLut = lut;
         var localCanvasImageDataData = canvasImageDataData;
-        while(storedPixelDataIndex < localNumPixels) {
-            localCanvasImageDataData[canvasImageDataIndex] = localLut[localPixelData[storedPixelDataIndex++]]; // alpha
-            canvasImageDataIndex += 4;
+        if(minPixelValue < 0){
+            while(storedPixelDataIndex < localNumPixels) {
+                localCanvasImageDataData[canvasImageDataIndex] = localLut[localPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // alpha
+                canvasImageDataIndex += 4;
+            }
+        }else{
+            while(storedPixelDataIndex < localNumPixels) {
+                localCanvasImageDataData[canvasImageDataIndex] = localLut[localPixelData[storedPixelDataIndex++]]; // alpha
+                canvasImageDataIndex += 4;
+            }
         }
     }
 
     function storedColorPixelDataToCanvasImageData(image, lut, canvasImageDataData)
     {
+        var minPixelValue = image.minPixelValue;
         var canvasImageDataIndex = 0;
         var storedPixelDataIndex = 0;
         var numPixels = image.width * image.height * 4;
         var storedPixelData = image.getPixelData();
         var localLut = lut;
         var localCanvasImageDataData = canvasImageDataData;
-        while(storedPixelDataIndex < numPixels) {
-            localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // red
-            localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // green
-            localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex]]; // blue
-            storedPixelDataIndex+=2;
-            canvasImageDataIndex+=2;
+        if(minPixelValue < 0){
+            while(storedPixelDataIndex < numPixels) {
+                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // red
+                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // green
+                localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex] + (-minPixelValue)]; // blue
+                storedPixelDataIndex+=2;
+                canvasImageDataIndex+=2;
+            }
+        }else{
+            while(storedPixelDataIndex < numPixels) {
+                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // red
+                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // green
+                localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex]]; // blue
+                storedPixelDataIndex+=2;
+                canvasImageDataIndex+=2;
+            }
         }
     }
 
@@ -1340,6 +1369,7 @@ var cornerstone = (function (cornerstone) {
 
    return cornerstone;
 }(cornerstone));
+
 /**
  * This module contains a function to immediately redraw an image
  */

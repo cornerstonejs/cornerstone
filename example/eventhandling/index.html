@@ -14,21 +14,22 @@
     <h1>
         eventhandling/index.html
     </h1>
-
     This is an example of event handling.  Cornerstone fires the event 'CornerstoneImageRendered'
     everytime the image is updated.  The event includes the canvas context set to the image coordinate system
-    so you can draw overlays.
+    so you can draw overlays.  Cornerstone also fires the event 'cornerstoneImageLoaded' on the cornerstone
+    object every time an image is loaded.
     <br>
     <br>
     This example illustrates this by updating the bottom left overlay with the updated WW/WC values.  It also
     illustrates overlays on the image itself by drawing a rectangle around a tumor and labeling it with the text
-    "Tumor Here"
+    "Tumor Here".  It also changes the text "Last ImageId Loaded:" to show the image id loaded
     <br>
     <br>
 
 
     <br>
     <br>
+    <div id="imageLoaded">Last ImageId Loaded:</div>
     <div style="width:512px;height:512px;position:relative;color: white;"
          class="cornerstone-enabled-image"
          oncontextmenu="return false"
@@ -97,6 +98,12 @@
 
         }
         $(element).on("CornerstoneImageRendered", onImageRendered);
+
+        $(cornerstone).bind('cornerstoneImageLoaded', function(event, image)
+        {
+            // Note - we would
+            $('#imageLoaded').text('Last ImageId Loaded:' + image.imageId);
+        });
 
         // load the image and display it
         var imageId = 'example://1';
