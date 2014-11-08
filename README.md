@@ -221,10 +221,10 @@ _Any guidance on submitting changes?_
 
 While I do appreciate code contributions, I will not merge it unless it meets the following criteria:
 
-*) Functionality is appropriate for the repository.  Consider posting on the forum if you are not sure
-*) Code quality is acceptable.  I don't have coding standards defined, but make sure it passes jshint and looks like
+* Functionality is appropriate for the repository.  Consider posting on the forum if you are not sure
+* Code quality is acceptable.  I don't have coding standards defined, but make sure it passes jshint and looks like
    the rest of the code in the repository.
-*) Quality of design is acceptable.  This is a bit subjective so you should consider posting on the forum for specific guidance
+* Quality of design is acceptable.  This is a bit subjective so you should consider posting on the forum for specific guidance
 
 I will provide feedback on your pull request if it fails to meet any of the above.
 
