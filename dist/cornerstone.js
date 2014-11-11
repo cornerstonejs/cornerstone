@@ -1,4 +1,4 @@
-/*! cornerstone - v0.5.1 - 2014-11-08 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.5.1 - 2014-11-11 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone = (function ($, cornerstone) {
 
     "use strict";
@@ -437,8 +437,26 @@ var cornerstone = (function (cornerstone) {
         return storedPixels;
     }
 
+    /**
+     * Returns array of pixels with modality LUT transformation applied
+     */
+    function getPixels(element, x, y, width, height) {
+
+        var storedPixels = getStoredPixels(element, x, y, width, height);
+        var ee = cornerstone.getEnabledElement(element);
+        var slope = ee.image.slope;
+        var intercept = ee.image.intercept;
+
+        var modalityPixels = storedPixels.map(function(pixel){
+                return pixel * slope + intercept;
+            });
+
+        return modalityPixels;
+    }
+
     // module exports
     cornerstone.getStoredPixels = getStoredPixels;
+    cornerstone.getPixels = getPixels;
 
     return cornerstone;
 }(cornerstone));
