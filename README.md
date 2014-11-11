@@ -124,6 +124,7 @@ I welcome pull requests, please see FAQ below for guidance on this.
 * @doncharkowsky - The angle tool in cornerstoneTools
 * @prasath-rasterimages - Touch event bindings in cornerstoneTools
 * @jpamburn - Performance optimizations for signed data
+* @jmhmd - for getPixels() implementation
 
 FAQ
 ===
