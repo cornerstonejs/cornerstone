@@ -50,15 +50,20 @@ var cornerstone = (function (cornerstone) {
             }
             return 0;
         }
-        cachedImages.sort(compare);
+        var cachedImagesLoaded = cachedImages.filter(function(image) {return image.loaded;});
+        if(cachedImagesLoaded === undefined)
+        {
+            throw "purgeCacheIfNecessary: cachedImages doesn't contain any loaded images";
+        }
+        cachedImagesLoaded.sort(compare);
 
         // remove images as necessary
         while(cacheSizeInBytes > maximumSizeInBytes)
         {
-            var lastCachedImage = cachedImages[cachedImages.length - 1];
+            var lastCachedImage = cachedImagesLoaded[cachedImagesLoaded.length - 1];
             cacheSizeInBytes -= lastCachedImage.sizeInBytes;
             delete imageCache[lastCachedImage.imageId];
-            cachedImages.pop();
+            cachedImages.splice(cachedImages.indexOf(lastCachedImage), 1);
         }
     }
 
@@ -77,6 +82,7 @@ var cornerstone = (function (cornerstone) {
         }
 
         var cachedImage = {
+            loaded : false,
             imageId : imageId,
             imagePromise : imagePromise,
             timeStamp : new Date(),
