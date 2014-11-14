@@ -55,6 +55,34 @@ var cornerstone = (function (cornerstone) {
         // apply pan offset
         var imageX = scaledMiddleX - viewport.translation.x;
         var imageY = scaledMiddleY - viewport.translation.y;
+        
+        //Apply Flips        
+        if(viewport.hflip) {
+			imageX*=-1;
+        }	
+        
+        if(viewport.vflip) {
+			imageY*=-1;
+        } 
+        
+		//Apply rotations
+		if(viewport.rotation!==0) {
+			var angle = viewport.rotation * Math.PI/180;		
+	
+			var cosA = Math.cos(angle);
+			var sinA = Math.sin(angle);
+	
+			var newX = imageX * cosA - imageY * sinA;
+			var newY = imageX * sinA + imageY * cosA;
+				
+			if(viewport.rotation===90 || viewport.rotation===270 || viewport.rotation===-90 || viewport.rotation===-270) {
+				newX*= -1;
+				newY*= -1;
+			}  
+	
+			imageX = newX;
+			imageY = newY;
+		}    
 
         // translate to image top left
         imageX += ee.image.columns / 2;
