@@ -20,6 +20,9 @@ var cornerstone = (function (cornerstone) {
         enabledElement.viewport.voi.windowCenter = viewport.voi.windowCenter;
         enabledElement.viewport.invert = viewport.invert;
         enabledElement.viewport.pixelReplication = viewport.pixelReplication;
+        enabledElement.viewport.rotation = viewport.rotation;
+        enabledElement.viewport.hflip = viewport.hflip;
+        enabledElement.viewport.vflip = viewport.vflip;
 
         // prevent window width from being < 1
         if(enabledElement.viewport.voi.windowWidth < 1) {
@@ -30,6 +33,10 @@ var cornerstone = (function (cornerstone) {
             enabledElement.viewport.scale = 0.25;
         }
 
+		if(enabledElement.viewport.rotation===360 || enabledElement.viewport.rotation===-360) {
+			enabledElement.viewport.rotation = 0;
+        }
+        
         // Force the image to be updated since the viewport has been modified
         cornerstone.updateImage(element);
     }
@@ -57,7 +64,10 @@ var cornerstone = (function (cornerstone) {
                 windowCenter : viewport.voi.windowCenter
             },
             invert : viewport.invert,
-            pixelReplication: viewport.pixelReplication
+            pixelReplication: viewport.pixelReplication,
+            rotation: viewport.rotation, 
+            hflip: viewport.hflip,
+            vflip: viewport.vflip
         };
     }
 

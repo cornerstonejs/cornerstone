@@ -54,7 +54,10 @@ var cornerstone = (function (cornerstone) {
         if(image.imageId !== lastRenderedImageId ||
             lastRenderedViewport.windowCenter !== enabledElement.viewport.voi.windowCenter ||
             lastRenderedViewport.windowWidth !== enabledElement.viewport.voi.windowWidth ||
-            lastRenderedViewport.invert !== enabledElement.viewport.invert
+            lastRenderedViewport.invert !== enabledElement.viewport.invert ||
+            lastRenderedViewport.rotation !== enabledElement.viewport.rotation ||  
+            lastRenderedViewport.hflip !== enabledElement.viewport.hflip ||
+            lastRenderedViewport.vflip !== enabledElement.viewport.vflip
             )
         {
             return true;
@@ -146,6 +149,9 @@ var cornerstone = (function (cornerstone) {
         lastRenderedViewport.windowCenter = enabledElement.viewport.voi.windowCenter;
         lastRenderedViewport.windowWidth = enabledElement.viewport.voi.windowWidth;
         lastRenderedViewport.invert = enabledElement.viewport.invert;
+        lastRenderedViewport.rotation = enabledElement.viewport.rotation;
+        lastRenderedViewport.hflip = enabledElement.viewport.hflip;
+        lastRenderedViewport.vflip = enabledElement.viewport.vflip;
     }
 
     // Module exports

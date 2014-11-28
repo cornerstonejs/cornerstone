@@ -52,7 +52,25 @@ var cornerstone = (function (cornerstone) {
             // apply the font scale
             context.scale(scale, scale);
         }
+        
+        //Apply if rotation required        
+        var angle = enabledElement.viewport.rotation;
 
+		if(angle!==0) {
+			context.rotate(angle*Math.PI/180);
+		}
+
+		//Apply Flip if required
+		if(enabledElement.viewport.hflip) {
+			context.translate(enabledElement.offsetWidth,0);
+			context.scale(-1,1);
+		} 
+
+		if(enabledElement.viewport.vflip) {
+			context.translate(0, enabledElement.offsetHeight);
+			context.scale(1,-1);
+		}    
+        
         // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
         context.translate(-enabledElement.image.width / 2 / scale, -enabledElement.image.height/ 2 / scale);
     }

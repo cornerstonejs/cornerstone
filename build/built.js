@@ -1,4 +1,6 @@
-/*! cornerstone - v0.5.2 - 2014-11-14 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/**
+ * This module is responsible for enabling an element to display images with cornerstone
+ */
 var cornerstone = (function ($, cornerstone) {
 
     "use strict";
