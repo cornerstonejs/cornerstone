@@ -125,6 +125,7 @@ I welcome pull requests, please see FAQ below for guidance on this.
 * @prasath-rasterimages - Touch event bindings in cornerstoneTools
 * @jpamburn - Performance optimizations for signed data
 * @jmhmd - for getPixels() implementation
+* @devishree-raster - for flip and rotate implementation
 
 FAQ
 ===
