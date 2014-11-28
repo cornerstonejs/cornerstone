@@ -48,9 +48,9 @@
     <label>Maximum Cache Size</label>
     <input id="maxCacheSize" type="text" placeholder="">
     <label>Current Cache Size:</label>
-    <input id="currentCacheSize" type="text" placeholder="" value="">
+    <input id="currentCacheSize" readonly type="text" placeholder="" value="">
     <label># Images Cached:</label>
-    <input id="numImagesCached" type="text" placeholder="" value="">
+    <input id="numImagesCached" readonly type="text" placeholder="" value="">
     <button id="apply" class="btn">Apply</button>
 
 
@@ -67,7 +67,8 @@
 <script>
     $(document).ready(function() {
 
-
+        var cacheInfo = cornerstone.imageCache.getCacheInfo();
+        $('#maxCacheSize').val("" + cacheInfo.maximumSizeInBytes)
         // Add event handler to the ww/wc apply button
         $('#apply').click(function (e) {
             var maxSizeInBytes = parseFloat($('#maxCacheSize').val());
@@ -86,7 +87,7 @@
 
         setInterval(function() {
             var cacheInfo = cornerstone.imageCache.getCacheInfo();
-            $('#maxCacheSize').val("" + cacheInfo.maximumSizeInBytes);
+            //$('#maxCacheSize').val("" + cacheInfo.maximumSizeInBytes);
             $('#currentCacheSize').val("" + cacheInfo.cacheSizeInBytes);
             $('#numImagesCached').val("" + cacheInfo.numberOfImagesCached);
         }, 100);

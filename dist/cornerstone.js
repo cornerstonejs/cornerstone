@@ -1,4 +1,4 @@
-/*! cornerstone - v0.6.0 - 2014-11-28 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.6.1 - 2014-11-28 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone = (function ($, cornerstone) {
 
     "use strict";
@@ -503,7 +503,7 @@ var cornerstone = (function (cornerstone) {
 
     function purgeCacheIfNecessary()
     {
-        // if max cache size has not been exceded, do nothing
+        // if max cache size has not been exceeded, do nothing
         if(cacheSizeInBytes <= maximumSizeInBytes)
         {
             return;
@@ -528,6 +528,7 @@ var cornerstone = (function (cornerstone) {
             var lastCachedImage = cachedImages[cachedImages.length - 1];
             cacheSizeInBytes -= lastCachedImage.sizeInBytes;
             delete imageCache[lastCachedImage.imageId];
+            lastCachedImage.imagePromise.reject();
             cachedImages.pop();
         }
     }
@@ -547,6 +548,7 @@ var cornerstone = (function (cornerstone) {
         }
 
         var cachedImage = {
+            loaded : false,
             imageId : imageId,
             imagePromise : imagePromise,
             timeStamp : new Date(),
@@ -596,10 +598,12 @@ var cornerstone = (function (cornerstone) {
     }
 
     function purgeCache() {
-        var oldMaximumSizeInBytes = maximumSizeInBytes;
-        maximumSizeInBytes = 0;
-        purgeCacheIfNecessary();
-        maximumSizeInBytes = oldMaximumSizeInBytes;
+        while (cachedImages.length > 0) {
+            var removedCachedImage = cachedImages.pop();
+            delete imageCache[removedCachedImage.imageId];
+            removedCachedImage.imagePromise.reject();
+        }
+        cacheSizeInBytes = 0;
     }
 
     // module exports
@@ -614,6 +618,7 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+
 /**
  * This module deals with ImageLoaders, loading images and caching images
  */

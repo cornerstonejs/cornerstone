@@ -1,8 +1,6 @@
 Backlog:
 ========
 * more viewport functionality
-  * Rotation (90, 180, 270, 0)
-  * Flip (Horizontal / Vertical)
   * Non linear LUTs (modality & voi)
   * pseudo color tables (for PET, MRI)
 * Enhance cache to work with multiframe sop instance case
