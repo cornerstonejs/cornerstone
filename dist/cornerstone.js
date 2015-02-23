@@ -360,6 +360,9 @@ var cornerstone = (function (cornerstone) {
         enabledElement.viewport.scale = defaultViewport.scale;
         enabledElement.viewport.translation.x = defaultViewport.translation.x;
         enabledElement.viewport.translation.y = defaultViewport.translation.y;
+        enabledElement.viewport.rotation = defaultViewport.rotation;
+        enabledElement.viewport.hflip = defaultViewport.hflip;
+        enabledElement.viewport.vflip = defaultViewport.vflip;
         cornerstone.updateImage(element);
     }
 
@@ -367,6 +370,7 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+
 /**
  * This module generates a lut for an image
  */
@@ -474,7 +478,10 @@ var cornerstone = (function (cornerstone) {
                 windowCenter: image.windowCenter,
             },
             invert: image.invert,
-            pixelReplication: false
+            pixelReplication: false,
+            rotation: 0,
+            hflip: false,
+            vflip: false
         };
 
         // fit image to window
@@ -494,6 +501,7 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+
 /**
  * This module returns a subset of the stored pixels of an image
  */
@@ -592,7 +600,7 @@ var cornerstone = (function (cornerstone) {
 
     function purgeCacheIfNecessary()
     {
-        // if max cache size has not been exceded, do nothing
+        // if max cache size has not been exceeded, do nothing
         if(cacheSizeInBytes <= maximumSizeInBytes)
         {
             return;
@@ -617,6 +625,7 @@ var cornerstone = (function (cornerstone) {
             var lastCachedImage = cachedImages[cachedImages.length - 1];
             cacheSizeInBytes -= lastCachedImage.sizeInBytes;
             delete imageCache[lastCachedImage.imageId];
+            lastCachedImage.imagePromise.reject();
             cachedImages.pop();
         }
     }
@@ -636,6 +645,7 @@ var cornerstone = (function (cornerstone) {
         }
 
         var cachedImage = {
+            loaded : false,
             imageId : imageId,
             imagePromise : imagePromise,
             timeStamp : new Date(),
@@ -676,6 +686,21 @@ var cornerstone = (function (cornerstone) {
         return cachedImage.imagePromise;
     }
 
+    function removeImagePromise(imageId) {
+        if(imageId === undefined) {
+            throw "removeImagePromise: imageId must not be undefined";
+        }
+        var cachedImage = imageCache[imageId];
+        if(cachedImage === undefined) {
+            throw "removeImagePromise: imageId must not be undefined";
+        }
+        cachedImages.splice( cachedImages.indexOf(cachedImage), 1);
+        cacheSizeInBytes -= cachedImage.sizeInBytes;
+        delete imageCache[imageId];
+
+        return cachedImage.imagePromise;
+    }
+
     function getCacheInfo() {
         return {
             maximumSizeInBytes : maximumSizeInBytes,
@@ -685,10 +710,12 @@ var cornerstone = (function (cornerstone) {
     }
 
     function purgeCache() {
-        var oldMaximumSizeInBytes = maximumSizeInBytes;
-        maximumSizeInBytes = 0;
-        purgeCacheIfNecessary();
-        maximumSizeInBytes = oldMaximumSizeInBytes;
+        while (cachedImages.length > 0) {
+            var removedCachedImage = cachedImages.pop();
+            delete imageCache[removedCachedImage.imageId];
+            removedCachedImage.imagePromise.reject();
+        }
+        cacheSizeInBytes = 0;
     }
 
     // module exports
@@ -696,6 +723,7 @@ var cornerstone = (function (cornerstone) {
     cornerstone.imageCache = {
         putImagePromise : putImagePromise,
         getImagePromise: getImagePromise,
+        removeImagePromise: removeImagePromise,
         setMaximumSizeBytes: setMaximumSizeBytes,
         getCacheInfo : getCacheInfo,
         purgeCache: purgeCache
@@ -703,6 +731,7 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+
 /**
  * This module deals with ImageLoaders, loading images and caching images
  */
@@ -924,6 +953,34 @@ var cornerstone = (function (cornerstone) {
         // apply pan offset
         var imageX = scaledMiddleX - viewport.translation.x;
         var imageY = scaledMiddleY - viewport.translation.y;
+        
+        //Apply Flips        
+        if(viewport.hflip) {
+			imageX*=-1;
+        }	
+        
+        if(viewport.vflip) {
+			imageY*=-1;
+        } 
+        
+		//Apply rotations
+		if(viewport.rotation!==0) {
+			var angle = viewport.rotation * Math.PI/180;		
+	
+			var cosA = Math.cos(angle);
+			var sinA = Math.sin(angle);
+	
+			var newX = imageX * cosA - imageY * sinA;
+			var newY = imageX * sinA + imageY * cosA;
+				
+			if(viewport.rotation===90 || viewport.rotation===270 || viewport.rotation===-90 || viewport.rotation===-270) {
+				newX*= -1;
+				newY*= -1;
+			}  
+	
+			imageX = newX;
+			imageY = newY;
+		}    
 
         // translate to image top left
         imageX += ee.image.columns / 2;
@@ -940,6 +997,7 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+
 /**
  * This module is responsible for drawing an image to an enabled elements canvas element
  */
@@ -996,7 +1054,10 @@ var cornerstone = (function (cornerstone) {
         if(image.imageId !== lastRenderedImageId ||
             lastRenderedViewport.windowCenter !== enabledElement.viewport.voi.windowCenter ||
             lastRenderedViewport.windowWidth !== enabledElement.viewport.voi.windowWidth ||
-            lastRenderedViewport.invert !== enabledElement.viewport.invert
+            lastRenderedViewport.invert !== enabledElement.viewport.invert ||
+            lastRenderedViewport.rotation !== enabledElement.viewport.rotation ||  
+            lastRenderedViewport.hflip !== enabledElement.viewport.hflip ||
+            lastRenderedViewport.vflip !== enabledElement.viewport.vflip
             )
         {
             return true;
@@ -1088,6 +1149,9 @@ var cornerstone = (function (cornerstone) {
         lastRenderedViewport.windowCenter = enabledElement.viewport.voi.windowCenter;
         lastRenderedViewport.windowWidth = enabledElement.viewport.voi.windowWidth;
         lastRenderedViewport.invert = enabledElement.viewport.invert;
+        lastRenderedViewport.rotation = enabledElement.viewport.rotation;
+        lastRenderedViewport.hflip = enabledElement.viewport.hflip;
+        lastRenderedViewport.vflip = enabledElement.viewport.vflip;
     }
 
     // Module exports
@@ -1095,6 +1159,7 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+
 /**
  * This module is responsible for drawing a grayscale imageß
  */
@@ -1152,7 +1217,10 @@ var cornerstone = (function (cornerstone) {
         if(image.imageId !== lastRenderedImageId ||
             lastRenderedViewport.windowCenter !== enabledElement.viewport.voi.windowCenter ||
             lastRenderedViewport.windowWidth !== enabledElement.viewport.voi.windowWidth ||
-            lastRenderedViewport.invert !== enabledElement.viewport.invert
+            lastRenderedViewport.invert !== enabledElement.viewport.invert ||
+            lastRenderedViewport.rotation !== enabledElement.viewport.rotation ||
+            lastRenderedViewport.hflip !== enabledElement.viewport.hflip ||
+            lastRenderedViewport.vflip !== enabledElement.viewport.vflip
             )
         {
             return true;
@@ -1229,6 +1297,9 @@ var cornerstone = (function (cornerstone) {
         lastRenderedViewport.windowCenter = enabledElement.viewport.voi.windowCenter;
         lastRenderedViewport.windowWidth = enabledElement.viewport.voi.windowWidth;
         lastRenderedViewport.invert = enabledElement.viewport.invert;
+        lastRenderedViewport.rotation = enabledElement.viewport.rotation;
+        lastRenderedViewport.hflip = enabledElement.viewport.hflip;
+        lastRenderedViewport.vflip = enabledElement.viewport.vflip;
     }
 
     // Module exports
@@ -1426,7 +1497,25 @@ var cornerstone = (function (cornerstone) {
             // apply the font scale
             context.scale(scale, scale);
         }
+        
+        //Apply if rotation required        
+        var angle = enabledElement.viewport.rotation;
 
+		if(angle!==0) {
+			context.rotate(angle*Math.PI/180);
+		}
+
+		//Apply Flip if required
+		if(enabledElement.viewport.hflip) {
+			context.translate(enabledElement.offsetWidth,0);
+			context.scale(-1,1);
+		} 
+
+		if(enabledElement.viewport.vflip) {
+			context.translate(0, enabledElement.offsetHeight);
+			context.scale(1,-1);
+		}    
+        
         // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
         context.translate(-enabledElement.image.width / 2 / scale, -enabledElement.image.height/ 2 / scale);
     }
@@ -1436,6 +1525,7 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
+
 /**
  * This module contains a function to convert stored pixel values to display pixel values using a LUT
  */
@@ -1575,6 +1665,9 @@ var cornerstone = (function (cornerstone) {
         enabledElement.viewport.voi.windowCenter = viewport.voi.windowCenter;
         enabledElement.viewport.invert = viewport.invert;
         enabledElement.viewport.pixelReplication = viewport.pixelReplication;
+        enabledElement.viewport.rotation = viewport.rotation;
+        enabledElement.viewport.hflip = viewport.hflip;
+        enabledElement.viewport.vflip = viewport.vflip;
 
         // prevent window width from being < 1
         if(enabledElement.viewport.voi.windowWidth < 1) {
@@ -1585,6 +1678,10 @@ var cornerstone = (function (cornerstone) {
             enabledElement.viewport.scale = 0.25;
         }
 
+		if(enabledElement.viewport.rotation===360 || enabledElement.viewport.rotation===-360) {
+			enabledElement.viewport.rotation = 0;
+        }
+        
         // Force the image to be updated since the viewport has been modified
         cornerstone.updateImage(element);
     }
@@ -1612,7 +1709,10 @@ var cornerstone = (function (cornerstone) {
                 windowCenter : viewport.voi.windowCenter
             },
             invert : viewport.invert,
-            pixelReplication: viewport.pixelReplication
+            pixelReplication: viewport.pixelReplication,
+            rotation: viewport.rotation, 
+            hflip: viewport.hflip,
+            vflip: viewport.vflip
         };
     }
 
