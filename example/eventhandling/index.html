@@ -92,6 +92,13 @@
             context.font = "6px Arial";
             context.fillText("Tumor Here", 128, 85);
 
+            context.beginPath();
+            context.arc(128, 128, 20, 0, 2 * Math.PI, false);
+            context.fillStyle = 'green';
+            context.lineWidth = -1;
+            context.strokeStyle = 'white';
+            context.stroke();
+
             $('#topright').text("Render Time:" + cornerstone.lastRenderTimeInMs + " ms");
             $('#bottomleft').text("WW/WL:" + Math.round(eventData.viewport.voi.windowWidth) + "/" + Math.round(eventData.viewport.voi.windowCenter));
             $('#bottomright').text("Zoom:" + eventData.viewport.scale.toFixed(2));

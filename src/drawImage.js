@@ -13,7 +13,7 @@ var cornerstone = (function ($, cornerstone) {
     /**
      * Internal API function to draw an image to a given enabled element
      * @param enabledElement
-     * @param invalidated - true if pixel data has been invaldiated and cached rendering should not be used
+     * @param invalidated - true if pixel data has been invalidated and cached rendering should not be used
      */
     function drawImage(enabledElement, invalidated) {
 
@@ -37,6 +37,7 @@ var cornerstone = (function ($, cornerstone) {
         };
 
         $(enabledElement.element).trigger("CornerstoneImageRendered", eventData);
+        enabledElement.invalid = false;
     }
 
     // Module exports

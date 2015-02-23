@@ -21,6 +21,7 @@ var cornerstone = (function (cornerstone) {
             element: element,
             canvas: canvas,
             image : undefined, // will be set once image is loaded
+            invalid: false, // true if image needs to be drawn, false if not
             data : {}
         };
         cornerstone.addEnabledElement(el);

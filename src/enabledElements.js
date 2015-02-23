@@ -29,20 +29,6 @@ var cornerstone = (function (cornerstone) {
         enabledElements.push(enabledElement);
     }
 
-    function disable(element) {
-        if(element === undefined) {
-            throw "disable: element element must not be undefined";
-        }
-
-        for(var i=0; i < enabledElements.length; i++) {
-            if(enabledElements[i].element === element) {
-                enabledElements[i].element.removeChild(enabledElements[i].canvas);
-                enabledElements.splice(i, 1);
-                return;
-            }
-        }
-    }
-
     function getEnabledElementsByImageId(imageId) {
         var ees = [];
         enabledElements.forEach(function(enabledElement) {
@@ -53,12 +39,15 @@ var cornerstone = (function (cornerstone) {
         return ees;
     }
 
+    function getEnabledElements() {
+        return enabledElements;
+    }
 
     // module/private exports
     cornerstone.getEnabledElement = getEnabledElement;
     cornerstone.addEnabledElement = addEnabledElement;
-    cornerstone.disable = disable;
     cornerstone.getEnabledElementsByImageId = getEnabledElementsByImageId;
+    cornerstone.getEnabledElements = getEnabledElements;
 
     return cornerstone;
 }(cornerstone));

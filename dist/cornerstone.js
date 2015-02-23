@@ -1,4 +1,47 @@
-/*! cornerstone - v0.5.2 - 2014-11-11 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.6.0 - 2015-02-23 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+var cornerstone = (function (cornerstone) {
+
+    "use strict";
+
+    if(cornerstone === undefined) {
+        cornerstone = {};
+    }
+
+    function disable(element) {
+        if(element === undefined) {
+            throw "disable: element element must not be undefined";
+        }
+
+        // Search for this element in this list of enabled elements
+        var enabledElements = cornerstone.getEnabledElements();
+        for(var i=0; i < enabledElements.length; i++) {
+            if(enabledElements[i].element === element) {
+                // We found it!
+
+                // Fire an event so dependencies can cleanup
+                var eventData = {
+                    element : element
+                };
+                $(element).trigger("CornerstoneElementDisabled", eventData);
+
+                // remove the child dom elements that we created (e.g.canvas)
+                enabledElements[i].element.removeChild(enabledElements[i].canvas);
+
+                // remove this element from the list of enabled elements
+                enabledElements.splice(i, 1);
+                return;
+            }
+        }
+    }
+
+    // module/private exports
+    cornerstone.disable = disable;
+
+    return cornerstone;
+}(cornerstone));
+/**
+ * This module is responsible for enabling an element to display images with cornerstone
+ */
 var cornerstone = (function ($, cornerstone) {
 
     "use strict";
@@ -66,6 +109,38 @@ var cornerstone = (function ($, cornerstone) {
     return cornerstone;
 }($, cornerstone));
 /**
+ * This module is responsible for immediately drawing an enabled element
+ */
+
+var cornerstone = (function ($, cornerstone) {
+
+    "use strict";
+
+    if(cornerstone === undefined) {
+        cornerstone = {};
+    }
+
+    /**
+     * Immediately draws the enabled element
+     *
+     * @param element
+     */
+    function draw(element) {
+        var enabledElement = cornerstone.getEnabledElement(element);
+
+        if(enabledElement.image === undefined) {
+            throw "draw: image has not been loaded yet";
+        }
+
+        cornerstone.drawImage(enabledElement);
+    }
+
+    // Module exports
+    cornerstone.draw = draw;
+
+    return cornerstone;
+}($, cornerstone));
+/**
  * This module is responsible for drawing an image to an enabled elements canvas element
  */
 
@@ -80,7 +155,7 @@ var cornerstone = (function ($, cornerstone) {
     /**
      * Internal API function to draw an image to a given enabled element
      * @param enabledElement
-     * @param invalidated - true if pixel data has been invaldiated and cached rendering should not be used
+     * @param invalidated - true if pixel data has been invalidated and cached rendering should not be used
      */
     function drawImage(enabledElement, invalidated) {
 
@@ -104,10 +179,42 @@ var cornerstone = (function ($, cornerstone) {
         };
 
         $(enabledElement.element).trigger("CornerstoneImageRendered", eventData);
+        enabledElement.invalid = false;
     }
 
     // Module exports
     cornerstone.drawImage = drawImage;
+
+    return cornerstone;
+}($, cornerstone));
+/**
+ * This module is responsible for drawing invalidated enabled elements
+ */
+
+var cornerstone = (function ($, cornerstone) {
+
+    "use strict";
+
+    if(cornerstone === undefined) {
+        cornerstone = {};
+    }
+
+    /**
+     * Draws all invalidated enabled elements and clears the invalid flag after drawing it
+     */
+    function drawInvalidated()
+    {
+        var enabledElements = cornerstone.getEnabledElements();
+        for(var i=0;i < enabledElements.length; i++) {
+            var ee = enabledElements[i];
+            if(ee.invalid === true) {
+                cornerstone.drawImage(ee);
+            }
+        }
+    }
+
+    // Module exports
+    cornerstone.drawInvalidated = drawInvalidated;
 
     return cornerstone;
 }($, cornerstone));
@@ -134,6 +241,7 @@ var cornerstone = (function (cornerstone) {
             element: element,
             canvas: canvas,
             image : undefined, // will be set once image is loaded
+            invalid: false, // true if image needs to be drawn, false if not
             data : {}
         };
         cornerstone.addEnabledElement(el);
@@ -207,20 +315,6 @@ var cornerstone = (function (cornerstone) {
         enabledElements.push(enabledElement);
     }
 
-    function disable(element) {
-        if(element === undefined) {
-            throw "disable: element element must not be undefined";
-        }
-
-        for(var i=0; i < enabledElements.length; i++) {
-            if(enabledElements[i].element === element) {
-                enabledElements[i].element.removeChild(enabledElements[i].canvas);
-                enabledElements.splice(i, 1);
-                return;
-            }
-        }
-    }
-
     function getEnabledElementsByImageId(imageId) {
         var ees = [];
         enabledElements.forEach(function(enabledElement) {
@@ -231,12 +325,15 @@ var cornerstone = (function (cornerstone) {
         return ees;
     }
 
+    function getEnabledElements() {
+        return enabledElements;
+    }
 
     // module/private exports
     cornerstone.getEnabledElement = getEnabledElement;
     cornerstone.addEnabledElement = addEnabledElement;
-    cornerstone.disable = disable;
     cornerstone.getEnabledElementsByImageId = getEnabledElementsByImageId;
+    cornerstone.getEnabledElements = getEnabledElements;
 
     return cornerstone;
 }(cornerstone));
@@ -713,6 +810,35 @@ var cornerstone = (function ($, cornerstone) {
 
     return cornerstone;
 }($, cornerstone));
+/**
+ * This module contains a function to make an image is invalid
+ */
+var cornerstone = (function (cornerstone) {
+
+    "use strict";
+
+    if(cornerstone === undefined) {
+        cornerstone = {};
+    }
+
+    /**
+     * Sets the invalid flag on the enabled element and fire an event
+     * @param element
+     */
+    function invalidate(element) {
+        var enabledElement = cornerstone.getEnabledElement(element);
+        enabledElement.invalid = true;
+        var eventData = {
+            element: element
+        };
+        $(enabledElement.element).trigger("CornerstoneInvalidated", eventData);
+    }
+
+    // module exports
+    cornerstone.invalidate = invalidate;
+
+    return cornerstone;
+}(cornerstone));
 /**
  * This module contains a function to immediately invalidate an image
  */
