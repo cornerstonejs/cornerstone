@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- cornerstone css - provides some useful css classes -->
+    <link href="../../dist/cornerstone.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="container">
+
+<h1>
+    fliprotate/index.html
+</h1>
+
+This is an example of image flips and rotations
+
+<br>
+<br>
+
+In this example,the image can be flipped (Horizontal/Vertical) or rotated (Clockwise/Anti-clockwise)
+<br>
+<br>
+
+    <button id="hFlip" type="button" class="btn btn-default">HFlip</button>
+    <button id="vFlip" type="button" class="btn btn-default">VFlip</button>
+    <button id="lRotate" type="button" class="btn btn-default">Rotate Left</button>
+    <button id="rRotate" type="button" class="btn btn-default">Rotate Right</button>
+    <button id="reset" type="button" class="btn btn-default">Reset</button>
+            <div id="dicomImage" style="width:512px;height:512px"
+            class="cornerstone-enabled-image"
+            oncontextmenu="return false"
+            unselectable='on'
+            onselectstart='return false;'
+            onmousedown='return false;'>
+            </div>
+            <div><span id="coords"></span></div>
+
+
+
+            </div>
+            </body>
+
+                <!-- cornerstone depends on jQuery so it must be loaded first-->
+            <script src="../jquery.min.js"></script>
+
+<!-- include the cornerstone library -->
+<script src="../../dist/cornerstone.js"></script>
+
+<!-- include special code for these examples which provides images -->
+<script src="../exampleImageIdLoader.js"></script>
+
+<script>
+    $(document).ready(function() {
+
+        // image enable the dicomImage element
+        var element = $('#dicomImage').get(0);
+        cornerstone.enable(element);
+
+        //load the image and display it
+        var imageId = 'example://1';
+        cornerstone.loadImage(imageId).then(function(image) {
+            cornerstone.displayImage(element, image);
+        });
+
+        // Add event handlers to flip or rotate the image
+        $('#hFlip').click(function (e) {
+            var viewport = cornerstone.getViewport(element);
+            viewport.hflip = !viewport.hflip;
+            cornerstone.setViewport(element, viewport);
+        });
+
+        $('#vFlip').click(function (e) {
+            var viewport = cornerstone.getViewport(element);
+            viewport.vflip = !viewport.vflip;
+            cornerstone.setViewport(element, viewport);
+        });
+
+        $('#lRotate').click(function (e) {
+            var viewport = cornerstone.getViewport(element);
+            viewport.rotation-=90;
+            cornerstone.setViewport(element, viewport);
+        });
+
+        $('#rRotate').click(function (e) {
+            var viewport = cornerstone.getViewport(element);
+            viewport.rotation+=90;
+            cornerstone.setViewport(element, viewport);
+        });
+        
+        $('#reset').click(function (e) {
+            var viewport = cornerstone.getViewport(element);
+            viewport.hflip = false;
+            viewport.vflip = false;
+            viewport.rotation = 0;
+            cornerstone.setViewport(element, viewport);
+        });
+        $(element).mousemove(function(event)
+        {
+            var pixelCoords = cornerstone.pageToPixel(element, event.pageX, event.pageY);
+            var x = event.pageX;
+            var y = event.pageY;
+            $('#coords').text("pageX=" + event.pageX + ", pageY=" + event.pageY + ", pixelX=" + pixelCoords.x + ", pixelY=" + pixelCoords.y);
+        });
+    });
+
+</script>
+</html>

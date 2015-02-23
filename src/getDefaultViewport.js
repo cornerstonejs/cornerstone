@@ -35,7 +35,10 @@ var cornerstone = (function (cornerstone) {
                 windowCenter: image.windowCenter,
             },
             invert: image.invert,
-            pixelReplication: false
+            pixelReplication: false,
+            rotation: 0,
+            hflip: false,
+            vflip: false
         };
 
         // fit image to window

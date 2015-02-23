@@ -21,6 +21,9 @@ var cornerstone = (function (cornerstone) {
         enabledElement.viewport.scale = defaultViewport.scale;
         enabledElement.viewport.translation.x = defaultViewport.translation.x;
         enabledElement.viewport.translation.y = defaultViewport.translation.y;
+        enabledElement.viewport.rotation = defaultViewport.rotation;
+        enabledElement.viewport.hflip = defaultViewport.hflip;
+        enabledElement.viewport.vflip = defaultViewport.vflip;
         cornerstone.updateImage(element);
     }
 

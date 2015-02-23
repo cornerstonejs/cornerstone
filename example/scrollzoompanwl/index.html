@@ -34,6 +34,9 @@
     <button id="x512" class="btn">512x512</button>
     <button id="invert" class="btn">Toggle Invert</button>
     <button id="interpolation" class="btn">Toggle Interpolation</button>
+    <button id="hflip" class="btn">Horizontal Flip</button>
+    <button id="vflip" class="btn">Vertical Flip</button>
+    <button id="rotate" class="btn">Rotate 90</button>
 
     <div id="dicomImageWrapper" style="width:512px;height:512px;position:relative;color: white;"
          class="cornerstone-enabled-image"
@@ -58,6 +61,7 @@
         </div>
 
     </div>
+    <div><span id="coords"></span></div>
 </div>
 </body>
 
@@ -97,6 +101,31 @@
         // set event handlers
         function onImageRendered(e, eventData) {
             $('#topright').text("Render Time:" + eventData.renderTimeInMs + " ms");
+        }
+        $(element).on("CornerstoneImageRendered", onImageRendered);
+
+        // setup handlers before we display the image
+        function onImageRendered(e, eventData) {
+            // set the canvas context to the image coordinate system
+            cornerstone.setToPixelCoordinateSystem(eventData.enabledElement, eventData.canvasContext);
+
+            // NOTE: The coordinate system of the canvas is in image pixel space.  Drawing
+            // to location 0,0 will be the top left of the image and rows,columns is the bottom
+            // right.
+            var context = eventData.canvasContext;
+            context.beginPath();
+            context.strokeStyle = 'white';
+            context.lineWidth = .5;
+            context.rect(128, 90, 50, 60);
+            context.stroke();
+            context.fillStyle = "white";
+            context.font = "6px Arial";
+            context.fillText("Tumor Here", 128, 85);
+
+            $('#topright').text("Render Time:" + cornerstone.lastRenderTimeInMs + " ms");
+            $('#bottomleft').text("WW/WL:" + Math.round(eventData.viewport.voi.windowWidth) + "/" + Math.round(eventData.viewport.voi.windowCenter));
+            $('#bottomright').text("Zoom:" + eventData.viewport.scale.toFixed(2));
+
         }
         $(element).on("CornerstoneImageRendered", onImageRendered);
 
@@ -196,6 +225,28 @@
                     viewport.pixelReplication = true;
                 }
                 cornerstone.setViewport(element, viewport);
+            });
+            $('#hflip').click(function (e) {
+                var viewport = cornerstone.getViewport(element);
+                viewport.hflip = !viewport.hflip;
+                cornerstone.setViewport(element, viewport);
+            });
+            $('#vflip').click(function (e) {
+                var viewport = cornerstone.getViewport(element);
+                viewport.vflip = !viewport.vflip;
+                cornerstone.setViewport(element, viewport);
+            });
+            $('#rotate').click(function (e) {
+                var viewport = cornerstone.getViewport(element);
+                viewport.rotation+=90;
+                cornerstone.setViewport(element, viewport);
+            });
+            $(element).mousemove(function(event)
+            {
+                var pixelCoords = cornerstone.pageToPixel(element, event.pageX, event.pageY);
+                var x = event.pageX;
+                var y = event.pageY;
+                $('#coords').text("pageX=" + event.pageX + ", pageY=" + event.pageY + ", pixelX=" + pixelCoords.x + ", pixelY=" + pixelCoords.y);
             });
         });
 

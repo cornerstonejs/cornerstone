@@ -123,8 +123,9 @@ I welcome pull requests, please see FAQ below for guidance on this.
 * @simonmd - CSS improvements in the cornerstoneDemo application
 * @doncharkowsky - The angle tool in cornerstoneTools
 * @prasath-rasterimages - Touch event bindings in cornerstoneTools
-* @jpamburn - Performance optimizations for signed data
+* @jpamburn - Performance optimizations for signed data, fixes for image caching
 * @jmhmd - for getPixels() implementation
+* @devishree-raster - for flip and rotate implementation
 
 FAQ
 ===
