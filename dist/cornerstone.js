@@ -1,4 +1,4 @@
-/*! cornerstone - v0.6.1 - 2015-02-21 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.6.1 - 2015-02-23 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone = (function ($, cornerstone) {
 
     "use strict";
@@ -589,19 +589,19 @@ var cornerstone = (function (cornerstone) {
         return cachedImage.imagePromise;
     }
 
-    function removeImagePromise(imageId) {
+    function removeImageId(imageId) {
         if(imageId === undefined) {
             throw "removeImagePromise: imageId must not be undefined";
         }
         var cachedImage = imageCache[imageId];
         if(cachedImage === undefined) {
-            throw "removeImagePromise: imageId must not be undefined";
+            return false;
         }
         cachedImages.splice( cachedImages.indexOf(cachedImage), 1);
         cacheSizeInBytes -= cachedImage.sizeInBytes;
         delete imageCache[imageId];
 
-        return cachedImage.imagePromise;
+        return true;
     }
 
     function getCacheInfo() {
@@ -626,7 +626,7 @@ var cornerstone = (function (cornerstone) {
     cornerstone.imageCache = {
         putImagePromise : putImagePromise,
         getImagePromise: getImagePromise,
-        removeImagePromise: removeImagePromise,
+        removeImageId: removeImageId,
         setMaximumSizeBytes: setMaximumSizeBytes,
         getCacheInfo : getCacheInfo,
         purgeCache: purgeCache
