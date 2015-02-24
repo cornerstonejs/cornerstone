@@ -20,7 +20,7 @@ var cornerstone = (function (cornerstone) {
     function generateLut(image, windowWidth, windowCenter, invert)
     {
         if(image.lut === undefined) {
-            image.lut =  new Int16Array(image.maxPixelValue - Math.min(image.minPixelValue,0));
+            image.lut =  new Int16Array(image.maxPixelValue - Math.min(image.minPixelValue,0)+1);
         }
         var lut = image.lut;
 

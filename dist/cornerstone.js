@@ -1,4 +1,4 @@
-/*! cornerstone - v0.7.0 - 2015-02-23 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.7.1 - 2015-02-24 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -393,7 +393,7 @@ var cornerstone = (function (cornerstone) {
     function generateLut(image, windowWidth, windowCenter, invert)
     {
         if(image.lut === undefined) {
-            image.lut =  new Int16Array(image.maxPixelValue - Math.min(image.minPixelValue,0));
+            image.lut =  new Int16Array(image.maxPixelValue - Math.min(image.minPixelValue,0)+1);
         }
         var lut = image.lut;
 
