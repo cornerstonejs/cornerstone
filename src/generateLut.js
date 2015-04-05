@@ -39,7 +39,12 @@ var cornerstone = (function (cornerstone) {
         // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
         // We improve performance by offsetting the pixel values for signed data to avoid negative indexes
         // when generating the lut and then undo it in storedPixelDataToCanvasImagedata.  Thanks to @jpambrun
-        // for this contibution!
+        // for this contribution!
+
+        var offset = 0;
+        if(minPixelValue < 0) {
+            offset = minPixelValue;
+        }
 
         if(invert === true) {
             for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
@@ -47,7 +52,7 @@ var cornerstone = (function (cornerstone) {
                 modalityLutValue = storedValue * slope + intercept;
                 voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
                 clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
-                lut[storedValue + (-minPixelValue)] = Math.round(255 - clampedValue);
+                lut[storedValue + (-offset)] = Math.round(255 - clampedValue);
             }
         }
         else {
@@ -56,7 +61,7 @@ var cornerstone = (function (cornerstone) {
                 modalityLutValue = storedValue * slope + intercept;
                 voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
                 clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
-                lut[storedValue+ (-minPixelValue)] = Math.round(clampedValue);
+                lut[storedValue+ (-offset)] = Math.round(clampedValue);
             }
         }
     }
