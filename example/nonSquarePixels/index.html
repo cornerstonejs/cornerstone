@@ -27,7 +27,7 @@
     <button id="reset" type="button" class="btn btn-default">Reset</button>
     <div><span id="coords"></span></div>
 
-    <div id="dicomImage" style="width:512px;height:512px;"
+    <div id="dicomImage" style="width:256px;height:256px;"
          class="cornerstone-enabled-image"
          oncontextmenu="return false"
          unselectable='on'
@@ -54,8 +54,8 @@
         // Loads an image given an imageId
         function loadImage(imageId) {
 
-            var width = 256;
-            var height = 512;
+            var width = 128;
+            var height = 256;
 
             var numPixels = width * height;
             var pixelData = new Uint16Array(numPixels);
@@ -63,15 +63,15 @@
             // clear image to black
             for (var y = 0; y < height; y++) {
                 for (var x = 0; x < width; x++) {
-                    pixelData[index] = 0;
+                    pixelData[index] = 128;
                     index++;
                 }
             }
 
             var left = 10;
             var top = 20;
-            var squareWidth = 100;
-            var squareHeight = 200;
+            var squareWidth = 50;
+            var squareHeight = 100;
 
             for (var row = top; row < top + squareHeight; row++) {
                 var rowOffset = row * width;
@@ -129,6 +129,12 @@
         var imageId = "myImageLoader://1";
         cornerstone.loadImage(imageId).then(function(image) {
             cornerstone.displayImage(element, image);
+            /*var vp = cornerstone.getViewport(element);
+            vp.scale = 0.5;
+            vp.translation.x =-20;
+            vp.translation.y =-20;
+                cornerstone.setViewport(element, vp);
+            */
         });
 
         // Add event handlers to flip or rotate the image

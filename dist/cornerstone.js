@@ -1,4 +1,4 @@
-/*! cornerstone - v0.7.4 - 2015-05-30 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.7.5 - 2015-05-30 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -940,6 +940,26 @@ var cornerstone = (function (cornerstone) {
         cornerstone = {};
     }
 
+    function rotate(rotation, pt) {
+        while(rotation < 0) {
+            rotation += 360;
+        }
+        console.log('rotation of ' + rotation);
+        var angle = rotation * Math.PI/180;
+
+        var cosA = Math.cos(angle);
+        var sinA = Math.sin(angle);
+
+        var newX = pt.x * cosA - pt.y * sinA;
+        var newY = pt.x * sinA + pt.y * cosA;
+
+        var newPt = {
+            x: newX,
+            y: newY
+        };
+        return newPt;
+    }
+
     /**
      * Converts a point in the page coordinate system to the pixel coordinate
      * system
@@ -957,83 +977,64 @@ var cornerstone = (function (cornerstone) {
         }
 
         // TODO: replace this with a transformation matrix
+        var image = enabledElement.image;
+        var viewport = enabledElement.viewport;
 
         // convert the pageX and pageY to the canvas client coordinates
         var rect = element.getBoundingClientRect();
         var clientX = pageX - rect.left - window.pageXOffset;
         var clientY = pageY - rect.top - window.pageYOffset;
 
-        // translate the client relative to the middle of the canvas
-        var middleX = clientX - rect.width / 2.0;
-        var middleY = clientY - rect.height / 2.0;
+        var pt = {x: clientX, y: clientY};
 
-        var image = enabledElement.image;
-        var viewport = enabledElement.viewport;
+        // translate the client relative to the middle of the canvas
+        pt.x -= rect.width / 2.0;
+        pt.y -= rect.height / 2.0;
+        console.log('centered');
+        console.log(pt);
+
+        pt = rotate(-viewport.rotation, pt);
+        console.log('rot1');
+        console.log(pt);
 
         // apply the scale
         var widthScale = viewport.scale;
         var heightScale = viewport.scale;
 
-        if (viewport.rotation === 90 || viewport.rotation === 270 || viewport.rotation === -90 || viewport.rotation === -270) {
-            if(image.rowPixelSpacing < image.columnPixelSpacing) {
-                widthScale = heightScale * (image.rowPixelSpacing / image.columnPixelSpacing);
-            }
-            else if(image.columnPixelSpacing < image.rowPixelSpacing) {
-                heightScale = widthScale * (image.columnPixelSpacing / image.rowPixelSpacing);
-            }
-        } else {
-            if(image.rowPixelSpacing < image.columnPixelSpacing) {
-                widthScale = widthScale * (image.columnPixelSpacing / image.rowPixelSpacing);
-            }
-            else if(image.columnPixelSpacing < image.rowPixelSpacing) {
-                heightScale = heightScale * (image.rowPixelSpacing / image.columnPixelSpacing);
-            }
+        if(enabledElement.image.rowPixelSpacing < enabledElement.image.columnPixelSpacing) {
+            widthScale = widthScale * (enabledElement.image.columnPixelSpacing / enabledElement.image.rowPixelSpacing);
+        }
+        else if(enabledElement.image.columnPixelSpacing < enabledElement.image.rowPixelSpacing) {
+            heightScale = heightScale * (enabledElement.image.rowPixelSpacing / enabledElement.image.columnPixelSpacing);
         }
 
         // scale to image coordinates middleX/middleY
-        var scaledMiddleX = middleX / widthScale;
-        var scaledMiddleY = middleY / heightScale;
+        pt.x /= widthScale;
+        pt.y /= heightScale;
+
+        pt = rotate(viewport.rotation, pt);
 
         // apply pan offset
-        var imageX = scaledMiddleX - viewport.translation.x;
-        var imageY = scaledMiddleY - viewport.translation.y;
-        
-        //Apply Flips        
+        pt.x -= viewport.translation.x;
+        pt.y -= viewport.translation.y;
+
+        //Apply Flips
         if (viewport.hflip) {
-			imageX *= -1;
+			pt.x *= -1;
         }
-        
+
         if (viewport.vflip) {
-			imageY *= -1;
+			pt.y *= -1;
         }
         
 		//Apply rotations
-		if (viewport.rotation !== 0) {
-			var angle = viewport.rotation * Math.PI/180;
-	
-			var cosA = Math.cos(angle);
-			var sinA = Math.sin(angle);
-	
-			var newX = imageX * cosA - imageY * sinA;
-			var newY = imageX * sinA + imageY * cosA;
-				
-			if(viewport.rotation === 90 || viewport.rotation === 270 || viewport.rotation === -90 || viewport.rotation === -270) {
-				newX*= -1;
-				newY*= -1;
-			}
-	
-			imageX = newX;
-			imageY = newY;
-		}
+        pt = rotate(-viewport.rotation, pt);
 
         // translate to image top left
-        imageX += image.columns / 2;
-        imageY += image.rows / 2;
 
-        return {
-            x: imageX,
-            y: imageY
-        };
+        pt.x += image.columns / 2;
+        pt.y += image.rows / 2;
+        return pt;
     }
 
     // module/private exports
