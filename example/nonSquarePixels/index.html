@@ -14,7 +14,7 @@
     <h1>
         nonSquarePixels/index.html
     </h1>
-    This example shows an image with non square pixels.  The image is 256x512 and has a column and row pixel spacing
+    This example shows an image with non square pixels.  The image is 128x256 and has a column and row pixel spacing
     of 1.0/0.5 respectively.  The image will display a square if non square pixels is being applied properly
     or a tall rectangle if not.
     <br>
@@ -174,7 +174,45 @@
             var pixelCoords = cornerstone.pageToPixel(element, event.pageX, event.pageY);
             var x = event.pageX;
             var y = event.pageY;
-            $('#coords').text("pageX=" + event.pageX + ", pageY=" + event.pageY + ", pixelX=" + pixelCoords.x + ", pixelY=" + pixelCoords.y);
+            $('#coords').text("pageX=" + event.pageX + ", pageY=" + event.pageY + ", pixelX=" + pixelCoords.x.toFixed(2) + ", pixelY=" + pixelCoords.y.toFixed(2));
+        });
+        // add event handlers to pan image on mouse move
+        $('#dicomImage').mousedown(function (e) {
+            var lastX = e.pageX;
+            var lastY = e.pageY;
+
+
+            $(document).mousemove(function (e) {
+                var deltaX = e.pageX - lastX,
+                        deltaY = e.pageY - lastY;
+                lastX = e.pageX;
+                lastY = e.pageY;
+
+                var viewport = cornerstone.getViewport(element);
+                viewport.translation.x += (deltaX / viewport.scale);
+                viewport.translation.y += (deltaY / viewport.scale);
+                cornerstone.setViewport(element, viewport);
+            });
+
+            $(document).mouseup(function (e) {
+                $(document).unbind('mousemove');
+                $(document).unbind('mouseup');
+            });
+        });
+        $('#dicomImage').on('mousewheel DOMMouseScroll', function (e) {
+            // Firefox e.originalEvent.detail > 0 scroll back, < 0 scroll forward
+            // chrome/safari e.originalEvent.wheelDelta < 0 scroll back, > 0 scroll forward
+            if (e.originalEvent.wheelDelta < 0 || e.originalEvent.detail > 0) {
+                var viewport = cornerstone.getViewport(element);
+                viewport.scale -= 0.25;
+                cornerstone.setViewport(element, viewport);
+            } else {
+                var viewport = cornerstone.getViewport(element);
+                viewport.scale += 0.25;
+                cornerstone.setViewport(element, viewport);
+            }
+            //prevent page fom scrolling
+            return false;
         });
 
     });
