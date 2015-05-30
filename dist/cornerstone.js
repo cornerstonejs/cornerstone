@@ -1,4 +1,4 @@
-/*! cornerstone - v0.7.3 - 2015-04-04 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.7.3 - 2015-05-20 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -922,9 +922,9 @@ var cornerstone = (function (cornerstone) {
      */
 
     function pageToPixel(element, pageX, pageY) {
-        var ee = cornerstone.getEnabledElement(element);
+        var enabledElement = cornerstone.getEnabledElement(element);
 
-        if(ee.image === undefined) {
+        if(enabledElement.image === undefined) {
             throw "image has not been loaded yet";
         }
 
@@ -939,19 +939,30 @@ var cornerstone = (function (cornerstone) {
         var middleX = clientX - rect.width / 2.0;
         var middleY = clientY - rect.height / 2.0;
 
-        // scale to image coordinates middleX/middleY
-        var viewport = ee.viewport;
+        var image = enabledElement.image;
+        var viewport = enabledElement.viewport;
 
         // apply the scale
-        var widthScale = ee.viewport.scale;
-        var heightScale = ee.viewport.scale;
-        if(ee.image.rowPixelSpacing < ee.image.columnPixelSpacing) {
-            widthScale = widthScale * (ee.image.columnPixelSpacing / ee.image.rowPixelSpacing);
-        }
-        else if(ee.image.columnPixelSpacing < ee.image.rowPixelSpacing) {
-            heightScale = heightScale * (ee.image.rowPixelSpacing / ee.image.columnPixelSpacing);
+        var widthScale = viewport.scale;
+        var heightScale = viewport.scale;
+
+        if (viewport.rotation === 90 || viewport.rotation === 270 || viewport.rotation === -90 || viewport.rotation === -270) {
+            if(image.rowPixelSpacing < image.columnPixelSpacing) {
+                widthScale = heightScale * (image.rowPixelSpacing / image.columnPixelSpacing);
+            }
+            else if(image.columnPixelSpacing < image.rowPixelSpacing) {
+                heightScale = widthScale * (image.columnPixelSpacing / image.rowPixelSpacing);
+            }
+        } else {
+            if(image.rowPixelSpacing < image.columnPixelSpacing) {
+                widthScale = widthScale * (image.columnPixelSpacing / image.rowPixelSpacing);
+            }
+            else if(image.columnPixelSpacing < image.rowPixelSpacing) {
+                heightScale = heightScale * (image.rowPixelSpacing / image.columnPixelSpacing);
+            }
         }
 
+        // scale to image coordinates middleX/middleY
         var scaledMiddleX = middleX / widthScale;
         var scaledMiddleY = middleY / heightScale;
 
@@ -960,17 +971,17 @@ var cornerstone = (function (cornerstone) {
         var imageY = scaledMiddleY - viewport.translation.y;
         
         //Apply Flips        
-        if(viewport.hflip) {
-			imageX*=-1;
-        }	
+        if (viewport.hflip) {
+			imageX *= -1;
+        }
         
-        if(viewport.vflip) {
-			imageY*=-1;
-        } 
+        if (viewport.vflip) {
+			imageY *= -1;
+        }
         
 		//Apply rotations
-		if(viewport.rotation!==0) {
-			var angle = viewport.rotation * Math.PI/180;		
+		if (viewport.rotation !== 0) {
+			var angle = viewport.rotation * Math.PI/180;
 	
 			var cosA = Math.cos(angle);
 			var sinA = Math.sin(angle);
@@ -978,18 +989,18 @@ var cornerstone = (function (cornerstone) {
 			var newX = imageX * cosA - imageY * sinA;
 			var newY = imageX * sinA + imageY * cosA;
 				
-			if(viewport.rotation===90 || viewport.rotation===270 || viewport.rotation===-90 || viewport.rotation===-270) {
+			if(viewport.rotation === 90 || viewport.rotation === 270 || viewport.rotation === -90 || viewport.rotation === -270) {
 				newX*= -1;
 				newY*= -1;
-			}  
+			}
 	
 			imageX = newX;
 			imageY = newY;
-		}    
+		}
 
         // translate to image top left
-        imageX += ee.image.columns / 2;
-        imageY += ee.image.rows / 2;
+        imageX += image.columns / 2;
+        imageY += image.rows / 2;
 
         return {
             x: imageX,
@@ -1480,21 +1491,35 @@ var cornerstone = (function (cornerstone) {
         // reset the transformation matrix
         context.setTransform(1, 0, 0, 1, 0, 0);
         // move origin to center of canvas
-        context.translate(enabledElement.canvas.width/2, enabledElement.canvas.height / 2);
+        context.translate(enabledElement.canvas.width / 2, enabledElement.canvas.height / 2);
+
+        var image = enabledElement.image;
+        var viewport = enabledElement.viewport;
 
         // apply the scale
-        var widthScale = enabledElement.viewport.scale;
-        var heightScale = enabledElement.viewport.scale;
-        if(enabledElement.image.rowPixelSpacing < enabledElement.image.columnPixelSpacing) {
-            widthScale = widthScale * (enabledElement.image.columnPixelSpacing / enabledElement.image.rowPixelSpacing);
+        var widthScale = viewport.scale;
+        var heightScale = viewport.scale;
+
+        if(viewport.rotation === 90 || viewport.rotation === 270 || viewport.rotation === -90 || viewport.rotation === -270) {
+            if(image.rowPixelSpacing < image.columnPixelSpacing) {
+                widthScale = heightScale * (image.rowPixelSpacing / image.columnPixelSpacing);
+            }
+            else if(image.columnPixelSpacing < image.rowPixelSpacing) {
+                heightScale = widthScale * (image.columnPixelSpacing / image.rowPixelSpacing);
+            }
+        } else {
+            if(image.rowPixelSpacing < image.columnPixelSpacing) {
+                widthScale = widthScale * (image.columnPixelSpacing / image.rowPixelSpacing);
+            }
+            else if(image.columnPixelSpacing < image.rowPixelSpacing) {
+                heightScale = heightScale * (image.rowPixelSpacing / image.columnPixelSpacing);
+            }
         }
-        else if(enabledElement.image.columnPixelSpacing < enabledElement.image.rowPixelSpacing) {
-            heightScale = heightScale * (enabledElement.image.rowPixelSpacing / enabledElement.image.columnPixelSpacing);
-        }
+
         context.scale(widthScale, heightScale);
 
         // apply the pan offset
-        context.translate(enabledElement.viewport.translation.x, enabledElement.viewport.translation.y);
+        context.translate(viewport.translation.x, viewport.translation.y);
 
         if(scale === undefined) {
             scale = 1.0;
@@ -1504,25 +1529,25 @@ var cornerstone = (function (cornerstone) {
         }
         
         //Apply if rotation required        
-        var angle = enabledElement.viewport.rotation;
+        var angle = viewport.rotation;
 
-		if(angle!==0) {
-			context.rotate(angle*Math.PI/180);
+		if (angle !== 0) {
+			context.rotate(angle * Math.PI / 180);
 		}
 
 		//Apply Flip if required
-		if(enabledElement.viewport.hflip) {
+		if (viewport.hflip) {
 			context.translate(enabledElement.offsetWidth,0);
-			context.scale(-1,1);
-		} 
+			context.scale(-1, 1);
+		}
 
-		if(enabledElement.viewport.vflip) {
+		if (viewport.vflip) {
 			context.translate(0, enabledElement.offsetHeight);
-			context.scale(1,-1);
-		}    
+			context.scale(1, -1);
+		}
         
         // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
-        context.translate(-enabledElement.image.width / 2 / scale, -enabledElement.image.height/ 2 / scale);
+        context.translate(-image.width / 2 / scale, -image.height / 2 / scale);
     }
 
     // Module exports
