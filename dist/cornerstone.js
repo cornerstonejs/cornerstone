@@ -1,4 +1,4 @@
-/*! cornerstone - v0.7.3 - 2015-05-20 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.7.4 - 2015-05-30 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone = (function (cornerstone) {
 
     "use strict";
@@ -507,6 +507,34 @@ var cornerstone = (function (cornerstone) {
     return cornerstone;
 }(cornerstone));
 
+/**
+ * This module is responsible for returning the currently displayed image for an element
+ */
+
+var cornerstone = (function ($, cornerstone) {
+
+    "use strict";
+
+    if(cornerstone === undefined) {
+        cornerstone = {};
+    }
+
+    /**
+     * returns the currently displayed image for an element or undefined if no image has
+     * been displayed yet
+     *
+     * @param element
+     */
+    function getImage(element) {
+        var enabledElement = cornerstone.getEnabledElement(element);
+        return enabledElement.image;
+    }
+
+    // Module exports
+    cornerstone.getImage = getImage;
+
+    return cornerstone;
+}($, cornerstone));
 /**
  * This module returns a subset of the stored pixels of an image
  */
@@ -1491,35 +1519,37 @@ var cornerstone = (function (cornerstone) {
         // reset the transformation matrix
         context.setTransform(1, 0, 0, 1, 0, 0);
         // move origin to center of canvas
-        context.translate(enabledElement.canvas.width / 2, enabledElement.canvas.height / 2);
+        context.translate(enabledElement.canvas.width/2, enabledElement.canvas.height / 2);
 
-        var image = enabledElement.image;
-        var viewport = enabledElement.viewport;
-
-        // apply the scale
-        var widthScale = viewport.scale;
-        var heightScale = viewport.scale;
-
-        if(viewport.rotation === 90 || viewport.rotation === 270 || viewport.rotation === -90 || viewport.rotation === -270) {
-            if(image.rowPixelSpacing < image.columnPixelSpacing) {
-                widthScale = heightScale * (image.rowPixelSpacing / image.columnPixelSpacing);
-            }
-            else if(image.columnPixelSpacing < image.rowPixelSpacing) {
-                heightScale = widthScale * (image.columnPixelSpacing / image.rowPixelSpacing);
-            }
-        } else {
-            if(image.rowPixelSpacing < image.columnPixelSpacing) {
-                widthScale = widthScale * (image.columnPixelSpacing / image.rowPixelSpacing);
-            }
-            else if(image.columnPixelSpacing < image.rowPixelSpacing) {
-                heightScale = heightScale * (image.rowPixelSpacing / image.columnPixelSpacing);
-            }
+        //Apply the rotation before scaling for non square pixels
+        var angle = enabledElement.viewport.rotation;
+        if(angle!==0) {
+            context.rotate(angle*Math.PI/180);
         }
 
+        // apply the scale
+        var widthScale = enabledElement.viewport.scale;
+        var heightScale = enabledElement.viewport.scale;
+        if(enabledElement.image.rowPixelSpacing < enabledElement.image.columnPixelSpacing) {
+            widthScale = widthScale * (enabledElement.image.columnPixelSpacing / enabledElement.image.rowPixelSpacing);
+        }
+        else if(enabledElement.image.columnPixelSpacing < enabledElement.image.rowPixelSpacing) {
+            heightScale = heightScale * (enabledElement.image.rowPixelSpacing / enabledElement.image.columnPixelSpacing);
+        }
         context.scale(widthScale, heightScale);
 
+        // unrotate to so we can translate unrotated
+        if(angle!==0) {
+            context.rotate(-angle*Math.PI/180);
+        }
+
         // apply the pan offset
-        context.translate(viewport.translation.x, viewport.translation.y);
+        context.translate(enabledElement.viewport.translation.x, enabledElement.viewport.translation.y);
+
+        // rotate again so we can apply general scale
+        if(angle!==0) {
+            context.rotate(angle*Math.PI/180);
+        }
 
         if(scale === undefined) {
             scale = 1.0;
@@ -1527,27 +1557,20 @@ var cornerstone = (function (cornerstone) {
             // apply the font scale
             context.scale(scale, scale);
         }
-        
-        //Apply if rotation required        
-        var angle = viewport.rotation;
 
-		if (angle !== 0) {
-			context.rotate(angle * Math.PI / 180);
-		}
+        //Apply Flip if required
+        if(enabledElement.viewport.hflip) {
+            context.translate(enabledElement.offsetWidth,0);
+            context.scale(-1,1);
+        }
 
-		//Apply Flip if required
-		if (viewport.hflip) {
-			context.translate(enabledElement.offsetWidth,0);
-			context.scale(-1, 1);
-		}
+        if(enabledElement.viewport.vflip) {
+            context.translate(0, enabledElement.offsetHeight);
+            context.scale(1,-1);
+        }
 
-		if (viewport.vflip) {
-			context.translate(0, enabledElement.offsetHeight);
-			context.scale(1, -1);
-		}
-        
         // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
-        context.translate(-image.width / 2 / scale, -image.height / 2 / scale);
+        context.translate(-enabledElement.image.width / 2 / scale, -enabledElement.image.height/ 2 / scale);
     }
 
     // Module exports
@@ -1555,7 +1578,6 @@ var cornerstone = (function (cornerstone) {
 
     return cornerstone;
 }(cornerstone));
-
 /**
  * This module contains a function to convert stored pixel values to display pixel values using a LUT
  */
