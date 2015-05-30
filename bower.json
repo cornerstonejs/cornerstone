@@ -1,6 +1,6 @@
 {
     "name": "cornerstone",
-    "version": "0.7.5",
+    "version": "0.7.6",
     "description": "HTML5 Medical Image Viewer Component",
     "main" : "dist/cornerstone.js",
     "ignore": [

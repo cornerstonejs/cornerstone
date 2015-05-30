@@ -13,7 +13,7 @@ var cornerstone = (function (cornerstone) {
         while(rotation < 0) {
             rotation += 360;
         }
-        console.log('rotation of ' + rotation);
+        //console.log('rotation of ' + rotation);
         var angle = rotation * Math.PI/180;
 
         var cosA = Math.cos(angle);
@@ -59,12 +59,12 @@ var cornerstone = (function (cornerstone) {
         // translate the client relative to the middle of the canvas
         pt.x -= rect.width / 2.0;
         pt.y -= rect.height / 2.0;
-        console.log('centered');
-        console.log(pt);
+        //console.log('centered');
+        //console.log(pt);
 
         pt = rotate(-viewport.rotation, pt);
-        console.log('rot1');
-        console.log(pt);
+        //console.log('rot1');
+        //console.log(pt);
 
         // apply the scale
         var widthScale = viewport.scale;
