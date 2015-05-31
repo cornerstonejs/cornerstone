@@ -1,13 +1,9 @@
 /**
  * This module contains functions to deal with getting and setting the viewport for an enabled element
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     function setViewport(element, viewport) {
 
@@ -71,10 +67,8 @@ var cornerstone = (function (cornerstone) {
         };
     }
 
-
     // module/private exports
     cornerstone.getViewport = getViewport;
     cornerstone.setViewport=setViewport;
 
-    return cornerstone;
 }(cornerstone));

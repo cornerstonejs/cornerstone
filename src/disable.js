@@ -1,10 +1,6 @@
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     function disable(element) {
         if(element === undefined) {
@@ -36,5 +32,4 @@ var cornerstone = (function (cornerstone) {
     // module/private exports
     cornerstone.disable = disable;
 
-    return cornerstone;
 }(cornerstone));

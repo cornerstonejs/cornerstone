@@ -1,11 +1,11 @@
-/*! cornerstone - v0.7.6 - 2015-05-30 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
-var cornerstone = (function (cornerstone) {
+/*! cornerstone - v0.7.7 - 2015-05-31 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+if(typeof cornerstone === 'undefined'){
+    cornerstone = {};
+}
+
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     function disable(element) {
         if(element === undefined) {
@@ -37,18 +37,13 @@ var cornerstone = (function (cornerstone) {
     // module/private exports
     cornerstone.disable = disable;
 
-    return cornerstone;
 }(cornerstone));
 /**
  * This module is responsible for enabling an element to display images with cornerstone
  */
-var cornerstone = (function ($, cornerstone) {
+(function ($, cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * sets a new image object for a given element
@@ -105,20 +100,14 @@ var cornerstone = (function ($, cornerstone) {
 
     // module/private exports
     cornerstone.displayImage = displayImage;
-
-    return cornerstone;
 }($, cornerstone));
 /**
  * This module is responsible for immediately drawing an enabled element
  */
 
-var cornerstone = (function ($, cornerstone) {
+(function ($, cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Immediately draws the enabled element
@@ -138,19 +127,14 @@ var cornerstone = (function ($, cornerstone) {
     // Module exports
     cornerstone.draw = draw;
 
-    return cornerstone;
 }($, cornerstone));
 /**
  * This module is responsible for drawing an image to an enabled elements canvas element
  */
 
-var cornerstone = (function ($, cornerstone) {
+(function ($, cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Internal API function to draw an image to a given enabled element
@@ -185,19 +169,14 @@ var cornerstone = (function ($, cornerstone) {
     // Module exports
     cornerstone.drawImage = drawImage;
 
-    return cornerstone;
 }($, cornerstone));
 /**
  * This module is responsible for drawing invalidated enabled elements
  */
 
-var cornerstone = (function ($, cornerstone) {
+(function ($, cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Draws all invalidated enabled elements and clears the invalid flag after drawing it
@@ -215,19 +194,13 @@ var cornerstone = (function ($, cornerstone) {
 
     // Module exports
     cornerstone.drawInvalidated = drawInvalidated;
-
-    return cornerstone;
 }($, cornerstone));
 /**
  * This module is responsible for enabling an element to display images with cornerstone
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     function enable(element) {
         if(element === undefined) {
@@ -253,16 +226,10 @@ var cornerstone = (function (cornerstone) {
 
     // module/private exports
     cornerstone.enable = enable;
-
-    return cornerstone;
 }(cornerstone));
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     function getElementData(el, dataType) {
         var ee = cornerstone.getEnabledElement(el);
@@ -282,15 +249,10 @@ var cornerstone = (function (cornerstone) {
     cornerstone.getElementData = getElementData;
     cornerstone.removeElementData = removeElementData;
 
-    return cornerstone;
 }(cornerstone));
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     var enabledElements = [];
 
@@ -334,20 +296,14 @@ var cornerstone = (function (cornerstone) {
     cornerstone.addEnabledElement = addEnabledElement;
     cornerstone.getEnabledElementsByImageId = getEnabledElementsByImageId;
     cornerstone.getEnabledElements = getEnabledElements;
-
-    return cornerstone;
 }(cornerstone));
 /**
  * This module will fit an image to fit inside the canvas displaying it such that all pixels
  * in the image are viewable
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Adjusts an images scale and center so the image is centered and completely visible
@@ -367,21 +323,15 @@ var cornerstone = (function (cornerstone) {
     }
 
     cornerstone.fitToWindow = fitToWindow;
-
-    return cornerstone;
 }(cornerstone));
 
 /**
  * This module generates a lut for an image
  */
 
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Creates a LUT used while rendering to convert stored pixel values to
@@ -442,8 +392,6 @@ var cornerstone = (function (cornerstone) {
 
     // Module exports
     cornerstone.generateLut = generateLut;
-
-    return cornerstone;
 }(cornerstone));
 
 /**
@@ -451,13 +399,9 @@ var cornerstone = (function (cornerstone) {
  * a canvas element to display it in
  *
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Creates a new viewport object containing default values for the image and canvas
@@ -503,21 +447,15 @@ var cornerstone = (function (cornerstone) {
 
     // module/private exports
     cornerstone.getDefaultViewport = getDefaultViewport;
-
-    return cornerstone;
 }(cornerstone));
 
 /**
  * This module is responsible for returning the currently displayed image for an element
  */
 
-var cornerstone = (function ($, cornerstone) {
+(function ($, cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * returns the currently displayed image for an element or undefined if no image has
@@ -532,19 +470,13 @@ var cornerstone = (function ($, cornerstone) {
 
     // Module exports
     cornerstone.getImage = getImage;
-
-    return cornerstone;
 }($, cornerstone));
 /**
  * This module returns a subset of the stored pixels of an image
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Returns an array of stored pixels given a rectangle in the image
@@ -595,20 +527,14 @@ var cornerstone = (function (cornerstone) {
     // module exports
     cornerstone.getStoredPixels = getStoredPixels;
     cornerstone.getPixels = getPixels;
-
-    return cornerstone;
 }(cornerstone));
 /**
  * This module deals with caching images
  */
 
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     var imageCache = {
     };
@@ -761,21 +687,15 @@ var cornerstone = (function (cornerstone) {
         getCacheInfo : getCacheInfo,
         purgeCache: purgeCache
     };
-
-    return cornerstone;
 }(cornerstone));
 
 /**
  * This module deals with ImageLoaders, loading images and caching images
  */
 
-var cornerstone = (function ($, cornerstone) {
+(function ($, cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     var imageLoaders = {};
 
@@ -870,18 +790,13 @@ var cornerstone = (function ($, cornerstone) {
     cornerstone.registerImageLoader = registerImageLoader;
     cornerstone.registerUnknownImageLoader = registerUnknownImageLoader;
 
-    return cornerstone;
 }($, cornerstone));
 /**
  * This module contains a function to make an image is invalid
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Sets the invalid flag on the enabled element and fire an event
@@ -898,19 +813,13 @@ var cornerstone = (function (cornerstone) {
 
     // module exports
     cornerstone.invalidate = invalidate;
-
-    return cornerstone;
 }(cornerstone));
 /**
  * This module contains a function to immediately invalidate an image
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Forces the image to be updated/redrawn for the specified enabled element
@@ -926,19 +835,13 @@ var cornerstone = (function (cornerstone) {
 
     // module exports
     cornerstone.invalidateImageId = invalidateImageId;
-
-    return cornerstone;
 }(cornerstone));
 /**
  * This module contains a helper function to covert page coordinates to pixel coordinates
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     function rotate(rotation, pt) {
         while(rotation < 0) {
@@ -1040,20 +943,15 @@ var cornerstone = (function (cornerstone) {
     // module/private exports
     cornerstone.pageToPixel = pageToPixel;
 
-    return cornerstone;
 }(cornerstone));
 
 /**
  * This module is responsible for drawing an image to an enabled elements canvas element
  */
 
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     var colorRenderCanvas = document.createElement('canvas');
     var colorRenderCanvasContext;
@@ -1201,21 +1099,15 @@ var cornerstone = (function (cornerstone) {
 
     // Module exports
     cornerstone.renderColorImage = renderColorImage;
-
-    return cornerstone;
 }(cornerstone));
 
 /**
  * This module is responsible for drawing a grayscale imageß
  */
 
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     var grayscaleRenderCanvas = document.createElement('canvas');
     var grayscaleRenderCanvasContext;
@@ -1350,20 +1242,15 @@ var cornerstone = (function (cornerstone) {
     // Module exports
     cornerstone.renderGrayscaleImage = renderGrayscaleImage;
 
-    return cornerstone;
 }(cornerstone));
 
 /**
  * This module is responsible for drawing an image to an enabled elements canvas element
  */
 
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * API function to draw a standard web image (PNG, JPG) to an enabledImage
@@ -1418,18 +1305,13 @@ var cornerstone = (function (cornerstone) {
     // Module exports
     cornerstone.renderWebImage = renderWebImage;
 
-    return cornerstone;
 }(cornerstone));
 /**
  * This module is responsible for enabling an element to display images with cornerstone
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     function setCanvasSize(element, canvas)
     {
@@ -1486,20 +1368,15 @@ var cornerstone = (function (cornerstone) {
     // module/private exports
     cornerstone.resize = resize;
 
-    return cornerstone;
 }(cornerstone));
 /**
  * This module contains a function that will set the canvas context to the pixel coordinates system
  * making it easy to draw geometry on the image
  */
 
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Sets the canvas context transformation matrix to the pixel coordinate system.  This allows
@@ -1576,19 +1453,13 @@ var cornerstone = (function (cornerstone) {
 
     // Module exports
     cornerstone.setToPixelCoordinateSystem = setToPixelCoordinateSystem;
-
-    return cornerstone;
 }(cornerstone));
 /**
  * This module contains a function to convert stored pixel values to display pixel values using a LUT
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * This function transforms stored pixel values into a canvas image data buffer
@@ -1663,19 +1534,14 @@ var cornerstone = (function (cornerstone) {
     cornerstone.storedPixelDataToCanvasImageData = storedPixelDataToCanvasImageData;
     cornerstone.storedColorPixelDataToCanvasImageData = storedColorPixelDataToCanvasImageData;
 
-   return cornerstone;
 }(cornerstone));
 
 /**
  * This module contains a function to immediately redraw an image
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Forces the image to be updated/redrawn for the specified enabled element
@@ -1694,18 +1560,13 @@ var cornerstone = (function (cornerstone) {
     // module exports
     cornerstone.updateImage = updateImage;
 
-    return cornerstone;
 }(cornerstone));
 /**
  * This module contains functions to deal with getting and setting the viewport for an enabled element
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     function setViewport(element, viewport) {
 
@@ -1769,10 +1630,8 @@ var cornerstone = (function (cornerstone) {
         };
     }
 
-
     // module/private exports
     cornerstone.getViewport = getViewport;
     cornerstone.setViewport=setViewport;
 
-    return cornerstone;
 }(cornerstone));

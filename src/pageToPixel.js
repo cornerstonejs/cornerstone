@@ -1,13 +1,9 @@
 /**
  * This module contains a helper function to covert page coordinates to pixel coordinates
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     function rotate(rotation, pt) {
         while(rotation < 0) {
@@ -109,5 +105,4 @@ var cornerstone = (function (cornerstone) {
     // module/private exports
     cornerstone.pageToPixel = pageToPixel;
 
-    return cornerstone;
 }(cornerstone));

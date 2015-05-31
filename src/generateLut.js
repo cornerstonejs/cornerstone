@@ -2,13 +2,9 @@
  * This module generates a lut for an image
  */
 
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Creates a LUT used while rendering to convert stored pixel values to
@@ -69,6 +65,4 @@ var cornerstone = (function (cornerstone) {
 
     // Module exports
     cornerstone.generateLut = generateLut;
-
-    return cornerstone;
 }(cornerstone));

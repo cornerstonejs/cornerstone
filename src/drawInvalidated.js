@@ -2,13 +2,9 @@
  * This module is responsible for drawing invalidated enabled elements
  */
 
-var cornerstone = (function ($, cornerstone) {
+(function ($, cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Draws all invalidated enabled elements and clears the invalid flag after drawing it
@@ -26,6 +22,4 @@ var cornerstone = (function ($, cornerstone) {
 
     // Module exports
     cornerstone.drawInvalidated = drawInvalidated;
-
-    return cornerstone;
 }($, cornerstone));

@@ -2,13 +2,9 @@
  * This module deals with caching images
  */
 
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     var imageCache = {
     };
@@ -161,6 +157,4 @@ var cornerstone = (function (cornerstone) {
         getCacheInfo : getCacheInfo,
         purgeCache: purgeCache
     };
-
-    return cornerstone;
 }(cornerstone));

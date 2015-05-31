@@ -1,13 +1,9 @@
 /**
  * This module is responsible for enabling an element to display images with cornerstone
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     function setCanvasSize(element, canvas)
     {
@@ -64,5 +60,4 @@ var cornerstone = (function (cornerstone) {
     // module/private exports
     cornerstone.resize = resize;
 
-    return cornerstone;
 }(cornerstone));

@@ -1,10 +1,6 @@
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     var enabledElements = [];
 
@@ -48,6 +44,4 @@ var cornerstone = (function (cornerstone) {
     cornerstone.addEnabledElement = addEnabledElement;
     cornerstone.getEnabledElementsByImageId = getEnabledElementsByImageId;
     cornerstone.getEnabledElements = getEnabledElements;
-
-    return cornerstone;
 }(cornerstone));

@@ -236,17 +236,17 @@ It is highly probably that I will reject a large pull request due to the time it
 _Will you add feature XYZ for me?_
 
 If it is in the roadmap, I intend to implement it some day - probably when I actually need it.  If you really need
-something now and want to pay for it, feel free to email me.
+something now and are willing to pay for it, try posting on the cornerstone platform google group
 
 _How mature is Cornerstone?_
 
-Each repository is at a different level of maturity.  There are at least 15 image viewer projects using Cornerstone
+Each repository is at a different level of maturity.  There are at least 50 image viewer projects using Cornerstone
 and the feedback has been consistently strong about the architecture, design and quality.  The cornerstoneTools library
 is the least mature from a framework and breadth of functionality perspective - but the implemented features work well.
 
 Copyright
 =========
 
-Copyright 2014 Chris Hafey [chafey@gmail.com](mailto:chafey@gmail.com)
+Copyright 2015 Chris Hafey [chafey@gmail.com](mailto:chafey@gmail.com)
 
 

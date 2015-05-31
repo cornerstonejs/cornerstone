@@ -1,13 +1,9 @@
 /**
  * This module contains a function to convert stored pixel values to display pixel values using a LUT
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * This function transforms stored pixel values into a canvas image data buffer
@@ -82,5 +78,4 @@ var cornerstone = (function (cornerstone) {
     cornerstone.storedPixelDataToCanvasImageData = storedPixelDataToCanvasImageData;
     cornerstone.storedColorPixelDataToCanvasImageData = storedColorPixelDataToCanvasImageData;
 
-   return cornerstone;
 }(cornerstone));

@@ -1,10 +1,6 @@
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     function getElementData(el, dataType) {
         var ee = cornerstone.getEnabledElement(el);
@@ -24,5 +20,4 @@ var cornerstone = (function (cornerstone) {
     cornerstone.getElementData = getElementData;
     cornerstone.removeElementData = removeElementData;
 
-    return cornerstone;
 }(cornerstone));

@@ -23,7 +23,7 @@ module.exports = function(grunt) {
         },
         concat: {
             build: {
-                src : ['src/ieVer.js','src/*.js'],
+                src : ['src/header.js','src/*.js'],
                 dest: 'build/built.js'
             },
             css: {

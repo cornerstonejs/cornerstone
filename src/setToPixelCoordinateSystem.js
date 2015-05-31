@@ -3,13 +3,9 @@
  * making it easy to draw geometry on the image
  */
 
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Sets the canvas context transformation matrix to the pixel coordinate system.  This allows
@@ -86,6 +82,4 @@ var cornerstone = (function (cornerstone) {
 
     // Module exports
     cornerstone.setToPixelCoordinateSystem = setToPixelCoordinateSystem;
-
-    return cornerstone;
 }(cornerstone));

@@ -3,13 +3,9 @@
  * a canvas element to display it in
  *
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Creates a new viewport object containing default values for the image and canvas
@@ -55,6 +51,4 @@ var cornerstone = (function (cornerstone) {
 
     // module/private exports
     cornerstone.getDefaultViewport = getDefaultViewport;
-
-    return cornerstone;
 }(cornerstone));

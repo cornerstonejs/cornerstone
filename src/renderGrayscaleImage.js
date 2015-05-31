@@ -2,13 +2,9 @@
  * This module is responsible for drawing a grayscale imageß
  */
 
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     var grayscaleRenderCanvas = document.createElement('canvas');
     var grayscaleRenderCanvasContext;
@@ -143,5 +139,4 @@ var cornerstone = (function (cornerstone) {
     // Module exports
     cornerstone.renderGrayscaleImage = renderGrayscaleImage;
 
-    return cornerstone;
 }(cornerstone));

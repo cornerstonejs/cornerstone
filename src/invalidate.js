@@ -1,13 +1,9 @@
 /**
  * This module contains a function to make an image is invalid
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Sets the invalid flag on the enabled element and fire an event
@@ -24,6 +20,4 @@ var cornerstone = (function (cornerstone) {
 
     // module exports
     cornerstone.invalidate = invalidate;
-
-    return cornerstone;
 }(cornerstone));

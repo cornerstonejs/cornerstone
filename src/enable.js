@@ -1,13 +1,9 @@
 /**
  * This module is responsible for enabling an element to display images with cornerstone
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     function enable(element) {
         if(element === undefined) {
@@ -33,6 +29,4 @@ var cornerstone = (function (cornerstone) {
 
     // module/private exports
     cornerstone.enable = enable;
-
-    return cornerstone;
 }(cornerstone));

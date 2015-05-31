@@ -2,13 +2,9 @@
  * This module is responsible for drawing an image to an enabled elements canvas element
  */
 
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     var colorRenderCanvas = document.createElement('canvas');
     var colorRenderCanvasContext;
@@ -156,6 +152,4 @@ var cornerstone = (function (cornerstone) {
 
     // Module exports
     cornerstone.renderColorImage = renderColorImage;
-
-    return cornerstone;
 }(cornerstone));

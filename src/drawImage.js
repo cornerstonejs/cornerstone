@@ -2,13 +2,9 @@
  * This module is responsible for drawing an image to an enabled elements canvas element
  */
 
-var cornerstone = (function ($, cornerstone) {
+(function ($, cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Internal API function to draw an image to a given enabled element
@@ -43,5 +39,4 @@ var cornerstone = (function ($, cornerstone) {
     // Module exports
     cornerstone.drawImage = drawImage;
 
-    return cornerstone;
 }($, cornerstone));

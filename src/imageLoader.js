@@ -2,13 +2,9 @@
  * This module deals with ImageLoaders, loading images and caching images
  */
 
-var cornerstone = (function ($, cornerstone) {
+(function ($, cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     var imageLoaders = {};
 
@@ -103,5 +99,4 @@ var cornerstone = (function ($, cornerstone) {
     cornerstone.registerImageLoader = registerImageLoader;
     cornerstone.registerUnknownImageLoader = registerUnknownImageLoader;
 
-    return cornerstone;
 }($, cornerstone));

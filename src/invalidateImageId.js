@@ -1,13 +1,9 @@
 /**
  * This module contains a function to immediately invalidate an image
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Forces the image to be updated/redrawn for the specified enabled element
@@ -23,6 +19,4 @@ var cornerstone = (function (cornerstone) {
 
     // module exports
     cornerstone.invalidateImageId = invalidateImageId;
-
-    return cornerstone;
 }(cornerstone));

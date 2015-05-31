@@ -2,13 +2,9 @@
  * This module will fit an image to fit inside the canvas displaying it such that all pixels
  * in the image are viewable
  */
-var cornerstone = (function (cornerstone) {
+(function (cornerstone) {
 
     "use strict";
-
-    if(cornerstone === undefined) {
-        cornerstone = {};
-    }
 
     /**
      * Adjusts an images scale and center so the image is centered and completely visible
@@ -28,6 +24,4 @@ var cornerstone = (function (cornerstone) {
     }
 
     cornerstone.fitToWindow = fitToWindow;
-
-    return cornerstone;
 }(cornerstone));
