@@ -69,7 +69,7 @@ module.exports = function(grunt) {
         },
         watch: {
             scripts: {
-                files: ['src/*.js', 'test/**/*.js'],
+                files: ['src/*.js', 'test/**/*'],
                 tasks: ['buildAll']
             }
         },
@@ -85,7 +85,7 @@ module.exports = function(grunt) {
 
     require('load-grunt-tasks')(grunt);
 
-    grunt.registerTask('buildAll', ['copy', 'concat', 'uglify', 'jshint', 'cssmin']);
+    grunt.registerTask('buildAll', ['copy', 'concat', 'uglify', 'jshint', 'cssmin', 'qunit']);
     grunt.registerTask('default', ['clean', 'buildAll']);
 };
 

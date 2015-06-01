@@ -2,33 +2,84 @@
 (function(csc) {
     module("cornerstoneCore.storedPixelDataToCanvasImageData");
 
-    test("storedPixelDataToCanvasImageData", function() {
+    test("storedPixelDataToCanvasImageData minPixel = 0", function() {
         // Arrange
-        var lut = [0,128,255];
-        var canvasImageDataData = [];
+        var lut = [0,255];
+        var canvasImageDataData = [255,255,255,128, 255,255,255,128];
         var image = {
-            storedPixelData: [0,1,2],
-            rows: 1,
-            columns: 3
+            minPixelValue : 0,
+            maxPixelValue: 1,
+            width: 1,
+            height: 2,
+            getPixelData : function() {return [0,1];}
         };
 
         // Act
         csc.storedPixelDataToCanvasImageData(image, lut, canvasImageDataData);
 
         // Assert
-        equal(canvasImageDataData[0], 0, "R");
-        equal(canvasImageDataData[1], 0, "G");
-        equal(canvasImageDataData[2], 0, "B");
-        equal(canvasImageDataData[3], 255, "A");
-        equal(canvasImageDataData[4], 128, "");
-        equal(canvasImageDataData[5], 128, "");
-        equal(canvasImageDataData[6], 128, "");
-        equal(canvasImageDataData[7], 255, "");
-        equal(canvasImageDataData[8], 255, "");
-        equal(canvasImageDataData[9], 255, "");
-        equal(canvasImageDataData[10], 255, "");
-        equal(canvasImageDataData[11], 255, "");
+        equal(canvasImageDataData[0], 255, "R1");
+        equal(canvasImageDataData[1], 255, "G1");
+        equal(canvasImageDataData[2], 255, "B1");
+        equal(canvasImageDataData[3], 0, "A1");
+        equal(canvasImageDataData[4], 255, "R2");
+        equal(canvasImageDataData[5], 255, "G2");
+        equal(canvasImageDataData[6], 255, "B2");
+        equal(canvasImageDataData[7], 255, "A2");
     });
 
+    test("storedPixelDataToCanvasImageData minPixel < 0", function() {
+        // Arrange
+        var lut = [0,255];
+        var canvasImageDataData = [255,255,255,128, 255,255,255,128];
+        var image = {
+            minPixelValue : -1,
+            maxPixelValue: 0,
+            width: 1,
+            height: 2,
+            getPixelData : function() {return [-1,0];}
+        };
 
-})(cornerstoneCore);
+        // Act
+        csc.storedPixelDataToCanvasImageData(image, lut, canvasImageDataData);
+
+        // Assert
+        equal(canvasImageDataData[0], 255, "R1");
+        equal(canvasImageDataData[1], 255, "G1");
+        equal(canvasImageDataData[2], 255, "B1");
+        equal(canvasImageDataData[3], 0, "A1");
+        equal(canvasImageDataData[4], 255, "R2");
+        equal(canvasImageDataData[5], 255, "G2");
+        equal(canvasImageDataData[6], 255, "B2");
+        equal(canvasImageDataData[7], 255, "A2");
+    });
+
+    test("storedPixelDataToCanvasImageData minPixel > 0", function() {
+        // Arrange
+        var lut = [];
+        lut[1] = 0;
+        lut[2] = 255;
+        var canvasImageDataData = [255,255,255,128, 255,255,255,128];
+        var image = {
+            minPixelValue : 1,
+            maxPixelValue: 2,
+            width: 1,
+            height: 2,
+            getPixelData : function() {return [1,2];}
+        };
+
+        // Act
+        csc.storedPixelDataToCanvasImageData(image, lut, canvasImageDataData);
+
+        // Assert
+        equal(canvasImageDataData[0], 255, "R1");
+        equal(canvasImageDataData[1], 255, "G1");
+        equal(canvasImageDataData[2], 255, "B1");
+        equal(canvasImageDataData[3], 0, "A1");
+        equal(canvasImageDataData[4], 255, "R2");
+        equal(canvasImageDataData[5], 255, "G2");
+        equal(canvasImageDataData[6], 255, "B2");
+        equal(canvasImageDataData[7], 255, "A2");
+    });
+
+})(cornerstone);
