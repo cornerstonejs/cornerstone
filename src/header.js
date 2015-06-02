@@ -1,3 +1,5 @@
 if(typeof cornerstone === 'undefined'){
-    cornerstone = {};
+    cornerstone = {
+        internal : {}
+    };
 }

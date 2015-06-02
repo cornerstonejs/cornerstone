@@ -23,61 +23,8 @@
             throw "setToPixelCoordinateSystem: parameter context must not be undefined";
         }
 
-        // reset the transformation matrix
-        context.setTransform(1, 0, 0, 1, 0, 0);
-        // move origin to center of canvas
-        context.translate(enabledElement.canvas.width/2, enabledElement.canvas.height / 2);
-
-        //Apply the rotation before scaling for non square pixels
-        var angle = enabledElement.viewport.rotation;
-        if(angle!==0) {
-            context.rotate(angle*Math.PI/180);
-        }
-
-        // apply the scale
-        var widthScale = enabledElement.viewport.scale;
-        var heightScale = enabledElement.viewport.scale;
-        if(enabledElement.image.rowPixelSpacing < enabledElement.image.columnPixelSpacing) {
-            widthScale = widthScale * (enabledElement.image.columnPixelSpacing / enabledElement.image.rowPixelSpacing);
-        }
-        else if(enabledElement.image.columnPixelSpacing < enabledElement.image.rowPixelSpacing) {
-            heightScale = heightScale * (enabledElement.image.rowPixelSpacing / enabledElement.image.columnPixelSpacing);
-        }
-        context.scale(widthScale, heightScale);
-
-        // unrotate to so we can translate unrotated
-        if(angle!==0) {
-            context.rotate(-angle*Math.PI/180);
-        }
-
-        // apply the pan offset
-        context.translate(enabledElement.viewport.translation.x, enabledElement.viewport.translation.y);
-
-        // rotate again so we can apply general scale
-        if(angle!==0) {
-            context.rotate(angle*Math.PI/180);
-        }
-
-        if(scale === undefined) {
-            scale = 1.0;
-        } else {
-            // apply the font scale
-            context.scale(scale, scale);
-        }
-
-        //Apply Flip if required
-        if(enabledElement.viewport.hflip) {
-            context.translate(enabledElement.offsetWidth,0);
-            context.scale(-1,1);
-        }
-
-        if(enabledElement.viewport.vflip) {
-            context.translate(0, enabledElement.offsetHeight);
-            context.scale(1,-1);
-        }
-
-        // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
-        context.translate(-enabledElement.image.width / 2 / scale, -enabledElement.image.height/ 2 / scale);
+        var transform = cornerstone.internal.calculateTransform(enabledElement, scale);
+        context.setTransform(transform.m[0],transform.m[1],transform.m[2],transform.m[3],transform.m[4],transform.m[5],transform.m[6]);
     }
 
     // Module exports

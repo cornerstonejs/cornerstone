@@ -3,7 +3,6 @@
 <head>
     <!-- twitter bootstrap CSS stylesheet - included to make things pretty, not needed or used by cornerstone -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- cornerstone css - provides some useful css classes -->
     <link href="../../dist/cornerstone.css" rel="stylesheet">
 
@@ -172,9 +171,9 @@
         $(element).mousemove(function(event)
         {
             var pixelCoords = cornerstone.pageToPixel(element, event.pageX, event.pageY);
-            var x = event.pageX;
-            var y = event.pageY;
-            $('#coords').text("pageX=" + event.pageX + ", pageY=" + event.pageY + ", pixelX=" + pixelCoords.x.toFixed(2) + ", pixelY=" + pixelCoords.y.toFixed(2));
+            var pt = cornerstone.pixelToCanvas(element, pixelCoords);
+            $('#coords').text("page=(" + event.pageX + ", " + event.pageY + "); pixel=(" + pixelCoords.x.toFixed(1) + ", " + pixelCoords.y.toFixed(1) + '); canvas=(' + pt.x.toFixed(1) + ', ' + pt.y.toFixed(1) + ')');
+
         });
         // add event handlers to pan image on mouse move
         $('#dicomImage').mousedown(function (e) {

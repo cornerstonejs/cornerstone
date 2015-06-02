@@ -1,6 +1,8 @@
-/*! cornerstone - v0.7.7 - 2015-05-31 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.7.7 - 2015-06-01 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 if(typeof cornerstone === 'undefined'){
-    cornerstone = {};
+    cornerstone = {
+        internal : {}
+    };
 }
 
 (function (cornerstone) {
@@ -791,6 +793,200 @@ if(typeof cornerstone === 'undefined'){
     cornerstone.registerUnknownImageLoader = registerUnknownImageLoader;
 
 }($, cornerstone));
+
+(function (cornerstone) {
+
+    "use strict";
+
+    function calculateTransform(enabledElement, scale) {
+
+        var transform = new cornerstone.internal.Transform();
+        transform.translate(enabledElement.canvas.width/2, enabledElement.canvas.height / 2);
+
+        //Apply the rotation before scaling for non square pixels
+        var angle = enabledElement.viewport.rotation;
+        if(angle!==0) {
+            transform.rotate(angle*Math.PI/180);
+        }
+
+        // apply the scale
+        var widthScale = enabledElement.viewport.scale;
+        var heightScale = enabledElement.viewport.scale;
+        if(enabledElement.image.rowPixelSpacing < enabledElement.image.columnPixelSpacing) {
+            widthScale = widthScale * (enabledElement.image.columnPixelSpacing / enabledElement.image.rowPixelSpacing);
+        }
+        else if(enabledElement.image.columnPixelSpacing < enabledElement.image.rowPixelSpacing) {
+            heightScale = heightScale * (enabledElement.image.rowPixelSpacing / enabledElement.image.columnPixelSpacing);
+        }
+        transform.scale(widthScale, heightScale);
+
+        // unrotate to so we can translate unrotated
+        if(angle!==0) {
+            transform.rotate(-angle*Math.PI/180);
+        }
+
+        // apply the pan offset
+        transform.translate(enabledElement.viewport.translation.x, enabledElement.viewport.translation.y);
+
+        // rotate again so we can apply general scale
+        if(angle!==0) {
+            transform.rotate(angle*Math.PI/180);
+        }
+
+        if(scale !== undefined) {
+            // apply the font scale
+            transform.scale(scale, scale);
+        }
+
+        //Apply Flip if required
+        if(enabledElement.viewport.hflip) {
+            transform.scale(-1,1);
+        }
+
+        if(enabledElement.viewport.vflip) {
+            transform.scale(1,-1);
+        }
+
+        // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
+        transform.translate(-enabledElement.image.width / 2 , -enabledElement.image.height/ 2);
+        return transform;
+    }
+
+    // Module exports
+    cornerstone.internal.calculateTransform = calculateTransform;
+}(cornerstone));
+(function (cornerstone) {
+
+    "use strict";
+
+    function getTransform(enabledElement)
+    {
+        // For now we will calculate it every time it is requested.  In the future, we may want to cache
+        // it in the enabled element to speed things up
+        var transform = cornerstone.internal.calculateTransform(enabledElement);
+        return transform;
+    }
+
+    // Module exports
+    cornerstone.internal.getTransform = getTransform;
+
+}(cornerstone));
+// Last updated November 2011
+// By Simon Sarris
+// www.simonsarris.com
+// sarris@acm.org
+//
+// Free to use and distribute at will
+// So long as you are nice to people, etc
+
+// Simple class for keeping track of the current transformation matrix
+
+// For instance:
+//    var t = new Transform();
+//    t.rotate(5);
+//    var m = t.m;
+//    ctx.setTransform(m[0], m[1], m[2], m[3], m[4], m[5]);
+
+// Is equivalent to:
+//    ctx.rotate(5);
+
+// But now you can retrieve it :)
+
+(function (cornerstone) {
+
+    "use strict";
+
+
+    // Remember that this does not account for any CSS transforms applied to the canvas
+    function Transform() {
+        this.reset();
+    }
+
+    Transform.prototype.reset = function() {
+        this.m = [1,0,0,1,0,0];
+    };
+
+    Transform.prototype.clone = function() {
+        var transform = new Transform();
+        transform.m[0] = this.m[0];
+        transform.m[1] = this.m[1];
+        transform.m[2] = this.m[2];
+        transform.m[3] = this.m[3];
+        transform.m[4] = this.m[4];
+        transform.m[5] = this.m[5];
+        return transform;
+    };
+
+
+    Transform.prototype.multiply = function(matrix) {
+        var m11 = this.m[0] * matrix.m[0] + this.m[2] * matrix.m[1];
+        var m12 = this.m[1] * matrix.m[0] + this.m[3] * matrix.m[1];
+
+        var m21 = this.m[0] * matrix.m[2] + this.m[2] * matrix.m[3];
+        var m22 = this.m[1] * matrix.m[2] + this.m[3] * matrix.m[3];
+
+        var dx = this.m[0] * matrix.m[4] + this.m[2] * matrix.m[5] + this.m[4];
+        var dy = this.m[1] * matrix.m[4] + this.m[3] * matrix.m[5] + this.m[5];
+
+        this.m[0] = m11;
+        this.m[1] = m12;
+        this.m[2] = m21;
+        this.m[3] = m22;
+        this.m[4] = dx;
+        this.m[5] = dy;
+    };
+
+    Transform.prototype.invert = function() {
+        var d = 1 / (this.m[0] * this.m[3] - this.m[1] * this.m[2]);
+        var m0 = this.m[3] * d;
+        var m1 = -this.m[1] * d;
+        var m2 = -this.m[2] * d;
+        var m3 = this.m[0] * d;
+        var m4 = d * (this.m[2] * this.m[5] - this.m[3] * this.m[4]);
+        var m5 = d * (this.m[1] * this.m[4] - this.m[0] * this.m[5]);
+        this.m[0] = m0;
+        this.m[1] = m1;
+        this.m[2] = m2;
+        this.m[3] = m3;
+        this.m[4] = m4;
+        this.m[5] = m5;
+    };
+
+    Transform.prototype.rotate = function(rad) {
+        var c = Math.cos(rad);
+        var s = Math.sin(rad);
+        var m11 = this.m[0] * c + this.m[2] * s;
+        var m12 = this.m[1] * c + this.m[3] * s;
+        var m21 = this.m[0] * -s + this.m[2] * c;
+        var m22 = this.m[1] * -s + this.m[3] * c;
+        this.m[0] = m11;
+        this.m[1] = m12;
+        this.m[2] = m21;
+        this.m[3] = m22;
+    };
+
+    Transform.prototype.translate = function(x, y) {
+        this.m[4] += this.m[0] * x + this.m[2] * y;
+        this.m[5] += this.m[1] * x + this.m[3] * y;
+    };
+
+    Transform.prototype.scale = function(sx, sy) {
+        this.m[0] *= sx;
+        this.m[1] *= sx;
+        this.m[2] *= sy;
+        this.m[3] *= sy;
+    };
+
+    Transform.prototype.transformPoint = function(px, py) {
+        var x = px;
+        var y = py;
+        px = x * this.m[0] + y * this.m[2] + this.m[4];
+        py = x * this.m[1] + y * this.m[3] + this.m[5];
+        return {x: px, y: py};
+    };
+
+    cornerstone.internal.Transform = Transform;
+}(cornerstone));
 /**
  * This module contains a function to make an image is invalid
  */
@@ -843,26 +1039,6 @@ if(typeof cornerstone === 'undefined'){
 
     "use strict";
 
-    function rotate(rotation, pt) {
-        while(rotation < 0) {
-            rotation += 360;
-        }
-        //console.log('rotation of ' + rotation);
-        var angle = rotation * Math.PI/180;
-
-        var cosA = Math.cos(angle);
-        var sinA = Math.sin(angle);
-
-        var newX = pt.x * cosA - pt.y * sinA;
-        var newY = pt.x * sinA + pt.y * cosA;
-
-        var newPt = {
-            x: newX,
-            y: newY
-        };
-        return newPt;
-    }
-
     /**
      * Converts a point in the page coordinate system to the pixel coordinate
      * system
@@ -871,7 +1047,6 @@ if(typeof cornerstone === 'undefined'){
      * @param pageY
      * @returns {{x: number, y: number}}
      */
-
     function pageToPixel(element, pageX, pageY) {
         var enabledElement = cornerstone.getEnabledElement(element);
 
@@ -879,9 +1054,7 @@ if(typeof cornerstone === 'undefined'){
             throw "image has not been loaded yet";
         }
 
-        // TODO: replace this with a transformation matrix
         var image = enabledElement.image;
-        var viewport = enabledElement.viewport;
 
         // convert the pageX and pageY to the canvas client coordinates
         var rect = element.getBoundingClientRect();
@@ -889,59 +1062,36 @@ if(typeof cornerstone === 'undefined'){
         var clientY = pageY - rect.top - window.pageYOffset;
 
         var pt = {x: clientX, y: clientY};
-
-        // translate the client relative to the middle of the canvas
-        pt.x -= rect.width / 2.0;
-        pt.y -= rect.height / 2.0;
-        //console.log('centered');
-        //console.log(pt);
-
-        pt = rotate(-viewport.rotation, pt);
-        //console.log('rot1');
-        //console.log(pt);
-
-        // apply the scale
-        var widthScale = viewport.scale;
-        var heightScale = viewport.scale;
-
-        if(enabledElement.image.rowPixelSpacing < enabledElement.image.columnPixelSpacing) {
-            widthScale = widthScale * (enabledElement.image.columnPixelSpacing / enabledElement.image.rowPixelSpacing);
-        }
-        else if(enabledElement.image.columnPixelSpacing < enabledElement.image.rowPixelSpacing) {
-            heightScale = heightScale * (enabledElement.image.rowPixelSpacing / enabledElement.image.columnPixelSpacing);
-        }
-
-        // scale to image coordinates middleX/middleY
-        pt.x /= widthScale;
-        pt.y /= heightScale;
-
-        pt = rotate(viewport.rotation, pt);
-
-        // apply pan offset
-        pt.x -= viewport.translation.x;
-        pt.y -= viewport.translation.y;
-
-        //Apply Flips
-        if (viewport.hflip) {
-			pt.x *= -1;
-        }
-
-        if (viewport.vflip) {
-			pt.y *= -1;
-        }
-        
-		//Apply rotations
-        pt = rotate(-viewport.rotation, pt);
-
-        // translate to image top left
-
-        pt.x += image.columns / 2;
-        pt.y += image.rows / 2;
-        return pt;
+        var transform = cornerstone.internal.getTransform(enabledElement);
+        transform.invert();
+        return transform.transformPoint(pt.x, pt.y);
     }
 
     // module/private exports
     cornerstone.pageToPixel = pageToPixel;
+
+}(cornerstone));
+
+(function (cornerstone) {
+
+    "use strict";
+
+    /**
+     * Converts a point in the pixel coordinate system to the canvas coordinate system
+     * system.  This can be used to render using canvas context without having the weird
+     * side effects that come from scaling and non square pixels
+     * @param element
+     * @param pt
+     * @returns {x: number, y: number}
+     */
+    function pixelToCanvas(element, pt) {
+        var enabledElement = cornerstone.getEnabledElement(element);
+        var transform = cornerstone.internal.getTransform(enabledElement);
+        return transform.transformPoint(pt.x, pt.y);
+    }
+
+    // module/private exports
+    cornerstone.pixelToCanvas = pixelToCanvas;
 
 }(cornerstone));
 
@@ -1394,61 +1544,8 @@ if(typeof cornerstone === 'undefined'){
             throw "setToPixelCoordinateSystem: parameter context must not be undefined";
         }
 
-        // reset the transformation matrix
-        context.setTransform(1, 0, 0, 1, 0, 0);
-        // move origin to center of canvas
-        context.translate(enabledElement.canvas.width/2, enabledElement.canvas.height / 2);
-
-        //Apply the rotation before scaling for non square pixels
-        var angle = enabledElement.viewport.rotation;
-        if(angle!==0) {
-            context.rotate(angle*Math.PI/180);
-        }
-
-        // apply the scale
-        var widthScale = enabledElement.viewport.scale;
-        var heightScale = enabledElement.viewport.scale;
-        if(enabledElement.image.rowPixelSpacing < enabledElement.image.columnPixelSpacing) {
-            widthScale = widthScale * (enabledElement.image.columnPixelSpacing / enabledElement.image.rowPixelSpacing);
-        }
-        else if(enabledElement.image.columnPixelSpacing < enabledElement.image.rowPixelSpacing) {
-            heightScale = heightScale * (enabledElement.image.rowPixelSpacing / enabledElement.image.columnPixelSpacing);
-        }
-        context.scale(widthScale, heightScale);
-
-        // unrotate to so we can translate unrotated
-        if(angle!==0) {
-            context.rotate(-angle*Math.PI/180);
-        }
-
-        // apply the pan offset
-        context.translate(enabledElement.viewport.translation.x, enabledElement.viewport.translation.y);
-
-        // rotate again so we can apply general scale
-        if(angle!==0) {
-            context.rotate(angle*Math.PI/180);
-        }
-
-        if(scale === undefined) {
-            scale = 1.0;
-        } else {
-            // apply the font scale
-            context.scale(scale, scale);
-        }
-
-        //Apply Flip if required
-        if(enabledElement.viewport.hflip) {
-            context.translate(enabledElement.offsetWidth,0);
-            context.scale(-1,1);
-        }
-
-        if(enabledElement.viewport.vflip) {
-            context.translate(0, enabledElement.offsetHeight);
-            context.scale(1,-1);
-        }
-
-        // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
-        context.translate(-enabledElement.image.width / 2 / scale, -enabledElement.image.height/ 2 / scale);
+        var transform = cornerstone.internal.calculateTransform(enabledElement, scale);
+        context.setTransform(transform.m[0],transform.m[1],transform.m[2],transform.m[3],transform.m[4],transform.m[5],transform.m[6]);
     }
 
     // Module exports

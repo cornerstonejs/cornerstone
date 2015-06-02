@@ -23,7 +23,7 @@ module.exports = function(grunt) {
         },
         concat: {
             build: {
-                src : ['src/header.js','src/*.js'],
+                src : ['src/header.js','src/**/*.js'],
                 dest: 'build/built.js'
             },
             css: {
@@ -69,7 +69,7 @@ module.exports = function(grunt) {
         },
         watch: {
             scripts: {
-                files: ['src/*.js', 'test/**/*'],
+                files: ['src/**/*.js', 'test/**/*'],
                 tasks: ['buildAll']
             }
         },
