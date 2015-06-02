@@ -127,13 +127,26 @@
         // load and display the image
         var imageId = "myImageLoader://1";
         cornerstone.loadImage(imageId).then(function(image) {
+
+            $(element).on("CornerstoneImageRendered", function(e, eventData) {
+                // reset to identity matrix
+                eventData.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
+
+                var context = eventData.canvasContext;
+                context.beginPath();
+                context.strokeStyle = 'white';
+                context.lineWidth = 0;
+                var topLeft = cornerstone.pixelToCanvas(element, {x:30, y:30});
+                var bottomRight = cornerstone.pixelToCanvas(element, {x:40, y:40});
+
+                context.rect(topLeft.x, topLeft.y, bottomRight.x-topLeft.x, bottomRight.y - topLeft.y);
+                context.stroke();
+
+                context.fillStyle = "white";
+                context.font = "14px Arial";
+                context.fillText("Tumor Here", topLeft.x, topLeft.y);
+            });
             cornerstone.displayImage(element, image);
-            /*var vp = cornerstone.getViewport(element);
-            vp.scale = 0.5;
-            vp.translation.x =-20;
-            vp.translation.y =-20;
-                cornerstone.setViewport(element, vp);
-            */
         });
 
         // Add event handlers to flip or rotate the image
