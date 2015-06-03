@@ -57,6 +57,7 @@
     }
 
     // Module exports
+    cornerstone.rendering.webImage = renderWebImage;
     cornerstone.renderWebImage = renderWebImage;
 
 }(cornerstone));

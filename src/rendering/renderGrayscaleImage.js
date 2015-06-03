@@ -137,6 +137,7 @@
     }
 
     // Module exports
+    cornerstone.rendering.grayscaleImage = renderGrayscaleImage;
     cornerstone.renderGrayscaleImage = renderGrayscaleImage;
 
 }(cornerstone));

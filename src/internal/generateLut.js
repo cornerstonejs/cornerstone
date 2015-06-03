@@ -64,5 +64,6 @@
 
 
     // Module exports
+    cornerstone.internal.generateLut = generateLut;
     cornerstone.generateLut = generateLut;
 }(cornerstone));

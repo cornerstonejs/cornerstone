@@ -29,46 +29,16 @@
             enabledElement.viewport.scale = 0.25;
         }
 
-		if(enabledElement.viewport.rotation===360 || enabledElement.viewport.rotation===-360) {
-			enabledElement.viewport.rotation = 0;
+        if(enabledElement.viewport.rotation===360 || enabledElement.viewport.rotation===-360) {
+            enabledElement.viewport.rotation = 0;
         }
-        
+
         // Force the image to be updated since the viewport has been modified
         cornerstone.updateImage(element);
     }
 
-    /**
-     * Returns the viewport for the specified enabled element
-     * @param element
-     * @returns {*}
-     */
-    function getViewport(element) {
-        var enabledElement = cornerstone.getEnabledElement(element);
-
-        var viewport = enabledElement.viewport;
-        if(viewport === undefined) {
-            return undefined;
-        }
-        return {
-            scale : viewport.scale,
-            translation : {
-                x : viewport.translation.x,
-                y : viewport.translation.y
-            },
-            voi : {
-                windowWidth: viewport.voi.windowWidth,
-                windowCenter : viewport.voi.windowCenter
-            },
-            invert : viewport.invert,
-            pixelReplication: viewport.pixelReplication,
-            rotation: viewport.rotation, 
-            hflip: viewport.hflip,
-            vflip: viewport.vflip
-        };
-    }
 
     // module/private exports
-    cornerstone.getViewport = getViewport;
-    cornerstone.setViewport=setViewport;
+    cornerstone.setViewport = setViewport;
 
 }(cornerstone));

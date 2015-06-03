@@ -23,7 +23,7 @@
         enabledElement.image = image;
 
         if(enabledElement.viewport === undefined) {
-            enabledElement.viewport = cornerstone.getDefaultViewport(enabledElement.canvas, image);
+            enabledElement.viewport = cornerstone.internal.getDefaultViewport(enabledElement.canvas, image);
         }
 
         // merge viewport

@@ -151,5 +151,6 @@
     }
 
     // Module exports
+    cornerstone.rendering.colorImage = renderColorImage;
     cornerstone.renderColorImage = renderColorImage;
 }(cornerstone));

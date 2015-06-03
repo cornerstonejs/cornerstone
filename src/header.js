@@ -1,5 +1,6 @@
 if(typeof cornerstone === 'undefined'){
     cornerstone = {
-        internal : {}
+        internal : {},
+        rendering: {}
     };
 }

@@ -34,24 +34,6 @@
         return storedPixels;
     }
 
-    /**
-     * Returns array of pixels with modality LUT transformation applied
-     */
-    function getPixels(element, x, y, width, height) {
-
-        var storedPixels = getStoredPixels(element, x, y, width, height);
-        var ee = cornerstone.getEnabledElement(element);
-        var slope = ee.image.slope;
-        var intercept = ee.image.intercept;
-
-        var modalityPixels = storedPixels.map(function(pixel){
-                return pixel * slope + intercept;
-            });
-
-        return modalityPixels;
-    }
-
     // module exports
     cornerstone.getStoredPixels = getStoredPixels;
-    cornerstone.getPixels = getPixels;
 }(cornerstone));

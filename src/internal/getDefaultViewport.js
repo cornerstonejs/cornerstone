@@ -50,5 +50,6 @@
     }
 
     // module/private exports
+    cornerstone.internal.getDefaultViewport = getDefaultViewport;
     cornerstone.getDefaultViewport = getDefaultViewport;
 }(cornerstone));

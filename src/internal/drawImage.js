@@ -37,6 +37,7 @@
     }
 
     // Module exports
+    cornerstone.internal.drawImage = drawImage;
     cornerstone.drawImage = drawImage;
 
 }($, cornerstone));
