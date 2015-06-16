@@ -1,4 +1,4 @@
-/*! cornerstone - v0.8.0 - 2015-06-14 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.8.1 - 2015-06-16 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 if(typeof cornerstone === 'undefined'){
     cornerstone = {
         internal : {},
@@ -286,6 +286,30 @@ if(typeof cornerstone === 'undefined'){
     cornerstone.fitToWindow = fitToWindow;
 }(cornerstone));
 
+/**
+ * This file is responsible for returning the default viewport for an image
+ */
+
+(function ($, cornerstone) {
+
+    "use strict";
+
+    /**
+     * returns a default viewport for display the specified image on the specified
+     * enabled element.  The default viewport is fit to window
+     *
+     * @param element
+     * @param image
+     */
+    function getDefaultViewportForImage(element, image) {
+        var enabledElement = cornerstone.getEnabledElement(element);
+        var viewport = cornerstone.internal.getDefaultViewport(enabledElement.canvas, image);
+        return viewport;
+    }
+
+    // Module exports
+    cornerstone.getDefaultViewportForImage = getDefaultViewportForImage;
+}($, cornerstone));
 /**
  * This module is responsible for returning the currently displayed image for an element
  */
