@@ -32,7 +32,7 @@
         if (ee.image.color) {
             for(row=0; row < height; row++) {
                 for(column=0; column < width; column++) {
-                    spIndex = ((row + y) * ee.image.columns) + (column + x);
+                    spIndex = (((row + y) * ee.image.columns) + (column + x)) * 4;
                     var red = pixelData[spIndex];
                     var green = pixelData[spIndex + 1];
                     var blue = pixelData[spIndex + 2];
