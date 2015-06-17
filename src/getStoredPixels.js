@@ -25,10 +25,26 @@
         var storedPixels = [];
         var index = 0;
         var pixelData = ee.image.getPixelData();
-        for(var row=0; row < height; row++) {
-            for(var column=0; column < width; column++) {
-                var spIndex = ((row + y) * ee.image.columns) + (column + x);
-                storedPixels[index++] = pixelData[spIndex];
+        var spIndex,
+            row,
+            column;
+
+        if (ee.image.color) {
+            for(row=0; row < height; row++) {
+                for(column=0; column < width; column++) {
+                    spIndex = ((row + y) * ee.image.columns) + (column + x);
+                    var red = pixelData[spIndex];
+                    var green = pixelData[spIndex + 1];
+                    var blue = pixelData[spIndex + 2];
+                    storedPixels[index++] = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+                }
+            }
+        } else {
+            for(row=0; row < height; row++) {
+                for(column=0; column < width; column++) {
+                    spIndex = ((row + y) * ee.image.columns) + (column + x);
+                    storedPixels[index++] = pixelData[spIndex];
+                }
             }
         }
         return storedPixels;
