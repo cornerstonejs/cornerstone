@@ -51,6 +51,7 @@
             delete imageCache[lastCachedImage.imageId];
             lastCachedImage.imagePromise.reject();
             cachedImages.pop();
+            $(cornerstone).trigger('CornerstoneImageCachePromiseRemoved', {imageId: lastCachedImage.imageId});
         }
 
         var cacheInfo = cornerstone.imageCache.getCacheInfo();
@@ -142,13 +143,14 @@
     }
 
     // module exports
-
     cornerstone.imageCache = {
         putImagePromise : putImagePromise,
         getImagePromise: getImagePromise,
         removeImagePromise: removeImagePromise,
         setMaximumSizeBytes: setMaximumSizeBytes,
         getCacheInfo : getCacheInfo,
-        purgeCache: purgeCache
+        purgeCache: purgeCache,
+        cachedImages: cachedImages
     };
+
 }(cornerstone));
