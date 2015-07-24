@@ -1,5 +1,5 @@
 /**
- * This module is responsible for drawing a grayscale imageß
+ * This module is responsible for drawing a grayscale image
  */
 
 (function (cornerstone) {
