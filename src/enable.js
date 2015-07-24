@@ -5,7 +5,7 @@
 
     "use strict";
 
-    function enable(element) {
+    function enable(element, renderer) {
         if(element === undefined) {
             throw "enable: parameter element cannot be undefined";
         }
@@ -13,18 +13,38 @@
         var canvas = document.createElement('canvas');
         element.appendChild(canvas);
 
+        if (typeof renderer === 'string' && renderer.toLowerCase() === 'webgl') {
+            renderer = cornerstone.webGL.renderer.render;
+        }
+
+        if (renderer === cornerstone.webGL.renderer.render) {
+            if (!cornerstone.webGL.renderer.isWebGLAvailable()) {
+                console.error('WebGL not available, falling back to Canvas renderer');
+                renderer = undefined;
+            } else {
+                cornerstone.webGL.renderer.initRenderer();
+            }
+        }
+
         var el = {
             element: element,
             canvas: canvas,
             image : undefined, // will be set once image is loaded
             invalid: false, // true if image needs to be drawn, false if not
             needsRedraw:true,
+            render: renderer,
             data : {}
         };
         cornerstone.addEnabledElement(el);
 
         cornerstone.resize(element, true);
 
+        var renderFn;
+        if (el.render) {
+            renderFn = el.render;
+        } else {
+            renderFn = el.image.render;
+        }
 
         function draw() {
             if (el.canvas === undefined){
@@ -32,7 +52,7 @@
             }
             if (el.needsRedraw && el.image !== undefined){
                 var start = new Date();
-                el.image.render(el, el.invalid);
+                renderFn(el, el.invalid);
 
                 var context = el.canvas.getContext('2d');
 

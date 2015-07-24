@@ -1,0 +1,157 @@
+    <!DOCTYPE HTML>
+<html>
+<head>
+    <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+
+<h1>
+WebGL Example
+</h1>
+
+This is a work-in-progress example of WebGL use in cornerstone
+
+<br>
+<br>
+
+<div class="row">
+    <div class="col-xs-2">
+        <ul class="list-group">
+            <a id="int16" class="list-group-item">Int 16</a>
+            <a id="uint16" class="list-group-item">UInt16</a>
+            <a id="uint8" class="list-group-item">UInt8</a>
+            <a id="RGB" class="list-group-item">RGB</a>
+        </ul>
+        <label for="invert">Invert <input id="invert" type="checkbox"></input></label>
+    </div>
+    <div class="col-xs-6">
+        <div style="width:512px;height:512px;position:relative;color: white;"
+             class="cornerstone-enabled-image"
+             oncontextmenu="return false"
+             unselectable='on'
+             onselectstart='return false;'
+             onmousedown='return false;'>
+            <div id="dicomImage" oncontextmenu="return false"
+                 style="width:512px;height:512px;top:0px;left:0px; position:absolute">
+            </div>
+            <div id="topleft" style="position: absolute;top:0px; left:0px">
+                Patient Name
+            </div>
+            <div id="topright" style="position: absolute;top:0px; right:0px">
+                Render Time:
+            </div>
+            <div id="bottomright" style="position: absolute;bottom:0px; right:0px">
+                Zoom:
+            </div>
+            <div id="bottomleft" style="position: absolute;bottom:0px; left:0px">
+                WW/WC:
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</div>
+</body>
+
+<!-- cornerstone depends on jQuery so it must be loaded first-->
+<script src="../jquery.min.js"></script>
+
+<!-- include the cornerstone library -->
+<script src="../../dist/cornerstone.js"></script>
+
+<!-- include special code for these examples which provides images -->
+<script src="../dicomParser.js"></script>
+<script src="../cornerstoneWADOImageLoader.js"></script>
+<script src="../cornerstoneWebImageLoader.js"></script>
+
+<script src="../cornerstoneMath.min.js"></script>
+<script src="../cornerstoneTools.js"></script>
+
+<script src="../exampleImageIdLoaderWebGL.js"></script>
+
+<script>
+
+    $(document).ready(function() {
+        // UInt16 Image generated via CornerstoneTestImageLoader
+        var rampImageId = "ramp://"+256+","+256 +"," + 16;
+        //var imageId = rampImageId;
+
+        // CR
+        //var imageId = 'dicomweb:http://cornerstonetech.org/images/ClearCanvas/CRStudy/1.3.51.5145.5142.20010109.1105627.1.0.1.dcm';
+        //var imageId = 'dicomweb:http://jpx.jfpb.net/data/raw.dcm';
+        //var imageId= 'dicomweb:http://cornerstonetech.org/images/ClearCanvas/DXStudy/1.2.840.113619.2.67.2158294438.16324010109084338.243.dcm';
+        
+        // Uncomment the next line to load a uint8 greyscale image
+        var imageIds = [
+            'example://1',
+            'example://2'
+        ];
+
+        var stack = {
+            currentImageIdIndex : 0,
+            imageIds: imageIds
+        };
+
+        
+        // Uncomment the next line to load an RGB image
+        //var imageId = 'https://upload.wikimedia.org/wikipedia/commons/7/7d/Renal_Cell_Carcinoma.jpg';
+        
+        var element = document.getElementById('dicomImage');
+
+
+        // setup handlers before we display the image
+        function onImageRendered(e, eventData) {
+            // set the canvas context to the image coordinate system
+            cornerstone.setToPixelCoordinateSystem(eventData.enabledElement, eventData.canvasContext);
+
+            $('#topright').text("Render Time:" + eventData.renderTimeInMs + " ms");
+            $('#bottomleft').text("WW/WL:" + Math.round(eventData.viewport.voi.windowWidth) + "/" + Math.round(eventData.viewport.voi.windowCenter));
+            $('#bottomright').text("Zoom:" + eventData.viewport.scale.toFixed(2));
+
+        }
+        $(element).on("CornerstoneImageRendered", onImageRendered);
+
+        $("#invert").on('change', function() {
+            var viewport = cornerstone.getViewport(element);
+            viewport.invert = this.checked;
+            cornerstone.setViewport(element, viewport);
+        })
+
+        function loadImage(imageId) {
+            cornerstone.loadImage(imageId).then(function(image) {
+                cornerstone.displayImage(element, image);
+                var viewport = cornerstone.getDefaultViewportForImage(element, image);
+                cornerstone.setViewport(element, viewport);
+            });
+        }
+
+        cornerstone.enable(element);
+        cornerstone.loadImage(imageIds[0]).then(function(image) {
+
+            cornerstone.rendering.webGLRenderer.initRenderer();
+            console.log(image);
+
+            cornerstone.rendering.webGLRenderer.initRenderer();
+
+            cornerstone.displayImage(element, image);
+
+            cornerstoneTools.mouseInput.enable(element);
+            cornerstoneTools.mouseWheelInput.enable(element);
+            
+            cornerstoneTools.addStackStateManager(element, ['stack']);
+            cornerstoneTools.addToolState(element, 'stack', stack);
+
+            // Enable all tools we want to use with this element
+            cornerstoneTools.stackScroll.activate(element, 1);
+            cornerstoneTools.stackScrollWheel.activate(element);
+            cornerstoneTools.pan.activate(element, 2);
+            cornerstoneTools.zoom.activate(element, 4);
+        });
+
+    });
+
+</script>
+</html>

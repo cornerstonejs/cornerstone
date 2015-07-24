@@ -16,7 +16,6 @@
         if (invalidated){
             enabledElement.invalid = true;
         }
-
     }
 
     // Module exports
