@@ -172,7 +172,6 @@
      * @param invalidated - true if pixel data has been invaldiated and cached rendering should not be used
      */
     function renderGrayscaleImageWebGL(enabledElement, invalidated) {
-
         if (!enabledElement) {
             throw "drawImage: enabledElement parameter must not be undefined";
         }
@@ -182,27 +181,28 @@
             throw "drawImage: image must be loaded before it can be drawn";
         }
 
-        var renderCanvas = getRenderCanvas(enabledElement, image, invalidated);
-
         // Start WebGL drawing
         var pixelData = image.getPixelData();
-        var width = image.width;
-        var height = image.height;
 
         // Get A WebGL context
-        var gl = initWebGL(renderCanvas);
+        var canvas = enabledElement.canvas;
+        var gl = initWebGL(canvas);
         var program = initShaders(gl);
+
         gl.clearColor(0.5, 0.0, 0.0, 1.0);
 
-        var numberOfChannels = 4;
-        var format = gl.RGBA;
-        
         // Transfer image data.
         // Some WebGL implementation supports floats components that could be used with medical images.
         // However, it rely a optional extension that is not supported by all hardware.
         // Furthermore, float textures have 4 channels (usually for RGBA) which means that each pixel requires
         // 16 bytes (4 floats32) of memory. To mitigate both issues, I have decided pack 16 bit in the 2 first
         // uint8 components (r and g). b and a are still available for other purposes.
+
+        // In the demo, I just concatenate a 512x512 image 4 times in each direction to create a 2048x2048 image.
+        var width = 512;
+        var height = 512;
+        var numberOfChannels = 4;
+        var format = gl.RGBA;
 
         // GL texture configuration
         var texture = gl.createTexture();
@@ -212,6 +212,7 @@
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
+
         // Create texture, pack uint16 into two uint8 (r and g) and concatenate.
         var data = new Uint8Array(width * height * numberOfChannels);
         // ii+=4 iterates over each pixels, not components.
@@ -219,16 +220,15 @@
             // ugly modulo magic to translate ii to image coordinate and concatenate.
             var x = Math.floor(ii/4)%width;
             var y = Math.floor(Math.floor(ii/4)/height);
-
             var val = pixelData[(y%512)*512+(x%512)];
+            
             // uint16 -> [uint8, uint8, ~, ~]
             // Only unsigned is implemented. Shader will also need to support other formats.
             data[ii+0] = (val & 0x0000FF00) >> 8;
             data[ii+1] = (val & 0x000000FF);
             data[ii+2] = 0;
-            data[ii+4] = 0;
+            data[ii+3] = 0;
         }
-
         gl.texImage2D(gl.TEXTURE_2D, 0, format, width, height, 0, format, gl.UNSIGNED_BYTE, data);
 
         // look up where the vertex data needs to go.
@@ -245,22 +245,22 @@
             0.0,  1.0,
             1.0,  0.0,
             1.0,  1.0]), gl.STATIC_DRAW);
-
         gl.enableVertexAttribArray(texCoordLocation);
         gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
-        
+
+
         // set the resolution
         var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
-        gl.uniform2f(resolutionLocation, renderCanvas.width, renderCanvas.height);
-        
+        gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+
         // set initial window/level (vec2)
         var wlLocation = gl.getUniformLocation(program, "u_wl");
-        gl.uniform2f(wlLocation, enabledElement.viewport.voi.windowCenter, enabledElement.viewport.voi.windowWidth);
-        
+        gl.uniform2f(wlLocation, -160, 240 );
+
         // set Slope Intercept (vec2)
         var siLocation = gl.getUniformLocation(program, "u_slopeIntercept");
-        gl.uniform2f(siLocation, image.slope, image.intercept);
-        
+        gl.uniform2f(siLocation, 1, -1000);
+
         // Create a buffer for the position of the rectangle corners.
         var posbuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, posbuffer);
@@ -268,21 +268,20 @@
         gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
         setRectangle(gl, 0, 0, width, height);
 
-        // Render to the canvas
-        render(gl, texture, program);
-
-        // ----- Testing purposes only -----
+        //var ii=0;
+        // redraw with changing W/L
+        // docs says requestAnimationFrame is better..
         function step(timestamp) {
             ii += 10;
+
             var t0 = performance.now();
             gl.uniform2f(wlLocation, -ii%1000-50, ii%1000+50 );
-            render(gl, texture, program);
+            render(gl,texture, program);
             var t1 = performance.now();
-            console.log("Call render " + (t1 - t0) + " milliseconds.");
             window.requestAnimationFrame(step);
         }
-        // window.requestAnimationFrame(step);
-        // ----- Testing purposes only -----
+        //window.requestAnimationFrame(step)
+        render(gl,texture, program);
 
         // Save lastRendered information
         lastRenderedImageId = image.imageId;

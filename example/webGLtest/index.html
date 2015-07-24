@@ -36,12 +36,15 @@ In this example, javascript is used to image enable a div.
 
 <!-- include special code for these examples which provides images -->
 <script src="../dicomParser.js"></script>
-<script src="../cornerstoneWADOImageLoader.js"></script>
+<script src="../cornerstoneWADOImageLoader.js"></script>-->
+
+<!--<script src="../exampleImageIdLoaderWebGL.js"></script>-->
 
 <script>
 
     $(document).ready(function() {
         var imageId = 'dicomweb:http://jpx.jfpb.net/data/raw.dcm';
+        //var imageId = 'example://1';
         var element = document.getElementById('dicomImage');
         cornerstone.enable(element);
         cornerstone.loadImage(imageId).then(function(image) {
