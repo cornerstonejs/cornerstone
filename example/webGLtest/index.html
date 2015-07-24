@@ -36,7 +36,10 @@ In this example, javascript is used to image enable a div.
 
 <!-- include special code for these examples which provides images -->
 <script src="../dicomParser.js"></script>
-<script src="../cornerstoneWADOImageLoader.js"></script>-->
+<script src="../cornerstoneWADOImageLoader.js"></script>
+
+<script src="../cornerstoneMath.min.js"></script>
+<script src="../cornerstoneTools.js"></script>
 
 <!--<script src="../exampleImageIdLoaderWebGL.js"></script>-->
 
@@ -47,8 +50,15 @@ In this example, javascript is used to image enable a div.
         //var imageId = 'example://1';
         var element = document.getElementById('dicomImage');
         cornerstone.enable(element);
+        cornerstoneTools.mouseInput.enable(element);
+        cornerstoneTools.mouseWheelInput.enable(element);
+
         cornerstone.loadImage(imageId).then(function(image) {
             cornerstone.displayImage(element, image);
+            cornerstoneTools.wwwc.activate(element, 1);
+            cornerstoneTools.pan.activate(element, 2);
+            cornerstoneTools.zoom.activate(element, 4);
+            cornerstoneTools.zoomWheel.activate(element);
         });
     });
 

@@ -1786,8 +1786,8 @@ if(typeof cornerstone === 'undefined'){
         // uint8 components (r and g). b and a are still available for other purposes.
 
         // In the demo, I just concatenate a 512x512 image 4 times in each direction to create a 2048x2048 image.
-        var width = 512;
-        var height = 512;
+        var width = image.width;
+        var height = image.height;
         var numberOfChannels = 4;
         var format = gl.RGBA;
 
@@ -1835,18 +1835,17 @@ if(typeof cornerstone === 'undefined'){
         gl.enableVertexAttribArray(texCoordLocation);
         gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
 
-
         // set the resolution
         var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
         gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
 
         // set initial window/level (vec2)
         var wlLocation = gl.getUniformLocation(program, "u_wl");
-        gl.uniform2f(wlLocation, -160, 240 );
+        gl.uniform2f(wlLocation, enabledElement.viewport.voi.windowCenter, enabledElement.viewport.voi.windowWidth);
 
         // set Slope Intercept (vec2)
         var siLocation = gl.getUniformLocation(program, "u_slopeIntercept");
-        gl.uniform2f(siLocation, 1, -1000);
+        gl.uniform2f(siLocation, image.slope, image.intercept);
 
         // Create a buffer for the position of the rectangle corners.
         var posbuffer = gl.createBuffer();
@@ -1855,20 +1854,7 @@ if(typeof cornerstone === 'undefined'){
         gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
         setRectangle(gl, 0, 0, width, height);
 
-        //var ii=0;
-        // redraw with changing W/L
-        // docs says requestAnimationFrame is better..
-        function step(timestamp) {
-            ii += 10;
-
-            var t0 = performance.now();
-            gl.uniform2f(wlLocation, -ii%1000-50, ii%1000+50 );
-            render(gl,texture, program);
-            var t1 = performance.now();
-            window.requestAnimationFrame(step);
-        }
-        //window.requestAnimationFrame(step)
-        render(gl,texture, program);
+        render(gl, texture, program);
 
         // Save lastRendered information
         lastRenderedImageId = image.imageId;
