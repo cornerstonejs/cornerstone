@@ -21,21 +21,24 @@
         // Credit to @jpambrun
 
         // Create texture, pack uint16 into two uint8 (r and g) and concatenate.
-        var numberOfChannels = 4;
+        var numberOfChannels = 2;
         var data = new Uint8Array(width * height * numberOfChannels);
         // ii+=4 iterates over each pixels, not components.
-        for (var ii = 0; ii < data.length; ii+=4) {
-            // ugly modulo magic to translate ii to image coordinate and concatenate.
-            var x = Math.floor(ii/4)%width;
-            var y = Math.floor(Math.floor(ii/4)/height);
-            var val = pixelData[(y%width)*width+(x%height)];
-            
-            // uint16 -> [uint8, uint8, ~, ~]
+        var offset=0;
+
+        for (var ii = 0; ii < pixelData.length; ii++) {
+            var val = pixelData[ii];
+
+          // uint16 -> [uint8, uint8, ~, ~]
             // Only unsigned is implemented. Shader will also need to support other formats.
-            data[ii+0] = (val & 0x0000FF00) >> 8;
-            data[ii+1] = (val & 0x000000FF);
-            data[ii+2] = 0;
-            data[ii+3] = 0;
+            data[offset++] = (val & 0x000000FF);
+            data[offset++] = (val & 0x0000FF00) >> 8;
+            //data[offset+2] = 0;
+            //data[offset+3] = 0;
+
+          //data[offset++]=parseInt(val & 0xFF);
+          //data[offset++]=parseInt(val >> 8)
+
         }
         return data;
     }
@@ -54,7 +57,12 @@
             'v_texCoord = a_texCoord;' +
         '}';
 
-    cornerstone.shaders.int16.frag = 'precision mediump float;' +
+  //modalityLutValue = storedValue * slope + intercept;
+  //voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
+  //clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
+
+
+  cornerstone.shaders.int16.frag = 'precision mediump float;' +
         'uniform sampler2D u_image;' +
         'uniform vec2 u_wl;' +
         'uniform vec2 u_slopeIntercept;' +
@@ -62,9 +70,9 @@
         'void main() {' +
             'vec4 packedTextureElement = texture2D(u_image, v_texCoord);' +
             // unpacking [ [uint8, uint8, ~, ~]] -> float and compute slope intercept
-            'float grayLevel = (packedTextureElement[0]*255.0*256.0 + packedTextureElement[1]*255.0) * u_slopeIntercept[0] + u_slopeIntercept[1];' +
+            'float grayLevel =  (packedTextureElement[1]*256.0*256.0 + packedTextureElement[0]*256.0) * 1.0 + 0.0;' +
             // W/L transformation.
-            'float grayLevel_wl = clamp( ( grayLevel - u_wl[0] ) / (u_wl[1] - u_wl[0]), 0.0, 1.0);' +
+            'float grayLevel_wl = grayLevel;' + //(grayLevel - 8192.0 ) / (16383.0);' + //clamp( ( grayLevel - u_wl[0] ) / (u_wl[1]), 0.0, 1.0);' +
             // RGBA output'
             'gl_FragColor = vec4(grayLevel_wl, grayLevel_wl, grayLevel_wl, 1);' +
         '}';

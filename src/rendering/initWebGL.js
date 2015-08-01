@@ -8,7 +8,8 @@
         var gl = null;
         try {
             // Try to grab the standard context. If it fails, fallback to experimental.
-            gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+          var options = {preserveDrawingBuffer: true}; // preserve buffer so we can copy to display canvas element
+          gl = canvas.getContext("webgl", options) || canvas.getContext("experimental-webgl", options);
         }
         catch(e) {}
 

@@ -6,7 +6,7 @@
 
     "use strict";
 
-    var grayscaleRenderCanvas = document.createElement('canvas');
+  var grayscaleRenderCanvas = document.createElement('canvas');
     var grayscaleRenderCanvasContext;
     var grayscaleRenderCanvasData;
     var gl;
@@ -33,8 +33,8 @@
         var pixelData = image.getPixelData();
 
         // Get A WebGL context
-        var canvas = enabledElement.canvas;
-        gl = cornerstone.rendering.initWebGL(canvas);
+        //var canvas = enabledElement.canvas;
+        gl = cornerstone.rendering.initWebGL(grayscaleRenderCanvas);
         
         // Set the current shader
         var shader = cornerstone.shaders.int16;
@@ -45,7 +45,7 @@
 
         var width = image.width;
         var height = image.height;
-        var format = gl.RGBA;
+        var format = gl.LUMINANCE_ALPHA;
 
         // GL texture configuration
         var texture = gl.createTexture();
@@ -128,7 +128,15 @@
             throw "drawImage: image must be loaded before it can be drawn";
         }
 
-        var canvas = enabledElement.canvas;
+      // get the canvas context and reset the transform
+      var context = enabledElement.canvas.getContext('2d');
+      context.setTransform(1, 0, 0, 1, 0, 0);
+
+      // clear the canvas
+      context.fillStyle = 'black';
+      context.fillRect(0,0, enabledElement.canvas.width, enabledElement.canvas.height);
+
+      var canvas = enabledElement.canvas;
         var shader = cornerstone.shaders.int16;
         //var shader = cornerstone.shaders.uint8;
         gl = getWebGLContext(enabledElement, image, invalidated);
@@ -139,11 +147,15 @@
 
         // set the resolution
         var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
-        gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+        gl.uniform2f(resolutionLocation, width, height);
 
         // set initial window/level (vec2)
         var wlLocation = gl.getUniformLocation(program, "u_wl");
-        gl.uniform2f(wlLocation, enabledElement.viewport.voi.windowCenter, enabledElement.viewport.voi.windowWidth);
+      var windowCenter = enabledElement.viewport.voi.windowCenter;
+      if(image.invert === true) {
+        //windowCenter = -windowCenter;
+      }
+        gl.uniform2f(wlLocation, windowCenter, enabledElement.viewport.voi.windowWidth);
 
         // set Slope Intercept (vec2)
         var siLocation = gl.getUniformLocation(program, "u_slopeIntercept");
@@ -152,6 +164,12 @@
         // Do the actual rendering
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+      // save the canvas context state and apply the viewport properties
+      cornerstone.setToPixelCoordinateSystem(enabledElement, context);
+
+
+      context.drawImage(grayscaleRenderCanvas, 0,0, image.width, image.height, 0, 0, image.width, image.height);
 
         // Save lastRendered information
         lastRenderedImageId = image.imageId;
