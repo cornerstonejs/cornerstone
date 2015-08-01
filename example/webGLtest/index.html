@@ -21,8 +21,26 @@ In this example, javascript is used to image enable a div.
 <br>
 <br>
 
-
-<div id="dicomImage" style="width:512px;height:512px;">
+<div class="row">
+    <div class="col-xs-2">
+        <ul class="list-group">
+            <a id="int16" class="list-group-item">Int 16</a>
+            <a id="uint8" class="list-group-item">uint8</a>
+            <a id="RGB" class="list-group-item">RGB</a>
+        </ul>
+    </div>
+    <div class="col-xs-6">
+        <div style="width:512px;height:512px;position:relative;display:inline-block;color:white;"
+             oncontextmenu="return false"
+             class='cornerstone-enabled-image'
+             unselectable='on'
+             onselectstart='return false;'
+             onmousedown='return false;'>
+            <div id="dicomImage"
+                 style="width:512px;height:512px;top:0px;left:0px; position:absolute;">
+            </div>
+        </div>
+    </div>
 </div>
 
 </div>
@@ -37,17 +55,39 @@ In this example, javascript is used to image enable a div.
 <!-- include special code for these examples which provides images -->
 <script src="../dicomParser.js"></script>
 <script src="../cornerstoneWADOImageLoader.js"></script>
+<script src="../cornerstoneWebImageLoader.js"></script>
 
 <script src="../cornerstoneMath.min.js"></script>
 <script src="../cornerstoneTools.js"></script>
 
-<!--<script src="../exampleImageIdLoaderWebGL.js"></script>-->
+<script src="../exampleImageIdLoaderWebGL.js"></script>
 
 <script>
 
     $(document).ready(function() {
         var imageId = 'dicomweb:http://jpx.jfpb.net/data/raw.dcm';
+
         //var imageId = 'example://1';
+        //var imageId = 'https://upload.wikimedia.org/wikipedia/commons/7/7d/Renal_Cell_Carcinoma.jpg';
+
+        $("#RGB").on('click', function() {
+            loadImage('https://upload.wikimedia.org/wikipedia/commons/7/7d/Renal_Cell_Carcinoma.jpg');
+        })
+
+        $("#uint8").on('click', function() {
+            loadImage('example://1');
+        })
+
+        $("#int16").on('click', function() {
+            loadImage('dicomweb:http://jpx.jfpb.net/data/raw.dcm');
+        })
+
+        function loadImage(imageId) {
+            cornerstone.loadImage(imageId).then(function(image) {
+                cornerstone.displayImage(element, image);
+            });
+        }
+
         var element = document.getElementById('dicomImage');
         cornerstone.enable(element);
         cornerstoneTools.mouseInput.enable(element);

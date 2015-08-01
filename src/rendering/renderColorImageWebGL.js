@@ -6,14 +6,31 @@
 
     "use strict";
 
-    var grayscaleRenderCanvas = document.createElement('canvas');
-    var grayscaleRenderCanvasContext;
-    var grayscaleRenderCanvasData;
+    var colorRenderCanvas = document.createElement('canvas');
+    var colorRenderCanvasContext;
+    var colorRenderCanvasData;
     var gl;
     var program;
 
     var lastRenderedImageId;
     var lastRenderedViewport = {};
+
+    function getLut(image, viewport) {
+        // if we have a cached lut and it has the right values, return it immediately
+        if(image.lut !== undefined &&
+            image.lut.windowCenter === viewport.voi.windowCenter &&
+            image.lut.windowWidth === viewport.voi.windowWidth &&
+            image.lut.invert === viewport.invert) {
+            return image.lut;
+        }
+
+        // lut is invalid or not present, regenerate it and cache it
+        cornerstone.generateLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert);
+        image.lut.windowWidth = viewport.voi.windowWidth;
+        image.lut.windowCenter = viewport.voi.windowCenter;
+        image.lut.invert = viewport.invert;
+        return image.lut;
+    }
 
     function getShaderProgram(gl, shader) {
         if (!program) {
@@ -26,8 +43,8 @@
         var image = enabledElement.image;
 
         // Resize the canvas
-        grayscaleRenderCanvas.width = image.width;
-        grayscaleRenderCanvas.height = image.height;
+        colorRenderCanvas.width = image.width;
+        colorRenderCanvas.height = image.height;
 
         // Start WebGL drawing
         var pixelData = image.getPixelData();
@@ -37,8 +54,7 @@
         gl = cornerstone.rendering.initWebGL(canvas);
         
         // Set the current shader
-        var shader = cornerstone.shaders.int16;
-        //var shader = cornerstone.shaders.uint8;
+        var shader = cornerstone.shaders.rgb;
         program = getShaderProgram(gl, shader);
 
         gl.clearColor(0.5, 0.0, 0.0, 1.0);
@@ -55,7 +71,10 @@
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-        var imageData = shader.storedPixelDataToImageData(pixelData, width, height);
+        //var imageData = shader.storedPixelDataToImageData(pixelData, width, height);
+        var viewport = enabledElement.viewport;
+        var lut = getLut(image, viewport);
+        var imageData = shader.storedColorPixelDataToCanvasImageData(image, lut);
         gl.texImage2D(gl.TEXTURE_2D, 0, format, width, height, 0, format, gl.UNSIGNED_BYTE, imageData);
 
         // look up where the vertex data needs to go.
@@ -107,7 +126,7 @@
         // If our render canvas does not match the size of this image reset it
         // NOTE: This might be inefficient if we are updating multiple images of different
         // sizes frequently.
-        if (grayscaleRenderCanvas.width !== image.width || grayscaleRenderCanvas.height != image.height) {
+        if (colorRenderCanvas.width !== image.width || colorRenderCanvas.height != image.height) {
             initializeWebGLContext(enabledElement);
         }
         return gl;
@@ -118,7 +137,7 @@
      * @param enabledElement
      * @param invalidated - true if pixel data has been invaldiated and cached rendering should not be used
      */
-    function renderGrayscaleImageWebGL(enabledElement, invalidated) {
+    function renderColorImageWebGL(enabledElement, invalidated) {
         if (!enabledElement) {
             throw "drawImage: enabledElement parameter must not be undefined";
         }
@@ -129,8 +148,7 @@
         }
 
         var canvas = enabledElement.canvas;
-        var shader = cornerstone.shaders.int16;
-        //var shader = cornerstone.shaders.uint8;
+        var shader = cornerstone.shaders.rgb;
         gl = getWebGLContext(enabledElement, image, invalidated);
         program = getShaderProgram(gl, shader);
 
@@ -164,7 +182,7 @@
     }
 
     // Module exports
-    cornerstone.rendering.grayscaleImageWebGL = renderGrayscaleImageWebGL;
-    cornerstone.renderGrayscaleImageWebGL = renderGrayscaleImageWebGL;
+    cornerstone.rendering.grayscaleImageWebGL = renderColorImageWebGL;
+    cornerstone.renderColorImageWebGL = renderColorImageWebGL;
 
 }(cornerstone));
