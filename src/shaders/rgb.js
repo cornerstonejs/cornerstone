@@ -6,9 +6,10 @@
         cornerstone.shaders = {};
     }
 
-    if (!cornerstone.shaders.rgb) {
-        cornerstone.shaders.rgb = {};
-    }
+    // Pack RGB images into a 3-channel RGB texture
+    var shader = {
+        format: 6407 // Equivalent to gl.RGB
+    };
 
     function storedColorPixelDataToCanvasImageData(image, lut) {
         var minPixelValue = image.minPixelValue;
@@ -40,10 +41,9 @@
         return localCanvasImageDataData;
     }
 
+    shader.storedColorPixelDataToCanvasImageData = storedColorPixelDataToCanvasImageData;
 
-    cornerstone.shaders.rgb.storedColorPixelDataToCanvasImageData = storedColorPixelDataToCanvasImageData;
-
-    cornerstone.shaders.rgb.vert = 'attribute vec2 a_position;' +
+    shader.vert = 'attribute vec2 a_position;' +
         'attribute vec2 a_texCoord;' +
         'uniform vec2 u_resolution;' +
         'varying vec2 v_texCoord;' +
@@ -55,7 +55,7 @@
             'v_texCoord = a_texCoord;' +
         '}';
 
-    cornerstone.shaders.rgb.frag = 'precision mediump float;' +
+    shader.frag = 'precision mediump float;' +
         'uniform sampler2D u_image;' +
         'uniform vec2 u_wl;' +
         'uniform vec2 u_slopeIntercept;' +
@@ -70,5 +70,7 @@
             //'gl_FragColor = vec4(grayLevel_wl, grayLevel_wl, grayLevel_wl, 1);' +
             'gl_FragColor = vec4(packedTextureElement[0], packedTextureElement[1], packedTextureElement[2], 1);' +
         '}';
+
+    cornerstone.shaders.rgb = shader;
 
 }(cornerstone));

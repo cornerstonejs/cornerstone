@@ -6,9 +6,10 @@
         cornerstone.shaders = {};
     }
 
-    if (!cornerstone.shaders.uint8) {
-        cornerstone.shaders.uint8 = {};
-    }
+    // For uint8 pack into alpha channel
+    var shader = {
+        format: 6406 // Equivalent to gl.ALPHA
+    };
 
     function storedPixelDataToImageData(pixelData, width, height) {
         var numberOfChannels = 4;
@@ -29,9 +30,9 @@
         return data;
     }
 
-    cornerstone.shaders.uint8.storedPixelDataToImageData = storedPixelDataToImageData;
+    shader.storedPixelDataToImageData = storedPixelDataToImageData;
 
-    cornerstone.shaders.uint8.vert = 'attribute vec2 a_position;' +
+    shader.vert = 'attribute vec2 a_position;' +
         'attribute vec2 a_texCoord;' +
         'uniform vec2 u_resolution;' +
         'varying vec2 v_texCoord;' +
@@ -43,7 +44,7 @@
             'v_texCoord = a_texCoord;' +
         '}';
 
-    cornerstone.shaders.uint8.frag = 'precision mediump float;' +
+    shader.frag = 'precision mediump float;' +
         'uniform sampler2D u_image;' +
         'uniform vec2 u_wl;' +
         'uniform vec2 u_slopeIntercept;' +
@@ -57,5 +58,7 @@
             // RGBA output'
             'gl_FragColor = vec4(grayLevel_wl, grayLevel_wl, grayLevel_wl, 1);' +
         '}';
+
+    cornerstone.shaders.uint8 = shader;
 
 }(cornerstone));

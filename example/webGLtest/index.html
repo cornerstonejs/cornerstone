@@ -119,17 +119,13 @@ In this example, javascript is used to image enable a div.
         }
 
         cornerstone.enable(element);
-        cornerstoneTools.mouseInput.enable(element);
-        cornerstoneTools.mouseWheelInput.enable(element);
-
         cornerstone.loadImage(imageId).then(function(image) {
             console.log(image);
             cornerstone.displayImage(element, image);
-            var vp = cornerstone.getViewport(element);
-            vp.voi.windowWidth = 400;
-            //vp.voi.windowCenter = -1024 + 40;
-            vp.voi.windowCenter = 40;
-            //cornerstone.setViewport(element, vp);
+
+            cornerstoneTools.mouseInput.enable(element);
+            cornerstoneTools.mouseWheelInput.enable(element);
+            
             cornerstoneTools.wwwc.activate(element, 1);
             cornerstoneTools.pan.activate(element, 2);
             cornerstoneTools.zoom.activate(element, 4);
