@@ -48,6 +48,7 @@
 
         var image = {
             imageId: imageId,
+            datatype: 'uint8',
             minPixelValue : 0,
             maxPixelValue : 257,
             slope: 1.0,

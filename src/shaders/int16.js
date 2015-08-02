@@ -8,7 +8,7 @@
 
     // For int16 pack uint16 into two uint8 channels (r and a)
     var shader = {
-        format: 6410 // Equivalent to gl.LUMINANCE_ALPHA
+        format: 'LUMINANCE_ALPHA'
     };
 
     function storedPixelDataToImageData(pixelData, width, height) {
@@ -42,7 +42,7 @@
             'v_texCoord = a_texCoord;' +
         '}';
 
-  shader.frag = 'precision mediump float;' +
+    shader.frag = 'precision mediump float;' +
         'uniform sampler2D u_image;' +
         'uniform vec2 u_wl;' +
         'uniform vec2 u_slopeIntercept;' +
@@ -65,7 +65,7 @@
             'float width0 = ww - 1.0;'+
             'intensity = (intensity - center0) / width0 + 0.5;'+
 
-            // RGBA output's
+            // RGBA output
             'gl_FragColor = vec4(intensity, intensity, intensity, 1);' +
         '}';
 

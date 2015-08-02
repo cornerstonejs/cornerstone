@@ -8,24 +8,15 @@
 
     // For uint8 pack into alpha channel
     var shader = {
-        format: 6406 // Equivalent to gl.ALPHA
+        format: 'ALPHA'
     };
 
-    function storedPixelDataToImageData(pixelData, width, height) {
-        var numberOfChannels = 4;
-        var data = new Uint8Array(width * height * numberOfChannels);
-        
-        // ii+=4 iterates over each pixels, not components.
-        for (var ii = 0; ii < data.length; ii+=4) {
-            // ugly modulo magic to translate ii to image coordinate and concatenate.
-            var x = Math.floor(ii/4)%width;
-            var y = Math.floor(Math.floor(ii/4)/height);
-            var val = pixelData[(y%width)*width+(x%height)];
-            
-            data[ii+0] = val;
-            data[ii+1] = 0;
-            data[ii+2] = 0;
-            data[ii+3] = 0;
+    function storedPixelDataToImageData(pixelData) {
+        // Transfer image data to alpha channel of WebGL texture
+        // Store data in Uint8Array
+        var data = new Uint8Array(pixelData.length);
+        for (var i = 0; i < pixelData.length; i++) {
+            data[i] = parseInt(pixelData[i], 10);
         }
         return data;
     }
@@ -51,12 +42,24 @@
         'varying vec2 v_texCoord;' +
         'void main() {' +
             'vec4 packedTextureElement = texture2D(u_image, v_texCoord);' +
-            // unpacking [ [uint8, uint8, ~, ~]] -> float and compute slope intercept
-            'float grayLevel = (packedTextureElement[0]*255.0) * u_slopeIntercept[0] + u_slopeIntercept[1];' +
-            // W/L transformation.
-            'float grayLevel_wl = clamp( ( grayLevel - u_wl[0] ) / (u_wl[1] - u_wl[0]), 0.0, 1.0);' +
-            // RGBA output'
-            'gl_FragColor = vec4(grayLevel_wl, grayLevel_wl, grayLevel_wl, 1);' +
+
+            'float intensity = packedTextureElement.a * 256.0;'+
+            'float rescaleSlope = float(u_slopeIntercept[0]);'+
+            'float rescaleIntercept = float(u_slopeIntercept[1]);'+
+            'float ww = u_wl[1];'+
+            'float wc = u_wl[0];'+
+
+            'intensity = intensity * rescaleSlope + rescaleIntercept;'+
+            'float lower_bound = (ww * -0.5) + wc; '+
+            'float upper_bound = (ww *  0.5) + wc; '+
+            'float center0 = wc - 0.5;'+
+            //'center0 -= minPixelValue;'+
+
+            'float width0 = ww - 1.0;'+
+            'intensity = (intensity - center0) / width0 + 0.5;'+
+
+            // RGBA output
+            'gl_FragColor = vec4(intensity, intensity, intensity, 1);' +
         '}';
 
     cornerstone.shaders.uint8 = shader;

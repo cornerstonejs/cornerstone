@@ -50,10 +50,14 @@
         var pixelData = image.getPixelData();
 
         // Get A WebGL context
-        var canvas = enabledElement.canvas;
-        gl = cornerstone.rendering.initWebGL(canvas);
+        gl = cornerstone.rendering.initWebGL(colorRenderCanvas);
         
+        if (!gl) {
+            return;
+        }
+
         // Set the current shader
+        //var shader = cornerstone.rendering.getShader(image);
         var shader = cornerstone.shaders.rgb;
         program = getShaderProgram(gl, shader);
 
@@ -61,7 +65,9 @@
 
         var width = image.width;
         var height = image.height;
-        var format = gl.RGBA;
+
+        // Get the texture format for this datatype
+        var format = gl[shader.format];
 
         // GL texture configuration
         var texture = gl.createTexture();
@@ -71,7 +77,6 @@
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-        //var imageData = shader.storedPixelDataToImageData(pixelData, width, height);
         var viewport = enabledElement.viewport;
         var lut = getLut(image, viewport);
         var imageData = shader.storedColorPixelDataToCanvasImageData(image, lut);
@@ -147,29 +152,58 @@
             throw "drawImage: image must be loaded before it can be drawn";
         }
 
-        var canvas = enabledElement.canvas;
-        var shader = cornerstone.shaders.rgb;
+        // Get the canvas context and reset the transform
+        var context = enabledElement.canvas.getContext('2d');
+        context.setTransform(1, 0, 0, 1, 0, 0);
+
+        // Clear the canvas
+        context.fillStyle = 'black';
+        context.fillRect(0,0, enabledElement.canvas.width, enabledElement.canvas.height);
+
+        // Turn off image smooth/interpolation if pixelReplication is set in the viewport
+        if (enabledElement.viewport.pixelReplication === true) {
+            context.imageSmoothingEnabled = false;
+            context.mozImageSmoothingEnabled = false; // firefox doesn't support imageSmoothingEnabled yet
+        } else {
+            context.imageSmoothingEnabled = true;
+            context.mozImageSmoothingEnabled = true;
+        }
+
         gl = getWebGLContext(enabledElement, image, invalidated);
+
+        if (!gl) {
+            return;
+        }
+
+        //var shader = cornerstone.rendering.getShader(image);
+        var shader = cornerstone.shaders.rgb;
+
         program = getShaderProgram(gl, shader);
 
         var width = image.width;
         var height = image.height;
 
-        // set the resolution
+        // Set the resolution
         var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
-        gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+        gl.uniform2f(resolutionLocation, width, height);
 
-        // set initial window/level (vec2)
+        // Set initial window/level (vec2)
         var wlLocation = gl.getUniformLocation(program, "u_wl");
         gl.uniform2f(wlLocation, enabledElement.viewport.voi.windowCenter, enabledElement.viewport.voi.windowWidth);
 
-        // set Slope Intercept (vec2)
+        // Set Slope Intercept (vec2)
         var siLocation = gl.getUniformLocation(program, "u_slopeIntercept");
         gl.uniform2f(siLocation, image.slope, image.intercept);
 
         // Do the actual rendering
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        // Save the canvas context state and apply the viewport properties
+        cornerstone.setToPixelCoordinateSystem(enabledElement, context);
+
+        // Copy pixels from the offscreen canvas to the onscreen canvas
+        context.drawImage(colorRenderCanvas, 0,0, image.width, image.height, 0, 0, image.width, image.height);
 
         // Save lastRendered information
         lastRenderedImageId = image.imageId;

@@ -8,34 +8,37 @@
 
     // Pack RGB images into a 3-channel RGB texture
     var shader = {
-        format: 6407 // Equivalent to gl.RGB
+        format: 'RGB'
     };
 
     function storedColorPixelDataToCanvasImageData(image, lut) {
         var minPixelValue = image.minPixelValue;
         var canvasImageDataIndex = 0;
         var storedPixelDataIndex = 0;
-        var numPixels = image.width * image.height * 4;
+        // Only 3 channels, since we use WebGL's RGB texture format
+        var numPixels = image.width * image.height * 3;
         var storedPixelData = image.getPixelData();
         var localLut = lut;
         var localCanvasImageDataData = new Uint8Array(numPixels);
+
         // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
         // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
+        console.log(minPixelValue);
         if (minPixelValue < 0){
             while (storedPixelDataIndex < numPixels) {
                 localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // red
                 localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // green
                 localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex] + (-minPixelValue)]; // blue
-                storedPixelDataIndex+=2;
-                canvasImageDataIndex+=2;
+                storedPixelDataIndex += 2; // The stored pixel data has 4 channels
+                canvasImageDataIndex += 1;
             }
         } else {
             while (storedPixelDataIndex < numPixels) {
                 localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // red
                 localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // green
                 localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex]]; // blue
-                storedPixelDataIndex+=2;
-                canvasImageDataIndex+=2;
+                storedPixelDataIndex += 2; // The stored pixel data has 4 channels
+                canvasImageDataIndex += 1;
             }
         }
         return localCanvasImageDataData;
@@ -62,13 +65,33 @@
         'varying vec2 v_texCoord;' +
         'void main() {' +
             'vec4 packedTextureElement = texture2D(u_image, v_texCoord);' +
-            // unpacking [ [uint8, uint8, ~, ~]] -> float and compute slope intercept
-            //'float grayLevel = (packedTextureElement[0]*255.0) * u_slopeIntercept[0] + u_slopeIntercept[1];' +
-            // W/L transformation.
-            //'float grayLevel_wl = clamp( ( grayLevel - u_wl[0] ) / (u_wl[1] - u_wl[0]), 0.0, 1.0);' +
-            // RGBA output'
-            //'gl_FragColor = vec4(grayLevel_wl, grayLevel_wl, grayLevel_wl, 1);' +
-            'gl_FragColor = vec4(packedTextureElement[0], packedTextureElement[1], packedTextureElement[2], 1);' +
+
+            'float red = packedTextureElement.r;'+
+            'float green = packedTextureElement.g;'+
+            'float blue = packedTextureElement.b;'+
+
+            // Need to fix application of window width/center
+            
+            /*'float rescaleSlope = float(u_slopeIntercept[0]);'+
+            'float rescaleIntercept = float(u_slopeIntercept[1]);'+
+            'float ww = u_wl[1];'+
+            'float wc = u_wl[0];'+
+
+            'red = red * rescaleSlope + rescaleIntercept;'+
+            'green = green * rescaleSlope + rescaleIntercept;'+
+            'blue = blue * rescaleSlope + rescaleIntercept;'+
+            'float lower_bound = (ww * -0.5) + wc; '+
+            'float upper_bound = (ww *  0.5) + wc; '+
+            'float center0 = wc - 0.5;'+
+            //'center0 -= minPixelValue;'+
+
+            'float width0 = ww - 1.0;'+
+            'red = (red - center0) / width0 + 0.5;'+
+            'green = (green - center0) / width0 + 0.5;'+
+            'blue = (blue - center0) / width0 + 0.5;'+*/
+
+            // RGBA output
+            'gl_FragColor = vec4(red, green, blue, 1);' +
         '}';
 
     cornerstone.shaders.rgb = shader;

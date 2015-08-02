@@ -35,6 +35,10 @@
         // Get A WebGL context
         gl = cornerstone.rendering.initWebGL(grayscaleRenderCanvas);
         
+        if (!gl) {
+            return;
+        }
+
         // Set the current shader
         var shader = cornerstone.rendering.getShader(image);
         program = getShaderProgram(gl, shader);
@@ -45,7 +49,7 @@
         var height = image.height;
 
         // Get the texture format for this datatype
-        var format = shader.format;
+        var format = gl[shader.format];
 
         // GL texture configuration
         var texture = gl.createTexture();
@@ -128,16 +132,30 @@
             throw "drawImage: image must be loaded before it can be drawn";
         }
 
-        // get the canvas context and reset the transform
+        // Get the canvas context and reset the transform
         var context = enabledElement.canvas.getContext('2d');
         context.setTransform(1, 0, 0, 1, 0, 0);
 
-        // clear the canvas
+        // Clear the canvas
         context.fillStyle = 'black';
         context.fillRect(0,0, enabledElement.canvas.width, enabledElement.canvas.height);
 
+        // Turn off image smooth/interpolation if pixelReplication is set in the viewport
+        if (enabledElement.viewport.pixelReplication === true) {
+            context.imageSmoothingEnabled = false;
+            context.mozImageSmoothingEnabled = false; // firefox doesn't support imageSmoothingEnabled yet
+        } else {
+            context.imageSmoothingEnabled = true;
+            context.mozImageSmoothingEnabled = true;
+        }
+
         var shader = cornerstone.rendering.getShader(image);
         gl = getWebGLContext(enabledElement, image, invalidated);
+
+        if (!gl) {
+            return;
+        }
+
         program = getShaderProgram(gl, shader);
 
         var width = image.width;
@@ -151,9 +169,9 @@
         var wlLocation = gl.getUniformLocation(program, "u_wl");
         var windowCenter = enabledElement.viewport.voi.windowCenter;
         
-        if(image.invert === true) {
+        /*if (image.invert === true) {
             //windowCenter = -windowCenter;
-        }
+        }*/
 
         gl.uniform2f(wlLocation, windowCenter, enabledElement.viewport.voi.windowWidth);
 
@@ -168,7 +186,7 @@
         // save the canvas context state and apply the viewport properties
         cornerstone.setToPixelCoordinateSystem(enabledElement, context);
 
-
+        // Copy pixels from the offscreen canvas to the onscreen canvas
         context.drawImage(grayscaleRenderCanvas, 0,0, image.width, image.height, 0, 0, image.width, image.height);
 
         // Save lastRendered information
