@@ -6,11 +6,12 @@
 
     "use strict";
 
-  var grayscaleRenderCanvas = document.createElement('canvas');
+    var grayscaleRenderCanvas = document.createElement('canvas');
     var grayscaleRenderCanvasContext;
     var grayscaleRenderCanvasData;
     var gl;
     var program;
+    var shader;
 
     var lastRenderedImageId;
     var lastRenderedViewport = {};
@@ -22,6 +23,13 @@
         return program;
     }
 
+    function getShader(image) {
+        if (!shader) {
+            shader = cornerstone.rendering.getShader(image);
+        }
+        return shader;
+    }
+        
     function initializeWebGLContext(enabledElement) {
         var image = enabledElement.image;
 
@@ -40,7 +48,7 @@
         }
 
         // Set the current shader
-        var shader = cornerstone.rendering.getShader(image);
+        shader = getShader(image);
         program = getShaderProgram(gl, shader);
 
         gl.clearColor(0.5, 0.0, 0.0, 1.0);
@@ -111,7 +119,7 @@
         // If our render canvas does not match the size of this image reset it
         // NOTE: This might be inefficient if we are updating multiple images of different
         // sizes frequently.
-        if (grayscaleRenderCanvas.width !== image.width || grayscaleRenderCanvas.height != image.height) {
+        if (invalidated || grayscaleRenderCanvas.width !== image.width || grayscaleRenderCanvas.height != image.height) {
             initializeWebGLContext(enabledElement);
         }
         return gl;
@@ -120,7 +128,7 @@
     /**
      * API function to draw a grayscale image to a given enabledElement
      * @param enabledElement
-     * @param invalidated - true if pixel data has been invaldiated and cached rendering should not be used
+     * @param invalidated - true if pixel data has been invalidated and cached rendering should not be used
      */
     function renderGrayscaleImageWebGL(enabledElement, invalidated) {
         if (!enabledElement) {
@@ -149,7 +157,7 @@
             context.mozImageSmoothingEnabled = true;
         }
 
-        var shader = cornerstone.rendering.getShader(image);
+        shader = cornerstone.rendering.getShader(image);
         gl = getWebGLContext(enabledElement, image, invalidated);
 
         if (!gl) {

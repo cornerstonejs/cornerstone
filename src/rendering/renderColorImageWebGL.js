@@ -11,6 +11,7 @@
     var colorRenderCanvasData;
     var gl;
     var program;
+    var shader;
 
     var lastRenderedImageId;
     var lastRenderedViewport = {};
@@ -39,6 +40,13 @@
         return program;
     }
 
+    function getShader(image) {
+        if (!shader) {
+            shader = shader = cornerstone.shaders.rgb; //cornerstone.rendering.getShader(image);
+        }
+        return shader;
+    }
+
     function initializeWebGLContext(enabledElement) {
         var image = enabledElement.image;
 
@@ -57,8 +65,7 @@
         }
 
         // Set the current shader
-        //var shader = cornerstone.rendering.getShader(image);
-        var shader = cornerstone.shaders.rgb;
+        shader = getShader(image);
         program = getShaderProgram(gl, shader);
 
         gl.clearColor(0.5, 0.0, 0.0, 1.0);
@@ -131,7 +138,7 @@
         // If our render canvas does not match the size of this image reset it
         // NOTE: This might be inefficient if we are updating multiple images of different
         // sizes frequently.
-        if (colorRenderCanvas.width !== image.width || colorRenderCanvas.height != image.height) {
+        if (invalidated || colorRenderCanvas.width !== image.width || colorRenderCanvas.height != image.height) {
             initializeWebGLContext(enabledElement);
         }
         return gl;
@@ -175,9 +182,7 @@
             return;
         }
 
-        //var shader = cornerstone.rendering.getShader(image);
-        var shader = cornerstone.shaders.rgb;
-
+        shader = getShader(image);
         program = getShaderProgram(gl, shader);
 
         var width = image.width;

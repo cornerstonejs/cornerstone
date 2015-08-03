@@ -6,7 +6,7 @@
         cornerstone.shaders = {};
     }
 
-    // For int16 pack uint16 into two uint8 channels (r and a)
+    // For int16 pack int16 into two uint8 channels (r and a)
     var shader = {
         format: 'LUMINANCE_ALPHA'
     };
@@ -15,7 +15,7 @@
         // Transfer image data to alpha and luminance channels of WebGL texture
         // Credit to @jpambrun and @fernandojsg
 
-        // Pack uint16 into two uint8 channels (r and a)
+        // Pack int16 into two uint8 channels (r and a)
         var numberOfChannels = 2;
         var data = new Uint8Array(width * height * numberOfChannels);
         var offset = 0;
@@ -70,5 +70,6 @@
         '}';
 
     cornerstone.shaders.int16 = shader;
+    cornerstone.shaders.uint16 = shader;
 
 }(cornerstone));

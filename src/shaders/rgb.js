@@ -23,7 +23,6 @@
 
         // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
         // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
-        console.log(minPixelValue);
         if (minPixelValue < 0){
             while (storedPixelDataIndex < numPixels) {
                 localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // red
