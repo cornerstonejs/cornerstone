@@ -53,8 +53,6 @@
 
             // Rescale based on slope and window settings
             'intensity = intensity * slope + intercept;'+
-            'float lower_bound = (ww * -0.5) + wc; '+
-            'float upper_bound = (ww *  0.5) + wc; '+
             'float center0 = wc - 0.5;'+
             'center0 -= minPixelValue;'+
             'float width0 = ww - 1.0;'+

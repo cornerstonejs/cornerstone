@@ -11,31 +11,30 @@
         format: 'RGB'
     };
 
-    function storedColorPixelDataToCanvasImageData(image, lut) {
+    function storedColorPixelDataToCanvasImageData(image) {
         var minPixelValue = image.minPixelValue;
         var canvasImageDataIndex = 0;
         var storedPixelDataIndex = 0;
         // Only 3 channels, since we use WebGL's RGB texture format
         var numPixels = image.width * image.height * 3;
         var storedPixelData = image.getPixelData();
-        var localLut = lut;
         var localCanvasImageDataData = new Uint8Array(numPixels);
 
         // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
         // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
         if (minPixelValue < 0){
             while (storedPixelDataIndex < numPixels) {
-                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // red
-                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // green
-                localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex] + (-minPixelValue)]; // blue
+                localCanvasImageDataData[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++] + (-minPixelValue); // red
+                localCanvasImageDataData[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++] + (-minPixelValue); // green
+                localCanvasImageDataData[canvasImageDataIndex] = storedPixelData[storedPixelDataIndex] + (-minPixelValue); // blue
                 storedPixelDataIndex += 2; // The stored pixel data has 4 channels
                 canvasImageDataIndex += 1;
             }
         } else {
             while (storedPixelDataIndex < numPixels) {
-                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // red
-                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // green
-                localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex]]; // blue
+                localCanvasImageDataData[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++]; // red
+                localCanvasImageDataData[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++]; // green
+                localCanvasImageDataData[canvasImageDataIndex] = storedPixelData[storedPixelDataIndex]; // blue
                 storedPixelDataIndex += 2; // The stored pixel data has 4 channels
                 canvasImageDataIndex += 1;
             }
@@ -67,31 +66,26 @@
         'uniform int invert;' +
         'varying vec2 v_texCoord;' +
         'void main() {' +
+            // Get texture
             'vec4 packedTextureElement = texture2D(u_image, v_texCoord);' +
 
-            'float red = packedTextureElement.r;'+
-            'float green = packedTextureElement.g;'+
-            'float blue = packedTextureElement.b;'+
+            // Get each RGB channel
+            'float red = packedTextureElement.r * 256.;'+
+            'float green = packedTextureElement.g * 256.;'+
+            'float blue = packedTextureElement.b * 256.;'+
 
-            // Need to fix application of window width/center
-            
-            /*'float rescaleSlope = float(u_slopeIntercept[0]);'+
-            'float rescaleIntercept = float(u_slopeIntercept[1]);'+
-            'float ww = u_wl[1];'+
-            'float wc = u_wl[0];'+
+            // Rescale based on slope and intercept
+            'red = red * slope + intercept;'+
+            'green = green * slope + intercept;'+
+            'blue = blue * slope + intercept;'+
 
-            'red = red * rescaleSlope + rescaleIntercept;'+
-            'green = green * rescaleSlope + rescaleIntercept;'+
-            'blue = blue * rescaleSlope + rescaleIntercept;'+
-            'float lower_bound = (ww * -0.5) + wc; '+
-            'float upper_bound = (ww *  0.5) + wc; '+
+            // Apply window settings
             'float center0 = wc - 0.5;'+
-            //'center0 -= minPixelValue;'+
-
+            'center0 -= minPixelValue;'+
             'float width0 = ww - 1.0;'+
             'red = (red - center0) / width0 + 0.5;'+
             'green = (green - center0) / width0 + 0.5;'+
-            'blue = (blue - center0) / width0 + 0.5;'+*/
+            'blue = (blue - center0) / width0 + 0.5;'+
 
             // RGBA output
             'gl_FragColor = vec4(red, green, blue, 1);' +

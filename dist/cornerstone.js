@@ -1550,23 +1550,6 @@ if(typeof cornerstone === 'undefined'){
     var lastRenderedImageId;
     var lastRenderedViewport = {};
 
-    function getLut(image, viewport) {
-        // if we have a cached lut and it has the right values, return it immediately
-        if(image.lut !== undefined &&
-            image.lut.windowCenter === viewport.voi.windowCenter &&
-            image.lut.windowWidth === viewport.voi.windowWidth &&
-            image.lut.invert === viewport.invert) {
-            return image.lut;
-        }
-
-        // lut is invalid or not present, regenerate it and cache it
-        cornerstone.generateLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert);
-        image.lut.windowWidth = viewport.voi.windowWidth;
-        image.lut.windowCenter = viewport.voi.windowCenter;
-        image.lut.invert = viewport.invert;
-        return image.lut;
-    }
-
     function getShaderProgram(gl, shader) {
         if (!program) {
             program = cornerstone.rendering.initShaders(gl, shader.frag, shader.vert);
@@ -1619,8 +1602,7 @@ if(typeof cornerstone === 'undefined'){
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
         var viewport = enabledElement.viewport;
-        var lut = getLut(image, viewport);
-        var imageData = shader.storedColorPixelDataToCanvasImageData(image, lut);
+        var imageData = shader.storedColorPixelDataToCanvasImageData(image);
         gl.texImage2D(gl.TEXTURE_2D, 0, format, width, height, 0, format, gl.UNSIGNED_BYTE, imageData);
 
         // look up where the vertex data needs to go.
@@ -1665,14 +1647,7 @@ if(typeof cornerstone === 'undefined'){
 
     function getWebGLContext(enabledElement, image, invalidated) {
         // apply the lut to the stored pixel data onto the render canvas
-        if (doesImageNeedToBeRendered(enabledElement, image) === false && invalidated !== true) {
-            return gl;
-        }
-
-        // If our render canvas does not match the size of this image reset it
-        // NOTE: This might be inefficient if we are updating multiple images of different
-        // sizes frequently.
-        if (invalidated || colorRenderCanvas.width !== image.width || colorRenderCanvas.height != image.height) {
+        if (doesImageNeedToBeRendered(enabledElement, image) || invalidated) {
             initializeWebGLContext(enabledElement);
         }
         return gl;
@@ -2035,14 +2010,7 @@ if(typeof cornerstone === 'undefined'){
 
     function getWebGLContext(enabledElement, image, invalidated) {
         // apply the lut to the stored pixel data onto the render canvas
-        if (doesImageNeedToBeRendered(enabledElement, image) === false && invalidated !== true) {
-            return gl;
-        }
-
-        // If our render canvas does not match the size of this image reset it
-        // NOTE: This might be inefficient if we are updating multiple images of different
-        // sizes frequently.
-        if (invalidated || grayscaleRenderCanvas.width !== image.width || grayscaleRenderCanvas.height != image.height) {
+        if (doesImageNeedToBeRendered(enabledElement, image) || invalidated) {
             initializeWebGLContext(enabledElement);
         }
         return gl;
@@ -2434,8 +2402,6 @@ if(typeof cornerstone === 'undefined'){
 
             // Rescale based on slope and window settings
             'intensity = intensity * slope + intercept;'+
-            'float lower_bound = (ww * -0.5) + wc; '+
-            'float upper_bound = (ww *  0.5) + wc; '+
             'float center0 = wc - 0.5;'+
             'center0 -= minPixelValue;'+
             'float width0 = ww - 1.0;'+
@@ -2472,31 +2438,30 @@ if(typeof cornerstone === 'undefined'){
         format: 'RGB'
     };
 
-    function storedColorPixelDataToCanvasImageData(image, lut) {
+    function storedColorPixelDataToCanvasImageData(image) {
         var minPixelValue = image.minPixelValue;
         var canvasImageDataIndex = 0;
         var storedPixelDataIndex = 0;
         // Only 3 channels, since we use WebGL's RGB texture format
         var numPixels = image.width * image.height * 3;
         var storedPixelData = image.getPixelData();
-        var localLut = lut;
         var localCanvasImageDataData = new Uint8Array(numPixels);
 
         // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
         // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
         if (minPixelValue < 0){
             while (storedPixelDataIndex < numPixels) {
-                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // red
-                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // green
-                localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex] + (-minPixelValue)]; // blue
+                localCanvasImageDataData[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++] + (-minPixelValue); // red
+                localCanvasImageDataData[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++] + (-minPixelValue); // green
+                localCanvasImageDataData[canvasImageDataIndex] = storedPixelData[storedPixelDataIndex] + (-minPixelValue); // blue
                 storedPixelDataIndex += 2; // The stored pixel data has 4 channels
                 canvasImageDataIndex += 1;
             }
         } else {
             while (storedPixelDataIndex < numPixels) {
-                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // red
-                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // green
-                localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex]]; // blue
+                localCanvasImageDataData[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++]; // red
+                localCanvasImageDataData[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++]; // green
+                localCanvasImageDataData[canvasImageDataIndex] = storedPixelData[storedPixelDataIndex]; // blue
                 storedPixelDataIndex += 2; // The stored pixel data has 4 channels
                 canvasImageDataIndex += 1;
             }
@@ -2528,31 +2493,26 @@ if(typeof cornerstone === 'undefined'){
         'uniform int invert;' +
         'varying vec2 v_texCoord;' +
         'void main() {' +
+            // Get texture
             'vec4 packedTextureElement = texture2D(u_image, v_texCoord);' +
 
-            'float red = packedTextureElement.r;'+
-            'float green = packedTextureElement.g;'+
-            'float blue = packedTextureElement.b;'+
+            // Get each RGB channel
+            'float red = packedTextureElement.r * 256.;'+
+            'float green = packedTextureElement.g * 256.;'+
+            'float blue = packedTextureElement.b * 256.;'+
 
-            // Need to fix application of window width/center
-            
-            /*'float rescaleSlope = float(u_slopeIntercept[0]);'+
-            'float rescaleIntercept = float(u_slopeIntercept[1]);'+
-            'float ww = u_wl[1];'+
-            'float wc = u_wl[0];'+
+            // Rescale based on slope and intercept
+            'red = red * slope + intercept;'+
+            'green = green * slope + intercept;'+
+            'blue = blue * slope + intercept;'+
 
-            'red = red * rescaleSlope + rescaleIntercept;'+
-            'green = green * rescaleSlope + rescaleIntercept;'+
-            'blue = blue * rescaleSlope + rescaleIntercept;'+
-            'float lower_bound = (ww * -0.5) + wc; '+
-            'float upper_bound = (ww *  0.5) + wc; '+
+            // Apply window settings
             'float center0 = wc - 0.5;'+
-            //'center0 -= minPixelValue;'+
-
+            'center0 -= minPixelValue;'+
             'float width0 = ww - 1.0;'+
             'red = (red - center0) / width0 + 0.5;'+
             'green = (green - center0) / width0 + 0.5;'+
-            'blue = (blue - center0) / width0 + 0.5;'+*/
+            'blue = (blue - center0) / width0 + 0.5;'+
 
             // RGBA output
             'gl_FragColor = vec4(red, green, blue, 1);' +
@@ -2620,8 +2580,6 @@ if(typeof cornerstone === 'undefined'){
 
             // Rescale based on slope and window settings
             'intensity = intensity * slope + intercept;'+
-            'float lower_bound = (ww * -0.5) + wc; '+
-            'float upper_bound = (ww *  0.5) + wc; '+
             'float center0 = wc - 0.5;'+
             'center0 -= minPixelValue;'+
             'float width0 = ww - 1.0;'+

@@ -16,23 +16,6 @@
     var lastRenderedImageId;
     var lastRenderedViewport = {};
 
-    function getLut(image, viewport) {
-        // if we have a cached lut and it has the right values, return it immediately
-        if(image.lut !== undefined &&
-            image.lut.windowCenter === viewport.voi.windowCenter &&
-            image.lut.windowWidth === viewport.voi.windowWidth &&
-            image.lut.invert === viewport.invert) {
-            return image.lut;
-        }
-
-        // lut is invalid or not present, regenerate it and cache it
-        cornerstone.generateLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert);
-        image.lut.windowWidth = viewport.voi.windowWidth;
-        image.lut.windowCenter = viewport.voi.windowCenter;
-        image.lut.invert = viewport.invert;
-        return image.lut;
-    }
-
     function getShaderProgram(gl, shader) {
         if (!program) {
             program = cornerstone.rendering.initShaders(gl, shader.frag, shader.vert);
@@ -85,8 +68,7 @@
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
         var viewport = enabledElement.viewport;
-        var lut = getLut(image, viewport);
-        var imageData = shader.storedColorPixelDataToCanvasImageData(image, lut);
+        var imageData = shader.storedColorPixelDataToCanvasImageData(image);
         gl.texImage2D(gl.TEXTURE_2D, 0, format, width, height, 0, format, gl.UNSIGNED_BYTE, imageData);
 
         // look up where the vertex data needs to go.
@@ -131,14 +113,7 @@
 
     function getWebGLContext(enabledElement, image, invalidated) {
         // apply the lut to the stored pixel data onto the render canvas
-        if (doesImageNeedToBeRendered(enabledElement, image) === false && invalidated !== true) {
-            return gl;
-        }
-
-        // If our render canvas does not match the size of this image reset it
-        // NOTE: This might be inefficient if we are updating multiple images of different
-        // sizes frequently.
-        if (invalidated || colorRenderCanvas.width !== image.width || colorRenderCanvas.height != image.height) {
+        if (doesImageNeedToBeRendered(enabledElement, image) || invalidated) {
             initializeWebGLContext(enabledElement);
         }
         return gl;

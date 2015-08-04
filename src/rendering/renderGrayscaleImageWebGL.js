@@ -112,14 +112,7 @@
 
     function getWebGLContext(enabledElement, image, invalidated) {
         // apply the lut to the stored pixel data onto the render canvas
-        if (doesImageNeedToBeRendered(enabledElement, image) === false && invalidated !== true) {
-            return gl;
-        }
-
-        // If our render canvas does not match the size of this image reset it
-        // NOTE: This might be inefficient if we are updating multiple images of different
-        // sizes frequently.
-        if (invalidated || grayscaleRenderCanvas.width !== image.width || grayscaleRenderCanvas.height != image.height) {
+        if (doesImageNeedToBeRendered(enabledElement, image) || invalidated) {
             initializeWebGLContext(enabledElement);
         }
         return gl;
