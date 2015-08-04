@@ -192,13 +192,30 @@
         var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
         gl.uniform2f(resolutionLocation, width, height);
 
-        // Set initial window/level (vec2)
-        var wlLocation = gl.getUniformLocation(program, "u_wl");
-        gl.uniform2f(wlLocation, enabledElement.viewport.voi.windowCenter, enabledElement.viewport.voi.windowWidth);
+        // Pass window level to fragment shader
+        var windowCenterLocation = gl.getUniformLocation(program, "wc");
+        gl.uniform1f(windowCenterLocation, enabledElement.viewport.voi.windowCenter);
+        
+        // Pass window width to fragment shader
+        var windowWidthLocation = gl.getUniformLocation(program, "ww");
+        gl.uniform1f(windowWidthLocation, enabledElement.viewport.voi.windowWidth);
 
-        // Set Slope Intercept (vec2)
-        var siLocation = gl.getUniformLocation(program, "u_slopeIntercept");
-        gl.uniform2f(siLocation, image.slope, image.intercept);
+        // Pass slope to fragment shader
+        var slopeLocation = gl.getUniformLocation(program, "slope");
+        gl.uniform1f(slopeLocation, image.slope);
+
+        // Pass intercept to fragment shader
+        var interceptLocation = gl.getUniformLocation(program, "intercept");
+        gl.uniform1f(interceptLocation, image.intercept);
+
+        // Pass minPixelValue to fragment shader
+        var minPixelValueLocation = gl.getUniformLocation(program, "minPixelValue");
+        gl.uniform1f(minPixelValueLocation, image.minPixelValue);
+
+        // Pass invert to fragment shader
+        var invertLocation = gl.getUniformLocation(program, "invert");
+        var invertAsInt = enabledElement.viewport.invert ? 1 : 0;
+        gl.uniform1i(invertLocation, invertAsInt);
 
         // Do the actual rendering
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);

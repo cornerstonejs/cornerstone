@@ -59,8 +59,12 @@
 
     shader.frag = 'precision mediump float;' +
         'uniform sampler2D u_image;' +
-        'uniform vec2 u_wl;' +
-        'uniform vec2 u_slopeIntercept;' +
+        'uniform float ww;' +
+        'uniform float wc;' +
+        'uniform float slope;' +
+        'uniform float intercept;' +
+        'uniform float minPixelValue;' +
+        'uniform int invert;' +
         'varying vec2 v_texCoord;' +
         'void main() {' +
             'vec4 packedTextureElement = texture2D(u_image, v_texCoord);' +
@@ -91,6 +95,10 @@
 
             // RGBA output
             'gl_FragColor = vec4(red, green, blue, 1);' +
+
+            // Apply any inversion necessary
+            'if (invert == 1)' +
+                'gl_FragColor.rgb=vec3(1.0,1.0,1.0)-gl_FragColor.rgb;' +
         '}';
 
     cornerstone.shaders.rgb = shader;
