@@ -37,29 +37,41 @@
 
     shader.frag = 'precision mediump float;' +
         'uniform sampler2D u_image;' +
-        'uniform vec2 u_wl;' +
-        'uniform vec2 u_slopeIntercept;' +
+        'uniform float ww;' +
+        'uniform float wc;' +
+        'uniform float slope;' +
+        'uniform float intercept;' +
+        'uniform float minPixelValue;' +
+        'uniform int invert;' +
         'varying vec2 v_texCoord;' +
         'void main() {' +
+            // Get texture
             'vec4 packedTextureElement = texture2D(u_image, v_texCoord);' +
 
+            // Calculate luminance from packed texture
             'float intensity = packedTextureElement.a * 256.0;'+
-            'float rescaleSlope = float(u_slopeIntercept[0]);'+
-            'float rescaleIntercept = float(u_slopeIntercept[1]);'+
-            'float ww = u_wl[1];'+
-            'float wc = u_wl[0];'+
 
-            'intensity = intensity * rescaleSlope + rescaleIntercept;'+
+            // Rescale based on slope and window settings
+            'intensity = intensity * slope + intercept;'+
             'float lower_bound = (ww * -0.5) + wc; '+
             'float upper_bound = (ww *  0.5) + wc; '+
             'float center0 = wc - 0.5;'+
-            //'center0 -= minPixelValue;'+
-
+            'center0 -= minPixelValue;'+
             'float width0 = ww - 1.0;'+
             'intensity = (intensity - center0) / width0 + 0.5;'+
 
+            // Clamp intensity
+            'if (intensity < 0. )' +
+                'intensity = 0.;' +
+            'else if (intensity > 1.0)' +
+                'intensity = 1.0;' +
+
             // RGBA output
             'gl_FragColor = vec4(intensity, intensity, intensity, 1);' +
+
+            // Apply any inversion necessary
+            'if (invert == 1)' +
+                'gl_FragColor.rgb=vec3(1.0,1.0,1.0)-gl_FragColor.rgb;' +
         '}';
 
     cornerstone.shaders.uint8 = shader;

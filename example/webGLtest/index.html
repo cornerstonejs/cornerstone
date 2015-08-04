@@ -24,6 +24,7 @@ This is a work-in-progress example of WebGL use in cornerstone
             <a id="uint8" class="list-group-item">UInt8</a>
             <a id="RGB" class="list-group-item">RGB</a>
         </ul>
+        <label for="invert">Invert <input id="invert" type="checkbox"></input></label>
     </div>
     <div class="col-xs-6">
         <div style="width:512px;height:512px;position:relative;color: white;"
@@ -85,7 +86,7 @@ This is a work-in-progress example of WebGL use in cornerstone
         var imageId= 'dicomweb:http://cornerstonetech.org/images/ClearCanvas/DXStudy/1.2.840.113619.2.67.2158294438.16324010109084338.243.dcm';
         
         // Uncomment the next line to load a uint8 greyscale image
-        //var imageId = 'example://1';
+        // var imageId = 'example://1';
         
         // Uncomment the next line to load an RGB image
         //var imageId = 'https://upload.wikimedia.org/wikipedia/commons/7/7d/Renal_Cell_Carcinoma.jpg';
@@ -121,7 +122,11 @@ This is a work-in-progress example of WebGL use in cornerstone
             loadImage(rampImageId);
         })
 
-                    
+        $("#invert").on('change', function() {
+            var viewport = cornerstone.getViewport(element);
+            viewport.invert = this.checked;
+            cornerstone.setViewport(element, viewport);
+        })
 
         function loadImage(imageId) {
             cornerstone.loadImage(imageId).then(function(image) {

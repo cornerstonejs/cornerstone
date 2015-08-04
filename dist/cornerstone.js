@@ -1,4 +1,4 @@
-/*! cornerstone - v0.8.1 - 2015-08-03 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.8.1 - 2015-08-04 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 if(typeof cornerstone === 'undefined'){
     cornerstone = {
         internal : {},
@@ -1359,8 +1359,7 @@ if(typeof cornerstone === 'undefined'){
                 failIfMajorPerformanceCaveat: true
             };
             gl = canvas.getContext("webgl", options) || canvas.getContext("experimental-webgl", options);
-        }
-        catch(error) {
+        } catch(error) {
             throw "Error creating WebGL context";
         }
 
@@ -2080,19 +2079,30 @@ if(typeof cornerstone === 'undefined'){
         var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
         gl.uniform2f(resolutionLocation, width, height);
 
-        // set initial window/level (vec2)
-        var wlLocation = gl.getUniformLocation(program, "u_wl");
-        var windowCenter = enabledElement.viewport.voi.windowCenter;
+        // Pass window level to fragment shader
+        var windowCenterLocation = gl.getUniformLocation(program, "wc");
+        gl.uniform1f(windowCenterLocation, enabledElement.viewport.voi.windowCenter);
         
-        /*if (image.invert === true) {
-            //windowCenter = -windowCenter;
-        }*/
+        // Pass window width to fragment shader
+        var windowWidthLocation = gl.getUniformLocation(program, "ww");
+        gl.uniform1f(windowWidthLocation, enabledElement.viewport.voi.windowWidth);
 
-        gl.uniform2f(wlLocation, windowCenter, enabledElement.viewport.voi.windowWidth);
+        // Pass slope to fragment shader
+        var slopeLocation = gl.getUniformLocation(program, "slope");
+        gl.uniform1f(slopeLocation, image.slope);
 
-        // set Slope Intercept (vec2)
-        var siLocation = gl.getUniformLocation(program, "u_slopeIntercept");
-        gl.uniform2f(siLocation, image.slope, image.intercept);
+        // Pass intercept to fragment shader
+        var interceptLocation = gl.getUniformLocation(program, "intercept");
+        gl.uniform1f(interceptLocation, image.intercept);
+
+        // Pass minPixelValue to fragment shader
+        var minPixelValueLocation = gl.getUniformLocation(program, "minPixelValue");
+        gl.uniform1f(minPixelValueLocation, image.minPixelValue);
+
+        // Pass invert to fragment shader
+        var invertLocation = gl.getUniformLocation(program, "invert");
+        var invertAsInt = enabledElement.viewport.invert ? 1 : 0;
+        gl.uniform1i(invertLocation, invertAsInt);
 
         // Do the actual rendering
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -2391,29 +2401,41 @@ if(typeof cornerstone === 'undefined'){
 
     shader.frag = 'precision mediump float;' +
         'uniform sampler2D u_image;' +
-        'uniform vec2 u_wl;' +
-        'uniform vec2 u_slopeIntercept;' +
+        'uniform float ww;' +
+        'uniform float wc;' +
+        'uniform float slope;' +
+        'uniform float intercept;' +
+        'uniform float minPixelValue;' +
+        'uniform int invert;' +
         'varying vec2 v_texCoord;' +
         'void main() {' +
+            // Get texture
             'vec4 packedTextureElement = texture2D(u_image, v_texCoord);' +
 
+            // Calculate luminance from packed texture
             'float intensity = packedTextureElement.r*256.0 + packedTextureElement.a*65536.0;'+
-            'float rescaleSlope = float(u_slopeIntercept[0]);'+
-            'float rescaleIntercept = float(u_slopeIntercept[1]);'+
-            'float ww = u_wl[1];'+
-            'float wc = u_wl[0];'+
 
-            'intensity = intensity * rescaleSlope + rescaleIntercept;'+
+            // Rescale based on slope and window settings
+            'intensity = intensity * slope + intercept;'+
             'float lower_bound = (ww * -0.5) + wc; '+
             'float upper_bound = (ww *  0.5) + wc; '+
             'float center0 = wc - 0.5;'+
-            //'center0 -= minPixelValue;'+
-
+            'center0 -= minPixelValue;'+
             'float width0 = ww - 1.0;'+
             'intensity = (intensity - center0) / width0 + 0.5;'+
 
+            // Clamp intensity
+            'if (intensity < 0. )' +
+                'intensity = 0.;' +
+            'else if (intensity > 1.0)' +
+                'intensity = 1.0;' +
+
             // RGBA output
             'gl_FragColor = vec4(intensity, intensity, intensity, 1);' +
+
+            // Apply any inversion necessary
+            'if (invert == 1)' +
+                'gl_FragColor.rgb=vec3(1.0,1.0,1.0)-gl_FragColor.rgb;' +
         '}';
 
     cornerstone.shaders.int16 = shader;
@@ -2557,29 +2579,41 @@ if(typeof cornerstone === 'undefined'){
 
     shader.frag = 'precision mediump float;' +
         'uniform sampler2D u_image;' +
-        'uniform vec2 u_wl;' +
-        'uniform vec2 u_slopeIntercept;' +
+        'uniform float ww;' +
+        'uniform float wc;' +
+        'uniform float slope;' +
+        'uniform float intercept;' +
+        'uniform float minPixelValue;' +
+        'uniform int invert;' +
         'varying vec2 v_texCoord;' +
         'void main() {' +
+            // Get texture
             'vec4 packedTextureElement = texture2D(u_image, v_texCoord);' +
 
+            // Calculate luminance from packed texture
             'float intensity = packedTextureElement.a * 256.0;'+
-            'float rescaleSlope = float(u_slopeIntercept[0]);'+
-            'float rescaleIntercept = float(u_slopeIntercept[1]);'+
-            'float ww = u_wl[1];'+
-            'float wc = u_wl[0];'+
 
-            'intensity = intensity * rescaleSlope + rescaleIntercept;'+
+            // Rescale based on slope and window settings
+            'intensity = intensity * slope + intercept;'+
             'float lower_bound = (ww * -0.5) + wc; '+
             'float upper_bound = (ww *  0.5) + wc; '+
             'float center0 = wc - 0.5;'+
-            //'center0 -= minPixelValue;'+
-
+            'center0 -= minPixelValue;'+
             'float width0 = ww - 1.0;'+
             'intensity = (intensity - center0) / width0 + 0.5;'+
 
+            // Clamp intensity
+            'if (intensity < 0. )' +
+                'intensity = 0.;' +
+            'else if (intensity > 1.0)' +
+                'intensity = 1.0;' +
+
             // RGBA output
             'gl_FragColor = vec4(intensity, intensity, intensity, 1);' +
+
+            // Apply any inversion necessary
+            'if (invert == 1)' +
+                'gl_FragColor.rgb=vec3(1.0,1.0,1.0)-gl_FragColor.rgb;' +
         '}';
 
     cornerstone.shaders.uint8 = shader;

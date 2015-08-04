@@ -11,8 +11,7 @@
                 failIfMajorPerformanceCaveat: true
             };
             gl = canvas.getContext("webgl", options) || canvas.getContext("experimental-webgl", options);
-        }
-        catch(error) {
+        } catch(error) {
             throw "Error creating WebGL context";
         }
 
