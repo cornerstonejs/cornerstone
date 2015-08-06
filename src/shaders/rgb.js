@@ -65,7 +65,7 @@
         'uniform float minPixelValue;' +
         'uniform int invert;' +
         'varying vec2 v_texCoord;' +
-        
+
         'void main() {' +
             
             // Get texture

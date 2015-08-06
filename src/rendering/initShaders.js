@@ -20,7 +20,7 @@
         gl.shaderSource(vertexShader, vertexShaderSrc);
         gl.compileShader(vertexShader);
         if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-            throw "An error occurred compiling the vertex shader" + gl.getShaderInfoLog(fragmentShader);
+            throw "An error occurred compiling the vertex shader" + gl.getShaderInfoLog(vertexShader);
         }
         gl.attachShader(shaderProgram, vertexShader);
 
@@ -28,7 +28,7 @@
 
         // If creating the shader program failed, alert
         if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-            throw "Unable to initialize the shader program." + gl.getShaderInfoLog(fragmentShader);
+            throw "Unable to initialize the shader program." + gl.getShaderInfoLog(shaderProgram);
         }
 
         gl.useProgram(shaderProgram);
