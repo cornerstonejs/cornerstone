@@ -8,7 +8,7 @@
     var gl;
     var program;
     var shader;
-    var texCoordBuffer
+    var texCoordBuffer, positionBuffer;
 
     function initRenderer() {
         
@@ -20,7 +20,7 @@
         }
     }
 
-    function setRectangle(gl, x, y, width, height) {
+    function updateRectangle(gl, x, y, width, height) {
         var x1 = x;
         var x2 = x + width;
         var y1 = y;
@@ -138,6 +138,7 @@
             1.0,  0.0,
             1.0,  1.0]), gl.STATIC_DRAW);
 
+
     }
 
     function render(enabledElement) {
@@ -170,14 +171,10 @@
             context.mozImageSmoothingEnabled = true;
         }
 
-        // Start WebGL drawing
-        var pixelData = image.getPixelData();
-
         // Set the current shader
         shader = getShader(image);
         program = getShaderProgram(gl, shader);
 
-        gl.clearColor(0.5, 0.0, 0.0, 1.0);
 
         var width = image.width;
         var height = image.height;
@@ -187,12 +184,17 @@
 
         var viewport = enabledElement.viewport;
 
-        // look up where the vertex data needs to go.
-        var positionLocation = gl.getAttribLocation(program, "a_position");
         var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
-
         gl.enableVertexAttribArray(texCoordLocation);
         gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+
+        var positionLocation = gl.getAttribLocation(program, "a_position");
+        positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.enableVertexAttribArray(positionLocation);
+        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+        updateRectangle(gl, 0, 0, width, height);
 
         // Set the resolution
         var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
@@ -223,26 +225,20 @@
         var invertAsInt = enabledElement.viewport.invert ? 1 : 0;
         gl.uniform1i(invertLocation, invertAsInt);
 
-
-
-        // Create a buffer for the position of the rectangle corners.
-        var posbuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, posbuffer);
-        gl.enableVertexAttribArray(positionLocation);
-        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-        setRectangle(gl, 0, 0, width, height);
-
         // Do the actual rendering
+        gl.clearColor(0.5, 0.0, 0.0, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        // Use program
+        //gl.useProgram(shaderProgram);
+        gl.activeTexture(gl.TEXTURE0);
+
         gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-
 
         // Save the canvas context state and apply the viewport properties
         cornerstone.setToPixelCoordinateSystem(enabledElement, context);
 
         // Copy pixels from the offscreen canvas to the onscreen canvas
-        context.drawImage(cornerstone.rendering.webGLRenderer.getRenderCanvas(), 0,0, image.width, image.height, 0, 0, image.width, image.height);
+        context.drawImage(renderCanvas, 0,0, image.width, image.height, 0, 0, image.width, image.height);
 /*
         // Save lastRendered information
         lastRenderedImageId = image.imageId;
@@ -270,19 +266,7 @@
         
     }
 
-    function getGLContext() {
-        return gl;
-
-    }
-
-    function getRenderCanvas() {
-        return renderCanvas;
-    }
-
     cornerstone.rendering.webGLRenderer = {
-        getGLContext: getGLContext,
-        updateElement: updateElement,
-        getRenderCanvas: getRenderCanvas,
         render: render,
     };
 
