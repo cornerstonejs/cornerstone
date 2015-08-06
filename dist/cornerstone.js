@@ -1996,8 +1996,7 @@ correct gl.viewport
         gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
         updateRectangle(gl, 0, 0, width, height);
-        console.log(">>>",positionBuffer.itemSize, texCoordBuffer.itemSize);
-
+        
         // Set the resolution
         var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
         gl.uniform2f(resolutionLocation, width, height);
@@ -2238,12 +2237,11 @@ correct gl.viewport
 
     function storedPixelDataToImageData(image) {
 
-        var pixelData = image.getPixelData();
-
         // Transfer image data to alpha and luminance channels of WebGL texture
         // Credit to @jpambrun and @fernandojsg
 
         // Pack int16 into two uint8 channels (r and a)
+        var pixelData = image.getPixelData();
         var numberOfChannels = 2;
         var data = new Uint8Array(image.width * image.height * numberOfChannels);
         var offset = 0;
@@ -2297,7 +2295,7 @@ correct gl.viewport
             'intensity = clamp(intensity, 0.0, 1.0);' +
 
             // RGBA output
-            'gl_FragColor = vec4(intensity, intensity, intensity, 1);' +
+            'gl_FragColor = vec4(intensity, intensity, intensity, 1.0);' +
 
             // Apply any inversion necessary
             'if (invert == 1)' +
@@ -2420,7 +2418,7 @@ correct gl.viewport
         var pixelData = image.getPixelData();
         var data = new Uint8Array(pixelData.length);
         for (var i = 0; i < pixelData.length; i++) {
-            data[i] = parseInt(pixelData[i], 10);
+            data[i] = parseInt(pixelData[i]/200, 10);
         }
         return data;
     }
@@ -2448,12 +2446,13 @@ correct gl.viewport
         'uniform float minPixelValue;' +
         'uniform int invert;' +
         'varying vec2 v_texCoord;' +
+
         'void main() {' +
             // Get texture
             'vec4 color = texture2D(u_image, v_texCoord);' +
 
             // Calculate luminance from packed texture
-            'float intensity = color.a * 256.0;'+
+/*            'float intensity = color.a * 256.0;'+
 
             // Rescale based on slope and window settings
             'intensity = intensity * slope + intercept;'+
@@ -2462,17 +2461,21 @@ correct gl.viewport
             'intensity = (intensity - center0) / width0 + 0.5;'+
 
             // Clamp intensity
-            'intensity = clamp(intensity, 0.0, 1.0);' +
+            //'intensity = clamp(intensity, 0.0, 1.0);' +
 
             // RGBA output
-            'gl_FragColor = vec4(intensity, intensity, intensity, 1);' +
+            'gl_FragColor = vec4(1.0, 0.0, intensity, 1.0);' +
 
             // Apply any inversion necessary
             'if (invert == 1)' +
                 'gl_FragColor.rgb = 1.0 - gl_FragColor.rgb;' +
+                */
+               
+            'gl_FragColor = vec4(color.a,color.a,color.a,1.0);'+
         '}';
 
     cornerstone.shaders.uint8 = shader;
+
 
 }(cornerstone));
 /**

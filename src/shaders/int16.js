@@ -13,12 +13,11 @@
 
     function storedPixelDataToImageData(image) {
 
-        var pixelData = image.getPixelData();
-
         // Transfer image data to alpha and luminance channels of WebGL texture
         // Credit to @jpambrun and @fernandojsg
 
         // Pack int16 into two uint8 channels (r and a)
+        var pixelData = image.getPixelData();
         var numberOfChannels = 2;
         var data = new Uint8Array(image.width * image.height * numberOfChannels);
         var offset = 0;
@@ -72,7 +71,7 @@
             'intensity = clamp(intensity, 0.0, 1.0);' +
 
             // RGBA output
-            'gl_FragColor = vec4(intensity, intensity, intensity, 1);' +
+            'gl_FragColor = vec4(intensity, intensity, intensity, 1.0);' +
 
             // Apply any inversion necessary
             'if (invert == 1)' +

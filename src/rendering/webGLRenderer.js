@@ -206,8 +206,7 @@ correct gl.viewport
         gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
         updateRectangle(gl, 0, 0, width, height);
-        console.log(">>>",positionBuffer.itemSize, texCoordBuffer.itemSize);
-
+        
         // Set the resolution
         var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
         gl.uniform2f(resolutionLocation, width, height);
