@@ -8,12 +8,13 @@
 
     // For uint8 pack into alpha channel
     var shader = {
-        format: 'ALPHA'
+//        format: 'ALPHA'
     };
 
-    function storedPixelDataToImageData(pixelData) {
+    function storedPixelDataToImageData(image) {
         // Transfer image data to alpha channel of WebGL texture
         // Store data in Uint8Array
+        var pixelData = image.getPixelData();
         var data = new Uint8Array(pixelData.length);
         for (var i = 0; i < pixelData.length; i++) {
             data[i] = parseInt(pixelData[i], 10);

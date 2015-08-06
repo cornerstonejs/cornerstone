@@ -7,7 +7,7 @@
         datatype = datatype || "int16";
         // We need a mechanism for
         // choosing the shader based on the image datatype
-        console.log("Datatype: " + image.datatype);
+        console.log("Datatype: " + datatype);
         if (cornerstone.shaders.hasOwnProperty(datatype)) {
             return cornerstone.shaders[datatype];
         }

@@ -8,7 +8,7 @@
 
     // Pack RGB images into a 3-channel RGB texture
     var shader = {
-        format: 'RGB'
+        //format: 'RGB'
     };
 
     function storedColorPixelDataToCanvasImageData(image) {
@@ -18,31 +18,32 @@
         // Only 3 channels, since we use WebGL's RGB texture format
         var numPixels = image.width * image.height * 3;
         var storedPixelData = image.getPixelData();
-        var localCanvasImageDataData = new Uint8Array(numPixels);
+        var data = new Uint8Array(numPixels);
 
         // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
         // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
         if (minPixelValue < 0){
             while (storedPixelDataIndex < numPixels) {
-                localCanvasImageDataData[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++] + (-minPixelValue); // red
-                localCanvasImageDataData[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++] + (-minPixelValue); // green
-                localCanvasImageDataData[canvasImageDataIndex] = storedPixelData[storedPixelDataIndex] + (-minPixelValue); // blue
+                data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++] + (-minPixelValue); // red
+                data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++] + (-minPixelValue); // green
+                data[canvasImageDataIndex] = storedPixelData[storedPixelDataIndex] + (-minPixelValue); // blue
                 storedPixelDataIndex += 2; // The stored pixel data has 4 channels
                 canvasImageDataIndex += 1;
             }
         } else {
             while (storedPixelDataIndex < numPixels) {
-                localCanvasImageDataData[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++]; // red
-                localCanvasImageDataData[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++]; // green
-                localCanvasImageDataData[canvasImageDataIndex] = storedPixelData[storedPixelDataIndex]; // blue
+                data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++]; // red
+                data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++]; // green
+                data[canvasImageDataIndex] = storedPixelData[storedPixelDataIndex]; // blue
                 storedPixelDataIndex += 2; // The stored pixel data has 4 channels
                 canvasImageDataIndex += 1;
             }
         }
-        return localCanvasImageDataData;
+        return data;
     }
 
     shader.storedColorPixelDataToCanvasImageData = storedColorPixelDataToCanvasImageData;
+    shader.storedPixelDataToImageData =storedColorPixelDataToCanvasImageData;
 
     shader.vert = 'attribute vec2 a_position;' +
         'attribute vec2 a_texCoord;' +
@@ -81,7 +82,7 @@
 
             // RGBA output
             'gl_FragColor = vec4(color, 1);' +
-
+            
             // Apply any inversion necessary
             'if (invert == 1)' +
                 'gl_FragColor.rgb = 1. - gl_FragColor.rgb;' +

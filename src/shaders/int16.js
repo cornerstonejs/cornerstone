@@ -8,16 +8,19 @@
 
     // For int16 pack int16 into two uint8 channels (r and a)
     var shader = {
-        format: 'LUMINANCE_ALPHA'
+//        format: 'LUMINANCE_ALPHA'
     };
 
-    function storedPixelDataToImageData(pixelData, width, height) {
+    function storedPixelDataToImageData(image) {
+
+        var pixelData = image.getPixelData();
+
         // Transfer image data to alpha and luminance channels of WebGL texture
         // Credit to @jpambrun and @fernandojsg
 
         // Pack int16 into two uint8 channels (r and a)
         var numberOfChannels = 2;
-        var data = new Uint8Array(width * height * numberOfChannels);
+        var data = new Uint8Array(image.width * image.height * numberOfChannels);
         var offset = 0;
 
         for (var i = 0; i < pixelData.length; i++) {
