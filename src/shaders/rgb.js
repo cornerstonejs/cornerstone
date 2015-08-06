@@ -65,34 +65,26 @@
         'uniform float minPixelValue;' +
         'uniform int invert;' +
         'varying vec2 v_texCoord;' +
+        
         'void main() {' +
+            
             // Get texture
-            'vec4 packedTextureElement = texture2D(u_image, v_texCoord);' +
+            'vec3 color = texture2D(u_image, v_texCoord).xyz;' +
 
-            // Get each RGB channel
-            'float red = packedTextureElement.r * 256.;'+
-            'float green = packedTextureElement.g * 256.;'+
-            'float blue = packedTextureElement.b * 256.;'+
-
-            // Rescale based on slope and intercept
-            'red = red * slope + intercept;'+
-            'green = green * slope + intercept;'+
-            'blue = blue * slope + intercept;'+
-
+            // Rescale based on slope and intercept 
+            'color = color * 256.0 * slope + intercept;' +
+            
             // Apply window settings
-            'float center0 = wc - 0.5;'+
-            'center0 -= minPixelValue;'+
+            'float center0 = wc - 0.5 - minPixelValue;'+
             'float width0 = ww - 1.0;'+
-            'red = (red - center0) / width0 + 0.5;'+
-            'green = (green - center0) / width0 + 0.5;'+
-            'blue = (blue - center0) / width0 + 0.5;'+
+            'color = (color - center0) / width0 + 0.5;'+
 
             // RGBA output
-            'gl_FragColor = vec4(red, green, blue, 1);' +
+            'gl_FragColor = vec4(color, 1);' +
 
             // Apply any inversion necessary
             'if (invert == 1)' +
-                'gl_FragColor.rgb=vec3(1.0,1.0,1.0)-gl_FragColor.rgb;' +
+                'gl_FragColor.rgb = 1. - gl_FragColor.rgb;' +
         '}';
 
     cornerstone.shaders.rgb = shader;
