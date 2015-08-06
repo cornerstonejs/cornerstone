@@ -1,3 +1,13 @@
+/*
+
+use trianglestrip
+prevent regenerate textures
+prevent reinit rendering context
+prevent reinit shaderprograms
+prevent regenerate buffers
+correct gl.viewport
+
+ */
 (function (cornerstone) {
 
     "use strict";
@@ -55,7 +65,7 @@
         return gl;
     }
 
-    function getImageDataType( image ) {
+    function getImageDataType(image) {
         
         return image.color ? "rgb" : image.datatype || "int16";
 
@@ -74,8 +84,10 @@
         var shader = cornerstone.shaders.rgb;
         return shader;
     }
+
     function getShaderProgram(gl, shader) {
-        if (!program) {
+        //if (!program) 
+        {
             program = cornerstone.rendering.initShaders(gl, shader.frag, shader.vert);
         }
         return program;
@@ -137,8 +149,6 @@
             0.0,  1.0,
             1.0,  0.0,
             1.0,  1.0]), gl.STATIC_DRAW);
-
-
     }
 
     function render(enabledElement) {
@@ -184,6 +194,7 @@
 
         var viewport = enabledElement.viewport;
 
+        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
         var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
         gl.enableVertexAttribArray(texCoordLocation);
         gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
@@ -195,6 +206,7 @@
         gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
         updateRectangle(gl, 0, 0, width, height);
+        console.log(">>>",positionBuffer.itemSize, texCoordBuffer.itemSize);
 
         // Set the resolution
         var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
@@ -260,6 +272,8 @@
         // Resize the canvas
         renderCanvas.width = image.width;
         renderCanvas.height = image.height;
+        
+        gl.viewport( 0,0 , image.width, image.height );
 
         // Get A WebGL context
         // We already got it defined! gl = cornerstone.rendering.initWebGL(renderCanvas);
