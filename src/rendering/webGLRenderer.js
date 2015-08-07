@@ -6,7 +6,7 @@ prevent reinit rendering context
 prevent reinit shaderprograms
 prevent regenerate buffers
 correct gl.viewport
-
+order vert, frag
  */
 (function (cornerstone) {
 
@@ -24,8 +24,9 @@ correct gl.viewport
 
         for (var id in cornerstone.shaders) {
 
+            console.log("WEBGL: Loading shader",id);
             var shader = cornerstone.shaders[ id ];
-            shader.program = cornerstone.rendering.initShaders(gl, shader.frag, shader.vert);
+            shader.program = cornerstone.rendering.createProgramFromString(gl, shader.vert, shader.frag);
 
         }
     }
@@ -123,8 +124,6 @@ correct gl.viewport
         var imageDataType = getImageDataType(image);
         var format = TEXTURE_FORMAT[imageDataType];
 
-        console.log(">>>>>>>>>>>>", imageDataType, format);
-
         // GL texture configuration
         var texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -189,11 +188,13 @@ correct gl.viewport
         // Set the current shader
         shader = getShader(image);
         console.log(shader);
-        program = shader.program;
+        var program = shader.program;
 
 
         var width = image.width;
         var height = image.height;
+
+        gl.useProgram(program);
 
         // GL texture configuration
         enableImageTexture(image);
@@ -291,7 +292,7 @@ correct gl.viewport
         initRenderer:initRenderer
     };
 
-    //initRenderer();
+    initRenderer();
 /*
     // Module exports
     cornerstone.rendering.grayscaleImageWebGL = renderColorImageWebGL;
