@@ -1858,9 +1858,20 @@ order vert, frag
 
             console.log("WEBGL: Loading shader",id);
             var shader = cornerstone.shaders[ id ];
+            shader.attributes = {};
+            shader.uniforms = {};
+
             shader.program = cornerstone.rendering.createProgramFromString(gl, shader.vert, shader.frag);
 
-        }
+            shader.attributes.texCoordLocation = gl.getAttribLocation(shader.program, "a_texCoord");
+            gl.enableVertexAttribArray(shader.attributes.texCoordLocation);
+        
+            shader.attributes.positionLocation = gl.getAttribLocation(shader.program, "a_position");
+            gl.enableVertexAttribArray(shader.attributes.positionLocation);
+        
+            shader.uniforms.resolutionLocation = gl.getUniformLocation(shader.program, "u_resolution");
+
+        }  
     }
 
     function initRenderer() {
@@ -1957,6 +1968,7 @@ order vert, frag
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
 
         var imageData = cornerstone.shaders[imageDataType].storedPixelDataToImageData(image, image.width, image.height);
 
@@ -1986,6 +1998,59 @@ order vert, frag
             1.0, 0.0,
             0.0, 0.0,
         ]), gl.STATIC_DRAW);
+    }
+
+    function renderQuad(shader, parameters, texture, canvasView )
+    {
+        gl.clearColor(0.0,0.0,0.0,1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.useProgram(shader.program);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+        var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
+        gl.enableVertexAttribArray(texCoordLocation);
+        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+
+        var positionLocation = gl.getAttribLocation(program, "a_position");
+        //positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.enableVertexAttribArray(positionLocation);
+
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+        gl.vertexAttribPointer(shader.program.vertexPositionAttribute, dynamicSquareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
+        gl.vertexAttribPointer(shader.program.textureCoordAttribute, cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+        for (var key in parameters)
+        {
+            var uniformLocation = gl.getUniformLocation(shader.program, key);
+            if ( !uniformLocation ) continue;
+
+            var uniform = parameters[key];
+
+            var type = uniform.type;
+            var value = uniform.value;
+
+            if( type == "i" )
+            {
+                gl.uniform1i( uniformLocation, value );
+            }
+            else if( type == "f" )
+            {
+                gl.uniform1f( uniformLocation, value );
+            }
+        }
+
+        //gl.uniform1i(shader.program.samplerUniform, 0);
+        gl.activeTexture(gl.TEXTURE0);
+
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+
+        //gl.drawArrays(gl.TRIANGLE_STRIP, 0, dynamicSquareVertexPositionBuffer.numItems);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
 
     function render(enabledElement) {
@@ -2019,69 +2084,67 @@ order vert, frag
         }
 
         // Set the current shader
-        shader = getShaderProgram(image);
-        console.log(shader);
-        var program = shader.program;
+        var shader = getShaderProgram(image);
 
-
-        var width = image.width;
-        var height = image.height;
-
-        gl.useProgram(program);
-
-        // GL texture configuration
-        enableImageTexture(image);
+        gl.useProgram(shader.program);
 
         var viewport = enabledElement.viewport;
 
         gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-        var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
+        var texCoordLocation = gl.getAttribLocation(shader.program, "a_texCoord");
         gl.enableVertexAttribArray(texCoordLocation);
         gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
 
-        var positionLocation = gl.getAttribLocation(program, "a_position");
-        //positionBuffer = gl.createBuffer();
+        var positionLocation = gl.getAttribLocation(shader.program, "a_position");
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.enableVertexAttribArray(positionLocation);
         gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
-        updateRectangle(gl, width, height);
+        updateRectangle(gl, image.width, image.height);
         
-        // Set the resolution
-        var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
-        gl.uniform2f(resolutionLocation, width, height);
+        console.log(enabledElement.viewport.voi.windowCenter);
 
-        // Pass window level to fragment shader
-        var windowCenterLocation = gl.getUniformLocation(program, "wc");
-        gl.uniform1f(windowCenterLocation, enabledElement.viewport.voi.windowCenter);
-        
-        // Pass window width to fragment shader
-        var windowWidthLocation = gl.getUniformLocation(program, "ww");
-        gl.uniform1f(windowWidthLocation, enabledElement.viewport.voi.windowWidth);
+        var parameters = {
+            "u_resolution": { type: "2f", value: [image.width, image.height] },
+            "wc": { type: "f", value: enabledElement.viewport.voi.windowCenter },
+            "ww": { type: "f", value: enabledElement.viewport.voi.windowWidth },
+            "slope": { type: "f", value: image.slope },
+            "intercept": { type: "f", value: image.intercept },
+            "minPixelValue": { type: "f", value: image.minPixelValue },
+            "invert": { type: "i", value: enabledElement.viewport.invert ? 1 : 0 },
 
-        // Pass slope to fragment shader
-        var slopeLocation = gl.getUniformLocation(program, "slope");
-        gl.uniform1f(slopeLocation, image.slope);
+        }
 
-        // Pass intercept to fragment shader
-        var interceptLocation = gl.getUniformLocation(program, "intercept");
-        gl.uniform1f(interceptLocation, image.intercept);
+        for (var key in parameters)
+        {
+            var uniformLocation = gl.getUniformLocation(shader.program, key);
+            if ( !uniformLocation ) throw "Could not access location for uniform: " + key;
 
-        // Pass minPixelValue to fragment shader
-        var minPixelValueLocation = gl.getUniformLocation(program, "minPixelValue");
-        gl.uniform1f(minPixelValueLocation, image.minPixelValue);
+            var uniform = parameters[key];
 
-        // Pass invert to fragment shader
-        var invertLocation = gl.getUniformLocation(program, "invert");
-        var invertAsInt = enabledElement.viewport.invert ? 1 : 0;
-        gl.uniform1i(invertLocation, invertAsInt);
+            var type = uniform.type;
+            var value = uniform.value;
+
+            if( type == "i" )
+            {
+                gl.uniform1i( uniformLocation, value );
+            }
+            else if( type == "f" )
+            {
+                gl.uniform1f( uniformLocation, value );
+            }
+            else if( type == "2f" )
+            {
+                gl.uniform2f( uniformLocation, value[0], value[1] );
+            }
+        }
 
         // Do the actual rendering
         gl.clearColor(0.5, 0.0, 0.0, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        // Use program
-        //gl.useProgram(shaderProgram);
-        //gl.activeTexture(gl.TEXTURE0);
+
+        gl.activeTexture(gl.TEXTURE0);
+        enableImageTexture(image);
 
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
