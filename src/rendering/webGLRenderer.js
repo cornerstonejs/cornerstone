@@ -35,28 +35,23 @@ order vert, frag
         
         if ( initWebGL( renderCanvas ) ) {
             
-            //initializeWebGLContext();
             initBuffers();
             initShaders();
             console.log("WEBGL Renderer initialized!", gl);
         }
     }
 
-    function updateRectangle(gl, x, y, width, height) {
-        var x1 = x;
-        var x2 = x + width;
-        var y1 = y;
-        var y2 = y + height;
+    function updateRectangle(gl, width, height) {
+
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-              x1, y1,
-              x2, y1,
-              x1, y2,
-              x1, y2,
-              x2, y1,
-              x2, y2]), gl.STATIC_DRAW);
+            width, height, 
+            0, height,
+            width, 0,
+            0, 0]), gl.STATIC_DRAW);
     }
 
     function initWebGL(canvas) {
+
         gl = null;
         try {
             // Try to grab the standard context. If it fails, fallback to experimental.
@@ -83,7 +78,7 @@ order vert, frag
 
     }
 
-    function getShader(image) {
+    function getShaderProgram(image) {
 
         var datatype = getImageDataType(image);
         // We need a mechanism for
@@ -110,9 +105,6 @@ order vert, frag
 
     function generateTexture( image ) {
         
-        // Get the texture format for this datatype
-        //!!!! fixme
-        
         var TEXTURE_FORMAT = {
             "rgb": gl.RGB,
             "uint8": gl.LUMINANCE,
@@ -127,13 +119,14 @@ order vert, frag
         // GL texture configuration
         var texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, texture);
-
+        
+        //gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-        var imageData = cornerstone.shaders[imageDataType].storedPixelDataToImageData(image, image.width, image.height); // shader. ???
+        var imageData = cornerstone.shaders[imageDataType].storedPixelDataToImageData(image, image.width, image.height);
 
         gl.texImage2D(gl.TEXTURE_2D, 0, format, image.width, image.height, 0, format, gl.UNSIGNED_BYTE, imageData);
 
@@ -142,17 +135,25 @@ order vert, frag
     }
 
     function initBuffers() {
-
-        // provide texture coordinates for the rectangle.
+ 
+        positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            1, 1, 
+            0, 1, 
+            1, 0, 
+            0, 0
+        ]), gl.STATIC_DRAW);
+ 
+ 
         texCoordBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-            0.0,  0.0,
-            1.0,  0.0,
-            0.0,  1.0,
-            0.0,  1.0,
-            1.0,  0.0,
-            1.0,  1.0]), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([         
+            1.0, 1.0,
+            0.0, 1.0,
+            1.0, 0.0,
+            0.0, 0.0,
+        ]), gl.STATIC_DRAW);
     }
 
     function render(enabledElement) {
@@ -186,7 +187,7 @@ order vert, frag
         }
 
         // Set the current shader
-        shader = getShader(image);
+        shader = getShaderProgram(image);
         console.log(shader);
         var program = shader.program;
 
@@ -207,12 +208,12 @@ order vert, frag
         gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
 
         var positionLocation = gl.getAttribLocation(program, "a_position");
-        positionBuffer = gl.createBuffer();
+        //positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.enableVertexAttribArray(positionLocation);
         gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
-        updateRectangle(gl, 0, 0, width, height);
+        updateRectangle(gl, width, height);
         
         // Set the resolution
         var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
@@ -248,9 +249,9 @@ order vert, frag
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         // Use program
         //gl.useProgram(shaderProgram);
-        gl.activeTexture(gl.TEXTURE0);
+        //gl.activeTexture(gl.TEXTURE0);
 
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
         // Save the canvas context state and apply the viewport properties
         cornerstone.setToPixelCoordinateSystem(enabledElement, context);
