@@ -39,7 +39,6 @@
      */
     function renderColorImageWebGL(enabledElement, invalidated) {
 
-        console.log("ASDASDF");
         cornerstone.rendering.webGLRenderer.render(enabledElement);
 
     }
