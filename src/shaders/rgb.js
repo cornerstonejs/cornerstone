@@ -42,7 +42,6 @@
         return data;
     }
 
-    shader.storedColorPixelDataToCanvasImageData = storedColorPixelDataToCanvasImageData;
     shader.storedPixelDataToImageData =storedColorPixelDataToCanvasImageData;
 
     shader.vert = 'attribute vec2 a_position;' +

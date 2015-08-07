@@ -16,9 +16,19 @@ correct gl.viewport
     var renderCanvasContext;
     var renderCanvasData;
     var gl;
-    var program;
+    var programs;
     var shader;
     var texCoordBuffer, positionBuffer;
+
+    function initShaders() {
+
+        for (var id in cornerstone.shaders) {
+
+            var shader = cornerstone.shaders[ id ];
+            shader.program = cornerstone.rendering.initShaders(gl, shader.frag, shader.vert);
+
+        }
+    }
 
     function initRenderer() {
         
@@ -26,6 +36,7 @@ correct gl.viewport
             
             //initializeWebGLContext();
             initBuffers();
+            initShaders();
             console.log("WEBGL Renderer initialized!", gl);
         }
     }
@@ -78,25 +89,19 @@ correct gl.viewport
         // choosing the shader based on the image datatype
         console.log("Datatype: " + datatype);
         if (cornerstone.shaders.hasOwnProperty(datatype)) {
-            return cornerstone.shaders[datatype];
+            return cornerstone.shaders[ datatype ];
         }
 
         var shader = cornerstone.shaders.rgb;
         return shader;
     }
 
-    function getShaderProgram(gl, shader) {
-        //if (!program) 
-        {
-            program = cornerstone.rendering.initShaders(gl, shader.frag, shader.vert);
-        }
-        return program;
-    }
-
     function enableImageTexture( image ) {
+        
         //@todo cache?
         if ( !image.texture ) {
             image.texture = generateTexture( image );
+            console.log("Generating texture");
         }
         gl.bindTexture(gl.TEXTURE_2D, image.texture);
 
@@ -183,7 +188,8 @@ correct gl.viewport
 
         // Set the current shader
         shader = getShader(image);
-        program = getShaderProgram(gl, shader);
+        console.log(shader);
+        program = shader.program;
 
 
         var width = image.width;
@@ -272,7 +278,8 @@ correct gl.viewport
         renderCanvas.width = image.width;
         renderCanvas.height = image.height;
         
-        gl.viewport( 0,0 , image.width, image.height );
+        if (gl)
+            gl.viewport( 0,0 , image.width, image.height );        
 
         // Get A WebGL context
         // We already got it defined! gl = cornerstone.rendering.initWebGL(renderCanvas);
@@ -281,9 +288,10 @@ correct gl.viewport
 
     cornerstone.rendering.webGLRenderer = {
         render: render,
+        initRenderer:initRenderer
     };
 
-    initRenderer();
+    //initRenderer();
 /*
     // Module exports
     cornerstone.rendering.grayscaleImageWebGL = renderColorImageWebGL;

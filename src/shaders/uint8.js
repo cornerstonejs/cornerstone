@@ -17,7 +17,7 @@
         var pixelData = image.getPixelData();
         var data = new Uint8Array(pixelData.length);
         for (var i = 0; i < pixelData.length; i++) {
-            data[i] = parseInt(pixelData[i]/200, 10);
+            data[i] = parseInt(pixelData[i], 10);
         }
         return data;
     }
