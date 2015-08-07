@@ -8,7 +8,7 @@
 
     // Pack RGB images into a 3-channel RGB texture
     var shader = {
-        //format: 'RGB'
+
     };
 
     function storedColorPixelDataToCanvasImageData(image) {

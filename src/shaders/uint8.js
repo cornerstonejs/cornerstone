@@ -6,9 +6,7 @@
         cornerstone.shaders = {};
     }
 
-    // For uint8 pack into alpha channel
     var shader = {
-//        format: 'ALPHA'
     };
 
     function storedPixelDataToImageData(image) {
@@ -45,13 +43,14 @@
         'uniform float minPixelValue;' +
         'uniform int invert;' +
         'varying vec2 v_texCoord;' +
-
+        
         'void main() {' +
             // Get texture
             'vec4 color = texture2D(u_image, v_texCoord);' +
 
             // Calculate luminance from packed texture
-/*            'float intensity = color.a * 256.0;'+
+            //'float intensity = color.a*256.0;'+
+            'float intensity = color.r*256.;'+
 
             // Rescale based on slope and window settings
             'intensity = intensity * slope + intercept;'+
@@ -60,17 +59,14 @@
             'intensity = (intensity - center0) / width0 + 0.5;'+
 
             // Clamp intensity
-            //'intensity = clamp(intensity, 0.0, 1.0);' +
+            'intensity = clamp(intensity, 0.0, 1.0);' +
 
             // RGBA output
-            'gl_FragColor = vec4(1.0, 0.0, intensity, 1.0);' +
+            'gl_FragColor = vec4(intensity, intensity, intensity, 1.0);' +
 
             // Apply any inversion necessary
             'if (invert == 1)' +
                 'gl_FragColor.rgb = 1.0 - gl_FragColor.rgb;' +
-                */
-               
-            'gl_FragColor = vec4(color.a,color.a,color.a,1.0);'+
         '}';
 
     cornerstone.shaders.uint8 = shader;

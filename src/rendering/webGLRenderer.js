@@ -270,8 +270,6 @@ order vert, frag
 
         updateRectangle(gl, image.width, image.height);
         
-        console.log(enabledElement.viewport.voi.windowCenter);
-
         var parameters = {
             "u_resolution": { type: "2f", value: [image.width, image.height] },
             "wc": { type: "f", value: enabledElement.viewport.voi.windowCenter },
@@ -283,10 +281,14 @@ order vert, frag
 
         }
 
+        console.log(shader);
+
         for (var key in parameters)
         {
             var uniformLocation = gl.getUniformLocation(shader.program, key);
-            if ( !uniformLocation ) throw "Could not access location for uniform: " + key;
+            if ( !uniformLocation ) {
+                throw "Could not access location for uniform: " + key;
+            }
 
             var uniform = parameters[key];
 
@@ -343,11 +345,7 @@ order vert, frag
         renderCanvas.width = image.width;
         renderCanvas.height = image.height;
         
-        if (gl)
-            gl.viewport( 0,0 , image.width, image.height );        
-
-        // Get A WebGL context
-        // We already got it defined! gl = cornerstone.rendering.initWebGL(renderCanvas);
+        gl.viewport( 0,0 , image.width, image.height );        
         
     }
 
@@ -356,7 +354,6 @@ order vert, frag
         initRenderer:initRenderer
     };
 
-    initRenderer();
 /*
     // Module exports
     cornerstone.rendering.grayscaleImageWebGL = renderColorImageWebGL;

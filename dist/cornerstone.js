@@ -1585,6 +1585,7 @@ if(typeof cornerstone === 'undefined'){
      */
     function renderColorImageWebGL(enabledElement, invalidated) {
 
+        console.log("ASDASDF");
         cornerstone.rendering.webGLRenderer.render(enabledElement);
 
     }
@@ -2102,8 +2103,6 @@ order vert, frag
 
         updateRectangle(gl, image.width, image.height);
         
-        console.log(enabledElement.viewport.voi.windowCenter);
-
         var parameters = {
             "u_resolution": { type: "2f", value: [image.width, image.height] },
             "wc": { type: "f", value: enabledElement.viewport.voi.windowCenter },
@@ -2115,10 +2114,14 @@ order vert, frag
 
         }
 
+        console.log(shader);
+
         for (var key in parameters)
         {
             var uniformLocation = gl.getUniformLocation(shader.program, key);
-            if ( !uniformLocation ) throw "Could not access location for uniform: " + key;
+            if ( !uniformLocation ) {
+                throw "Could not access location for uniform: " + key;
+            }
 
             var uniform = parameters[key];
 
@@ -2175,11 +2178,7 @@ order vert, frag
         renderCanvas.width = image.width;
         renderCanvas.height = image.height;
         
-        if (gl)
-            gl.viewport( 0,0 , image.width, image.height );        
-
-        // Get A WebGL context
-        // We already got it defined! gl = cornerstone.rendering.initWebGL(renderCanvas);
+        gl.viewport( 0,0 , image.width, image.height );        
         
     }
 
@@ -2188,7 +2187,6 @@ order vert, frag
         initRenderer:initRenderer
     };
 
-    initRenderer();
 /*
     // Module exports
     cornerstone.rendering.grayscaleImageWebGL = renderColorImageWebGL;
@@ -2431,7 +2429,7 @@ order vert, frag
 
     // Pack RGB images into a 3-channel RGB texture
     var shader = {
-        //format: 'RGB'
+
     };
 
     function storedColorPixelDataToCanvasImageData(image) {
@@ -2521,9 +2519,7 @@ order vert, frag
         cornerstone.shaders = {};
     }
 
-    // For uint8 pack into alpha channel
     var shader = {
-//        format: 'ALPHA'
     };
 
     function storedPixelDataToImageData(image) {
@@ -2560,13 +2556,14 @@ order vert, frag
         'uniform float minPixelValue;' +
         'uniform int invert;' +
         'varying vec2 v_texCoord;' +
-
+        
         'void main() {' +
             // Get texture
             'vec4 color = texture2D(u_image, v_texCoord);' +
 
             // Calculate luminance from packed texture
-/*            'float intensity = color.a * 256.0;'+
+            //'float intensity = color.a*256.0;'+
+            'float intensity = color.r*256.;'+
 
             // Rescale based on slope and window settings
             'intensity = intensity * slope + intercept;'+
@@ -2575,17 +2572,14 @@ order vert, frag
             'intensity = (intensity - center0) / width0 + 0.5;'+
 
             // Clamp intensity
-            //'intensity = clamp(intensity, 0.0, 1.0);' +
+            'intensity = clamp(intensity, 0.0, 1.0);' +
 
             // RGBA output
-            'gl_FragColor = vec4(1.0, 0.0, intensity, 1.0);' +
+            'gl_FragColor = vec4(intensity, intensity, intensity, 1.0);' +
 
             // Apply any inversion necessary
             'if (invert == 1)' +
                 'gl_FragColor.rgb = 1.0 - gl_FragColor.rgb;' +
-                */
-               
-            'gl_FragColor = vec4(color.a,color.a,color.a,1.0);'+
         '}';
 
     cornerstone.shaders.uint8 = shader;
