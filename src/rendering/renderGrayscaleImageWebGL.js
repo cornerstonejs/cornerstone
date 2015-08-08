@@ -6,9 +6,6 @@
 
     "use strict";
 
-    var lastRenderedImageId;
-    var lastRenderedViewport = {};
-
     /**
      * API function to draw a grayscale image to a given enabledElement
      * @param enabledElement

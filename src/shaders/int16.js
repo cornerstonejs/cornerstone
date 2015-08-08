@@ -8,7 +8,6 @@
 
     // For int16 pack int16 into two uint8 channels (r and a)
     var shader = {
-//        format: 'LUMINANCE_ALPHA'
     };
 
     function storedPixelDataToImageData(image) {

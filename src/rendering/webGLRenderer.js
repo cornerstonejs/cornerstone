@@ -1,5 +1,4 @@
 /*
-
 use trianglestrip
 prevent regenerate textures
 prevent reinit rendering context
@@ -104,14 +103,15 @@ order vert, frag
         return shader;
     }
 
-    function enableImageTexture( image ) {
+    function getImageTexture( image ) {
         
         //@todo cache?
         if ( !texturesCache[ image.imageId ] ) {
             texturesCache[ image.imageId ] = generateTexture( image );
             console.log("Generating texture for imageid: ", image.imageId);
         }
-        gl.bindTexture(gl.TEXTURE_2D, texturesCache[ image.imageId ]);
+        //gl.bindTexture(gl.TEXTURE_2D, texturesCache[ image.imageId ]);
+        return texturesCache[ image.imageId ];
 
     }
 
@@ -169,118 +169,21 @@ order vert, frag
         ]), gl.STATIC_DRAW);
     }
 
-    function renderQuad(shader, parameters, texture, canvasView )
+    function renderQuad(shader, parameters, texture )
     {
-        gl.clearColor(0.0,0.0,0.0,1.0);
+        gl.clearColor(1.0,0.0,0.0,1.0);
+        gl.viewport( 0,0 , texture.width, texture.height );
+
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.useProgram(shader.program);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-        var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
-        gl.enableVertexAttribArray(texCoordLocation);
-        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(shader.attributes.texCoordLocation);
+        gl.vertexAttribPointer(shader.attributes.texCoordLocation, 2, gl.FLOAT, false, 0, 0);
 
-        var positionLocation = gl.getAttribLocation(program, "a_position");
-        //positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        gl.enableVertexAttribArray(positionLocation);
-
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-        gl.vertexAttribPointer(shader.program.vertexPositionAttribute, dynamicSquareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
-        gl.vertexAttribPointer(shader.program.textureCoordAttribute, cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
-        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-
-        for (var key in parameters)
-        {
-            var uniformLocation = gl.getUniformLocation(shader.program, key);
-            if ( !uniformLocation ) continue;
-
-            var uniform = parameters[key];
-
-            var type = uniform.type;
-            var value = uniform.value;
-
-            if( type == "i" )
-            {
-                gl.uniform1i( uniformLocation, value );
-            }
-            else if( type == "f" )
-            {
-                gl.uniform1f( uniformLocation, value );
-            }
-        }
-
-        //gl.uniform1i(shader.program.samplerUniform, 0);
-        gl.activeTexture(gl.TEXTURE0);
-
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-
-        //gl.drawArrays(gl.TRIANGLE_STRIP, 0, dynamicSquareVertexPositionBuffer.numItems);
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    }
-
-    function render(enabledElement) {
-
-        if (!enabledElement) {
-            throw "drawImage: enabledElement parameter must not be undefined";
-        }
-
-        var image = enabledElement.image;
-        if (!image) {
-            throw "drawImage: image must be loaded before it can be drawn";
-        }
-
-        updateElement(enabledElement);
-
-        // Get the canvas context and reset the transform
-        var context = enabledElement.canvas.getContext('2d');
-        context.setTransform(1, 0, 0, 1, 0, 0);
-
-        // Clear the canvas
-        context.fillStyle = 'black';
-        context.fillRect(0,0, enabledElement.canvas.width, enabledElement.canvas.height);
-
-        // Turn off image smooth/interpolation if pixelReplication is set in the viewport
-        if (enabledElement.viewport.pixelReplication === true) {
-            context.imageSmoothingEnabled = false;
-            context.mozImageSmoothingEnabled = false; // firefox doesn't support imageSmoothingEnabled yet
-        } else {
-            context.imageSmoothingEnabled = true;
-            context.mozImageSmoothingEnabled = true;
-        }
-
-        // Set the current shader
-        var shader = getShaderProgram(image);
-
-        gl.useProgram(shader.program);
-
-        var viewport = enabledElement.viewport;
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-        var texCoordLocation = gl.getAttribLocation(shader.program, "a_texCoord");
-        gl.enableVertexAttribArray(texCoordLocation);
-        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
-
-        var positionLocation = gl.getAttribLocation(shader.program, "a_position");
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        gl.enableVertexAttribArray(positionLocation);
-        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-
-        updateRectangle(gl, image.width, image.height);
-        
-        var parameters = {
-            "u_resolution": { type: "2f", value: [image.width, image.height] },
-            "wc": { type: "f", value: enabledElement.viewport.voi.windowCenter },
-            "ww": { type: "f", value: enabledElement.viewport.voi.windowWidth },
-            "slope": { type: "f", value: image.slope },
-            "intercept": { type: "f", value: image.intercept },
-            "minPixelValue": { type: "f", value: image.minPixelValue },
-            "invert": { type: "i", value: enabledElement.viewport.invert ? 1 : 0 },
-
-        }
+        gl.enableVertexAttribArray(shader.attributes.positionLocation);
+        gl.vertexAttribPointer(shader.attributes.positionLocation, 2, gl.FLOAT, false, 0, 0);
 
         for (var key in parameters)
         {
@@ -308,49 +211,74 @@ order vert, frag
             }
         }
 
-        // Do the actual rendering
-        gl.clearColor(0.5, 0.0, 0.0, 1.0);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
+        updateRectangle(gl, texture.width, texture.height);
+        
         gl.activeTexture(gl.TEXTURE0);
-        enableImageTexture(image);
-
+        gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+    }
+
+    function render(enabledElement) {
+
+        if (!enabledElement) {
+            throw "drawImage: enabledElement parameter must not be undefined";
+        }
+
+        var image = enabledElement.image;
+        if (!image) {
+            throw "drawImage: image must be loaded before it can be drawn";
+        }
+
+        // Resize the canvas
+        renderCanvas.width = image.width;
+        renderCanvas.height = image.height;
+        
+        // Get the canvas context and reset the transform
+        var context = enabledElement.canvas.getContext('2d');
+        context.setTransform(1, 0, 0, 1, 0, 0);
+
+        // Clear the canvas
+        context.fillStyle = 'black';
+        context.fillRect(0,0, enabledElement.canvas.width, enabledElement.canvas.height);
+
+        // Turn off image smooth/interpolation if pixelReplication is set in the viewport
+        if (enabledElement.viewport.pixelReplication === true) {
+            context.imageSmoothingEnabled = false;
+            context.mozImageSmoothingEnabled = false; // firefox doesn't support imageSmoothingEnabled yet
+        } else {
+            context.imageSmoothingEnabled = true;
+            context.mozImageSmoothingEnabled = true;
+        }
+
+        var viewport = enabledElement.viewport;
+
+        // Render the current image
+        var shader = getShaderProgram(image);
+        var texture = getImageTexture(image); 
+        var parameters = {
+            "u_resolution": { type: "2f", value: [image.width, image.height] },
+            "wc": { type: "f", value: enabledElement.viewport.voi.windowCenter },
+            "ww": { type: "f", value: enabledElement.viewport.voi.windowWidth },
+            "slope": { type: "f", value: image.slope },
+            "intercept": { type: "f", value: image.intercept },
+            "minPixelValue": { type: "f", value: image.minPixelValue },
+            "invert": { type: "i", value: enabledElement.viewport.invert ? 1 : 0 },
+
+        }
+        renderQuad(shader, parameters, texture );
 
         // Save the canvas context state and apply the viewport properties
         cornerstone.setToPixelCoordinateSystem(enabledElement, context);
 
         // Copy pixels from the offscreen canvas to the onscreen canvas
         context.drawImage(renderCanvas, 0,0, image.width, image.height, 0, 0, image.width, image.height);
-/*
-        // Save lastRendered information
-        lastRenderedImageId = image.imageId;
-        lastRenderedViewport.windowCenter = enabledElement.viewport.voi.windowCenter;
-        lastRenderedViewport.windowWidth = enabledElement.viewport.voi.windowWidth;
-        lastRenderedViewport.invert = enabledElement.viewport.invert;
-        lastRenderedViewport.rotation = enabledElement.viewport.rotation;
-        lastRenderedViewport.hflip = enabledElement.viewport.hflip;
-        lastRenderedViewport.vflip = enabledElement.viewport.vflip;
-*/
 
-    }
-
-
-    function updateElement(enabledElement) {
-        
-        var image = enabledElement.image;
-
-        // Resize the canvas
-        renderCanvas.width = image.width;
-        renderCanvas.height = image.height;
-        
-        gl.viewport( 0,0 , image.width, image.height );        
-        
     }
 
     cornerstone.rendering.webGLRenderer = {
         render: render,
-        initRenderer:initRenderer
+        initRenderer: initRenderer
     };
 
 }(cornerstone));
