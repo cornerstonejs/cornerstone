@@ -1,12 +1,3 @@
-/*
-use trianglestrip
-prevent regenerate textures
-prevent reinit rendering context
-prevent reinit shaderprograms
-prevent regenerate buffers
-correct gl.viewport
-order vert, frag
- */
 (function (cornerstone) {
 
     "use strict";
@@ -43,7 +34,7 @@ order vert, frag
     }
 
     function initRenderer() {
-        
+
         if ( initWebGL( renderCanvas ) ) {
             
             initBuffers();

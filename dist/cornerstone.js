@@ -1801,15 +1801,6 @@ if(typeof cornerstone === 'undefined'){
     cornerstone.renderWebImage = renderWebImage;
 
 }(cornerstone));
-/*
-use trianglestrip
-prevent regenerate textures
-prevent reinit rendering context
-prevent reinit shaderprograms
-prevent regenerate buffers
-correct gl.viewport
-order vert, frag
- */
 (function (cornerstone) {
 
     "use strict";
@@ -1846,7 +1837,7 @@ order vert, frag
     }
 
     function initRenderer() {
-        
+
         if ( initWebGL( renderCanvas ) ) {
             
             initBuffers();
@@ -2327,27 +2318,26 @@ order vert, frag
         var canvasImageDataIndex = 0;
         var storedPixelDataIndex = 0;
         // Only 3 channels, since we use WebGL's RGB texture format
-        var numPixels = image.width * image.height * 3;
+        var numStoredPixels = image.width * image.height * 4;
+        var numOutputPixels = image.width * image.height * 3;
         var storedPixelData = image.getPixelData();
-        var data = new Uint8Array(numPixels);
+        var data = new Uint8Array(numOutputPixels);
 
         // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
         // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
         if (minPixelValue < 0){
-            while (storedPixelDataIndex < numPixels) {
+            while (storedPixelDataIndex < numStoredPixels) {
                 data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++] + (-minPixelValue); // red
                 data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++] + (-minPixelValue); // green
-                data[canvasImageDataIndex] = storedPixelData[storedPixelDataIndex] + (-minPixelValue); // blue
-                storedPixelDataIndex += 2; // The stored pixel data has 4 channels
-                canvasImageDataIndex += 1;
+                data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++] + (-minPixelValue); // blue
+                storedPixelDataIndex += 1; // The stored pixel data has 4 channels
             }
         } else {
-            while (storedPixelDataIndex < numPixels) {
+            while (storedPixelDataIndex < numStoredPixels) {
                 data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++]; // red
                 data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++]; // green
-                data[canvasImageDataIndex] = storedPixelData[storedPixelDataIndex]; // blue
-                storedPixelDataIndex += 2; // The stored pixel data has 4 channels
-                canvasImageDataIndex += 1;
+                data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++]; // blue
+                storedPixelDataIndex += 1; // The stored pixel data has 4 channels
             }
         }
         return data;

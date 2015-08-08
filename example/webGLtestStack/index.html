@@ -130,6 +130,8 @@ This is a work-in-progress example of WebGL use in cornerstone
 
         cornerstone.enable(element);
         cornerstone.loadImage(imageIds[0]).then(function(image) {
+
+            cornerstone.rendering.webGLRenderer.initRenderer();
             console.log(image);
             cornerstone.displayImage(element, image);
 
