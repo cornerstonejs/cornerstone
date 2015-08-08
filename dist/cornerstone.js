@@ -1972,11 +1972,11 @@ order vert, frag
         ]), gl.STATIC_DRAW);
     }
 
-    function renderQuad(shader, parameters, texture )
+    function renderQuad(shader, parameters, texture, width, height )
     {
         gl.clearColor(1.0,0.0,0.0,1.0);
-        gl.viewport( 0,0 , texture.width, texture.height );
-
+        gl.viewport( 0, 0, width, height );
+        
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.useProgram(shader.program);
 
@@ -2014,7 +2014,7 @@ order vert, frag
             }
         }
 
-        updateRectangle(gl, texture.width, texture.height);
+        updateRectangle(gl, width, height);
         
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -2069,7 +2069,7 @@ order vert, frag
             "invert": { type: "i", value: enabledElement.viewport.invert ? 1 : 0 },
 
         }
-        renderQuad(shader, parameters, texture );
+        renderQuad(shader, parameters, texture, image.width, image.height );
 
         // Save the canvas context state and apply the viewport properties
         cornerstone.setToPixelCoordinateSystem(enabledElement, context);
