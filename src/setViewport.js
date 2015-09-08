@@ -5,6 +5,13 @@
 
     "use strict";
 
+    /**
+     * Sets the viewport for an element and corrects invalid values
+     *
+     * @param element - DOM element of the enabled element
+     * @param viewport - Object containing the viewport properties
+     * @returns {*}
+     */
     function setViewport(element, viewport) {
 
         var enabledElement = cornerstone.getEnabledElement(element);
@@ -20,9 +27,10 @@
         enabledElement.viewport.hflip = viewport.hflip;
         enabledElement.viewport.vflip = viewport.vflip;
 
-        // prevent window width from being < 1
-        if(enabledElement.viewport.voi.windowWidth < 1) {
-            enabledElement.viewport.voi.windowWidth = 1;
+        // prevent window width from being too small (note that values close to zero are valid and can occur with
+        // PET images in particular)
+        if(enabledElement.viewport.voi.windowWidth < 0.000001) {
+            enabledElement.viewport.voi.windowWidth = 0.000001;
         }
         // prevent scale from getting too small
         if(enabledElement.viewport.scale < 0.0001) {
