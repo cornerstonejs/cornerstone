@@ -6,20 +6,18 @@
 
     "use strict";
 
-    var imageCache = {
-    };
+    var imageCache = {};
 
     var cachedImages = [];
 
     var maximumSizeInBytes = 1024 * 1024 * 1024; // 1 GB
     var cacheSizeInBytes = 0;
 
-    function setMaximumSizeBytes(numBytes)
-    {
-        if(numBytes === undefined) {
+    function setMaximumSizeBytes(numBytes) {
+        if (numBytes === undefined) {
             throw "setMaximumSizeBytes: parameter numBytes must not be undefined";
         }
-        if(numBytes.toFixed === undefined) {
+        if (numBytes.toFixed === undefined) {
             throw "setMaximumSizeBytes: parameter numBytes must be a number";
         }
 
@@ -27,21 +25,19 @@
         purgeCacheIfNecessary();
     }
 
-    function purgeCacheIfNecessary()
-    {
+    function purgeCacheIfNecessary() {
         // if max cache size has not been exceeded, do nothing
-        if(cacheSizeInBytes <= maximumSizeInBytes)
-        {
+        if (cacheSizeInBytes <= maximumSizeInBytes) {
             return;
         }
 
         // cache size has been exceeded, create list of images sorted by timeStamp
         // so we can purge the least recently used image
         function compare(a,b) {
-            if(a.timeStamp > b.timeStamp) {
+            if (a.timeStamp > b.timeStamp) {
                 return -1;
             }
-            if(a.timeStamp < b.timeStamp) {
+            if (a.timeStamp < b.timeStamp) {
                 return 1;
             }
             return 0;
@@ -49,27 +45,28 @@
         cachedImages.sort(compare);
 
         // remove images as necessary
-        while(cacheSizeInBytes > maximumSizeInBytes)
-        {
+        while(cacheSizeInBytes > maximumSizeInBytes) {
             var lastCachedImage = cachedImages[cachedImages.length - 1];
             cacheSizeInBytes -= lastCachedImage.sizeInBytes;
             delete imageCache[lastCachedImage.imageId];
             lastCachedImage.imagePromise.reject();
             cachedImages.pop();
+            $(cornerstone).trigger('CornerstoneImageCachePromiseRemoved', {imageId: lastCachedImage.imageId});
         }
+
+        var cacheInfo = cornerstone.imageCache.getCacheInfo();
+        $(cornerstone).trigger('CornerstoneImageCacheFull', cacheInfo);
     }
 
     function putImagePromise(imageId, imagePromise) {
-        if(imageId === undefined)
-        {
+        if (imageId === undefined) {
             throw "getImagePromise: imageId must not be undefined";
         }
-        if(imagePromise === undefined)
-        {
+        if (imagePromise === undefined) {
             throw "getImagePromise: imagePromise must not be undefined";
         }
 
-        if(imageCache.hasOwnProperty(imageId) === true) {
+        if (imageCache.hasOwnProperty(imageId) === true) {
             throw "putImagePromise: imageId already in cache";
         }
 
@@ -87,11 +84,10 @@
         imagePromise.then(function(image) {
             cachedImage.loaded = true;
 
-            if(image.sizeInBytes === undefined)
-            {
+            if (image.sizeInBytes === undefined) {
                 throw "putImagePromise: image does not have sizeInBytes property or";
             }
-            if(image.sizeInBytes.toFixed === undefined) {
+            if (image.sizeInBytes.toFixed === undefined) {
                 throw "putImagePromise: image.sizeInBytes is not a number";
             }
             cachedImage.sizeInBytes = image.sizeInBytes;
@@ -101,12 +97,11 @@
     }
 
     function getImagePromise(imageId) {
-        if(imageId === undefined)
-        {
+        if (imageId === undefined) {
             throw "getImagePromise: imageId must not be undefined";
         }
         var cachedImage = imageCache[imageId];
-        if(cachedImage === undefined) {
+        if (cachedImage === undefined) {
             return undefined;
         }
 
@@ -116,11 +111,11 @@
     }
 
     function removeImagePromise(imageId) {
-        if(imageId === undefined) {
+        if (imageId === undefined) {
             throw "removeImagePromise: imageId must not be undefined";
         }
         var cachedImage = imageCache[imageId];
-        if(cachedImage === undefined) {
+        if (cachedImage === undefined) {
             throw "removeImagePromise: imageId must not be undefined";
         }
         cachedImages.splice( cachedImages.indexOf(cachedImage), 1);
@@ -148,13 +143,14 @@
     }
 
     // module exports
-
     cornerstone.imageCache = {
         putImagePromise : putImagePromise,
         getImagePromise: getImagePromise,
         removeImagePromise: removeImagePromise,
         setMaximumSizeBytes: setMaximumSizeBytes,
         getCacheInfo : getCacheInfo,
-        purgeCache: purgeCache
+        purgeCache: purgeCache,
+        cachedImages: cachedImages
     };
+
 }(cornerstone));
