@@ -84,7 +84,11 @@
       modalityLutValue = mlutfn(storedValue);
       voiLutValue = vlutfn(modalityLutValue);
       clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
-      lut[storedValue+ (-offset)] = Math.round(clampedValue);
+      if(!invert) {
+        lut[storedValue+ (-offset)] = Math.round(clampedValue);
+      } else {
+        lut[storedValue + (-offset)] = Math.round(255 - clampedValue);
+      }
     }
     return lut;
   }
