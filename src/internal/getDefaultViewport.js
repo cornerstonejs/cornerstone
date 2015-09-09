@@ -34,7 +34,9 @@
             pixelReplication: false,
             rotation: 0,
             hflip: false,
-            vflip: false
+            vflip: false,
+            modalityLUT: image.modalityLUT,
+            voiLUT: image.voiLUT
         };
 
         // fit image to window

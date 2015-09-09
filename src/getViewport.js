@@ -31,7 +31,9 @@
             pixelReplication: viewport.pixelReplication,
             rotation: viewport.rotation, 
             hflip: viewport.hflip,
-            vflip: viewport.vflip
+            vflip: viewport.vflip,
+            modalityLUT: viewport.modalityLUT,
+            voiLUT: viewport.voiLUT
         };
     }
 

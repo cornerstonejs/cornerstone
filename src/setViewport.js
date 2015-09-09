@@ -26,6 +26,8 @@
         enabledElement.viewport.rotation = viewport.rotation;
         enabledElement.viewport.hflip = viewport.hflip;
         enabledElement.viewport.vflip = viewport.vflip;
+        enabledElement.viewport.modalityLUT = viewport.modalityLUT;
+        enabledElement.viewport.voiLUT = viewport.voiLUT;
 
         // prevent window width from being too small (note that values close to zero are valid and can occur with
         // PET images in particular)

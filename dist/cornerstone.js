@@ -1,4 +1,4 @@
-/*! cornerstone - v0.8.2 - 2015-09-08 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.8.2 - 2015-09-09 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 if(typeof cornerstone === 'undefined'){
     cornerstone = {
         internal : {},
@@ -432,7 +432,9 @@ if(typeof cornerstone === 'undefined'){
             pixelReplication: viewport.pixelReplication,
             rotation: viewport.rotation, 
             hflip: viewport.hflip,
-            vflip: viewport.vflip
+            vflip: viewport.vflip,
+            modalityLUT: viewport.modalityLUT,
+            voiLUT: viewport.voiLUT
         };
     }
 
@@ -811,68 +813,160 @@ if(typeof cornerstone === 'undefined'){
 
 (function (cornerstone) {
 
-    "use strict";
+  "use strict";
 
-    /**
-     * Creates a LUT used while rendering to convert stored pixel values to
-     * display pixels
-     *
-     * @param image
-     * @returns {Array}
-     */
-    function generateLut(image, windowWidth, windowCenter, invert)
+  function generateLinearModalityLUT(image) {
+    var localSlope = image.slope;
+    var localIntercept = image.intercept;
+    return function(sp) {
+      return sp * localSlope + localIntercept;
+    }
+  }
+
+  function generateNonLinearModalityLUT(image, modalityLUT) {
+    var minValue = modalityLUT.lut[0];
+    var maxValue = modalityLUT.lut[modalityLUT.lut.length -1];
+    var maxValueMapped = modalityLUT.firstValueMapped + modalityLUT.lut.length;
+    return function(sp) {
+      if(sp < modalityLUT.firstValueMapped) {
+        return minValue;
+      }
+      else if(sp >= maxValueMapped)
+      {
+        return maxValue;
+      }
+      else
+      {
+        return modalityLUT.lut[sp];
+      }
+    }
+  }
+  function generateLinearVOILUT(windowWidth, windowCenter) {
+    return function(modalityLutValue) {
+      return (((modalityLutValue - (windowCenter)) / (windowWidth) + 0.5) * 255.0);
+    }
+  }
+
+  function generateNonLinearVOILUT(image, voiLUT) {
+    var shift = voiLUT.numBitsPerEntry - 8;
+    var minValue = voiLUT.lut[0] >> shift;
+    var maxValue = voiLUT.lut[voiLUT.lut.length -1] >> shift;
+    var maxValueMapped = voiLUT.firstValueMapped + voiLUT.lut.length - 1;
+    return function(modalityLutValue) {
+      if(modalityLutValue < voiLUT.firstValueMapped) {
+        return minValue;
+      }
+      else if(modalityLutValue >= maxValueMapped)
+      {
+        return maxValue;
+      }
+      else
+      {
+        return voiLUT.lut[modalityLutValue - voiLUT.firstValueMapped] >> shift;
+      }
+    }
+  }
+
+  function generateLutNew(image, windowWidth, windowCenter, invert, modalityLUT, voiLUT)
+  {
+    if(image.lut === undefined) {
+      image.lut =  new Int16Array(image.maxPixelValue - Math.min(image.minPixelValue,0)+1);
+    }
+    var lut = image.lut;
+    var maxPixelValue = image.maxPixelValue;
+    var minPixelValue = image.minPixelValue;
+
+    var mlutfn = modalityLUT ? generateNonLinearModalityLUT(image, modalityLUT) : generateLinearModalityLUT(image);
+    var vlutfn = voiLUT ? generateNonLinearVOILUT(image, voiLUT) : generateLinearVOILUT(windowWidth, windowCenter);
+
+    var offset = 0;
+    if(minPixelValue < 0) {
+      offset = minPixelValue;
+    }
+    var storedValue;
+    var modalityLutValue;
+    var voiLutValue;
+    var clampedValue;
+
+    for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
     {
-        if(image.lut === undefined) {
-            image.lut =  new Int16Array(image.maxPixelValue - Math.min(image.minPixelValue,0)+1);
-        }
-        var lut = image.lut;
+      modalityLutValue = mlutfn(storedValue);
+      voiLutValue = vlutfn(modalityLutValue);
+      clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
+      lut[storedValue+ (-offset)] = Math.round(clampedValue);
+    }
+    return lut;
+  }
 
-        var maxPixelValue = image.maxPixelValue;
-        var minPixelValue = image.minPixelValue;
-        var slope = image.slope;
-        var intercept = image.intercept;
-        var localWindowWidth = windowWidth;
-        var localWindowCenter = windowCenter;
 
-        var modalityLutValue;
-        var voiLutValue;
-        var clampedValue;
-        var storedValue;
 
-        // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
-        // We improve performance by offsetting the pixel values for signed data to avoid negative indexes
-        // when generating the lut and then undo it in storedPixelDataToCanvasImagedata.  Thanks to @jpambrun
-        // for this contribution!
-
-        var offset = 0;
-        if(minPixelValue < 0) {
-            offset = minPixelValue;
-        }
-
-        if(invert === true) {
-            for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
-            {
-                modalityLutValue = storedValue * slope + intercept;
-                voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
-                clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
-                lut[storedValue + (-offset)] = Math.round(255 - clampedValue);
-            }
-        }
-        else {
-            for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
-            {
-                modalityLutValue = storedValue * slope + intercept;
-                voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
-                clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
-                lut[storedValue+ (-offset)] = Math.round(clampedValue);
-            }
-        }
+  /**
+   * Creates a LUT used while rendering to convert stored pixel values to
+   * display pixels
+   *
+   * @param image
+   * @returns {Array}
+   */
+  function generateLut(image, windowWidth, windowCenter, invert, modalityLUT, voiLUT)
+  {
+    if(modalityLUT || voiLUT) {
+      return generateLutNew(image, windowWidth, windowCenter, invert, modalityLUT, voiLUT);
     }
 
+    if(image.lut === undefined) {
+      image.lut =  new Int16Array(image.maxPixelValue - Math.min(image.minPixelValue,0)+1);
+    }
+    var lut = image.lut;
 
-    // Module exports
-    cornerstone.internal.generateLut = generateLut;
-    cornerstone.generateLut = generateLut;
+    var maxPixelValue = image.maxPixelValue;
+    var minPixelValue = image.minPixelValue;
+    var slope = image.slope;
+    var intercept = image.intercept;
+    var localWindowWidth = windowWidth;
+    var localWindowCenter = windowCenter;
+    var localModalityLUT = modalityLUT ? modalityLUT.lut : undefined;
+    var localVOILUT = voiLUT ? voiLUT.lut : undefined;
+    var modalityLutValue;
+    var voiLutValue;
+    var clampedValue;
+    var storedValue;
+
+    // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
+    // We improve performance by offsetting the pixel values for signed data to avoid negative indexes
+    // when generating the lut and then undo it in storedPixelDataToCanvasImagedata.  Thanks to @jpambrun
+    // for this contribution!
+
+    var offset = 0;
+    if(minPixelValue < 0) {
+      offset = minPixelValue;
+    }
+
+    if(invert === true) {
+      for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
+      {
+        modalityLutValue = localModalityLUT ? localModalityLUT[storedValue] : storedValue * slope + intercept;
+        voiLutValue = localVOILUT ? localVOILUT[modalityLutValue] : (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
+        clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
+        lut[storedValue + (-offset)] = Math.round(255 - clampedValue);
+      }
+    }
+    else {
+      for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
+      {
+        modalityLutValue = localModalityLUT ? localModalityLUT[storedValue] : storedValue * slope + intercept;
+        voiLutValue = localVOILUT ? localVOILUT[modalityLutValue] : (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
+        clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
+        lut[storedValue+ (-offset)] = Math.round(clampedValue);
+      }
+    }
+  }
+
+
+  // Module exports
+  cornerstone.internal.generateLutNew = generateLutNew;
+  cornerstone.internal.generateLut = generateLut;
+  cornerstone.generateLutNew = generateLutNew;
+  cornerstone.generateLut = generateLut;
 }(cornerstone));
 
 /**
@@ -911,7 +1005,9 @@ if(typeof cornerstone === 'undefined'){
             pixelReplication: false,
             rotation: 0,
             hflip: false,
-            vflip: false
+            vflip: false,
+            modalityLUT: image.modalityLUT,
+            voiLUT: image.voiLUT
         };
 
         // fit image to window
@@ -1466,22 +1562,39 @@ if(typeof cornerstone === 'undefined'){
         grayscaleRenderCanvasData = grayscaleRenderCanvasContext.getImageData(0,0,image.width, image.height);
     }
 
+    function lutMatches(a, b) {
+      // if undefined, they are equal
+      if(!a && !b) {
+        return true;
+      }
+      // if one is undefined, not equal
+      if(!a || !b) {
+        return false;
+      }
+      // check the unique ids
+      return (a.id !== b.id)
+    }
+
     function getLut(image, viewport, invalidated)
     {
         // if we have a cached lut and it has the right values, return it immediately
         if(image.lut !== undefined &&
             image.lut.windowCenter === viewport.voi.windowCenter &&
             image.lut.windowWidth === viewport.voi.windowWidth &&
+            lutMatches(image.lut.modalityLUT, viewport.modalityLUT) &&
+            lutMatches(image.lut.voiLUT, viewport.voiLUT) &&
             image.lut.invert === viewport.invert &&
             invalidated !== true) {
             return image.lut;
         }
 
         // lut is invalid or not present, regenerate it and cache it
-        cornerstone.generateLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert);
+        cornerstone.generateLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert, viewport.modalityLUT, viewport.voiLUT);
         image.lut.windowWidth = viewport.voi.windowWidth;
         image.lut.windowCenter = viewport.voi.windowCenter;
         image.lut.invert = viewport.invert;
+        image.lut.voiLUT = viewport.voiLUT;
+        image.lut.modalityLUT = viewport.modalityLUT;
         return image.lut;
     }
 
@@ -1493,7 +1606,9 @@ if(typeof cornerstone === 'undefined'){
             lastRenderedViewport.invert !== enabledElement.viewport.invert ||
             lastRenderedViewport.rotation !== enabledElement.viewport.rotation ||
             lastRenderedViewport.hflip !== enabledElement.viewport.hflip ||
-            lastRenderedViewport.vflip !== enabledElement.viewport.vflip
+            lastRenderedViewport.vflip !== enabledElement.viewport.vflip ||
+            lastRenderedViewport.modalityLUT !== enabledElement.viewport.modalityLUT ||
+            lastRenderedViewport.voiLUT !== enabledElement.viewport.voiLUT
             )
         {
             return true;
@@ -1573,6 +1688,8 @@ if(typeof cornerstone === 'undefined'){
         lastRenderedViewport.rotation = enabledElement.viewport.rotation;
         lastRenderedViewport.hflip = enabledElement.viewport.hflip;
         lastRenderedViewport.vflip = enabledElement.viewport.vflip;
+        lastRenderedViewport.modalityLUT = enabledElement.viewport.modalityLUT;
+        lastRenderedViewport.voiLUT = enabledElement.viewport.voiLUT;
     }
 
     // Module exports
@@ -1767,6 +1884,8 @@ if(typeof cornerstone === 'undefined'){
         enabledElement.viewport.rotation = viewport.rotation;
         enabledElement.viewport.hflip = viewport.hflip;
         enabledElement.viewport.vflip = viewport.vflip;
+        enabledElement.viewport.modalityLUT = viewport.modalityLUT;
+        enabledElement.viewport.voiLUT = viewport.voiLUT;
 
         // prevent window width from being too small (note that values close to zero are valid and can occur with
         // PET images in particular)

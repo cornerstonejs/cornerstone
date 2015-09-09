@@ -27,22 +27,39 @@
         grayscaleRenderCanvasData = grayscaleRenderCanvasContext.getImageData(0,0,image.width, image.height);
     }
 
+    function lutMatches(a, b) {
+      // if undefined, they are equal
+      if(!a && !b) {
+        return true;
+      }
+      // if one is undefined, not equal
+      if(!a || !b) {
+        return false;
+      }
+      // check the unique ids
+      return (a.id !== b.id)
+    }
+
     function getLut(image, viewport, invalidated)
     {
         // if we have a cached lut and it has the right values, return it immediately
         if(image.lut !== undefined &&
             image.lut.windowCenter === viewport.voi.windowCenter &&
             image.lut.windowWidth === viewport.voi.windowWidth &&
+            lutMatches(image.lut.modalityLUT, viewport.modalityLUT) &&
+            lutMatches(image.lut.voiLUT, viewport.voiLUT) &&
             image.lut.invert === viewport.invert &&
             invalidated !== true) {
             return image.lut;
         }
 
         // lut is invalid or not present, regenerate it and cache it
-        cornerstone.generateLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert);
+        cornerstone.generateLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert, viewport.modalityLUT, viewport.voiLUT);
         image.lut.windowWidth = viewport.voi.windowWidth;
         image.lut.windowCenter = viewport.voi.windowCenter;
         image.lut.invert = viewport.invert;
+        image.lut.voiLUT = viewport.voiLUT;
+        image.lut.modalityLUT = viewport.modalityLUT;
         return image.lut;
     }
 
@@ -54,7 +71,9 @@
             lastRenderedViewport.invert !== enabledElement.viewport.invert ||
             lastRenderedViewport.rotation !== enabledElement.viewport.rotation ||
             lastRenderedViewport.hflip !== enabledElement.viewport.hflip ||
-            lastRenderedViewport.vflip !== enabledElement.viewport.vflip
+            lastRenderedViewport.vflip !== enabledElement.viewport.vflip ||
+            lastRenderedViewport.modalityLUT !== enabledElement.viewport.modalityLUT ||
+            lastRenderedViewport.voiLUT !== enabledElement.viewport.voiLUT
             )
         {
             return true;
@@ -134,6 +153,8 @@
         lastRenderedViewport.rotation = enabledElement.viewport.rotation;
         lastRenderedViewport.hflip = enabledElement.viewport.hflip;
         lastRenderedViewport.vflip = enabledElement.viewport.vflip;
+        lastRenderedViewport.modalityLUT = enabledElement.viewport.modalityLUT;
+        lastRenderedViewport.voiLUT = enabledElement.viewport.voiLUT;
     }
 
     // Module exports
