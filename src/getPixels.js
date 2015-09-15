@@ -5,7 +5,6 @@
 
     "use strict";
 
-
     /**
      * Returns array of pixels with modality LUT transformation applied
      */
@@ -13,12 +12,10 @@
 
         var storedPixels = cornerstone.getStoredPixels(element, x, y, width, height);
         var ee = cornerstone.getEnabledElement(element);
-        var slope = ee.image.slope;
-        var intercept = ee.image.intercept;
 
-        var modalityPixels = storedPixels.map(function(pixel){
-            return pixel * slope + intercept;
-        });
+        var mlutfn = cornerstone.internal.getModalityLUT(ee.image.slope, ee.image.intercept, ee.viewport.modalityLUT);
+
+        var modalityPixels = storedPixels.map(mlutfn);
 
         return modalityPixels;
     }

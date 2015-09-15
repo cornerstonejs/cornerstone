@@ -91,11 +91,7 @@ In this example,the image can be flipped (Horizontal/Vertical) or rotated (Clock
         });
         
         $('#reset').click(function (e) {
-            var viewport = cornerstone.getViewport(element);
-            viewport.hflip = false;
-            viewport.vflip = false;
-            viewport.rotation = 0;
-            cornerstone.setViewport(element, viewport);
+            cornerstone.reset(element);
         });
         $(element).mousemove(function(event)
         {

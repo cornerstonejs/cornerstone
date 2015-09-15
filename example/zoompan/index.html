@@ -38,7 +38,7 @@ by the developer
 
 <button id="zoomIn" type="button" class="btn btn-default">Zoom In</button>
 <button id="zoomOut" type="button" class="btn btn-default">Zoom Out</button>
-<button id="fitToWindow" type="button" class="btn btn-default">Reset</button>
+<button id="reset" type="button" class="btn btn-default">Reset</button>
 
 </div>
 </body>
@@ -76,8 +76,8 @@ by the developer
             viewport.scale -= 0.25;
             cornerstone.setViewport(element, viewport);
         });
-        $('#fitToWindow').click(function (e) {
-            cornerstone.fitToWindow(element);
+        $('#reset').click(function (e) {
+            cornerstone.reset(element);
         });
 
         // add event handlers to pan image on mouse move

@@ -1,4 +1,4 @@
-/*! cornerstone - v0.8.3 - 2015-09-11 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.8.4 - 2015-09-12 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 if(typeof cornerstone === 'undefined'){
     cornerstone = {
         internal : {},
@@ -266,6 +266,20 @@ if(typeof cornerstone === 'undefined'){
 
     "use strict";
 
+    function getImageSize(enabledElement) {
+      if(enabledElement.viewport.rotation === 0 ||enabledElement.viewport.rotation === 180) {
+        return {
+          width: enabledElement.image.width,
+          height: enabledElement.image.height
+        };
+      } else {
+        return {
+          width: enabledElement.image.height,
+          height: enabledElement.image.width
+        };
+      }
+    }
+
     /**
      * Adjusts an images scale and center so the image is centered and completely visible
      * @param element
@@ -273,13 +287,19 @@ if(typeof cornerstone === 'undefined'){
     function fitToWindow(element)
     {
         var enabledElement = cornerstone.getEnabledElement(element);
-        var defaultViewport = cornerstone.internal.getDefaultViewport(enabledElement.canvas, enabledElement.image);
-        enabledElement.viewport.scale = defaultViewport.scale;
-        enabledElement.viewport.translation.x = defaultViewport.translation.x;
-        enabledElement.viewport.translation.y = defaultViewport.translation.y;
-        enabledElement.viewport.rotation = defaultViewport.rotation;
-        enabledElement.viewport.hflip = defaultViewport.hflip;
-        enabledElement.viewport.vflip = defaultViewport.vflip;
+        var imageSize = getImageSize(enabledElement);
+
+        var verticalScale = enabledElement.canvas.height / imageSize.height;
+        var horizontalScale= enabledElement.canvas.width / imageSize.width;
+        if(horizontalScale < verticalScale) {
+          enabledElement.viewport.scale = horizontalScale;
+        }
+        else
+        {
+          enabledElement.viewport.scale = verticalScale;
+        }
+        enabledElement.viewport.translation.x = 0;
+        enabledElement.viewport.translation.y = 0;
         cornerstone.updateImage(element);
     }
 
@@ -339,7 +359,6 @@ if(typeof cornerstone === 'undefined'){
 
     "use strict";
 
-
     /**
      * Returns array of pixels with modality LUT transformation applied
      */
@@ -347,12 +366,10 @@ if(typeof cornerstone === 'undefined'){
 
         var storedPixels = cornerstone.getStoredPixels(element, x, y, width, height);
         var ee = cornerstone.getEnabledElement(element);
-        var slope = ee.image.slope;
-        var intercept = ee.image.intercept;
 
-        var modalityPixels = storedPixels.map(function(pixel){
-            return pixel * slope + intercept;
-        });
+        var mlutfn = cornerstone.internal.getModalityLUT(ee.image.slope, ee.image.intercept, ee.viewport.modalityLUT);
+
+        var modalityPixels = storedPixels.map(mlutfn);
 
         return modalityPixels;
     }
@@ -815,58 +832,6 @@ if(typeof cornerstone === 'undefined'){
 
   "use strict";
 
-  function generateLinearModalityLUT(image) {
-    var localSlope = image.slope;
-    var localIntercept = image.intercept;
-    return function(sp) {
-      return sp * localSlope + localIntercept;
-    }
-  }
-
-  function generateNonLinearModalityLUT(image, modalityLUT) {
-    var minValue = modalityLUT.lut[0];
-    var maxValue = modalityLUT.lut[modalityLUT.lut.length -1];
-    var maxValueMapped = modalityLUT.firstValueMapped + modalityLUT.lut.length;
-    return function(sp) {
-      if(sp < modalityLUT.firstValueMapped) {
-        return minValue;
-      }
-      else if(sp >= maxValueMapped)
-      {
-        return maxValue;
-      }
-      else
-      {
-        return modalityLUT.lut[sp];
-      }
-    }
-  }
-  function generateLinearVOILUT(windowWidth, windowCenter) {
-    return function(modalityLutValue) {
-      return (((modalityLutValue - (windowCenter)) / (windowWidth) + 0.5) * 255.0);
-    }
-  }
-
-  function generateNonLinearVOILUT(image, voiLUT) {
-    var shift = voiLUT.numBitsPerEntry - 8;
-    var minValue = voiLUT.lut[0] >> shift;
-    var maxValue = voiLUT.lut[voiLUT.lut.length -1] >> shift;
-    var maxValueMapped = voiLUT.firstValueMapped + voiLUT.lut.length - 1;
-    return function(modalityLutValue) {
-      if(modalityLutValue < voiLUT.firstValueMapped) {
-        return minValue;
-      }
-      else if(modalityLutValue >= maxValueMapped)
-      {
-        return maxValue;
-      }
-      else
-      {
-        return voiLUT.lut[modalityLutValue - voiLUT.firstValueMapped] >> shift;
-      }
-    }
-  }
-
   function generateLutNew(image, windowWidth, windowCenter, invert, modalityLUT, voiLUT)
   {
     if(image.lut === undefined) {
@@ -876,8 +841,8 @@ if(typeof cornerstone === 'undefined'){
     var maxPixelValue = image.maxPixelValue;
     var minPixelValue = image.minPixelValue;
 
-    var mlutfn = modalityLUT ? generateNonLinearModalityLUT(image, modalityLUT) : generateLinearModalityLUT(image);
-    var vlutfn = voiLUT ? generateNonLinearVOILUT(image, voiLUT) : generateLinearVOILUT(windowWidth, windowCenter);
+    var mlutfn = cornerstone.internal.getModalityLUT(image.slope, image.intercept, modalityLUT);
+    var vlutfn = cornerstone.internal.getVOILUT(windowWidth, windowCenter, voiLUT);
 
     var offset = 0;
     if(minPixelValue < 0) {
@@ -928,8 +893,6 @@ if(typeof cornerstone === 'undefined'){
     var intercept = image.intercept;
     var localWindowWidth = windowWidth;
     var localWindowCenter = windowCenter;
-    var localModalityLUT = modalityLUT ? modalityLUT.lut : undefined;
-    var localVOILUT = voiLUT ? voiLUT.lut : undefined;
     var modalityLutValue;
     var voiLutValue;
     var clampedValue;
@@ -948,8 +911,8 @@ if(typeof cornerstone === 'undefined'){
     if(invert === true) {
       for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
       {
-        modalityLutValue = localModalityLUT ? localModalityLUT[storedValue] : storedValue * slope + intercept;
-        voiLutValue = localVOILUT ? localVOILUT[modalityLutValue] : (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
+        modalityLutValue =  storedValue * slope + intercept;
+        voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
         clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
         lut[storedValue + (-offset)] = Math.round(255 - clampedValue);
       }
@@ -957,8 +920,8 @@ if(typeof cornerstone === 'undefined'){
     else {
       for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
       {
-        modalityLutValue = localModalityLUT ? localModalityLUT[storedValue] : storedValue * slope + intercept;
-        voiLutValue = localVOILUT ? localVOILUT[modalityLutValue] : (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
+        modalityLutValue = storedValue * slope + intercept;
+        voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
         clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
         lut[storedValue+ (-offset)] = Math.round(clampedValue);
       }
@@ -1061,6 +1024,55 @@ if(typeof cornerstone === 'undefined'){
     cornerstone.storedColorPixelDataToCanvasImageData = cornerstone.internal.storedColorPixelDataToCanvasImageData;
 
 }($, cornerstone));
+/**
+ * This module generates a Modality LUT
+ */
+
+(function (cornerstone) {
+
+  "use strict";
+
+
+  function generateLinearModalityLUT(slope, intercept) {
+    var localSlope = slope;
+    var localIntercept = intercept;
+    return function(sp) {
+      return sp * localSlope + localIntercept;
+    }
+  }
+
+  function generateNonLinearModalityLUT(modalityLUT) {
+    var minValue = modalityLUT.lut[0];
+    var maxValue = modalityLUT.lut[modalityLUT.lut.length -1];
+    var maxValueMapped = modalityLUT.firstValueMapped + modalityLUT.lut.length;
+    return function(sp) {
+      if(sp < modalityLUT.firstValueMapped) {
+        return minValue;
+      }
+      else if(sp >= maxValueMapped)
+      {
+        return maxValue;
+      }
+      else
+      {
+        return modalityLUT.lut[sp];
+      }
+    }
+  }
+
+  function getModalityLUT(slope, intercept, modalityLUT) {
+    if (modalityLUT) {
+      return generateNonLinearModalityLUT(modalityLUT);
+    } else {
+      return generateLinearModalityLUT(slope, intercept);
+    }
+  }
+
+    // Module exports
+    cornerstone.internal.getModalityLUT = getModalityLUT;
+
+}(cornerstone));
+
 /**
  * This module contains a function to convert stored pixel values to display pixel values using a LUT
  */
@@ -1272,6 +1284,52 @@ if(typeof cornerstone === 'undefined'){
 
     cornerstone.internal.Transform = Transform;
 }(cornerstone));
+/**
+ * This module generates a VOI LUT
+ */
+
+(function (cornerstone) {
+
+  "use strict";
+
+  function generateLinearVOILUT(windowWidth, windowCenter) {
+    return function(modalityLutValue) {
+      return (((modalityLutValue - (windowCenter)) / (windowWidth) + 0.5) * 255.0);
+    }
+  }
+
+  function generateNonLinearVOILUT(voiLUT) {
+    var shift = voiLUT.numBitsPerEntry - 8;
+    var minValue = voiLUT.lut[0] >> shift;
+    var maxValue = voiLUT.lut[voiLUT.lut.length -1] >> shift;
+    var maxValueMapped = voiLUT.firstValueMapped + voiLUT.lut.length - 1;
+    return function(modalityLutValue) {
+      if(modalityLutValue < voiLUT.firstValueMapped) {
+        return minValue;
+      }
+      else if(modalityLutValue >= maxValueMapped)
+      {
+        return maxValue;
+      }
+      else
+      {
+        return voiLUT.lut[modalityLutValue - voiLUT.firstValueMapped] >> shift;
+      }
+    }
+  }
+
+  function getVOILUT(windowWidth, windowCenter, voiLUT) {
+    if(voiLUT) {
+      return generateNonLinearVOILUT(voiLUT);
+    } else {
+      return generateLinearVOILUT(windowWidth, windowCenter);
+    }
+  }
+
+  // Module exports
+  cornerstone.internal.getVOILUT = getVOILUT;
+}(cornerstone));
+
 /**
  * This module contains a function to make an image is invalid
  */
@@ -1765,6 +1823,28 @@ if(typeof cornerstone === 'undefined'){
     cornerstone.renderWebImage = renderWebImage;
 
 }(cornerstone));
+/**
+ */
+(function (cornerstone) {
+
+  "use strict";
+
+  /**
+   * Resets the viewport to the default settings
+   *
+   * @param element
+   */
+  function reset(element)
+  {
+    var enabledElement = cornerstone.getEnabledElement(element);
+    var defaultViewport = cornerstone.internal.getDefaultViewport(enabledElement.canvas, enabledElement.image);
+    enabledElement.viewport = defaultViewport;
+    cornerstone.updateImage(element);
+  }
+
+  cornerstone.reset = reset;
+}(cornerstone));
+
 /**
  * This module is responsible for enabling an element to display images with cornerstone
  */

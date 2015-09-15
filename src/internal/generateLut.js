@@ -6,58 +6,6 @@
 
   "use strict";
 
-  function generateLinearModalityLUT(image) {
-    var localSlope = image.slope;
-    var localIntercept = image.intercept;
-    return function(sp) {
-      return sp * localSlope + localIntercept;
-    }
-  }
-
-  function generateNonLinearModalityLUT(image, modalityLUT) {
-    var minValue = modalityLUT.lut[0];
-    var maxValue = modalityLUT.lut[modalityLUT.lut.length -1];
-    var maxValueMapped = modalityLUT.firstValueMapped + modalityLUT.lut.length;
-    return function(sp) {
-      if(sp < modalityLUT.firstValueMapped) {
-        return minValue;
-      }
-      else if(sp >= maxValueMapped)
-      {
-        return maxValue;
-      }
-      else
-      {
-        return modalityLUT.lut[sp];
-      }
-    }
-  }
-  function generateLinearVOILUT(windowWidth, windowCenter) {
-    return function(modalityLutValue) {
-      return (((modalityLutValue - (windowCenter)) / (windowWidth) + 0.5) * 255.0);
-    }
-  }
-
-  function generateNonLinearVOILUT(image, voiLUT) {
-    var shift = voiLUT.numBitsPerEntry - 8;
-    var minValue = voiLUT.lut[0] >> shift;
-    var maxValue = voiLUT.lut[voiLUT.lut.length -1] >> shift;
-    var maxValueMapped = voiLUT.firstValueMapped + voiLUT.lut.length - 1;
-    return function(modalityLutValue) {
-      if(modalityLutValue < voiLUT.firstValueMapped) {
-        return minValue;
-      }
-      else if(modalityLutValue >= maxValueMapped)
-      {
-        return maxValue;
-      }
-      else
-      {
-        return voiLUT.lut[modalityLutValue - voiLUT.firstValueMapped] >> shift;
-      }
-    }
-  }
-
   function generateLutNew(image, windowWidth, windowCenter, invert, modalityLUT, voiLUT)
   {
     if(image.lut === undefined) {
@@ -67,8 +15,8 @@
     var maxPixelValue = image.maxPixelValue;
     var minPixelValue = image.minPixelValue;
 
-    var mlutfn = modalityLUT ? generateNonLinearModalityLUT(image, modalityLUT) : generateLinearModalityLUT(image);
-    var vlutfn = voiLUT ? generateNonLinearVOILUT(image, voiLUT) : generateLinearVOILUT(windowWidth, windowCenter);
+    var mlutfn = cornerstone.internal.getModalityLUT(image.slope, image.intercept, modalityLUT);
+    var vlutfn = cornerstone.internal.getVOILUT(windowWidth, windowCenter, voiLUT);
 
     var offset = 0;
     if(minPixelValue < 0) {
@@ -119,8 +67,6 @@
     var intercept = image.intercept;
     var localWindowWidth = windowWidth;
     var localWindowCenter = windowCenter;
-    var localModalityLUT = modalityLUT ? modalityLUT.lut : undefined;
-    var localVOILUT = voiLUT ? voiLUT.lut : undefined;
     var modalityLutValue;
     var voiLutValue;
     var clampedValue;
@@ -139,8 +85,8 @@
     if(invert === true) {
       for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
       {
-        modalityLutValue = localModalityLUT ? localModalityLUT[storedValue] : storedValue * slope + intercept;
-        voiLutValue = localVOILUT ? localVOILUT[modalityLutValue] : (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
+        modalityLutValue =  storedValue * slope + intercept;
+        voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
         clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
         lut[storedValue + (-offset)] = Math.round(255 - clampedValue);
       }
@@ -148,8 +94,8 @@
     else {
       for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
       {
-        modalityLutValue = localModalityLUT ? localModalityLUT[storedValue] : storedValue * slope + intercept;
-        voiLutValue = localVOILUT ? localVOILUT[modalityLutValue] : (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
+        modalityLutValue = storedValue * slope + intercept;
+        voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
         clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
         lut[storedValue+ (-offset)] = Math.round(clampedValue);
       }

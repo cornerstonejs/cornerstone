@@ -6,6 +6,20 @@
 
     "use strict";
 
+    function getImageSize(enabledElement) {
+      if(enabledElement.viewport.rotation === 0 ||enabledElement.viewport.rotation === 180) {
+        return {
+          width: enabledElement.image.width,
+          height: enabledElement.image.height
+        };
+      } else {
+        return {
+          width: enabledElement.image.height,
+          height: enabledElement.image.width
+        };
+      }
+    }
+
     /**
      * Adjusts an images scale and center so the image is centered and completely visible
      * @param element
@@ -13,13 +27,19 @@
     function fitToWindow(element)
     {
         var enabledElement = cornerstone.getEnabledElement(element);
-        var defaultViewport = cornerstone.internal.getDefaultViewport(enabledElement.canvas, enabledElement.image);
-        enabledElement.viewport.scale = defaultViewport.scale;
-        enabledElement.viewport.translation.x = defaultViewport.translation.x;
-        enabledElement.viewport.translation.y = defaultViewport.translation.y;
-        enabledElement.viewport.rotation = defaultViewport.rotation;
-        enabledElement.viewport.hflip = defaultViewport.hflip;
-        enabledElement.viewport.vflip = defaultViewport.vflip;
+        var imageSize = getImageSize(enabledElement);
+
+        var verticalScale = enabledElement.canvas.height / imageSize.height;
+        var horizontalScale= enabledElement.canvas.width / imageSize.width;
+        if(horizontalScale < verticalScale) {
+          enabledElement.viewport.scale = horizontalScale;
+        }
+        else
+        {
+          enabledElement.viewport.scale = verticalScale;
+        }
+        enabledElement.viewport.translation.x = 0;
+        enabledElement.viewport.translation.y = 0;
         cornerstone.updateImage(element);
     }
 
