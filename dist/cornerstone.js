@@ -1,4 +1,4 @@
-/*! cornerstone - v0.8.3 - 2015-09-11 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.8.3 - 2015-09-15 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 if(typeof cornerstone === 'undefined'){
     cornerstone = {
         internal : {},
@@ -1450,7 +1450,7 @@ if(typeof cornerstone === 'undefined'){
 
         if(enabledElement.viewport.voi.windowWidth === enabledElement.image.windowWidth &&
             enabledElement.viewport.voi.windowCenter === enabledElement.image.windowCenter &&
-            enabledElement.viewport.invert === false)
+            enabledElement.viewport.invert === false && image.getCanvas)
         {
             // the color image voi/invert has not been modified, request the canvas that contains
             // it so we can draw it directly to the display canvas

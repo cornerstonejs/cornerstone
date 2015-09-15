@@ -68,7 +68,7 @@
 
         if(enabledElement.viewport.voi.windowWidth === enabledElement.image.windowWidth &&
             enabledElement.viewport.voi.windowCenter === enabledElement.image.windowCenter &&
-            enabledElement.viewport.invert === false)
+            enabledElement.viewport.invert === false && image.getCanvas)
         {
             // the color image voi/invert has not been modified, request the canvas that contains
             // it so we can draw it directly to the display canvas
