@@ -168,7 +168,7 @@ displayed using this library will have originated as DICOM images.  It is theref
 that there are no limitations with respect to displaying the different types of DICOM images and have robust
 supporting libraries for DICOM.  Separate libraries to add DICOM specific support already exist, check out the
 [CornerstoneWADOImageLoader](https://github.com/chafey/cornerstoneWADOImageLoader) library and
-the (dicomParser)[https://github.com/chafey/dicomParser] library.
+the [dicomParser](https://github.com/chafey/dicomParser) library.
 
 _Why doesn't Cornerstone include basic tools like ww/wc using the mouse?_
 
