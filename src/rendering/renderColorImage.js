@@ -64,38 +64,39 @@
 
     function getRenderCanvas(enabledElement, image, invalidated)
     {
-        // apply the lut to the stored pixel data onto the render canvas
 
-        if(enabledElement.viewport.voi.windowWidth === enabledElement.image.windowWidth &&
-            enabledElement.viewport.voi.windowCenter === enabledElement.image.windowCenter &&
-            enabledElement.viewport.invert === false)
+        // The ww/wc is identity and not inverted - get a canvas with the image rendered into it for
+        // fast drawing
+        if(enabledElement.viewport.voi.windowWidth === 255 &&
+            enabledElement.viewport.voi.windowCenter === 128 &&
+            enabledElement.viewport.invert === false &&
+            image.getCanvas &&
+            image.getCanvas()
+        )
         {
-            // the color image voi/invert has not been modified, request the canvas that contains
-            // it so we can draw it directly to the display canvas
             return image.getCanvas();
         }
-        else
-        {
-            if(doesImageNeedToBeRendered(enabledElement, image) === false && invalidated !== true) {
-                return colorRenderCanvas;
-            }
 
-            // If our render canvas does not match the size of this image reset it
-            // NOTE: This might be inefficient if we are updating multiple images of different
-            // sizes frequently.
-            if(colorRenderCanvas.width !== image.width || colorRenderCanvas.height != image.height) {
-                initializeColorRenderCanvas(image);
-            }
-
-            // get the lut to use
-            var colorLut = getLut(image, enabledElement.viewport);
-
-            // the color image voi/invert has been modified - apply the lut to the underlying
-            // pixel data and put it into the renderCanvas
-            cornerstone.storedColorPixelDataToCanvasImageData(image, colorLut, colorRenderCanvasData.data);
-            colorRenderCanvasContext.putImageData(colorRenderCanvasData, 0, 0);
+        // apply the lut to the stored pixel data onto the render canvas
+        if(doesImageNeedToBeRendered(enabledElement, image) === false && invalidated !== true) {
             return colorRenderCanvas;
         }
+
+        // If our render canvas does not match the size of this image reset it
+        // NOTE: This might be inefficient if we are updating multiple images of different
+        // sizes frequently.
+        if(colorRenderCanvas.width !== image.width || colorRenderCanvas.height != image.height) {
+            initializeColorRenderCanvas(image);
+        }
+
+        // get the lut to use
+        var colorLut = getLut(image, enabledElement.viewport);
+
+        // the color image voi/invert has been modified - apply the lut to the underlying
+        // pixel data and put it into the renderCanvas
+        cornerstone.storedColorPixelDataToCanvasImageData(image, colorLut, colorRenderCanvasData.data);
+        colorRenderCanvasContext.putImageData(colorRenderCanvasData, 0, 0);
+        return colorRenderCanvas;
     }
 
     /**

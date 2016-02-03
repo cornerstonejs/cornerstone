@@ -20,6 +20,7 @@
 
     <button id="purge" class="btn">Purge Cache</button>
     <button id="addImage" class="btn">Add Image</button>
+    <button id="changeImageSize" class="btn">Change Image Size</button>
 
     <div style="width:512px;height:512px;position:relative;color: white;"
          class="cornerstone-enabled-image"
@@ -83,6 +84,11 @@
         $('#addImage').click(function() {
             var imageId = "colorImageLoader://" + imageNum++;
             cornerstone.loadAndCacheImage(imageId);
+        });
+
+        $('#changeImageSize').click(function() {
+            var imageId = "colorImageLoader://1";
+            cornerstone.imageCache.changeImageIdCacheSize(imageId, 512 * 1024);
         });
 
         setInterval(function() {
