@@ -6,8 +6,11 @@
 
     "use strict";
 
+    // dictionary of imageId to cachedImage objects
     var imageCache = {};
-
+    // dictionary of sharedCacheKeys to number of imageId's in cache with this shared cache key
+    var sharedCacheKeys = {};
+    // array of cachedImage objects
     var cachedImages = [];
 
     var maximumSizeInBytes = 1024 * 1024 * 1024; // 1 GB
@@ -73,6 +76,7 @@
         var cachedImage = {
             loaded : false,
             imageId : imageId,
+            sharedCacheKey: undefined, // the sharedCacheKey for this imageId.  undefined by default
             imagePromise : imagePromise,
             timeStamp : new Date(),
             sizeInBytes: 0
@@ -90,8 +94,23 @@
             if (image.sizeInBytes.toFixed === undefined) {
                 throw "putImagePromise: image.sizeInBytes is not a number";
             }
-            cachedImage.sizeInBytes = image.sizeInBytes;
-            cacheSizeInBytes += cachedImage.sizeInBytes;
+
+            // If this image has a shared cache key, reference count it and only
+            // count the image size for the first one added with this sharedCacheKey
+            if(image.sharedCacheKey) {
+              cachedImage.sizeInBytes = image.sizeInBytes;
+              cachedImage.sharedCacheKey = image.sharedCacheKey;
+              if(sharedCacheKeys[image.sharedCacheKey]) {
+                sharedCacheKeys[image.sharedCacheKey]++;
+              } else {
+                sharedCacheKeys[image.sharedCacheKey] = 1;
+                cacheSizeInBytes += cachedImage.sizeInBytes;
+              }
+            }
+            else {
+              cachedImage.sizeInBytes = image.sizeInBytes;
+              cacheSizeInBytes += cachedImage.sizeInBytes;
+            }
             purgeCacheIfNecessary();
         });
     }
@@ -119,8 +138,22 @@
             throw "removeImagePromise: imageId must not be undefined";
         }
         cachedImages.splice( cachedImages.indexOf(cachedImage), 1);
-        cacheSizeInBytes -= cachedImage.sizeInBytes;
+
+        // If this is using a sharedCacheKey, decrement the cache size only
+        // if it is the last imageId in the cache with this sharedCacheKey
+        if(cachedImages.sharedCacheKey) {
+          if(sharedCacheKeys[cachedImages.sharedCacheKey] === 1) {
+            cacheSizeInBytes -= cachedImage.sizeInBytes;
+            delete sharedCacheKeys[cachedImages.sharedCacheKey];
+          } else {
+            sharedCacheKeys[cachedImages.sharedCacheKey]--;
+          }
+        } else {
+          cacheSizeInBytes -= cachedImage.sizeInBytes;
+        }
         delete imageCache[imageId];
+
+        decache(cachedImage.imagePromise, cachedImage.imageId);
 
         return cachedImage.imagePromise;
     }
@@ -133,13 +166,35 @@
         };
     }
 
+    function decache(imagePromise, imageId) {
+      imagePromise.then(function(image) {
+        if(image.decache) {
+          image.decache();
+        }
+        imagePromise.reject();
+        delete imageCache[imageId];
+      }).always(function() {
+        delete imageCache[imageId];
+      });
+    }
+
     function purgeCache() {
         while (cachedImages.length > 0) {
-            var removedCachedImage = cachedImages.pop();
-            delete imageCache[removedCachedImage.imageId];
-            removedCachedImage.imagePromise.reject();
+          var removedCachedImage = cachedImages.pop();
+          decache(removedCachedImage.imagePromise, removedCachedImage.imageId);
         }
         cacheSizeInBytes = 0;
+    }
+
+    function changeImageIdCacheSize(imageId, newCacheSize) {
+      var cacheEntry = imageCache[imageId];
+      if(cacheEntry) {
+        cacheEntry.imagePromise.then(function(image) {
+          var cacheSizeDifference = newCacheSize - image.sizeInBytes;
+          image.sizeInBytes = newCacheSize;
+          cacheSizeInBytes += cacheSizeDifference;
+        });
+      }
     }
 
     // module exports
@@ -150,7 +205,8 @@
         setMaximumSizeBytes: setMaximumSizeBytes,
         getCacheInfo : getCacheInfo,
         purgeCache: purgeCache,
-        cachedImages: cachedImages
+        cachedImages: cachedImages,
+        changeImageIdCacheSize: changeImageIdCacheSize
     };
 
 }(cornerstone));
