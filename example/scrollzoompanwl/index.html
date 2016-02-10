@@ -10,6 +10,7 @@
 
 </head>
 <body>
+
 <div class="container">
 
     <h1>
@@ -33,17 +34,18 @@
     <button id="x256" class="btn">256x256</button>
     <button id="x512" class="btn">512x512</button>
     <button id="invert" class="btn">Toggle Invert</button>
-    <button id="interpolation" class="btn">Toggle Interpolation</button>
+    <!-- <button id="interpolation" class="btn">Toggle Interpolation</button> -->
     <button id="hflip" class="btn">Horizontal Flip</button>
     <button id="vflip" class="btn">Vertical Flip</button>
     <button id="rotate" class="btn">Rotate 90</button>
 
-    <div id="dicomImageWrapper" style="width:512px;height:512px;position:relative;color: white;"
+    <div id="dicomImageWrapper" style="width:512px;height:512px;position:relative;color: white; background: black; overflow: hidden;"
          class="cornerstone-enabled-image"
          oncontextmenu="return false"
          unselectable='on'
          onselectstart='return false;'
          onmousedown='return false;'>
+
         <div id="dicomImage" oncontextmenu="return false"
              style="width:512px;height:512px;top:0px;left:0px; position:absolute">
         </div>
@@ -112,17 +114,21 @@
             // NOTE: The coordinate system of the canvas is in image pixel space.  Drawing
             // to location 0,0 will be the top left of the image and rows,columns is the bottom
             // right.
+            /*            
             var context = eventData.canvasContext;
-            context.beginPath();
             context.strokeStyle = 'white';
             context.lineWidth = .5;
-            context.rect(128, 90, 50, 60);
-            context.stroke();
             context.fillStyle = "white";
             context.font = "6px Arial";
+
+            context.beginPath();
+            context.rect(128, 90, 50, 60);
             context.fillText("Tumor Here", 128, 85);
 
-            $('#topright').text("Render Time:" + cornerstone.lastRenderTimeInMs + " ms");
+            context.stroke();
+            */
+
+            $('#topright').text("Render Time:" + eventData.renderTimeInMs + " ms");
             $('#bottomleft').text("WW/WL:" + Math.round(eventData.viewport.voi.windowWidth) + "/" + Math.round(eventData.viewport.voi.windowCenter));
             $('#bottomright').text("Zoom:" + eventData.viewport.scale.toFixed(2));
 
@@ -139,7 +145,7 @@
             $('#bottomleft').text("WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
 
             // add event handlers to pan image on mouse move
-            $('#dicomImage').mousedown(function (e) {
+            $('#dicomImageWrapper').mousedown(function (e) {
                 var lastX = e.pageX;
                 var lastY = e.pageY;
 
@@ -160,8 +166,9 @@
                     }
                     else if (mouseButton == 2) {
                         var viewport = cornerstone.getViewport(element);
-                        viewport.translation.x += (deltaX / viewport.scale);
-                        viewport.translation.y += (deltaY / viewport.scale);
+
+                        viewport.translation.x += deltaX;
+                        viewport.translation.y += deltaY;
                         cornerstone.setViewport(element, viewport);
                     }
                     else if (mouseButton == 3) {
@@ -198,13 +205,13 @@
             $('#x256').click(function (e) {
                 $('#dicomImage').width(256).height(256);
                 $('#dicomImageWrapper').width(256).height(256);
-                cornerstone.resize(element);
+                cornerstone.fitToWindow(element);
             });
 
             $('#x512').click(function (e) {
                 $('#dicomImage').width(512).height(512);
                 $('#dicomImageWrapper').width(512).height(512);
-                cornerstone.resize(element);
+                cornerstone.fitToWindow(element);
             });
 
             $('#invert').click(function (e) {
@@ -214,6 +221,8 @@
                 } else {
                     viewport.invert = true;
                 }
+
+                $('#dicomImageWrapper').css('color', viewport.invert ? 'black' : 'white');
                 cornerstone.setViewport(element, viewport);
             });
 
@@ -243,10 +252,7 @@
             });
             $(element).mousemove(function(event)
             {
-                var pixelCoords = cornerstone.pageToPixel(element, event.pageX, event.pageY);
-                var x = event.pageX;
-                var y = event.pageY;
-                $('#coords').text("pageX=" + event.pageX + ", pageY=" + event.pageY + ", pixelX=" + pixelCoords.x + ", pixelY=" + pixelCoords.y);
+                $('#coords').text("pageX=" + event.pageX + ", pageY=" + event.pageY + ", pixelX=" + event.offsetX + ", pixelY=" + event.offsetY);
             });
         });
 

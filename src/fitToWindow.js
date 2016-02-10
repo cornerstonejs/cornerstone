@@ -27,20 +27,16 @@
     function fitToWindow(element)
     {
         var enabledElement = cornerstone.getEnabledElement(element);
-        var imageSize = getImageSize(enabledElement);
 
-        var verticalScale = enabledElement.canvas.height / imageSize.height;
-        var horizontalScale= enabledElement.canvas.width / imageSize.width;
-        if(horizontalScale < verticalScale) {
-          enabledElement.viewport.scale = horizontalScale;
-        }
-        else
-        {
-          enabledElement.viewport.scale = verticalScale;
-        }
+        var imageSize = getImageSize(enabledElement);
+        var elStyle = window.getComputedStyle(element);
+        enabledElement.viewport.scale = cornerstone.internal.scaleToFit(
+            parseInt(elStyle.width), parseInt(elStyle.height), // element size
+            imageSize.width,         imageSize.height);        // image size
+
         enabledElement.viewport.translation.x = 0;
         enabledElement.viewport.translation.y = 0;
-        cornerstone.updateImage(element);
+        cornerstone.applyTransform(enabledElement);
     }
 
     cornerstone.fitToWindow = fitToWindow;

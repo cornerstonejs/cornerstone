@@ -57,7 +57,8 @@
         }
     }
 
+    /* That function becomes useless */
     // module/private exports
-    cornerstone.resize = resize;
+    //cornerstone.resize = resize;
 
 }(cornerstone));

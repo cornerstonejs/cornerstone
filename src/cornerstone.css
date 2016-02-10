@@ -12,7 +12,13 @@
     user-select: none;
 
     /* force the cursor to always be the default arrow.  This prevents it from changing to an ibar when it is
-       over HTML based text overlays (four corners */
+       over HTML based text overlays (four corners) */
     cursor:default;
+}
+
+canvas.cornerstone-renderer{
+    position: absolute;
+    top: 50%;
+    left: 50%;
 }
 

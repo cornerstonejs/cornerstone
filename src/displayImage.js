@@ -19,12 +19,20 @@
         }
 
         var enabledElement = cornerstone.getEnabledElement(element);
+        var hasSizeChanged = false;
+
+        if(enabledElement.image === undefined)
+             //TODO could do better
+            //What we want is to set canvas background only once we start displaying images
+            // Doing it at enable() is too soon (create a white rect during image load)
+            // Doing it at each drawImage() call seems too much
+            //Here we kinda do it at first displayImage
+            enabledElement.canvas.style.backgroundColor = '#fff';
 
         enabledElement.image = image;
 
-        if(enabledElement.viewport === undefined) {
-            enabledElement.viewport = cornerstone.internal.getDefaultViewport(enabledElement.canvas, image);
-        }
+        if(enabledElement.viewport === undefined)
+            enabledElement.viewport = cornerstone.internal.getDefaultViewport(enabledElement, image);
 
         // merge viewport
         if(viewport) {
@@ -34,6 +42,15 @@
                     enabledElement.viewport[attrname] = viewport[attrname];
                 }
             }
+        }
+
+        if(enabledElement.canvas.width != image.width){
+            enabledElement.canvas.width = image.width;
+            hasSizeChanged = true;
+        }
+        if(enabledElement.canvas.height != image.height){
+            enabledElement.canvas.height = image.height;
+            hasSizeChanged = true;
         }
 
         var now = new Date();
@@ -55,9 +72,13 @@
 
         $(enabledElement.element).trigger("CornerstoneNewImage", newImageEventData);
 
+        if( viewport || hasSizeChanged )
+            cornerstone.updateTransform(element);
+
         cornerstone.updateImage(element);
     }
 
     // module/private exports
     cornerstone.displayImage = displayImage;
+
 }($, cornerstone));

@@ -14,37 +14,52 @@
      */
     function setViewport(element, viewport) {
 
-        var enabledElement = cornerstone.getEnabledElement(element);
+        var enabledElement = cornerstone.getEnabledElement(element),
+            elViewport = enabledElement.viewport;
 
-        enabledElement.viewport.scale = viewport.scale;
-        enabledElement.viewport.translation.x = viewport.translation.x;
-        enabledElement.viewport.translation.y = viewport.translation.y;
-        enabledElement.viewport.voi.windowWidth = viewport.voi.windowWidth;
-        enabledElement.viewport.voi.windowCenter = viewport.voi.windowCenter;
-        enabledElement.viewport.invert = viewport.invert;
-        enabledElement.viewport.pixelReplication = viewport.pixelReplication;
-        enabledElement.viewport.rotation = viewport.rotation;
-        enabledElement.viewport.hflip = viewport.hflip;
-        enabledElement.viewport.vflip = viewport.vflip;
-        enabledElement.viewport.modalityLUT = viewport.modalityLUT;
-        enabledElement.viewport.voiLUT = viewport.voiLUT;
+        //TODO should take into consideration the 3 borning condition below (rotation, windowWidth, scale)
+        var needViewportUpdate = elViewport.scale != viewport.scale ||
+                                 elViewport.translation.x != viewport.translation.x ||
+                                 elViewport.translation.y != viewport.translation.y ||
+                                 elViewport.rotation != viewport.rotation ||
+                                 elViewport.hflip != viewport.hflip ||
+                                 elViewport.vflip != viewport.vflip;  
+
+        var needImageUpdate =   elViewport.voi.windowWidth != viewport.voi.windowWidth ||
+                                elViewport.voi.windowCenter != viewport.voi.windowCenter ||
+                                elViewport.invert != viewport.invert ||
+                                elViewport.modalityLUT != viewport.modalityLUT ||
+                                elViewport.voiLUT != viewport.voiLUT;
+
+        elViewport.scale = viewport.scale;
+        elViewport.translation.x = viewport.translation.x;
+        elViewport.translation.y = viewport.translation.y;
+        elViewport.voi.windowWidth = viewport.voi.windowWidth;
+        elViewport.voi.windowCenter = viewport.voi.windowCenter;
+        elViewport.invert = viewport.invert;
+        elViewport.pixelReplication = viewport.pixelReplication;
+        elViewport.rotation = viewport.rotation % 360;
+        elViewport.hflip = viewport.hflip;
+        elViewport.vflip = viewport.vflip;
+        elViewport.modalityLUT = viewport.modalityLUT;
+        elViewport.voiLUT = viewport.voiLUT;
 
         // prevent window width from being too small (note that values close to zero are valid and can occur with
         // PET images in particular)
-        if(enabledElement.viewport.voi.windowWidth < 0.000001) {
-            enabledElement.viewport.voi.windowWidth = 0.000001;
-        }
+        if(elViewport.voi.windowWidth < 0.000001)
+            elViewport.voi.windowWidth = 0.000001;
+
         // prevent scale from getting too small
-        if(enabledElement.viewport.scale < 0.0001) {
-            enabledElement.viewport.scale = 0.25;
-        }
+        if(elViewport.scale < 0.0001)
+            elViewport.scale = 0.25;
 
-        if(enabledElement.viewport.rotation===360 || enabledElement.viewport.rotation===-360) {
-            enabledElement.viewport.rotation = 0;
-        }
+        if(needViewportUpdate)
+            cornerstone.applyTransform(enabledElement);
 
-        // Force the image to be updated since the viewport has been modified
-        cornerstone.updateImage(element);
+        if(needImageUpdate){
+            element.style.background = elViewport.invert ? '#fff' : '#000';
+            cornerstone.drawImage(enabledElement, true);
+        }
     }
 
 

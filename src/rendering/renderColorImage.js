@@ -6,27 +6,6 @@
 
     "use strict";
 
-    var colorRenderCanvas = document.createElement('canvas');
-    var colorRenderCanvasContext;
-    var colorRenderCanvasData;
-
-    var lastRenderedImageId;
-    var lastRenderedViewport = {};
-
-    function initializeColorRenderCanvas(image)
-    {
-        // Resize the canvas
-        colorRenderCanvas.width = image.width;
-        colorRenderCanvas.height = image.height;
-
-        // get the canvas data so we can write to it directly
-        colorRenderCanvasContext = colorRenderCanvas.getContext('2d');
-        colorRenderCanvasContext.fillStyle = 'white';
-        colorRenderCanvasContext.fillRect(0,0, colorRenderCanvas.width, colorRenderCanvas.height);
-        colorRenderCanvasData = colorRenderCanvasContext.getImageData(0,0,image.width, image.height);
-    }
-
-
     function getLut(image, viewport)
     {
         // if we have a cached lut and it has the right values, return it immediately
@@ -45,60 +24,6 @@
         return image.lut;
     }
 
-    function doesImageNeedToBeRendered(enabledElement, image)
-    {
-        if(image.imageId !== lastRenderedImageId ||
-            lastRenderedViewport.windowCenter !== enabledElement.viewport.voi.windowCenter ||
-            lastRenderedViewport.windowWidth !== enabledElement.viewport.voi.windowWidth ||
-            lastRenderedViewport.invert !== enabledElement.viewport.invert ||
-            lastRenderedViewport.rotation !== enabledElement.viewport.rotation ||  
-            lastRenderedViewport.hflip !== enabledElement.viewport.hflip ||
-            lastRenderedViewport.vflip !== enabledElement.viewport.vflip
-            )
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    function getRenderCanvas(enabledElement, image, invalidated)
-    {
-
-        // The ww/wc is identity and not inverted - get a canvas with the image rendered into it for
-        // fast drawing
-        if(enabledElement.viewport.voi.windowWidth === 255 &&
-            enabledElement.viewport.voi.windowCenter === 128 &&
-            enabledElement.viewport.invert === false &&
-            image.getCanvas &&
-            image.getCanvas()
-        )
-        {
-            return image.getCanvas();
-        }
-
-        // apply the lut to the stored pixel data onto the render canvas
-        if(doesImageNeedToBeRendered(enabledElement, image) === false && invalidated !== true) {
-            return colorRenderCanvas;
-        }
-
-        // If our render canvas does not match the size of this image reset it
-        // NOTE: This might be inefficient if we are updating multiple images of different
-        // sizes frequently.
-        if(colorRenderCanvas.width !== image.width || colorRenderCanvas.height != image.height) {
-            initializeColorRenderCanvas(image);
-        }
-
-        // get the lut to use
-        var colorLut = getLut(image, enabledElement.viewport);
-
-        // the color image voi/invert has been modified - apply the lut to the underlying
-        // pixel data and put it into the renderCanvas
-        cornerstone.storedColorPixelDataToCanvasImageData(image, colorLut, colorRenderCanvasData.data);
-        colorRenderCanvasContext.putImageData(colorRenderCanvasData, 0, 0);
-        return colorRenderCanvas;
-    }
-
     /**
      * API function to render a color image to an enabled element
      * @param enabledElement
@@ -114,41 +39,29 @@
             throw "drawImage: image must be loaded before it can be drawn";
         }
 
-        // get the canvas context and reset the transform
-        var context = enabledElement.canvas.getContext('2d');
-        context.setTransform(1, 0, 0, 1, 0, 0);
+        var canvas = enabledElement.canvas,      
+            context = canvas.getContext('2d');
 
-        // clear the canvas
-        context.fillStyle = 'black';
-        context.fillRect(0,0, enabledElement.canvas.width, enabledElement.canvas.height);
-
-        // turn off image smooth/interpolation if pixelReplication is set in the viewport
-        if(enabledElement.viewport.pixelReplication === true) {
-            context.imageSmoothingEnabled = false;
-            context.mozImageSmoothingEnabled = false; // firefox doesn't support imageSmoothingEnabled yet
+        if(enabledElement.viewport.voi.windowWidth === image.windowWidth &&
+            enabledElement.viewport.voi.windowCenter === image.windowCenter &&
+            enabledElement.viewport.invert === false)
+            // the color image voi/invert has not been modified, request the canvas that contains
+            // it so we can draw it directly to the display canvas
+            context.drawImage(image.getCanvas(), 0, 0);
+        else{
+            //may be faster to replace fillrect() and getImageData() with createImageData() and fill the alpha channel on storedColorPixelDataToCanvasImageData()
+            context.fillStyle = "#000";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            var canvasData = context.getImageData(0, 0, canvas.width, canvas.height);
+        
+            cornerstone.storedColorPixelDataToCanvasImageData(
+                image, 
+                getLut(image, enabledElement.viewport, invalidated), 
+                canvasData.data);
+            
+            context.putImageData(canvasData, 0, 0);
         }
-        else {
-            context.imageSmoothingEnabled = true;
-            context.mozImageSmoothingEnabled = true;
-        }
-
-        // save the canvas context state and apply the viewport properties
-        context.save();
-        cornerstone.setToPixelCoordinateSystem(enabledElement, context);
-
-        var renderCanvas = getRenderCanvas(enabledElement, image, invalidated);
-
-        context.drawImage(renderCanvas, 0,0, image.width, image.height, 0, 0, image.width, image.height);
-
-        context.restore();
-
-        lastRenderedImageId = image.imageId;
-        lastRenderedViewport.windowCenter = enabledElement.viewport.voi.windowCenter;
-        lastRenderedViewport.windowWidth = enabledElement.viewport.voi.windowWidth;
-        lastRenderedViewport.invert = enabledElement.viewport.invert;
-        lastRenderedViewport.rotation = enabledElement.viewport.rotation;
-        lastRenderedViewport.hflip = enabledElement.viewport.hflip;
-        lastRenderedViewport.vflip = enabledElement.viewport.vflip;
+      
     }
 
     // Module exports

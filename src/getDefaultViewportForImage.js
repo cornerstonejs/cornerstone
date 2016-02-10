@@ -15,7 +15,7 @@
      */
     function getDefaultViewportForImage(element, image) {
         var enabledElement = cornerstone.getEnabledElement(element);
-        var viewport = cornerstone.internal.getDefaultViewport(enabledElement.canvas, image);
+        var viewport = cornerstone.internal.getDefaultViewport(enabledElement, image);
         return viewport;
     }
 
