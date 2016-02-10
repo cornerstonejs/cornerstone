@@ -24,7 +24,7 @@
 
         //We dont need to translate to center to apply scale/rotation thanks to transform-origin
         
-        if( viewport.rotation%180 !== 0 )//heavy test for small optimisation ?
+        if( viewport.rotation%360 !== 0 )//heavy test for small optimisation ?
             transform += 'rotate(' + viewport.rotation + 'deg)'; //use radiant ?
 
         //use rotation for flip so we can animate it

@@ -73,7 +73,7 @@
         $(enabledElement.element).trigger("CornerstoneNewImage", newImageEventData);
 
         if( viewport || hasSizeChanged )
-            cornerstone.updateTransform(element);
+            cornerstone.updateTransform(element);  
 
         cornerstone.updateImage(element);
     }

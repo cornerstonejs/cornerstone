@@ -98,48 +98,44 @@
 
         // image enable the element
         var element = $('#dicomImage').get(0);
-        cornerstone.enable(element);
-
-        // set event handlers
-        function onImageRendered(e, eventData) {
-            $('#topright').text("Render Time:" + eventData.renderTimeInMs + " ms");
-        }
-        $(element).on("CornerstoneImageRendered", onImageRendered);
+        cornerstone.enable(element, true);
 
         // setup handlers before we display the image
         function onImageRendered(e, eventData) {
-            // set the canvas context to the image coordinate system
-            cornerstone.setToPixelCoordinateSystem(eventData.enabledElement, eventData.canvasContext);
-
-            // NOTE: The coordinate system of the canvas is in image pixel space.  Drawing
-            // to location 0,0 will be the top left of the image and rows,columns is the bottom
-            // right.
-            /*            
-            var context = eventData.canvasContext;
-            context.strokeStyle = 'white';
-            context.lineWidth = .5;
-            context.fillStyle = "white";
-            context.font = "6px Arial";
-
-            context.beginPath();
-            context.rect(128, 90, 50, 60);
-            context.fillText("Tumor Here", 128, 85);
-
-            context.stroke();
-            */
-
             $('#topright').text("Render Time:" + eventData.renderTimeInMs + " ms");
             $('#bottomleft').text("WW/WL:" + Math.round(eventData.viewport.voi.windowWidth) + "/" + Math.round(eventData.viewport.voi.windowCenter));
-            $('#bottomright').text("Zoom:" + eventData.viewport.scale.toFixed(2));
-
         }
+
+        function onTransformUpdated(e, eventData){
+            $('#bottomright').text("Zoom:" + eventData.viewport.scale.toFixed(2));
+        }
+
         $(element).on("CornerstoneImageRendered", onImageRendered);
+        $(element).on("CornerstoneTransformUpdated", onTransformUpdated);
 
         // load and display the image
         var imagePromise = updateTheImage(0);
 
         // add handlers for mouse events once the image is loaded.
         imagePromise.then(function() {
+            cornerstone.drawAnnotation(element, [
+                    function( ctx, offset ){
+                        ctx.beginPath();        
+                        ctx.rect(128 + offset, 90 + offset, 50, 60);
+
+                        return true;
+                    }
+                ],[
+                    {
+                        text: 'Tumor Here',
+                        left: 128,
+                        bottom: 90,
+                        width: 50,
+                        height: 50
+                    }
+                ]
+            );
+
             viewport = cornerstone.getViewport(element);
             $('#bottomright').text("Zoom: " + viewport.scale.toFixed(2) + "x");
             $('#bottomleft').text("WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
@@ -206,12 +202,24 @@
                 $('#dicomImage').width(256).height(256);
                 $('#dicomImageWrapper').width(256).height(256);
                 cornerstone.fitToWindow(element);
+
+                //must update annotation, still in test won't be necessary on the future
+                var  enabledElement = cornerstone.getEnabledElement(element);
+                enabledElement.canvasAnnot.width = 256;
+                enabledElement.canvasAnnot.height = 256;
+                cornerstone.internal.updateAnnotation(enabledElement);
             });
 
             $('#x512').click(function (e) {
                 $('#dicomImage').width(512).height(512);
                 $('#dicomImageWrapper').width(512).height(512);
                 cornerstone.fitToWindow(element);
+
+                //must update annotation, still in test won't be necessary on the future
+                var  enabledElement = cornerstone.getEnabledElement(element);
+                enabledElement.canvasAnnot.width = 512;
+                enabledElement.canvasAnnot.height = 512;
+                cornerstone.internal.updateAnnotation(enabledElement);
             });
 
             $('#invert').click(function (e) {

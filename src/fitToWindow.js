@@ -36,7 +36,7 @@
 
         enabledElement.viewport.translation.x = 0;
         enabledElement.viewport.translation.y = 0;
-        cornerstone.applyTransform(enabledElement);
+        cornerstone.internal.applyTransform(enabledElement);
     }
 
     cornerstone.fitToWindow = fitToWindow;

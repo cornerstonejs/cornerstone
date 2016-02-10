@@ -5,7 +5,7 @@
 
     "use strict";
 
-    function enable(element) {
+    function enable(element, enableAnnot) {
         if(element === undefined) {
             throw "enable: parameter element cannot be undefined";
         }
@@ -18,33 +18,52 @@
         renderer.appendChild(canvas);
         element.appendChild(renderer);
 
-        /*
-        var canvasAnnot = document.createElement('canvas');
-        canvasAnnot.width = 512;
-        canvasAnnot.height = 512;
-        canvasAnnot.style.position = "absolute";
-        canvasAnnot.style.top = 0;
-        canvasAnnot.style.left = 0;
-        canvasAnnot.style.bottom = 0;
-        canvasAnnot.style.right = 0;
-
-        element.appendChild(canvasAnnot);
-        */
-
         var el = {
             element: element,
             renderer: renderer,
             canvas: canvas,
-            //canvasAnnot: canvasAnnot,
             image : undefined, // will be set once image is loaded
             invalid: false, // true if image needs to be drawn, false if not
             data : {}
         };
         cornerstone.addEnabledElement(el);
 
+        if(enableAnnot)
+            enableAnnotation(el);
+
         return element;
+    }
+
+    // /!\ canvas size is set on displayImage() so we must display an image before being able to draw on annotations
+    function enableAnnotation(enabledElement){
+        
+        var canvasAnnot = document.createElement('canvas');
+
+        //must be updated if element change size
+        canvasAnnot.width = enabledElement.element.offsetWidth;
+        canvasAnnot.height = enabledElement.element.offsetHeight;
+
+        //TODO use css class
+        canvasAnnot.style.position = "absolute";
+        canvasAnnot.style.top = canvasAnnot.style.left = canvasAnnot.style.bottom = canvasAnnot.style.right = 0;
+
+        enabledElement.element.appendChild(canvasAnnot);
+        enabledElement.canvasAnnot = canvasAnnot;
     }
 
     // module/private exports
     cornerstone.enable = enable;
+    cornerstone.enableAnnotation = function(element){
+         if(element === undefined) {
+            throw "enable: parameter element cannot be undefined";
+        }
+
+        var enabledElement = cornerstone.getEnabledElement(element);
+
+        if(enabledElement === undefined) {
+            throw "enableAnnotation: element must be enabled first";
+        }
+
+        enableAnnotation(enabledElement);
+    };
 }(cornerstone));

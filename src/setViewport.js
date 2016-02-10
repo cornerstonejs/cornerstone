@@ -53,8 +53,12 @@
         if(elViewport.scale < 0.0001)
             elViewport.scale = 0.25;
 
-        if(needViewportUpdate)
-            cornerstone.applyTransform(enabledElement);
+        if(needViewportUpdate){
+            cornerstone.internal.applyTransform(enabledElement);
+
+            if(enabledElement.canvasAnnot)
+                cornerstone.internal.updateAnnotation(enabledElement);
+        }
 
         if(needImageUpdate){
             element.style.background = elViewport.invert ? '#fff' : '#000';
