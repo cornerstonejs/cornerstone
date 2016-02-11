@@ -33,8 +33,17 @@
         if(viewport.vflip)
             transform += 'rotateX(180deg)';
 
-        //no need for an if() because we will likely always have a scale
-        transform += 'scale(' + viewport.scale + ')';
+        //scale
+        var widthScale = enabledElement.viewport.scale;
+        var heightScale = enabledElement.viewport.scale;
+        if(enabledElement.image.rowPixelSpacing < enabledElement.image.columnPixelSpacing)
+            widthScale = widthScale * (enabledElement.image.columnPixelSpacing / enabledElement.image.rowPixelSpacing);
+        else if(enabledElement.image.columnPixelSpacing < enabledElement.image.rowPixelSpacing)
+            heightScale = heightScale * (enabledElement.image.rowPixelSpacing / enabledElement.image.columnPixelSpacing);
+    
+        transform.scale(widthScale, heightScale);
+
+        transform += 'scale(' + widthScale + ',' + heightScale +')';
 
         /* flip with scale()
         transform += 'scale('+ 
