@@ -15,16 +15,16 @@ This is an example of the static display use of cornerstone
 <br>
 
 <h3>fit</h3>
-<canvas id="ex1" width="80px" height="80px"></canvas>
+<div id="ex1"></div>
 
 <h3>adjustHeight</h3>
-<canvas id="ex2" width="200"></canvas>
+<div id="ex2"></div>
 
 <h3>adjustWidth</h3>
-<canvas id="ex3" height="200"></canvas>
+<div id="ex3"></div>
 
 <h3>with different viewport property (invert)</h3>
-<canvas id="ex4" width="512" height="512"></canvas>
+<div id="ex4"></div>
 
 <h3>using an Image element</h3>
 <div id="imgContainer"></div>
@@ -48,14 +48,20 @@ This is an example of the static display use of cornerstone
        
         cornerstone.loadImage(imageId).then(function(image) {
 
-            cornerstone.displayStaticImage(document.getElementById('ex1'), image);
-            cornerstone.displayStaticImage(document.getElementById('ex2'), image, 'adjustHeight');
-            cornerstone.displayStaticImage(document.getElementById('ex3'), image, 'adjustWidth');
-            cornerstone.displayStaticImage(document.getElementById('ex4'), image, 'fit', { invert : true });
+            document.getElementById('ex1').appendChild(
+                cornerstone.getImageCanvas(image, 80, 80));
+            
+            document.getElementById('ex2').appendChild(
+                cornerstone.getImageCanvas(image, 200));
+            
+            document.getElementById('ex3').appendChild(
+                cornerstone.getImageCanvas(image, 0, 200));
+            
+            document.getElementById('ex4').appendChild(
+                cornerstone.getImageCanvas(image, 0, 0, { invert : true }));
 
             document.getElementById('imgContainer').appendChild( 
-                cornerstone.getImageElement(image)
-            );
+                cornerstone.getImageElement(image));
         });
     });
 

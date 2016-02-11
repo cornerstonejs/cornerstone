@@ -133,7 +133,7 @@
 
     // module/private exports
     cornerstone.displayImage = displayImage;
-    cornerstone.displayStaticImage = getImageCanvas;
+    cornerstone.getImageCanvas = getImageCanvas;
     cornerstone.getImageElement = getImageElement;
 
 }($, cornerstone));
