@@ -40,8 +40,6 @@
             widthScale = widthScale * (enabledElement.image.columnPixelSpacing / enabledElement.image.rowPixelSpacing);
         else if(enabledElement.image.columnPixelSpacing < enabledElement.image.rowPixelSpacing)
             heightScale = heightScale * (enabledElement.image.rowPixelSpacing / enabledElement.image.columnPixelSpacing);
-    
-        transform.scale(widthScale, heightScale);
 
         transform += 'scale(' + widthScale + ',' + heightScale +')';
 
