@@ -55,7 +55,7 @@
 
         $(enabledElement.element).trigger("CornerstoneNewImage", newImageEventData);
 
-        cornerstone.updateImage(element);
+        cornerstone.drawImage(enabledElement);
     }
 
     // module/private exports

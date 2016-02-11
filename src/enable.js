@@ -5,6 +5,8 @@
 
     "use strict";
 
+    var idCpt = 0;
+
     function enable(element) {
         if(element === undefined) {
             throw "enable: parameter element cannot be undefined";
@@ -14,6 +16,7 @@
         element.appendChild(canvas);
 
         var el = {
+            id: idCpt++,
             element: element,
             canvas: canvas,
             image : undefined, // will be set once image is loaded
