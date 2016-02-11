@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+
+<h1>
+staticImage/index.html
+</h1>
+
+This is an example of the static display use of cornerstone
+<br>
+
+<h3>fit</h3>
+<canvas id="ex1" width="80px" height="80px"></canvas>
+
+<h3>adjustHeight</h3>
+<canvas id="ex2" width="200"></canvas>
+
+<h3>adjustWidth</h3>
+<canvas id="ex3" height="200"></canvas>
+
+<h3>with different viewport property (invert)</h3>
+<canvas id="ex4" width="512" height="512"></canvas>
+
+<h3>using an Image element</h3>
+<div id="imgContainer"></div>
+
+</div>
+</body>
+
+<!-- cornerstone depends on jQuery so it must be loaded first-->
+<script src="../jquery.min.js"></script>
+
+<!-- include the cornerstone library -->
+<script src="../../dist/cornerstone.js"></script>
+
+<!-- include special code for these examples which provides images -->
+<script src="../exampleImageIdLoader.js"></script>
+
+<script>
+
+    $(document).ready(function() {
+        var imageId = 'example://1';
+       
+        cornerstone.loadImage(imageId).then(function(image) {
+
+            cornerstone.displayStaticImage(document.getElementById('ex1'), image);
+            cornerstone.displayStaticImage(document.getElementById('ex2'), image, 'adjustHeight');
+            cornerstone.displayStaticImage(document.getElementById('ex3'), image, 'adjustWidth');
+            cornerstone.displayStaticImage(document.getElementById('ex4'), image, 'fit', { invert : true });
+
+            document.getElementById('imgContainer').appendChild( 
+                cornerstone.getImageElement(image)
+            );
+        });
+    });
+
+</script>
+</html>

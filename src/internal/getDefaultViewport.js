@@ -39,15 +39,9 @@
             voiLUT: image.voiLUT
         };
 
-        // fit image to window
-        var verticalScale = canvas.height / image.rows;
-        var horizontalScale= canvas.width / image.columns;
-        if(horizontalScale < verticalScale) {
-            viewport.scale = horizontalScale;
-        }
-        else {
-            viewport.scale = verticalScale;
-        }
+        // fit image to window   
+        viewport.scale = cornerstone.internal.scaleToFit( canvas.width, canvas.height, image.columns, image.rows );
+        
         return viewport;
     }
 
