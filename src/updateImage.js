@@ -10,7 +10,7 @@
         loopRunning = false;
 
     function renderingLoop(){
-        var id = pool.pop(),
+        var id = pool.shift(),
             el = pendingEls[id];
 
         delete pendingEls[id];
