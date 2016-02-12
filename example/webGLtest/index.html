@@ -166,8 +166,12 @@ This is a work-in-progress example of WebGL use in cornerstone
             });
         }
 
+        var options = {
+            renderer: 'webgl'
+        };
+
         cornerstone.webGL.debug = true;
-        cornerstone.enable(element, cornerstone.webGL.renderer.render);
+        cornerstone.enable(element, options);
         //cornerstone.enable(element, "WebGL");
 
         cornerstoneTools.mouseInput.enable(element);
@@ -175,7 +179,7 @@ This is a work-in-progress example of WebGL use in cornerstone
         cornerstoneTools.mouseWheelInput.enable(element);
 
         var element2 = document.getElementById('dicomImage2');
-        cornerstone.enable(element2, cornerstone.webGL.renderer.render);
+        cornerstone.enable(element2, options);
         //cornerstone.enable(element, "WebGL");
 
         cornerstoneTools.mouseInput.enable(element2);

@@ -176,16 +176,16 @@ This is a work-in-progress example of WebGL use in cornerstone
         });
 
 
+        var options = {
+            renderer: 'webgl'
+        };
 
-        cornerstone.enable(elementWebGL, cornerstone.webGL.renderer.render);
-        //cornerstone.enable(elementWebGL, "WebGL");
+        cornerstone.enable(elementWebGL, options);
 
         cornerstone.loadAndCacheImage(imageId).then(function(image) {
             cornerstoneTools.mouseInput.enable(elementWebGL);
             cornerstoneTools.touchInput.enable(elementWebGL);
             cornerstoneTools.mouseWheelInput.enable(elementWebGL);
-
-            cornerstone.webGL.renderer.initRenderer();
 
             cornerstone.displayImage(elementWebGL, image);
 

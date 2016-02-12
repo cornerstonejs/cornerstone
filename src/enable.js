@@ -5,26 +5,31 @@
 
     "use strict";
 
-    function enable(element, renderer) {
+    function enable(element, options) {
         if(element === undefined) {
             throw "enable: parameter element cannot be undefined";
         }
 
-        var canvas = document.createElement('canvas');
-        element.appendChild(canvas);
-
-        if (typeof renderer === 'string' && renderer.toLowerCase() === 'webgl') {
-            renderer = cornerstone.webGL.renderer.render;
-        }
-
-        if (renderer === cornerstone.webGL.renderer.render) {
-            if (!cornerstone.webGL.renderer.isWebGLAvailable()) {
-                console.error('WebGL not available, falling back to Canvas renderer');
-                renderer = undefined;
-            } else {
+        // If this enabled element has the option set for WebGL, we should
+        // check if this device actually supports it
+        if (options && options.renderer && options.renderer.toLowerCase() === 'webgl') {
+            if (cornerstone.webGL.renderer.isWebGLAvailable()) {
+                // If WebGL is available on the device, initialize the renderer
+                // and return the renderCanvas from the WebGL rendering path
+                console.log('Using WebGL rendering path');
+                
                 cornerstone.webGL.renderer.initRenderer();
+                options.renderer = 'webgl';
+            } else {
+                // If WebGL is not available on this device, we will fall back
+                // to using the Canvas renderer
+                console.error('WebGL not available, falling back to Canvas renderer');
+                delete options.renderer;
             }
         }
+
+        var canvas = document.createElement('canvas');
+        element.appendChild(canvas);
 
         var el = {
             element: element,
@@ -33,6 +38,7 @@
             invalid: false, // true if image needs to be drawn, false if not
             needsRedraw:true,
             render: renderer,
+            options: options,
             data : {}
         };
         cornerstone.addEnabledElement(el);
