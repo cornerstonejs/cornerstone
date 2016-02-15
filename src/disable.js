@@ -19,8 +19,8 @@
                 };
                 $(element).trigger("CornerstoneElementDisabled", eventData);
 
-                // remove the child dom elements that we created (e.g.canvas)
-                enabledElements[i].element.removeChild(enabledElements[i].canvas);
+                // remove the child dom elements that we created (e.g. renderer)
+                enabledElements[i].element.removeChild(enabledElements[i].renderer);
 
                 // remove this element from the list of enabled elements
                 enabledElements.splice(i, 1);
