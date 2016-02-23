@@ -52,7 +52,6 @@
             var lastCachedImage = cachedImages[cachedImages.length - 1];
             cacheSizeInBytes -= lastCachedImage.sizeInBytes;
             delete imageCache[lastCachedImage.imageId];
-            lastCachedImage.imagePromise.reject();
             cachedImages.pop();
             $(cornerstone).trigger('CornerstoneImageCachePromiseRemoved', {imageId: lastCachedImage.imageId});
         }
@@ -72,6 +71,17 @@
         if (imageCache.hasOwnProperty(imageId) === true) {
             throw "putImagePromise: imageId already in cache";
         }
+
+        imagePromise = imagePromise.then(function(image) {
+            // when the image is no longer in cache, prevent the user to use fulfilled promise
+            if (!imageCache || !imageCache.hasOwnProperty(imageId)) {
+                // reject the promise
+                throw "getImagePromise: image is not in cache anymore";
+            }
+            else {
+                return image;
+            }
+        });
 
         var cachedImage = {
             loaded : false,
@@ -171,10 +181,11 @@
         if(image.decache) {
           image.decache();
         }
-        imagePromise.reject();
         delete imageCache[imageId];
-      }).always(function() {
-        delete imageCache[imageId];
+      }, function(err) {
+        if (imageCache.hasOwnProperty(imageId)) {
+            delete imageCache[imageId];
+        }
       });
     }
 
