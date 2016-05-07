@@ -118,24 +118,6 @@
 
         // add handlers for mouse events once the image is loaded.
         imagePromise.then(function() {
-            cornerstone.drawAnnotation(element, [
-                    function( ctx, offset ){
-                        ctx.beginPath();        
-                        ctx.rect(128 + offset, 90 + offset, 50, 60);
-
-                        return true;
-                    }
-                ],[
-                    {
-                        text: 'Tumor Here',
-                        left: 128,
-                        bottom: 90,
-                        width: 50,
-                        height: 50
-                    }
-                ]
-            );
-
             viewport = cornerstone.getViewport(element);
             $('#bottomright').text("Zoom: " + viewport.scale.toFixed(2) + "x");
             $('#bottomleft').text("WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));

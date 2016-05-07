@@ -21,19 +21,13 @@
             throw "getDefaultViewport: parameter image must not be undefined";
         }
 
-        //quick and temporary hack for displayStaticImage() where we have no element
-        var scale;
-        if(!enabledElement){
-            scale = 1;
-        }
-        else{
-            var elemStyle =      window.getComputedStyle(enabledElement.element);
+        var elemStyle = window.getComputedStyle(enabledElement.element),
 
-            var elWidth = parseInt(elemStyle.width);
-            var elHeight =  parseInt(elemStyle.height);
+            elWidth =  parseInt(elemStyle.width) || enabledElement.element.offsetWidth,
+            elHeight = parseInt(elemStyle.height) || enabledElement.element.offsetHeight,
 
             scale = scaleToFit(elWidth, elHeight, image.width, image.height);
-        }
+        
 
         var viewport = {
             scale : scale,
