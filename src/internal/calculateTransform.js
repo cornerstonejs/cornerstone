@@ -6,7 +6,7 @@
     function calculateTransform(enabledElement, scale) {
 
         var transform = new cornerstone.internal.Transform();
-        transform.translate(enabledElement.canvas.width/2, enabledElement.canvas.height / 2);
+        transform.translate(-enabledElement.canvas.width/2, -enabledElement.canvas.height / 2);
 
         //Apply the rotation before scaling for non square pixels
         var angle = enabledElement.viewport.rotation;
@@ -38,22 +38,11 @@
             transform.rotate(angle*Math.PI/180);
         }
 
-        if(scale !== undefined) {
-            // apply the font scale
-            transform.scale(scale, scale);
-        }
-
-        //Apply Flip if required
-        if(enabledElement.viewport.hflip) {
-            transform.scale(-1,1);
-        }
-
-        if(enabledElement.viewport.vflip) {
-            transform.scale(1,-1);
-        }
+        scale = scale || 1;
+        matrix.scale( (viewport.hflip ? -1 : 1)*scale, (viewport.vflip ? -1 : 1)*scale );
 
         // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
-        transform.translate(-enabledElement.image.width / 2 , -enabledElement.image.height/ 2);
+        //transform.translate(-enabledElement.image.width / 2 , -enabledElement.image.height/ 2);
         return transform;
     }
 

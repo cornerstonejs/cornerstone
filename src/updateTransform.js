@@ -18,6 +18,8 @@
     function applyTransform(enabledElement){      
 
         var viewport = enabledElement.viewport,
+            image = enabledElement.image,
+            
             transform = 'translate(' + 
                 (viewport.translation.x === 0 ? '-50%,' : 'calc(' + viewport.translation.x + 'px - 50%),') +
                 (viewport.translation.y === 0 ? '-50%)' : 'calc(' + viewport.translation.y + 'px - 50%))');
@@ -28,18 +30,18 @@
             transform += 'rotate(' + viewport.rotation + 'deg)'; //use radiant ?
 
         //use rotation for flip so we can animate it
-        if(viewport.hflip)
-            transform += 'rotateY(180deg)';
-        if(viewport.vflip)
-            transform += 'rotateX(180deg)';
+        transform += 'rotateY(' + (viewport.hflip ? 180 : 0) + 'deg)';
+        transform += 'rotateX(' + (viewport.vflip ? 180 : 0) + 'deg)';
 
         //scale
         var widthScale = enabledElement.viewport.scale;
         var heightScale = enabledElement.viewport.scale;
-        if(enabledElement.image.rowPixelSpacing < enabledElement.image.columnPixelSpacing)
-            widthScale = widthScale * (enabledElement.image.columnPixelSpacing / enabledElement.image.rowPixelSpacing);
-        else if(enabledElement.image.columnPixelSpacing < enabledElement.image.rowPixelSpacing)
-            heightScale = heightScale * (enabledElement.image.rowPixelSpacing / enabledElement.image.columnPixelSpacing);
+       if(image){
+            if(image.rowPixelSpacing < image.columnPixelSpacing)
+                widthScale = widthScale * (image.columnPixelSpacing / image.rowPixelSpacing);
+            else if(image.columnPixelSpacing < image.rowPixelSpacing)
+                heightScale = heightScale * (image.rowPixelSpacing / image.columnPixelSpacing);
+        }
 
         transform += 'scale(' + widthScale + ',' + heightScale +')';
 
