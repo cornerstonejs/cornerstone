@@ -43,15 +43,7 @@
 
         transform += 'scale(' + widthScale + ',' + heightScale +')';
 
-        /* flip with scale()
-        transform += 'scale('+ 
-            (viewport.hflip? -1 : 1)*viewport.scale + //x
-            ',' + 
-            (viewport.vflip? -1 : 1)*viewport.scale + //y
-            ')';
-        */
-
-        enabledElement.renderer.style.transform = transform;
+        enabledElement.canvas.style.transform = transform;
 
         $(enabledElement.element).trigger("CornerstoneTransformUpdated", {
             viewport : enabledElement.viewport,
