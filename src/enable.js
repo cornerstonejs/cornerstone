@@ -11,6 +11,8 @@
         }
 
         var canvas = document.createElement('canvas');
+        canvas.className = 'cornerstone-canvas';
+
         element.appendChild(canvas);
 
         var el = {
@@ -21,8 +23,6 @@
             data : {}
         };
         cornerstone.addEnabledElement(el);
-
-        cornerstone.resize(element, true);
 
         return element;
     }
