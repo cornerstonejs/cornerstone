@@ -12,8 +12,10 @@
   function reset(element)
   {
     var enabledElement = cornerstone.getEnabledElement(element);
-    var defaultViewport = cornerstone.internal.getDefaultViewport(enabledElement, enabledElement.image);
-    enabledElement.viewport = defaultViewport;
+
+    enabledElement.viewport = 
+      enabledElement.initialViewport || cornerstone.internal.getDefaultViewport(enabledElement.image);
+
     cornerstone.updateImage(element);
   }
 

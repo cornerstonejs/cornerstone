@@ -21,23 +21,37 @@
     }
 
     /**
+     * Deprecated
      * Adjusts an images scale and center so the image is centered and completely visible
      * @param element
+     * @param [Number] elWidth  element width in px unit
+     * @param [Number] elHeight element height in px unit
      */
-    function fitToWindow(element)
+    function fitToWindow(element, elwidth, elHeight)
     {
         var enabledElement = cornerstone.getEnabledElement(element);
 
         var imageSize = getImageSize(enabledElement);
-        var elStyle = window.getComputedStyle(element);
-        enabledElement.viewport.scale = cornerstone.internal.scaleToFit(
-            parseInt(elStyle.width), parseInt(elStyle.height), // element size
-            imageSize.width,         imageSize.height);        // image size
+
+        enabledElement.viewport.scale = _scaleToFit(
+            elwidth,          elHeight, // element size
+            imageSize.width,  imageSize.height);        // image size
 
         enabledElement.viewport.translation.x = 0;
         enabledElement.viewport.translation.y = 0;
         cornerstone.internal.applyTransform(enabledElement);
     }
 
+    function _scaleToFit(elWidth, elHeight, imgWidth, imgHeight){
+        return Math.min(elWidth / imgWidth, elHeight / imgHeight);
+    }
+
+    function scaleToFit(elWidth, elHeight, image){
+        return _scaleToFit(elWidth, elHeight, image.columns, image.rows);
+    }
+
+    
     cornerstone.fitToWindow = fitToWindow;
+    cornerstone.scaleToFit = scaleToFit;
+
 }(cornerstone));

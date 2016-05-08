@@ -91,8 +91,10 @@
         function updateTheImage(imageIndex) {
             return cornerstone.loadAndCacheImage(imageIds[imageIndex]).then(function(image) {
                 currentImageIndex = imageIndex;
-                var viewport = cornerstone.getViewport(element);
-                cornerstone.displayImage(element, image, viewport);
+                
+                cornerstone.displayImage(element, image, {
+                    scale: cornerstone.scaleToFit(element.offsetWidth, element.offsetHeight, image)
+                });
             });
         }
 
@@ -183,7 +185,7 @@
             $('#x256').click(function (e) {
                 $('#dicomImage').width(256).height(256);
                 $('#dicomImageWrapper').width(256).height(256);
-                cornerstone.fitToWindow(element);
+                cornerstone.fitToWindow(element, 256, 256);
 
                 //must update annotation, still in test won't be necessary on the future
                 var  enabledElement = cornerstone.getEnabledElement(element);
@@ -195,7 +197,7 @@
             $('#x512').click(function (e) {
                 $('#dicomImage').width(512).height(512);
                 $('#dicomImageWrapper').width(512).height(512);
-                cornerstone.fitToWindow(element);
+                cornerstone.fitToWindow(element, 512, 512);
 
                 //must update annotation, still in test won't be necessary on the future
                 var  enabledElement = cornerstone.getEnabledElement(element);

@@ -9,28 +9,17 @@
 
     /**
      * Creates a new viewport object containing default values for the image and canvas
-     * @param canvas
      * @param image
      * @returns viewport object
      */
-    function getDefaultViewport(enabledElement, image) {
-        if(enabledElement === undefined) {
-            throw "getDefaultViewport: parameter enabledElement must not be undefined";
-        }
+    function getDefaultViewport(image) {
+
         if(image === undefined) {
             throw "getDefaultViewport: parameter image must not be undefined";
-        }
-
-        var elemStyle = window.getComputedStyle(enabledElement.element),
-
-            elWidth =  parseInt(elemStyle.width) || enabledElement.element.offsetWidth,
-            elHeight = parseInt(elemStyle.height) || enabledElement.element.offsetHeight,
-
-            scale = scaleToFit(elWidth, elHeight, image.width, image.height);
-        
+        }        
 
         var viewport = {
-            scale : scale,
+            scale : 1,
             translation : {
                 x : 0,
                 y : 0
@@ -51,13 +40,8 @@
         return viewport;
     }
 
-    function scaleToFit(elWidth, elHeight, imgWidth, imgHeight){
-        return Math.min(elWidth / imgWidth, elHeight / imgHeight);
-    }
-
     // module/private exports
     cornerstone.internal.getDefaultViewport = getDefaultViewport;
     cornerstone.getDefaultViewport = getDefaultViewport;
 
-    cornerstone.internal.scaleToFit = scaleToFit;
 }(cornerstone));

@@ -11,12 +11,16 @@
      * @returns {*}
      */
     function getViewport(element) {
-        var enabledElement = cornerstone.getEnabledElement(element);
+        return _getViewport( cornerstone.getEnabledElement(element) );
+    }
 
+    function _getViewport(enabledElement) {
         var viewport = enabledElement.viewport;
+
         if(viewport === undefined) {
             return undefined;
         }
+
         return {
             scale : viewport.scale,
             translation : {
@@ -39,5 +43,6 @@
 
     // module/private exports
     cornerstone.getViewport = getViewport;
+    cornerstone.internal.getViewport = _getViewport;
 
 }(cornerstone));

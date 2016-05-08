@@ -31,8 +31,9 @@
 
         enabledElement.image = image;
 
+
         if(enabledElement.viewport === undefined)
-            enabledElement.viewport = cornerstone.internal.getDefaultViewport(enabledElement, image);
+            enabledElement.viewport = cornerstone.internal.getDefaultViewport(image);
 
         // merge viewport
         if(viewport) {
@@ -43,6 +44,8 @@
                 }
             }
         }
+        //for reset we keep a copy of the viewport at this point 
+        enabledElement.initialViewport = cornerstone.internal.getViewport(enabledElement);
 
         if(enabledElement.canvas.width != image.width){
             enabledElement.canvas.width = image.width;
