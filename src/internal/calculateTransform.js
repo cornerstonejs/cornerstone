@@ -39,7 +39,7 @@
         }
 
         scale = scale || 1;
-        transform.scale( (viewport.hflip ? -1 : 1)*scale, (viewport.vflip ? -1 : 1)*scale );
+        transform.scale( (enabledElement.viewport.hflip ? -1 : 1)*scale, (enabledElement.viewport.vflip ? -1 : 1)*scale );
 
         // translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
         //transform.translate(-enabledElement.image.width / 2 , -enabledElement.image.height/ 2);
