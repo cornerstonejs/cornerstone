@@ -64,40 +64,13 @@ Key Features
  * Retrieval of images from different systems with different protocols via Image Loader plugin design
  * API support for changing viewport properties (e.g. ww/wc, zoom, pan, invert)
 
-Build System
-============
-
-This project uses grunt to build the software.
-
-Pre-requisites:
----------------
-
-NodeJs - [click to visit web site for installation instructions](http://nodejs.org).
-
-grunt-cli
-
-> npm install -g grunt-cli
-
-bower
-
-> npm install -g bower
-
-Common Tasks
-------------
-
-Update dependencies (after each pull):
-> npm install
-
-> bower install
-
-Running the build:
-> grunt
-
-Automatically running the build and unit tests after each source change:
-> grunt watch
 
 Links
 =====
+
+[Development Process](docs/developmentProcess.md)
+
+[Build System](docs/building.md)
 
 [View the wiki for documentation on the concepts and APIs](https://github.com/chafey/cornerstone/wiki)
 
