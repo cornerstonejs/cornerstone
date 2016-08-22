@@ -1,4 +1,4 @@
-/*! cornerstone - v0.9.1 - 2017-02-10 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.10.0 - 2017-02-11 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 if(typeof cornerstone === 'undefined'){
     cornerstone = {
         internal : {},
@@ -603,12 +603,12 @@ if(typeof cornerstone === 'undefined'){
 
         // If this is using a sharedCacheKey, decrement the cache size only
         // if it is the last imageId in the cache with this sharedCacheKey
-        if(cachedImages.sharedCacheKey) {
-          if(sharedCacheKeys[cachedImages.sharedCacheKey] === 1) {
+        if(cachedImage.sharedCacheKey) {
+          if(sharedCacheKeys[cachedImage.sharedCacheKey] === 1) {
             cacheSizeInBytes -= cachedImage.sizeInBytes;
-            delete sharedCacheKeys[cachedImages.sharedCacheKey];
+            delete sharedCacheKeys[cachedImage.sharedCacheKey];
           } else {
-            sharedCacheKeys[cachedImages.sharedCacheKey]--;
+            sharedCacheKeys[cachedImage.sharedCacheKey]--;
           }
         } else {
           cacheSizeInBytes -= cachedImage.sizeInBytes;
@@ -685,7 +685,7 @@ if(typeof cornerstone === 'undefined'){
 
     var unknownImageLoader;
 
-    function loadImageFromImageLoader(imageId) {
+    function loadImageFromImageLoader(imageId, options) {
         var colonIndex = imageId.indexOf(":");
         var scheme = imageId.substring(0, colonIndex);
         var loader = imageLoaders[scheme];
@@ -699,7 +699,7 @@ if(typeof cornerstone === 'undefined'){
                 return undefined;
             }
         }
-        imagePromise = loader(imageId);
+        imagePromise = loader(imageId, options);
 
         // broadcast an image loaded event once the image is loaded
         // This is based on the idea here: http://stackoverflow.com/questions/3279809/global-custom-events-in-jquery
@@ -710,10 +710,10 @@ if(typeof cornerstone === 'undefined'){
         return imagePromise;
     }
 
-    // Loads an image given an imageId and returns a promise which will resolve
+    // Loads an image given an imageId and optional priority and returns a promise which will resolve
     // to the loaded image object or fail if an error occurred.  The loaded image
     // is not stored in the cache
-    function loadImage(imageId) {
+    function loadImage(imageId, options) {
         if(imageId === undefined) {
             throw "loadImage: parameter imageId must not be undefined";
         }
@@ -723,7 +723,7 @@ if(typeof cornerstone === 'undefined'){
             return imagePromise;
         }
 
-        imagePromise = loadImageFromImageLoader(imageId);
+        imagePromise = loadImageFromImageLoader(imageId, options);
         if(imagePromise === undefined) {
             throw "loadImage: no image loader for imageId";
         }
@@ -731,10 +731,10 @@ if(typeof cornerstone === 'undefined'){
         return imagePromise;
     }
 
-    // Loads an image given an imageId and returns a promise which will resolve
+    // Loads an image given an imageId and optional priority and returns a promise which will resolve
     // to the loaded image object or fail if an error occurred.  The image is
     // stored in the cache
-    function loadAndCacheImage(imageId) {
+    function loadAndCacheImage(imageId, options) {
         if(imageId === undefined) {
             throw "loadAndCacheImage: parameter imageId must not be undefined";
         }
@@ -744,7 +744,7 @@ if(typeof cornerstone === 'undefined'){
             return imagePromise;
         }
 
-        imagePromise = loadImageFromImageLoader(imageId);
+        imagePromise = loadImageFromImageLoader(imageId, options);
         if(imagePromise === undefined) {
             throw "loadAndCacheImage: no image loader for imageId";
         }
@@ -1431,6 +1431,78 @@ if(typeof cornerstone === 'undefined'){
     // module exports
     cornerstone.invalidateImageId = invalidateImageId;
 }(cornerstone));
+(function($, cornerstone) {
+
+  'use strict';
+
+  // this module defines a way to access various metadata about an imageId.  This layer of abstraction exists
+  // so metadata can be provided in different ways (e.g. by parsing DICOM P10 or by a WADO-RS document)
+
+  var providers = [];
+
+  /**
+   * Adds a metadata provider with the specified priority
+   * @param provider
+   * @param priority
+   */
+  function addProvider(provider, priority) {
+    priority = priority || 0; // default priority
+    // find the right spot to insert this provider based on priority
+    for(var i=0; i < providers.length; i++) {
+      if(providers[i].priority >= priority) {
+        break;
+      }
+    }
+
+    // insert the decode task in the sorted position
+    providers.splice(i, 0, {
+      priority: priority,
+      provider: provider
+    });
+
+  }
+
+  /**
+   * Removes the specified provider
+   * @param provider
+   */
+  function removeProvider( provider) {
+    for(var i=0; i < providers.length; i++) {
+      if(providers[i].provider === provider) {
+        providers.splice(i, 1);
+        return;
+      }
+    }
+  }
+
+  /**
+   * Gets metadata from the registered metadata providers.  Will call each one from highest priority to lowest
+   * until one responds
+   *
+   * @param type
+   * @param imageId
+   * @returns {boolean}
+   */
+  function getMetaData(type, imageId) {
+    // invoke each provider in priority order until one returns something
+    for(var i=0; i < providers.length; i++) {
+      var result;
+      result = providers[i].provider(type, imageId);
+      if (result !== undefined) {
+        return result;
+      }
+    }
+  }
+
+  // module/private exports
+  cornerstone.metaData = {
+    addProvider: addProvider,
+    removeProvider: removeProvider,
+    get: getMetaData
+  };
+
+})($, cornerstone);
+
 /**
  * This module contains a helper function to covert page coordinates to pixel coordinates
  */
@@ -1991,7 +2063,7 @@ if(typeof cornerstone === 'undefined'){
         }
 
         var transform = cornerstone.internal.calculateTransform(enabledElement, scale);
-        context.setTransform(transform.m[0],transform.m[1],transform.m[2],transform.m[3],transform.m[4],transform.m[5],transform.m[6]);
+        context.setTransform(transform.m[0],transform.m[1],transform.m[2],transform.m[3],transform.m[4],transform.m[5]);
     }
 
     // Module exports

@@ -24,7 +24,7 @@
         }
 
         var transform = cornerstone.internal.calculateTransform(enabledElement, scale);
-        context.setTransform(transform.m[0],transform.m[1],transform.m[2],transform.m[3],transform.m[4],transform.m[5],transform.m[6]);
+        context.setTransform(transform.m[0],transform.m[1],transform.m[2],transform.m[3],transform.m[4],transform.m[5]);
     }
 
     // Module exports
