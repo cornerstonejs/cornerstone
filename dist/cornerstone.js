@@ -1,4 +1,4 @@
-/*! cornerstone - v0.10.0 - 2016-08-22 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.10.0 - 2016-08-30 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 if(typeof cornerstone === 'undefined'){
     cornerstone = {
         internal : {},
@@ -1443,18 +1443,18 @@ if(typeof cornerstone === 'undefined'){
   /**
    * Adds a metadata provider with the specified priority
    * @param provider
-   * @param priority
+   * @param priority - 0 is default/normal, > 0 is high, < 0 is low
    */
   function addProvider(provider, priority) {
     priority = priority || 0; // default priority
     // find the right spot to insert this provider based on priority
     for(var i=0; i < providers.length; i++) {
-      if(providers[i].priority >= priority) {
+      if(providers[i].priority <= priority) {
         break;
       }
     }
 
-    // insert the decode task in the sorted position
+    // insert the decode task at position i
     providers.splice(i, 0, {
       priority: priority,
       provider: provider
