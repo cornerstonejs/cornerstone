@@ -549,6 +549,7 @@ if(typeof cornerstone === 'undefined'){
 
         imagePromise.then(function(image) {
             cachedImage.loaded = true;
+            cachedImage.image = image;
 
             if (image.sizeInBytes === undefined) {
                 throw "putImagePromise: image does not have sizeInBytes property or";
@@ -668,6 +669,7 @@ if(typeof cornerstone === 'undefined'){
         getCacheInfo : getCacheInfo,
         purgeCache: purgeCache,
         cachedImages: cachedImages,
+        imageCache: imageCache,
         changeImageIdCacheSize: changeImageIdCacheSize
     };
 
