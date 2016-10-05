@@ -1,4 +1,4 @@
-/*! cornerstone - v0.10.0 - 2016-08-30 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.10.0 - 2016-10-05 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 if(typeof cornerstone === 'undefined'){
     cornerstone = {
         internal : {},
@@ -549,6 +549,7 @@ if(typeof cornerstone === 'undefined'){
 
         imagePromise.then(function(image) {
             cachedImage.loaded = true;
+            cachedImage.image = image;
 
             if (image.sizeInBytes === undefined) {
                 throw "putImagePromise: image does not have sizeInBytes property or";
@@ -668,6 +669,7 @@ if(typeof cornerstone === 'undefined'){
         getCacheInfo : getCacheInfo,
         purgeCache: purgeCache,
         cachedImages: cachedImages,
+        imageCache: imageCache,
         changeImageIdCacheSize: changeImageIdCacheSize
     };
 
