@@ -6,24 +6,21 @@
 
     "use strict";
 
-    var colorRenderCanvas = document.createElement('canvas');
-    var colorRenderCanvasContext;
-    var colorRenderCanvasData;
-
-    var lastRenderedImageId;
-    var lastRenderedViewport = {};
-
-    function initializeColorRenderCanvas(image)
+    function initializeColorRenderCanvas(enabledElement, image)
     {
+        var colorRenderCanvas = enabledElement.renderingTools.colorRenderCanvas;
         // Resize the canvas
         colorRenderCanvas.width = image.width;
         colorRenderCanvas.height = image.height;
 
         // get the canvas data so we can write to it directly
-        colorRenderCanvasContext = colorRenderCanvas.getContext('2d');
+        var colorRenderCanvasContext = colorRenderCanvas.getContext('2d');
         colorRenderCanvasContext.fillStyle = 'white';
         colorRenderCanvasContext.fillRect(0,0, colorRenderCanvas.width, colorRenderCanvas.height);
-        colorRenderCanvasData = colorRenderCanvasContext.getImageData(0,0,image.width, image.height);
+        var colorRenderCanvasData = colorRenderCanvasContext.getImageData(0,0,image.width, image.height);
+        
+        enabledElement.renderingTools.colorRenderCanvasContext = colorRenderCanvasContext;
+        enabledElement.renderingTools.colorRenderCanvasData = colorRenderCanvasData;
     }
 
 
@@ -47,6 +44,9 @@
 
     function doesImageNeedToBeRendered(enabledElement, image)
     {
+        var lastRenderedImageId = enabledElement.renderingTools.lastRenderedImageId;
+        var lastRenderedViewport = enabledElement.renderingTools.lastRenderedViewport;
+        
         if(image.imageId !== lastRenderedImageId ||
             lastRenderedViewport.windowCenter !== enabledElement.viewport.voi.windowCenter ||
             lastRenderedViewport.windowWidth !== enabledElement.viewport.voi.windowWidth ||
@@ -64,7 +64,17 @@
 
     function getRenderCanvas(enabledElement, image, invalidated)
     {
-
+        if (!enabledElement.renderingTools|| !enabledElement.renderingTools.colorRenderCanvas) {
+            enabledElement.renderingTools = {
+                colorRenderCanvas: document.createElement('canvas'),
+                colorRenderCanvasContext: null,
+                colorRenderCanvasData: null,
+                lastRenderedImageId: null,
+                lastRenderedViewport: null
+            };
+        }
+        var colorRenderCanvas = enabledElement.renderingTools.colorRenderCanvas;
+        
         // The ww/wc is identity and not inverted - get a canvas with the image rendered into it for
         // fast drawing
         if(enabledElement.viewport.voi.windowWidth === 255 &&
@@ -85,13 +95,15 @@
         // If our render canvas does not match the size of this image reset it
         // NOTE: This might be inefficient if we are updating multiple images of different
         // sizes frequently.
-        if(colorRenderCanvas.width !== image.width || colorRenderCanvas.height != image.height) {
-            initializeColorRenderCanvas(image);
+        if(colorRenderCanvas.width !== image.width || colorRenderCanvas.height !== image.height) {
+            initializeColorRenderCanvas(enabledElement, image);
         }
 
         // get the lut to use
         var colorLut = getLut(image, enabledElement.viewport);
 
+        var colorRenderCanvasData = enabledElement.renderingTools.colorRenderCanvasData;
+        var colorRenderCanvasContext = enabledElement.renderingTools.colorRenderCanvasContext;
         // the color image voi/invert has been modified - apply the lut to the underlying
         // pixel data and put it into the renderCanvas
         cornerstone.storedColorPixelDataToCanvasImageData(image, colorLut, colorRenderCanvasData.data);
@@ -142,13 +154,15 @@
 
         context.restore();
 
-        lastRenderedImageId = image.imageId;
+        enabledElement.renderingTools.lastRenderedImageId = image.imageId;
+        var lastRenderedViewport = {};
         lastRenderedViewport.windowCenter = enabledElement.viewport.voi.windowCenter;
         lastRenderedViewport.windowWidth = enabledElement.viewport.voi.windowWidth;
         lastRenderedViewport.invert = enabledElement.viewport.invert;
         lastRenderedViewport.rotation = enabledElement.viewport.rotation;
         lastRenderedViewport.hflip = enabledElement.viewport.hflip;
         lastRenderedViewport.vflip = enabledElement.viewport.vflip;
+        enabledElement.renderingTools.lastRenderedViewport = lastRenderedViewport;
     }
 
     // Module exports
