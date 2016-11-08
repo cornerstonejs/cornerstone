@@ -16,7 +16,7 @@
     var minPixelValue = image.minPixelValue;
 
     var mlutfn = cornerstone.internal.getModalityLUT(image.slope, image.intercept, modalityLUT);
-    var vlutfn = cornerstone.internal.getVOILUT(windowWidth, windowCenter, voiLUT);
+    var vlutfn = cornerstone.internal.getVOILUT(windowWidth, windowCenter, image.bitsStored, minPixelValue, maxPixelValue, voiLUT);
 
     var offset = 0;
     if(minPixelValue < 0) {
