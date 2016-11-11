@@ -59,7 +59,7 @@
             // Rescale based on slope and window settings
             'intensity = intensity * slope + intercept;'+
             'float center0 = wc - 0.5;'+
-            'float width0 = ww - 1.0;'+
+            'float width0 = max(ww, 1.0);' +
             'intensity = (intensity - center0) / width0 + 0.5;'+
 
             // Clamp intensity

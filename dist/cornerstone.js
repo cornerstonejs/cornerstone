@@ -223,7 +223,6 @@ if(typeof cornerstone === 'undefined'){
             image : undefined, // will be set once image is loaded
             invalid: false, // true if image needs to be drawn, false if not
             needsRedraw:true,
-            render: renderer,
             options: options,
             data : {}
         };
@@ -231,12 +230,6 @@ if(typeof cornerstone === 'undefined'){
 
         cornerstone.resize(element, true);
 
-        var renderFn;
-        if (el.render) {
-            renderFn = el.render;
-        } else {
-            renderFn = el.image.render;
-        }
 
         function draw() {
             if (el.canvas === undefined){
@@ -244,7 +237,7 @@ if(typeof cornerstone === 'undefined'){
             }
             if (el.needsRedraw && el.image !== undefined){
                 var start = new Date();
-                renderFn(el, el.invalid);
+                el.image.render(el, el.invalid);
 
                 var context = el.canvas.getContext('2d');
 
@@ -921,6 +914,7 @@ if(typeof cornerstone === 'undefined'){
         if (invalidated){
             enabledElement.invalid = true;
         }
+
     }
 
     // Module exports
@@ -2369,7 +2363,7 @@ if(typeof cornerstone === 'undefined'){
 
     function initShaders() {
         for (var id in cornerstone.webGL.shaders) {
-            console.log("WEBGL: Loading shader", id);
+            //console.log("WEBGL: Loading shader", id);
             var shader = cornerstone.webGL.shaders[ id ];
             shader.attributes = {};
             shader.uniforms = {};
@@ -2389,14 +2383,14 @@ if(typeof cornerstone === 'undefined'){
 
     function initRenderer() {
         if (cornerstone.webGL.isWebGLInitialized === true) {
-            console.log("WEBGL Renderer already initialized");
+            //console.log("WEBGL Renderer already initialized");
             return;
         }
 
         if (initWebGL(renderCanvas)) {
             initBuffers();
             initShaders();
-            console.log("WEBGL Renderer initialized!");
+            //console.log("WEBGL Renderer initialized!");
             cornerstone.webGL.isWebGLInitialized = true;
         }
     }
@@ -2419,7 +2413,7 @@ if(typeof cornerstone === 'undefined'){
         cornerstone.webGL.isWebGLInitialized = false;
         cornerstone.webGL.textureCache.purgeCache();
         initRenderer();
-        console.log('WebGL Context Restored.');
+        //console.log('WebGL Context Restored.');
     }
 
     function initWebGL(canvas) {
@@ -2892,7 +2886,7 @@ if(typeof cornerstone === 'undefined'){
             
             // Apply window settings
             'float center0 = wc - 0.5 - minPixelValue;'+
-            'float width0 = ww - 1.0;'+
+            'float width0 = max(ww, 1.0);' +
             'color = (color - center0) / width0 + 0.5;'+
 
             // RGBA output
@@ -2967,7 +2961,7 @@ if(typeof cornerstone === 'undefined'){
             // Rescale based on slope and window settings
             'intensity = intensity * slope + intercept;'+
             'float center0 = wc - 0.5;'+
-            'float width0 = ww - 1.0;'+
+            'float width0 = max(ww, 1.0);' +
             'intensity = (intensity - center0) / width0 + 0.5;'+
 
             // Clamp intensity

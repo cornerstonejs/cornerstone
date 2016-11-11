@@ -71,7 +71,7 @@
             
             // Apply window settings
             'float center0 = wc - 0.5 - minPixelValue;'+
-            'float width0 = ww - 1.0;'+
+            'float width0 = max(ww, 1.0);' +
             'color = (color - center0) / width0 + 0.5;'+
 
             // RGBA output

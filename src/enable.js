@@ -37,7 +37,6 @@
             image : undefined, // will be set once image is loaded
             invalid: false, // true if image needs to be drawn, false if not
             needsRedraw:true,
-            render: renderer,
             options: options,
             data : {}
         };
@@ -45,12 +44,6 @@
 
         cornerstone.resize(element, true);
 
-        var renderFn;
-        if (el.render) {
-            renderFn = el.render;
-        } else {
-            renderFn = el.image.render;
-        }
 
         function draw() {
             if (el.canvas === undefined){
@@ -58,7 +51,7 @@
             }
             if (el.needsRedraw && el.image !== undefined){
                 var start = new Date();
-                renderFn(el, el.invalid);
+                el.image.render(el, el.invalid);
 
                 var context = el.canvas.getContext('2d');
 
