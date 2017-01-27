@@ -50,11 +50,12 @@
         // remove images as necessary
         while(cacheSizeInBytes > maximumSizeInBytes) {
             var lastCachedImage = cachedImages[cachedImages.length - 1];
-            cacheSizeInBytes -= lastCachedImage.sizeInBytes;
-            delete imageCache[lastCachedImage.imageId];
+            var imageId = lastCachedImage.imageId;
+
             lastCachedImage.imagePromise.reject();
-            cachedImages.pop();
-            $(cornerstone).trigger('CornerstoneImageCachePromiseRemoved', {imageId: lastCachedImage.imageId});
+            removeImagePromise(imageId);
+
+            $(cornerstone).trigger('CornerstoneImageCachePromiseRemoved', {imageId: imageId});
         }
 
         var cacheInfo = cornerstone.imageCache.getCacheInfo();
@@ -150,11 +151,11 @@
             sharedCacheKeys[cachedImage.sharedCacheKey]--;
           }
         } else {
-          cacheSizeInBytes -= cachedImage.sizeInBytes;
+            cacheSizeInBytes -= cachedImage.sizeInBytes;
         }
-        delete imageCache[imageId];
 
         decache(cachedImage.imagePromise, cachedImage.imageId);
+        delete imageCache[imageId];
 
         return cachedImage.imagePromise;
     }
@@ -167,24 +168,23 @@
         };
     }
 
+    // This method should only be called by `removeImagePromise` because it's
+    // the one that knows how to deal with shared cache keys and cache size.
     function decache(imagePromise, imageId) {
-      imagePromise.then(function(image) {
-        if(image.decache) {
-          image.decache();
-        }
-        imagePromise.reject();
-        delete imageCache[imageId];
-      }).always(function() {
-        delete imageCache[imageId];
-      });
+        imagePromise.then(function(image) {
+            if(image.decache) {
+                image.decache();
+            }
+        }).always(function() {
+            delete imageCache[imageId];
+        });
     }
 
     function purgeCache() {
         while (cachedImages.length > 0) {
-          var removedCachedImage = cachedImages.pop();
-          decache(removedCachedImage.imagePromise, removedCachedImage.imageId);
+            var removedCachedImage = cachedImages[0];
+            removeImagePromise(removedCachedImage.imageId);
         }
-        cacheSizeInBytes = 0;
     }
 
     function changeImageIdCacheSize(imageId, newCacheSize) {
