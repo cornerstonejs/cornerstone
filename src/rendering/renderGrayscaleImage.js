@@ -37,7 +37,7 @@
         return false;
       }
       // check the unique ids
-      return (a.id !== b.id)
+      return (a.id === b.id)
     }
 
     function getLut(image, viewport, invalidated)
