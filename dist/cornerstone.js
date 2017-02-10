@@ -1,4 +1,4 @@
-/*! cornerstone - v0.9.0 - 2016-02-03 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.9.0 - 2016-02-11 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 if(typeof cornerstone === 'undefined'){
     cornerstone = {
         internal : {},
@@ -101,8 +101,84 @@ if(typeof cornerstone === 'undefined'){
         cornerstone.updateImage(element);
     }
 
+     /*
+        Return a canvas with the image displayed on
+        Statically means 
+            - we keep nothing on memory (no cache, no enabled element etc...)
+            - we won't apply any changes on the image
+
+        @param canvas
+        @param image
+        @param width width of the final canvas
+        @param height height of the final canvas
+        @param viewport 
+
+        if width is undefined or equal to 0 it will be computed from image ratio and height
+        same for height.
+        if both width and height are undefined or equals to 0, we'll use image size.
+     */
+    function getImageCanvas(image, width, height, viewport){
+        if(image === undefined) {
+            throw "displayStaticImage: parameters 'canvas' and 'image' cannot be undefined";
+        }
+
+        var imgWidth = image.width,
+            imgHeight = image.height;
+        
+        if( !width && !height){
+            width = image.width;
+            height = image.height;
+        }
+        //at least one is non-null
+        else{
+            if(!width)
+                width = height * imgWidth / imgHeight;
+            else if(!height)
+                height = width * imgHeight / imgWidth;
+        }
+
+        var canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+
+        var vp = cornerstone.internal.getDefaultViewport(canvas, image);
+        if( viewport )
+            $.extend(vp, viewport);
+
+        cornerstone.internal.drawImage({
+            canvas : canvas,
+            viewport : vp,
+            image: image
+        });
+
+        return canvas;
+    }
+
+   /*
+        return an <image> element
+        @param opt object list of option which may contain :
+            viewport:       viewport to apply to the srcImage
+            
+            width:          width of the imageElement default width of srcImage
+            height:         height of the imageElement default height of srcImage
+            imageType:      type of the imageElement @see canvas.toDataURL()
+            imageQuality:   quality of the imageElement @see canvas.toDataURL()
+     */
+    function getImageElement(srcImage, opt ){
+        opt = opt || {};
+
+        var img = document.createElement('img');
+        img.src = getImageCanvas(srcImage, opt.width, opt.height, opt.viewport)
+            .toDataURL(opt.imageType, opt.imageQuality);
+
+        return img;
+    }
+
     // module/private exports
     cornerstone.displayImage = displayImage;
+    cornerstone.getImageCanvas = getImageCanvas;
+    cornerstone.getImageElement = getImageElement;
+
 }($, cornerstone));
 /**
  * This module is responsible for immediately drawing an enabled element
@@ -280,6 +356,10 @@ if(typeof cornerstone === 'undefined'){
       }
     }
 
+    function scaleToFit(elWidth, elHeight, imgWidth, imgHeight){
+        return Math.min(elWidth / imgWidth, elHeight / imgHeight);
+    }
+
     /**
      * Adjusts an images scale and center so the image is centered and completely visible
      * @param element
@@ -289,21 +369,15 @@ if(typeof cornerstone === 'undefined'){
         var enabledElement = cornerstone.getEnabledElement(element);
         var imageSize = getImageSize(enabledElement);
 
-        var verticalScale = enabledElement.canvas.height / imageSize.height;
-        var horizontalScale= enabledElement.canvas.width / imageSize.width;
-        if(horizontalScale < verticalScale) {
-          enabledElement.viewport.scale = horizontalScale;
-        }
-        else
-        {
-          enabledElement.viewport.scale = verticalScale;
-        }
+        enabledElement.viewport.scale = scaleToFit(enabledElement.canvas.width, enabledElement.canvas.height, imageSize.width, imageSize.height);
+        
         enabledElement.viewport.translation.x = 0;
         enabledElement.viewport.translation.y = 0;
         cornerstone.updateImage(element);
     }
 
     cornerstone.fitToWindow = fitToWindow;
+    cornerstone.internal.scaleToFit = scaleToFit;
 }(cornerstone));
 
 /**
@@ -1033,15 +1107,9 @@ if(typeof cornerstone === 'undefined'){
             voiLUT: image.voiLUT
         };
 
-        // fit image to window
-        var verticalScale = canvas.height / image.rows;
-        var horizontalScale= canvas.width / image.columns;
-        if(horizontalScale < verticalScale) {
-            viewport.scale = horizontalScale;
-        }
-        else {
-            viewport.scale = verticalScale;
-        }
+        // fit image to window   
+        viewport.scale = cornerstone.internal.scaleToFit( canvas.width, canvas.height, image.columns, image.rows );
+        
         return viewport;
     }
 

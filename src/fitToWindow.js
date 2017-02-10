@@ -20,6 +20,10 @@
       }
     }
 
+    function scaleToFit(elWidth, elHeight, imgWidth, imgHeight){
+        return Math.min(elWidth / imgWidth, elHeight / imgHeight);
+    }
+
     /**
      * Adjusts an images scale and center so the image is centered and completely visible
      * @param element
@@ -29,19 +33,13 @@
         var enabledElement = cornerstone.getEnabledElement(element);
         var imageSize = getImageSize(enabledElement);
 
-        var verticalScale = enabledElement.canvas.height / imageSize.height;
-        var horizontalScale= enabledElement.canvas.width / imageSize.width;
-        if(horizontalScale < verticalScale) {
-          enabledElement.viewport.scale = horizontalScale;
-        }
-        else
-        {
-          enabledElement.viewport.scale = verticalScale;
-        }
+        enabledElement.viewport.scale = scaleToFit(enabledElement.canvas.width, enabledElement.canvas.height, imageSize.width, imageSize.height);
+        
         enabledElement.viewport.translation.x = 0;
         enabledElement.viewport.translation.y = 0;
         cornerstone.updateImage(element);
     }
 
     cornerstone.fitToWindow = fitToWindow;
+    cornerstone.internal.scaleToFit = scaleToFit;
 }(cornerstone));
