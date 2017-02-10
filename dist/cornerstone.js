@@ -1,4 +1,4 @@
-/*! cornerstone - v0.9.0 - 2016-02-03 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.9.1 - 2017-02-10 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 if(typeof cornerstone === 'undefined'){
     cornerstone = {
         internal : {},
@@ -1691,7 +1691,7 @@ if(typeof cornerstone === 'undefined'){
         return false;
       }
       // check the unique ids
-      return (a.id !== b.id)
+      return (a.id === b.id)
     }
 
     function getLut(image, viewport, invalidated)
