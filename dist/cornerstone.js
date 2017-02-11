@@ -1,4 +1,4 @@
-/*! cornerstone - v0.10.0 - 2017-02-11 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.10.1 - 2017-02-11 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 if(typeof cornerstone === 'undefined'){
     cornerstone = {
         internal : {},
@@ -174,7 +174,7 @@ if(typeof cornerstone === 'undefined'){
         for(var i=0;i < enabledElements.length; i++) {
             var ee = enabledElements[i];
             if(ee.invalid === true) {
-                cornerstone.drawImage(ee);
+                cornerstone.drawImage(ee, true);
             }
         }
     }
@@ -182,6 +182,7 @@ if(typeof cornerstone === 'undefined'){
     // Module exports
     cornerstone.drawInvalidated = drawInvalidated;
 }($, cornerstone));
+
 /**
  * This module is responsible for enabling an element to display images with cornerstone
  */
