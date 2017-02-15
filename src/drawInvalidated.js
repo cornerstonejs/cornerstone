@@ -15,7 +15,7 @@
         for(var i=0;i < enabledElements.length; i++) {
             var ee = enabledElements[i];
             if(ee.invalid === true) {
-                cornerstone.drawImage(ee);
+                cornerstone.drawImage(ee, true);
             }
         }
     }

@@ -64,40 +64,13 @@ Key Features
  * Retrieval of images from different systems with different protocols via Image Loader plugin design
  * API support for changing viewport properties (e.g. ww/wc, zoom, pan, invert)
 
-Build System
-============
-
-This project uses grunt to build the software.
-
-Pre-requisites:
----------------
-
-NodeJs - [click to visit web site for installation instructions](http://nodejs.org).
-
-grunt-cli
-
-> npm install -g grunt-cli
-
-bower
-
-> npm install -g bower
-
-Common Tasks
-------------
-
-Update dependencies (after each pull):
-> npm install
-
-> bower install
-
-Running the build:
-> grunt
-
-Automatically running the build and unit tests after each source change:
-> grunt watch
 
 Links
 =====
+
+[Development Process](docs/developmentProcess.md)
+
+[Build System](docs/building.md)
 
 [View the wiki for documentation on the concepts and APIs](https://github.com/chafey/cornerstone/wiki)
 
@@ -105,13 +78,11 @@ Links
 
 [View Backlog](docs/backlog.md)
 
-[comp.protocols.dicom thread](https://groups.google.com/forum/#!topic/comp.protocols.dicom/_2fMh69GdAM)
-
-[Trello](https://trello.com/b/tGTDIyt4/cornerstone)
+[2014 comp.protocols.dicom thread that started this project](https://groups.google.com/forum/#!topic/comp.protocols.dicom/_2fMh69GdAM)
 
 [CornerstoneTools](https://github.com/chafey/cornerstoneTools) - A library of common tools that can be used with Cornerstone
 
-[CornerstoneWADOImageLoader ](https://github.com/chafey/cornerstoneWADOImageLoader) - A Cornerstone Image Loader that works with WADO
+[CornerstoneWADOImageLoader ](https://github.com/chafey/cornerstoneWADOImageLoader) - A Cornerstone Image Loader that works with WADO-URI, WADO-RS and DICOM P10 files
 
 [dicomParser ](https://github.com/chafey/dicomParser) - A JavaScript library designed to parse DICOM for web browsers
 
@@ -184,14 +155,11 @@ approach is that the code base is smaller and easier to understand since it is f
 thing.  Tools are provided using the separate [CornerstoneTools](https://github.com/chafey/cornerstoneTools)
 if desired.
 
-_Why does this library require HTML5 canvas when IE8 is the main browser used in healthcare?_
+_Why doesn't this library support older browsers like IE8?_
 
-The fact that IE8 is the most popular commonly used web browser in healthcare right now is a temporary
-situation.  It is expected that 50% of the industry will have HTML5 based web browsers deployed by the end
-of 2015 and 90% by 2017.  The library made a tradeoff to focus on the future platform to keep the code base
-simple and avoid compromises related to older browser technology.  Note that it may be possible to get
-this library to work on IE8 using [excanvas](https://code.google.com/p/explorercanvas/) but I haven't tried
-it yet.
+Much of the performance in this library is possible due to utilizing modern web features such as HTML5 canvas,
+high performance javascript engines and WebGL.  These feature are not avaialble in IE8 and there are no suitable
+polyfills available.  Sorry, upgrade your browser.
 
 _Why doesn't this library support stacks of images?_
 
@@ -208,8 +176,10 @@ This library would be responsible for displaying the rendered image to the user.
 no knowledge of 3D image space.  It will probably make sense to have several layers on top of this library
 to provide 3D functionality.  For example, one layer that has a 3D viewport with properties such as transformation
 matrix, slice thickness, transfer function/LUT, segmentation masks, etc.  And another 3D tools layer that provides
-various tools on top of the 3d viewport (rotate, zoom, segment, scroll, etc).  I do have a working 3D server that
-is integrated with cornerstone but am keeping the code closed for now (this may change in the future - TBD).
+various tools on top of the 3d viewport (rotate, zoom, segment, scroll, etc).
+
+OHIF/Cornerstone is working with the 3DSlicer project to integrate the two.  I also expect to implement
+client side MPR at some point as the browsers seem to be handling large memory much better.
 
 _Why did you add jQuery as a dependency?_
 
@@ -238,15 +208,9 @@ _Will you add feature XYZ for me?_
 If it is in the roadmap, I intend to implement it some day - probably when I actually need it.  If you really need
 something now and are willing to pay for it, try posting on the cornerstone platform google group
 
-_How mature is Cornerstone?_
-
-Each repository is at a different level of maturity.  There are at least 50 image viewer projects using Cornerstone
-and the feedback has been consistently strong about the architecture, design and quality.  The cornerstoneTools library
-is the least mature from a framework and breadth of functionality perspective - but the implemented features work well.
-
 Copyright
 =========
 
-Copyright 2015 Chris Hafey [chafey@gmail.com](mailto:chafey@gmail.com)
+Copyright 2016 Chris Hafey [chafey@gmail.com](mailto:chafey@gmail.com)
 
 

@@ -87,6 +87,7 @@
 
         imagePromise.then(function(image) {
             cachedImage.loaded = true;
+            cachedImage.image = image;
 
             if (image.sizeInBytes === undefined) {
                 throw "putImagePromise: image does not have sizeInBytes property or";
@@ -141,12 +142,12 @@
 
         // If this is using a sharedCacheKey, decrement the cache size only
         // if it is the last imageId in the cache with this sharedCacheKey
-        if(cachedImages.sharedCacheKey) {
-          if(sharedCacheKeys[cachedImages.sharedCacheKey] === 1) {
+        if(cachedImage.sharedCacheKey) {
+          if(sharedCacheKeys[cachedImage.sharedCacheKey] === 1) {
             cacheSizeInBytes -= cachedImage.sizeInBytes;
-            delete sharedCacheKeys[cachedImages.sharedCacheKey];
+            delete sharedCacheKeys[cachedImage.sharedCacheKey];
           } else {
-            sharedCacheKeys[cachedImages.sharedCacheKey]--;
+            sharedCacheKeys[cachedImage.sharedCacheKey]--;
           }
         } else {
           cacheSizeInBytes -= cachedImage.sizeInBytes;
@@ -206,6 +207,7 @@
         getCacheInfo : getCacheInfo,
         purgeCache: purgeCache,
         cachedImages: cachedImages,
+        imageCache: imageCache,
         changeImageIdCacheSize: changeImageIdCacheSize
     };
 
