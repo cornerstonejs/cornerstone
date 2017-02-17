@@ -12,28 +12,11 @@
      * @param invalidated - true if pixel data has been invalidated and cached rendering should not be used
      */
     function drawImage(enabledElement, invalidated) {
+        enabledElement.needsRedraw = true;
+        if (invalidated){
+            enabledElement.invalid = true;
+        }
 
-        var start = new Date();
-
-        enabledElement.image.render(enabledElement, invalidated);
-
-        var context = enabledElement.canvas.getContext('2d');
-
-        var end = new Date();
-        var diff = end - start;
-        //console.log(diff + ' ms');
-
-        var eventData = {
-            viewport : enabledElement.viewport,
-            element : enabledElement.element,
-            image : enabledElement.image,
-            enabledElement : enabledElement,
-            canvasContext: context,
-            renderTimeInMs : diff
-        };
-
-        $(enabledElement.element).trigger("CornerstoneImageRendered", eventData);
-        enabledElement.invalid = false;
     }
 
     // Module exports
