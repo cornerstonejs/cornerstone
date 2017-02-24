@@ -12,6 +12,7 @@
     function invalidate(element) {
         var enabledElement = cornerstone.getEnabledElement(element);
         enabledElement.invalid = true;
+        enabledElement.needsRedraw = true;
         var eventData = {
             element: element
         };

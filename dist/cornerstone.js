@@ -1,4 +1,4 @@
-/*! cornerstone - v0.10.2 - 2017-02-21 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.10.3 - 2017-02-24 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 if(typeof cornerstone === 'undefined'){
     cornerstone = {
         internal : {},
@@ -1473,6 +1473,7 @@ if(typeof cornerstone === 'undefined'){
     function invalidate(element) {
         var enabledElement = cornerstone.getEnabledElement(element);
         enabledElement.invalid = true;
+        enabledElement.needsRedraw = true;
         var eventData = {
             element: element
         };
