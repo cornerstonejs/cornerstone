@@ -2,7 +2,7 @@
  * This module is responsible for drawing invalidated enabled elements
  */
 
-(function ($, cornerstone) {
+(function (cornerstone) {
 
     "use strict";
 
@@ -22,4 +22,4 @@
 
     // Module exports
     cornerstone.drawInvalidated = drawInvalidated;
-}($, cornerstone));
+}(cornerstone));

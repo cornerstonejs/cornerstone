@@ -17,7 +17,8 @@
                 var eventData = {
                     element : element
                 };
-                $(element).trigger("CornerstoneElementDisabled", eventData);
+                var event = new CustomEvent("CornerstoneElementDisabled", {detail: eventData});
+                element.dispatchEvent(event);
 
                 // remove the child dom elements that we created (e.g.canvas)
                 enabledElements[i].element.removeChild(enabledElements[i].canvas);

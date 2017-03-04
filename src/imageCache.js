@@ -29,6 +29,7 @@
     }
 
     function purgeCacheIfNecessary() {
+
         // if max cache size has not been exceeded, do nothing
         if (cacheSizeInBytes <= maximumSizeInBytes) {
             return;
@@ -54,11 +55,11 @@
             delete imageCache[lastCachedImage.imageId];
             lastCachedImage.imagePromise.reject();
             cachedImages.pop();
-            $(cornerstone).trigger('CornerstoneImageCachePromiseRemoved', {imageId: lastCachedImage.imageId});
+            cornerstone.dispatchEvent("CornerstoneImageCachePromiseRemoved", {imageId: lastCachedImage.imageId});
         }
 
         var cacheInfo = cornerstone.imageCache.getCacheInfo();
-        $(cornerstone).trigger('CornerstoneImageCacheFull', cacheInfo);
+        cornerstone.dispatchEvent("CornerstoneImageCacheFull", cacheInfo);
     }
 
     function putImagePromise(imageId, imagePromise) {

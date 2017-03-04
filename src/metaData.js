@@ -1,4 +1,4 @@
-(function($, cornerstone) {
+(function(cornerstone) {
 
   'use strict';
 
@@ -68,4 +68,4 @@
     get: getMetaData
   };
 
-})($, cornerstone);
+})(cornerstone);
