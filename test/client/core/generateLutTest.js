@@ -1,9 +1,9 @@
 
 (function(csc) {
-    module("cornerstoneCore.generateLut");
+    QUnit.module("cornerstoneCore.generateLut");
 
 
-     test("min pixel < 0", function() {
+     QUnit.test("min pixel < 0", function(assert) {
         // Arrange
         var image = {
             minPixelValue : -1,
@@ -18,13 +18,13 @@
         csc.generateLut(image, 2, 0, false);
 
         // Assert
-        equal(image.lut.length, 3, "lut length is 3");
-        equal(image.lut[0], 0, "lut entry -1 is 0");
-        equal(image.lut[1], 128, "lut entry 0 is 128");
-        equal(image.lut[2], 255, "lut entry 1 is 255");
+        assert.equal(image.lut.length, 3, "lut length is 3");
+        assert.equal(image.lut[0], 0, "lut entry -1 is 0");
+        assert.equal(image.lut[1], 128, "lut entry 0 is 128");
+        assert.equal(image.lut[2], 255, "lut entry 1 is 255");
     });
 
-    test("min pixel = 0", function() {
+    QUnit.test("min pixel = 0", function(assert) {
         // Arrange
         var image = {
             minPixelValue : 0,
@@ -39,13 +39,13 @@
         csc.generateLut(image, 2, 1, false);
 
         // Assert
-        equal(image.lut.length, 3, "lut length is 3");
-        equal(image.lut[0], 0, "lut entry 0 is 0");
-        equal(image.lut[1], 128, "lut entry 1 is 128");
-        equal(image.lut[2], 255, "lut entry 2 is 255");
+        assert.equal(image.lut.length, 3, "lut length is 3");
+        assert.equal(image.lut[0], 0, "lut entry 0 is 0");
+        assert.equal(image.lut[1], 128, "lut entry 1 is 128");
+        assert.equal(image.lut[2], 255, "lut entry 2 is 255");
     });
 
-    test("min pixel > 0", function() {
+    QUnit.test("min pixel > 0", function(assert) {
         // Arrange
         var image = {
             minPixelValue : 1,
@@ -60,14 +60,14 @@
         csc.generateLut(image, 2, 2, false);
 
         // Assert
-        equal(image.lut.length, 4, "lut length is 4");
-        equal(image.lut[0], 0, "lut entry 0 is 0");
-        equal(image.lut[1], 0, "lut entry 1 is 0");
-        equal(image.lut[2], 128, "lut entry 2 is 128");
-        equal(image.lut[3], 255, "lut entry 3 is 255");
+        assert.equal(image.lut.length, 4, "lut length is 4");
+        assert.equal(image.lut[0], 0, "lut entry 0 is 0");
+        assert.equal(image.lut[1], 0, "lut entry 1 is 0");
+        assert.equal(image.lut[2], 128, "lut entry 2 is 128");
+        assert.equal(image.lut[3], 255, "lut entry 3 is 255");
     });
 
-    test("slope and intercept", function() {
+    QUnit.test("slope and intercept", function(assert) {
         // Arrange
         var image = {
             minPixelValue : 0,
@@ -82,10 +82,10 @@
         csc.generateLut(image, 4, 3, false);
 
         // Assert
-        equal(image.lut.length, 3, "lut length is 3");
-        equal(image.lut[0], 0, "lut entry 0 is 0");
-        equal(image.lut[1], 128, "lut entry 1 is 128");
-        equal(image.lut[2], 255, "lut entry 2 is 255");
+        assert.equal(image.lut.length, 3, "lut length is 3");
+        assert.equal(image.lut[0], 0, "lut entry 0 is 0");
+        assert.equal(image.lut[1], 128, "lut entry 1 is 128");
+        assert.equal(image.lut[2], 255, "lut entry 2 is 255");
     });
 
 

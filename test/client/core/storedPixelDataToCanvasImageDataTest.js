@@ -1,8 +1,8 @@
 
 (function(csc) {
-    module("cornerstoneCore.storedPixelDataToCanvasImageData");
+    QUnit.module("cornerstoneCore.storedPixelDataToCanvasImageData");
 
-    test("storedPixelDataToCanvasImageData minPixel = 0", function() {
+    QUnit.test("storedPixelDataToCanvasImageData minPixel = 0", function(assert) {
         // Arrange
         var lut = [0,255];
         var canvasImageDataData = [255,255,255,128, 255,255,255,128];
@@ -18,17 +18,17 @@
         csc.storedPixelDataToCanvasImageData(image, lut, canvasImageDataData);
 
         // Assert
-        equal(canvasImageDataData[0], 255, "R1");
-        equal(canvasImageDataData[1], 255, "G1");
-        equal(canvasImageDataData[2], 255, "B1");
-        equal(canvasImageDataData[3], 0, "A1");
-        equal(canvasImageDataData[4], 255, "R2");
-        equal(canvasImageDataData[5], 255, "G2");
-        equal(canvasImageDataData[6], 255, "B2");
-        equal(canvasImageDataData[7], 255, "A2");
+        assert.equal(canvasImageDataData[0], 255, "R1");
+        assert.equal(canvasImageDataData[1], 255, "G1");
+        assert.equal(canvasImageDataData[2], 255, "B1");
+        assert.equal(canvasImageDataData[3], 0, "A1");
+        assert.equal(canvasImageDataData[4], 255, "R2");
+        assert.equal(canvasImageDataData[5], 255, "G2");
+        assert.equal(canvasImageDataData[6], 255, "B2");
+        assert.equal(canvasImageDataData[7], 255, "A2");
     });
 
-    test("storedPixelDataToCanvasImageData minPixel < 0", function() {
+    QUnit.test("storedPixelDataToCanvasImageData minPixel < 0", function(assert) {
         // Arrange
         var lut = [0,255];
         var canvasImageDataData = [255,255,255,128, 255,255,255,128];
@@ -44,17 +44,17 @@
         csc.storedPixelDataToCanvasImageData(image, lut, canvasImageDataData);
 
         // Assert
-        equal(canvasImageDataData[0], 255, "R1");
-        equal(canvasImageDataData[1], 255, "G1");
-        equal(canvasImageDataData[2], 255, "B1");
-        equal(canvasImageDataData[3], 0, "A1");
-        equal(canvasImageDataData[4], 255, "R2");
-        equal(canvasImageDataData[5], 255, "G2");
-        equal(canvasImageDataData[6], 255, "B2");
-        equal(canvasImageDataData[7], 255, "A2");
+        assert.equal(canvasImageDataData[0], 255, "R1");
+        assert.equal(canvasImageDataData[1], 255, "G1");
+        assert.equal(canvasImageDataData[2], 255, "B1");
+        assert.equal(canvasImageDataData[3], 0, "A1");
+        assert.equal(canvasImageDataData[4], 255, "R2");
+        assert.equal(canvasImageDataData[5], 255, "G2");
+        assert.equal(canvasImageDataData[6], 255, "B2");
+        assert.equal(canvasImageDataData[7], 255, "A2");
     });
 
-    test("storedPixelDataToCanvasImageData minPixel > 0", function() {
+    QUnit.test("storedPixelDataToCanvasImageData minPixel > 0", function(assert) {
         // Arrange
         var lut = [];
         lut[1] = 0;
@@ -72,14 +72,14 @@
         csc.storedPixelDataToCanvasImageData(image, lut, canvasImageDataData);
 
         // Assert
-        equal(canvasImageDataData[0], 255, "R1");
-        equal(canvasImageDataData[1], 255, "G1");
-        equal(canvasImageDataData[2], 255, "B1");
-        equal(canvasImageDataData[3], 0, "A1");
-        equal(canvasImageDataData[4], 255, "R2");
-        equal(canvasImageDataData[5], 255, "G2");
-        equal(canvasImageDataData[6], 255, "B2");
-        equal(canvasImageDataData[7], 255, "A2");
+        assert.equal(canvasImageDataData[0], 255, "R1");
+        assert.equal(canvasImageDataData[1], 255, "G1");
+        assert.equal(canvasImageDataData[2], 255, "B1");
+        assert.equal(canvasImageDataData[3], 0, "A1");
+        assert.equal(canvasImageDataData[4], 255, "R2");
+        assert.equal(canvasImageDataData[5], 255, "G2");
+        assert.equal(canvasImageDataData[6], 255, "B2");
+        assert.equal(canvasImageDataData[7], 255, "A2");
     });
 
 })(cornerstone);
