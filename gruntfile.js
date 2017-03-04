@@ -11,10 +11,6 @@ module.exports = function(grunt) {
             }
         },
         concat: {
-            build: {
-                src : ['src/header.js','src/**/*.js'],
-                dest: 'build/built.js'
-            },
             css: {
                 options: {
                     stripBanners: true,
@@ -54,7 +50,10 @@ module.exports = function(grunt) {
         jshint: {
             files: [
                 'src/*.js'
-            ]
+            ],
+            options: {
+              esversion: 6
+            }
         },
         watch: {
             scripts: {
@@ -76,6 +75,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('buildAll', ['concat', 'uglify', 'jshint', 'cssmin', 'qunit']);
     grunt.registerTask('default', ['clean', 'buildAll']);
+    //grunt.registerTask('default', ['babel']);
 };
 
 

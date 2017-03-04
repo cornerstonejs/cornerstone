@@ -2,21 +2,15 @@
  * This module is responsible for returning the currently displayed image for an element
  */
 
-(function (cornerstone) {
+import { getEnabledElement } from './enabledElements.js';
 
-    "use strict";
-
-    /**
-     * returns the currently displayed image for an element or undefined if no image has
-     * been displayed yet
-     *
-     * @param element
-     */
-    function getImage(element) {
-        var enabledElement = cornerstone.getEnabledElement(element);
-        return enabledElement.image;
-    }
-
-    // Module exports
-    cornerstone.getImage = getImage;
-}(cornerstone));
+/**
+ * returns the currently displayed image for an element or undefined if no image has
+ * been displayed yet
+ *
+ * @param element
+ */
+export function getImage(element) {
+    var enabledElement = getEnabledElement(element);
+    return enabledElement.image;
+}

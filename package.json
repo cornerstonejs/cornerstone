@@ -17,9 +17,12 @@
   "scripts": {
     "start": "grunt",
     "watch": "grunt watch",
+    "build": "rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-latest": "^6.22.0",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "^1.0.0",
@@ -31,6 +34,8 @@
     "grunt-contrib-uglify": "^2.1.0",
     "grunt-contrib-watch": "^1.0.0",
     "load-grunt-tasks": "^3.5.2",
-    "qunitjs": "^2.1.1"
+    "qunitjs": "^2.1.1",
+    "rollup": "^0.41.4",
+    "rollup-plugin-babel": "^2.7.1"
   }
 }

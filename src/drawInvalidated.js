@@ -2,24 +2,19 @@
  * This module is responsible for drawing invalidated enabled elements
  */
 
-(function (cornerstone) {
+import { getEnabledElements } from './enabledElements.js';
+import { drawImage } from './internal/drawImage.js';
 
-    "use strict";
-
-    /**
-     * Draws all invalidated enabled elements and clears the invalid flag after drawing it
-     */
-    function drawInvalidated()
-    {
-        var enabledElements = cornerstone.getEnabledElements();
-        for(var i=0;i < enabledElements.length; i++) {
-            var ee = enabledElements[i];
-            if(ee.invalid === true) {
-                cornerstone.drawImage(ee, true);
-            }
+/**
+ * Draws all invalidated enabled elements and clears the invalid flag after drawing it
+ */
+export function drawInvalidated()
+{
+    var enabledElements = getEnabledElements();
+    for(var i=0;i < enabledElements.length; i++) {
+        var ee = enabledElements[i];
+        if(ee.invalid === true) {
+            drawImage(ee, true);
         }
     }
-
-    // Module exports
-    cornerstone.drawInvalidated = drawInvalidated;
-}(cornerstone));
+}
