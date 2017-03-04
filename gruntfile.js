@@ -1,3 +1,5 @@
+var babel = require('rollup-plugin-babel');
+
 module.exports = function(grunt) {
 
     // Project configuration.
@@ -6,9 +8,21 @@ module.exports = function(grunt) {
         clean: {
             default: {
                 src: [
-                    'dist'
+                    'dist', ' build',
                 ]
             }
+        },
+        rollup: {
+          build: {
+            options: {
+              format: 'iife',
+              moduleName: 'cornerstone',
+              plugins: [ babel() ],
+            },
+            files: [{
+              'build/built.js': ['src/cornerstone.js'], // Only one source file is permitted
+            }],
+          }
         },
         concat: {
             css: {
@@ -73,7 +87,7 @@ module.exports = function(grunt) {
 
     require('load-grunt-tasks')(grunt);
 
-    grunt.registerTask('buildAll', ['concat', 'uglify', 'jshint', 'cssmin', 'qunit']);
+    grunt.registerTask('buildAll', ['rollup', 'concat', 'uglify', 'jshint', 'cssmin', 'qunit']);
     grunt.registerTask('default', ['clean', 'buildAll']);
     //grunt.registerTask('default', ['babel']);
 };
