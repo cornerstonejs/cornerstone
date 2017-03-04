@@ -10,7 +10,6 @@
 
     // Registers an event listener
     function addEventListener(type, callback) {
-      console.log("REGISTER", type, callback);
         var eventListeners = eventTypes[type] || [];
         eventListeners.push(callback);
         eventTypes[type] = eventListeners;
@@ -18,7 +17,6 @@
 
     // Dispatches an event
     function dispatchEvent(type, data) {
-      console.log("DISPATCH", type, data);
         var eventListeners = eventTypes[type];
 
         if (!eventListeners || eventListeners.length < 1) {
