@@ -16,9 +16,7 @@
   },
   "scripts": {
     "start": "grunt",
-    "watch": "grunt watch",
-    "build": "rollup -c",
-    "test": "ava --verbose 'src/**/*.test.js'"
+    "watch": "grunt watch"
   },
   "devDependencies": {
     "babel-plugin-external-helpers": "^6.22.0",
