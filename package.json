@@ -2,6 +2,7 @@
   "name": "cornerstone",
   "version": "0.10.3",
   "description": "HTML5 Medical Image Viewer Component",
+  "main": "dist/cornerstone.js",
   "keywords": [
     "DICOM",
     "medical",
@@ -15,8 +16,9 @@
     "url": "https://github.com/chafey/cornerstone.git"
   },
   "scripts": {
-    "start": "grunt",
-    "watch": "grunt watch"
+    "start": "grunt watch",
+    "build": "grunt",
+    "prepublish": "npm run build"
   },
   "devDependencies": {
     "babel-plugin-external-helpers": "^6.22.0",
