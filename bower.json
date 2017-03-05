@@ -13,12 +13,6 @@
         "bower.json",
         ".gitignore"
     ],
-    "dependencies": {
-        "jquery" : "~2.1.1"
-    },
-    "devDependencies": {
-        "qunit": "~1.14.0"
-    },
     "license": "MIT",
     "authors" : ["Chris Hafey"],
     "homepage": "https://github.com/chafey/cornerstone",

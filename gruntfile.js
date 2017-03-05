@@ -1,3 +1,9 @@
+var babel = require('rollup-plugin-babel');
+
+var banner = '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+    '<%= grunt.template.today("yyyy-mm-dd") %> ' +
+    '| (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */\n';
+
 module.exports = function(grunt) {
 
     // Project configuration.
@@ -6,46 +12,45 @@ module.exports = function(grunt) {
         clean: {
             default: {
                 src: [
-                    'dist'
+                    'dist',
                 ]
             }
         },
-        copy: {
-            bower: {
-                src: [
-                    'bower_components/jquery/dist/jquery.min.js',
-                    'bower_components/jquery/dist/jquery.min.map',
-                ],
-                dest: 'example',
-                expand: true,
-                flatten: true
-            }
+        rollup: {
+          build: {
+            options: {
+              format: 'iife',
+              moduleName: 'cornerstone',
+              plugins: [ babel() ],
+              banner: banner,
+              sourceMap: true,
+            },
+            files: [{
+              'dist/cornerstone.js': ['src/cornerstone.js'], // Only one source file is permitted
+            }],
+          },
+          esmodule: {
+            options: {
+              format: 'es',
+              entry: 'src/cornerstone.js',
+              plugins: [ babel() ],
+              banner: banner,
+              sourceMap: true,
+            },
+            files: [{
+              'dist/cornerstone.es.js': ['src/cornerstone.js'], // Only one source file is permitted
+            }],
+          }
         },
         concat: {
-            build: {
-                src : ['src/header.js','src/**/*.js'],
-                dest: 'build/built.js'
-            },
             css: {
                 options: {
                     stripBanners: true,
-                    banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-                        '<%= grunt.template.today("yyyy-mm-dd") %> ' +
-                        '| (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */\n'
+                    banner: banner,
                 },
                 src: ['src/cornerstone.css'],
                 dest: 'dist/cornerstone.css',
             },
-            dist: {
-                options: {
-                    stripBanners: true,
-                    banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-                        '<%= grunt.template.today("yyyy-mm-dd") %> ' +
-                        '| (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */\n'
-                },
-                src : ['build/built.js'],
-                dest: 'dist/cornerstone.js'
-            }
         },
         uglify: {
             dist: {
@@ -54,9 +59,8 @@ module.exports = function(grunt) {
                 }
             },
             options: {
-                banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-                    '<%= grunt.template.today("yyyy-mm-dd") %> ' +
-                    '| (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */\n'
+                sourceMap: true,
+                banner: banner,
             }
         },
         qunit: {
@@ -65,7 +69,10 @@ module.exports = function(grunt) {
         jshint: {
             files: [
                 'src/*.js'
-            ]
+            ],
+            options: {
+              esversion: 6
+            }
         },
         watch: {
             scripts: {
@@ -85,8 +92,9 @@ module.exports = function(grunt) {
 
     require('load-grunt-tasks')(grunt);
 
-    grunt.registerTask('buildAll', ['copy', 'concat', 'uglify', 'jshint', 'cssmin', 'qunit']);
+    grunt.registerTask('buildAll', ['rollup', 'concat', 'uglify', 'jshint', 'cssmin', 'qunit']);
     grunt.registerTask('default', ['clean', 'buildAll']);
+    //grunt.registerTask('default', ['babel']);
 };
 
 

@@ -128,7 +128,8 @@
         var imageId = "myImageLoader://1";
         cornerstone.loadImage(imageId).then(function(image) {
 
-            $(element).on("CornerstoneImageRendered", function(e, eventData) {
+            element.addEventListener("CornerstoneImageRendered", function(e) {
+                var eventData = e.detail;
                 // reset to identity matrix
                 eventData.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
 

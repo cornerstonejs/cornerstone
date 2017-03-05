@@ -181,10 +181,6 @@ various tools on top of the 3d viewport (rotate, zoom, segment, scroll, etc).
 OHIF/Cornerstone is working with the 3DSlicer project to integrate the two.  I also expect to implement
 client side MPR at some point as the browsers seem to be handling large memory much better.
 
-_Why did you add jQuery as a dependency?_
-
-Primarily for its custom event handling.
-
 _I would like to contribute code - how do I do this?_
 
 Fork the repository, make your change and submit a pull request.
@@ -212,5 +208,3 @@ Copyright
 =========
 
 Copyright 2016 Chris Hafey [chafey@gmail.com](mailto:chafey@gmail.com)
-
-

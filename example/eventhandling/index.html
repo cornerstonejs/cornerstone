@@ -74,7 +74,8 @@
         cornerstone.enable(element);
 
         // setup handlers before we display the image
-        function onImageRendered(e, eventData) {
+        function onImageRendered(e) {
+            var eventData = e.detail;
             // set the canvas context to the image coordinate system
             cornerstone.setToPixelCoordinateSystem(eventData.enabledElement, eventData.canvasContext);
 
@@ -103,12 +104,12 @@
             $('#bottomright').text("Zoom:" + eventData.viewport.scale.toFixed(2));
 
         }
-        $(element).on("CornerstoneImageRendered", onImageRendered);
+        element.addEventListener("CornerstoneImageRendered", onImageRendered);
 
-        $(cornerstone).bind('CornerstoneImageLoaded', function(event, eventData)
+        cornerstone.addEventListener('CornerstoneImageLoaded', function(event)
         {
             // Note - we would
-            $('#imageLoaded').text('Last ImageId Loaded:' + eventData.image.imageId);
+            $('#imageLoaded').text('Last ImageId Loaded:' + event.image.imageId);
         });
 
         // load the image and display it
