@@ -54,11 +54,14 @@
             cacheSizeInBytes -= lastCachedImage.sizeInBytes;
             delete imageCache[lastCachedImage.imageId];
             cachedImages.pop();
-            cornerstone.dispatchEvent("CornerstoneImageCachePromiseRemoved", {imageId: lastCachedImage.imageId});
+            var eventData = {imageId: lastCachedImage.imageId};
+            var removedEvent = new cornerstone.internal.CustomEvent("CornerstoneImageCachePromiseRemoved", {detail: eventData});
+            cornerstone.dispatchEvent(removedEvent);
         }
 
         var cacheInfo = cornerstone.imageCache.getCacheInfo();
-        cornerstone.dispatchEvent("CornerstoneImageCacheFull", cacheInfo);
+        var fullEvent = new cornerstone.internal.CustomEvent("CornerstoneImageCacheFull", {detail: cacheInfo});
+        cornerstone.dispatchEvent(fullEvent);
     }
 
     function putImagePromise(imageId, imagePromise) {

@@ -109,7 +109,7 @@
         cornerstone.addEventListener('CornerstoneImageLoaded', function(event)
         {
             // Note - we would
-            $('#imageLoaded').text('Last ImageId Loaded:' + event.image.imageId);
+            $('#imageLoaded').text('Last ImageId Loaded:' + event.detail.image.imageId);
         });
 
         // load the image and display it

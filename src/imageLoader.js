@@ -28,7 +28,8 @@
 
         // broadcast an image loaded event once the image is loaded
         imagePromise.then(function(image) {
-            cornerstone.dispatchEvent("CornerstoneImageLoaded",  {image: image});
+            var event = new cornerstone.internal.CustomEvent("CornerstoneImageLoaded", {detail: {image: image}});
+            cornerstone.dispatchEvent(event);
         });
 
         return imagePromise;

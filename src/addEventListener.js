@@ -16,20 +16,19 @@
     }
 
     // Dispatches an event
-    function dispatchEvent(type, data) {
-        var eventListeners = eventTypes[type];
+    function dispatchEvent(event) {
+        var eventListeners = eventTypes[event.type];
 
         if (!eventListeners || eventListeners.length < 1) {
             return;
         }
 
         for (var i = 0; i < eventListeners.length; i++) {
-            eventListeners[i](data);
+            eventListeners[i](event);
         }
     }
 
     // module exports
-
     cornerstone.addEventListener = addEventListener;
     cornerstone.dispatchEvent = dispatchEvent;
 
