@@ -53,7 +53,7 @@
             frameRate : frameRate
         };
 
-        var event = new CustomEvent("CornerstoneNewImage", {detail: newImageEventData});
+        var event = new cornerstone.internal.CustomEvent("CornerstoneNewImage", {detail: newImageEventData});
         enabledElement.element.dispatchEvent(event);
 
         cornerstone.updateImage(element);

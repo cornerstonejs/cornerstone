@@ -16,7 +16,7 @@
         var eventData = {
             element: element
         };
-        var event = new CustomEvent("CornerstoneInvalidated", {detail: eventData});
+        var event = new cornerstone.internal.CustomEvent("CornerstoneInvalidated", {detail: eventData});
         enabledElement.element.dispatchEvent(event);
     }
 

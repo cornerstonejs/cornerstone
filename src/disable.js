@@ -17,7 +17,7 @@
                 var eventData = {
                     element : element
                 };
-                var event = new CustomEvent("CornerstoneElementDisabled", {detail: eventData});
+                var event = new cornerstone.internal.CustomEvent("CornerstoneElementDisabled", {detail: eventData});
                 element.dispatchEvent(event);
 
                 // remove the child dom elements that we created (e.g.canvas)
