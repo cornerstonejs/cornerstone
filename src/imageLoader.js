@@ -2,7 +2,7 @@
  * This module deals with ImageLoaders, loading images and caching images
  */
 
-(function ($, cornerstone) {
+(function (cornerstone) {
 
     "use strict";
 
@@ -27,9 +27,9 @@
         imagePromise = loader(imageId, options);
 
         // broadcast an image loaded event once the image is loaded
-        // This is based on the idea here: http://stackoverflow.com/questions/3279809/global-custom-events-in-jquery
         imagePromise.then(function(image) {
-            $(cornerstone).trigger('CornerstoneImageLoaded', {image: image});
+            var event = new cornerstone.internal.CustomEvent("CornerstoneImageLoaded", {detail: {image: image}});
+            cornerstone.dispatchEvent(event);
         });
 
         return imagePromise;
@@ -99,4 +99,4 @@
     cornerstone.registerImageLoader = registerImageLoader;
     cornerstone.registerUnknownImageLoader = registerUnknownImageLoader;
 
-}($, cornerstone));
+}(cornerstone));

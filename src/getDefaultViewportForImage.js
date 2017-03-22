@@ -2,7 +2,7 @@
  * This file is responsible for returning the default viewport for an image
  */
 
-(function ($, cornerstone) {
+(function (cornerstone) {
 
     "use strict";
 
@@ -21,4 +21,4 @@
 
     // Module exports
     cornerstone.getDefaultViewportForImage = getDefaultViewportForImage;
-}($, cornerstone));
+}(cornerstone));

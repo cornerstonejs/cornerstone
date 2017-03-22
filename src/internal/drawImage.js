@@ -2,7 +2,7 @@
  * This module is responsible for drawing an image to an enabled elements canvas element
  */
 
-(function ($, cornerstone) {
+(function (cornerstone) {
 
     "use strict";
 
@@ -23,4 +23,4 @@
     cornerstone.internal.drawImage = drawImage;
     cornerstone.drawImage = drawImage;
 
-}($, cornerstone));
+}(cornerstone));

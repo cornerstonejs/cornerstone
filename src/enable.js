@@ -48,7 +48,8 @@
                     renderTimeInMs: diff
                 };
 
-                $(el.element).trigger("CornerstoneImageRendered", eventData);
+                var event = new cornerstone.internal.CustomEvent("CornerstoneImageRendered", {detail: eventData});
+                el.element.dispatchEvent(event);
                 el.invalid = false;
                 el.needsRedraw = false;
             }

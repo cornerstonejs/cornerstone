@@ -2,7 +2,7 @@
  * This module is responsible for returning the currently displayed image for an element
  */
 
-(function ($, cornerstone) {
+(function (cornerstone) {
 
     "use strict";
 
@@ -19,4 +19,4 @@
 
     // Module exports
     cornerstone.getImage = getImage;
-}($, cornerstone));
+}(cornerstone));

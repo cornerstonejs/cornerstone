@@ -29,6 +29,7 @@
     }
 
     function purgeCacheIfNecessary() {
+
         // if max cache size has not been exceeded, do nothing
         if (cacheSizeInBytes <= maximumSizeInBytes) {
             return;
@@ -52,13 +53,15 @@
             var lastCachedImage = cachedImages[cachedImages.length - 1];
             cacheSizeInBytes -= lastCachedImage.sizeInBytes;
             delete imageCache[lastCachedImage.imageId];
-            lastCachedImage.imagePromise.reject();
             cachedImages.pop();
-            $(cornerstone).trigger('CornerstoneImageCachePromiseRemoved', {imageId: lastCachedImage.imageId});
+            var eventData = {imageId: lastCachedImage.imageId};
+            var removedEvent = new cornerstone.internal.CustomEvent("CornerstoneImageCachePromiseRemoved", {detail: eventData});
+            cornerstone.dispatchEvent(removedEvent);
         }
 
         var cacheInfo = cornerstone.imageCache.getCacheInfo();
-        $(cornerstone).trigger('CornerstoneImageCacheFull', cacheInfo);
+        var fullEvent = new cornerstone.internal.CustomEvent("CornerstoneImageCacheFull", {detail: cacheInfo});
+        cornerstone.dispatchEvent(fullEvent);
     }
 
     function putImagePromise(imageId, imagePromise) {
@@ -72,6 +75,17 @@
         if (imageCache.hasOwnProperty(imageId) === true) {
             throw "putImagePromise: imageId already in cache";
         }
+
+        imagePromise = imagePromise.then(function(image) {
+            // when the image is no longer in cache, prevent the user to use fulfilled promise
+            if (!imageCache || !imageCache.hasOwnProperty(imageId)) {
+                // reject the promise
+                throw "getImagePromise: image is not in cache anymore";
+            }
+            else {
+                return image;
+            }
+        });
 
         var cachedImage = {
             loaded : false,
@@ -172,10 +186,11 @@
         if(image.decache) {
           image.decache();
         }
-        imagePromise.reject();
         delete imageCache[imageId];
-      }).always(function() {
-        delete imageCache[imageId];
+      }, function(err) {
+        if (imageCache.hasOwnProperty(imageId)) {
+            delete imageCache[imageId];
+        }
       });
     }
 

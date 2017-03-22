@@ -2,7 +2,7 @@
  * This module is responsible for immediately drawing an enabled element
  */
 
-(function ($, cornerstone) {
+(function (cornerstone) {
 
     "use strict";
 
@@ -24,4 +24,4 @@
     // Module exports
     cornerstone.draw = draw;
 
-}($, cornerstone));
+}(cornerstone));
