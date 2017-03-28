@@ -45,6 +45,12 @@
 
         setCanvasSize(element, enabledElement.canvas);
 
+        var eventData = {
+            element: element
+        };
+
+        $(element).trigger("CornerstoneElementResized", eventData);
+
         if(enabledElement.image === undefined ) {
             return;
         }
