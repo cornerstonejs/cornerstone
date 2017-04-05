@@ -136,7 +136,17 @@
         context.save();
         cornerstone.setToPixelCoordinateSystem(enabledElement, context);
 
-        var renderCanvas = getRenderCanvas(enabledElement, image, invalidated);
+        var renderCanvas;
+        if (enabledElement.options && enabledElement.options.renderer &&
+            enabledElement.options.renderer.toLowerCase() === 'webgl') {
+            // If this enabled element has the option set for WebGL, we should
+            // user it as our renderer.
+            renderCanvas = cornerstone.webGL.renderer.render(enabledElement);
+        } else {
+            // If no options are set we will retrieve the renderCanvas through the
+            // normal Canvas rendering path
+            renderCanvas = getRenderCanvas(enabledElement, image, invalidated);
+        }
 
         context.drawImage(renderCanvas, 0,0, image.width, image.height, 0, 0, image.width, image.height);
 

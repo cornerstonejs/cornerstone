@@ -5,9 +5,27 @@
 
     "use strict";
 
-    function enable(element) {
+    function enable(element, options) {
         if(element === undefined) {
             throw "enable: parameter element cannot be undefined";
+        }
+
+        // If this enabled element has the option set for WebGL, we should
+        // check if this device actually supports it
+        if (options && options.renderer && options.renderer.toLowerCase() === 'webgl') {
+            if (cornerstone.webGL.renderer.isWebGLAvailable()) {
+                // If WebGL is available on the device, initialize the renderer
+                // and return the renderCanvas from the WebGL rendering path
+                console.log('Using WebGL rendering path');
+                
+                cornerstone.webGL.renderer.initRenderer();
+                options.renderer = 'webgl';
+            } else {
+                // If WebGL is not available on this device, we will fall back
+                // to using the Canvas renderer
+                console.error('WebGL not available, falling back to Canvas renderer');
+                delete options.renderer;
+            }
         }
 
         var canvas = document.createElement('canvas');
@@ -19,6 +37,7 @@
             image : undefined, // will be set once image is loaded
             invalid: false, // true if image needs to be drawn, false if not
             needsRedraw:true,
+            options: options,
             data : {}
         };
         cornerstone.addEnabledElement(el);

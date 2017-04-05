@@ -1,5 +1,5 @@
 /**
- * This module is responsible for drawing a grayscale imageß
+ * This module is responsible for drawing a grayscale image
  */
 
 (function (cornerstone) {
@@ -111,12 +111,12 @@
      * @param invalidated - true if pixel data has been invaldiated and cached rendering should not be used
      */
     function renderGrayscaleImage(enabledElement, invalidated) {
-
-        if(enabledElement === undefined) {
+        if (enabledElement === undefined) {
             throw "drawImage: enabledElement parameter must not be undefined";
         }
+
         var image = enabledElement.image;
-        if(image === undefined) {
+        if (image === undefined) {
             throw "drawImage: image must be loaded before it can be drawn";
         }
 
@@ -138,10 +138,20 @@
             context.mozImageSmoothingEnabled = true;
         }
 
-        // save the canvas context state and apply the viewport properties
+        // Save the canvas context state and apply the viewport properties
         cornerstone.setToPixelCoordinateSystem(enabledElement, context);
 
-        var renderCanvas = getRenderCanvas(enabledElement, image, invalidated);
+        var renderCanvas;
+        if (enabledElement.options && enabledElement.options.renderer &&
+            enabledElement.options.renderer.toLowerCase() === 'webgl') {
+            // If this enabled element has the option set for WebGL, we should
+            // user it as our renderer.
+            renderCanvas = cornerstone.webGL.renderer.render(enabledElement);
+        } else {
+            // If no options are set we will retrieve the renderCanvas through the
+            // normal Canvas rendering path
+            renderCanvas = getRenderCanvas(enabledElement, image, invalidated);
+        }
 
         // Draw the render canvas half the image size (because we set origin to the middle of the canvas above)
         context.drawImage(renderCanvas, 0,0, image.width, image.height, 0, 0, image.width, image.height);

@@ -1,0 +1,172 @@
+    <!DOCTYPE HTML>
+<html>
+<head>
+    <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+
+<h1>
+WebGL Example
+</h1>
+
+This is an example of WebGL use in cornerstone
+
+<br>
+<br>
+
+<div class="row">
+    <div class="col-xs-6">
+        <h4>WebGL</h4>
+        <div style="width:512px;height:512px;position:relative;color: white;"
+             class="cornerstone-enabled-image"
+             oncontextmenu="return false"
+             unselectable='on'
+             onselectstart='return false;'
+             onmousedown='return false;'>
+            <div id="dicomImageWebGL" oncontextmenu="return false"
+                 style="width:512px;height:512px;top:0px;left:0px; position:absolute">
+            </div>
+            <div class="topleft" style="position: absolute;top:0px; left:0px">
+                Patient Name
+            </div>
+            <div class="topright" style="position: absolute;top:0px; right:0px">
+                Render Time:
+            </div>
+            <div class="bottomright" style="position: absolute;bottom:0px; right:0px">
+                Zoom:
+            </div>
+            <div class="bottomleft" style="position: absolute;bottom:0px; left:0px">
+                WW/WC:
+            </div>
+
+        </div>
+    </div>
+    <div class="col-xs-6">
+        <h4>Canvas</h4>
+        <div style="width:512px;height:512px;position:relative;color: white;"
+             class="cornerstone-enabled-image"
+             oncontextmenu="return false"
+             unselectable='on'
+             onselectstart='return false;'
+             onmousedown='return false;'>
+            <div id="dicomImage" oncontextmenu="return false"
+                 style="width:512px;height:512px;top:0px;left:0px; position:absolute">
+            </div>
+            <div class="topleft" style="position: absolute;top:0px; left:0px">
+                Patient Name
+            </div>
+            <div class="topright" style="position: absolute;top:0px; right:0px">
+                Render Time:
+            </div>
+            <div class="bottomright" style="position: absolute;bottom:0px; right:0px">
+                Zoom:
+            </div>
+            <div class="bottomleft" style="position: absolute;bottom:0px; left:0px">
+                WW/WC:
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</div>
+</body>
+
+<!-- cornerstone depends on jQuery so it must be loaded first-->
+<script src="../jquery.min.js"></script>
+
+<!-- include the cornerstone library -->
+<script src="../../dist/cornerstone.js"></script>
+
+<!-- include special code for these examples which provides images -->
+<script src="../exampleImageIdLoader.js"></script>
+
+<script>
+
+    $(document).ready(function() {
+        var element = document.getElementById('dicomImage');
+        var elementWebGL = document.getElementById('dicomImageWebGL');
+
+        // setup handlers before we display the image
+        function onImageRendered(e, eventData) {
+            // set the canvas context to the image coordinate system
+            cornerstone.setToPixelCoordinateSystem(eventData.enabledElement, eventData.canvasContext);
+
+            $(eventData.element).siblings('.topright').text("Render Time:" + eventData.renderTimeInMs + " ms");
+            $(eventData.element).siblings('.bottomleft').text("WW/WL:" + Math.round(eventData.viewport.voi.windowWidth) + "/" + Math.round(eventData.viewport.voi.windowCenter));
+            $(eventData.element).siblings('.bottomright').text("Zoom:" + eventData.viewport.scale.toFixed(2));
+
+        }
+        $(element).on("CornerstoneImageRendered", onImageRendered);
+        $(elementWebGL).on("CornerstoneImageRendered", onImageRendered);
+
+        var imageId = 'example://1';
+
+        cornerstone.enable(element);
+
+        cornerstone.loadAndCacheImage(imageId).then(function(image) {
+            cornerstone.displayImage(element, image);
+        });
+
+
+        var options = {
+            renderer: 'webgl'
+        };
+
+        cornerstone.enable(elementWebGL, options);
+
+        cornerstone.loadAndCacheImage(imageId).then(function(image) {
+            cornerstone.displayImage(elementWebGL, image);
+        });
+
+
+        // add event handlers to mouse move to adjust window/center
+        $('#dicomImage').mousedown(function (e) {
+            var lastX = e.pageX;
+            var lastY = e.pageY;
+
+            $(document).mousemove(function (e) {
+                var deltaX = e.pageX - lastX,
+                        deltaY = e.pageY - lastY;
+                lastX = e.pageX;
+                lastY = e.pageY;
+
+                var viewport = cornerstone.getViewport(element);
+                viewport.voi.windowWidth += (deltaX / viewport.scale);
+                viewport.voi.windowCenter += (deltaY / viewport.scale);
+                cornerstone.setViewport(element, viewport);
+            });
+
+            $(document).mouseup(function (e) {
+                $(document).unbind('mousemove');
+                $(document).unbind('mouseup');
+            });
+        });
+
+        // add event handlers to mouse move to adjust window/center
+        $('#dicomImageWebGL').mousedown(function (e) {
+            var lastX = e.pageX;
+            var lastY = e.pageY;
+
+            $(document).mousemove(function (e) {
+                var deltaX = e.pageX - lastX,
+                        deltaY = e.pageY - lastY;
+                lastX = e.pageX;
+                lastY = e.pageY;
+
+                var viewport = cornerstone.getViewport(elementWebGL);
+                viewport.voi.windowWidth += (deltaX / viewport.scale);
+                viewport.voi.windowCenter += (deltaY / viewport.scale);
+                cornerstone.setViewport(elementWebGL, viewport);
+            });
+
+            $(document).mouseup(function (e) {
+                $(document).unbind('mousemove');
+                $(document).unbind('mouseup');
+            });
+        });
+    });
+</script>
+</html>
