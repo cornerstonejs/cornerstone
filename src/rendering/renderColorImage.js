@@ -64,15 +64,10 @@
 
     function getRenderCanvas(enabledElement, image, invalidated)
     {
-        if (!enabledElement.renderingTools|| !enabledElement.renderingTools.colorRenderCanvas) {
-            enabledElement.renderingTools = {
-                colorRenderCanvas: document.createElement('canvas'),
-                colorRenderCanvasContext: null,
-                colorRenderCanvasData: null,
-                lastRenderedImageId: null,
-                lastRenderedViewport: null
-            };
+        if (!enabledElement.renderingTools.colorRenderCanvas) {
+            enabledElement.renderingTools.colorRenderCanvas = document.createElement('canvas');
         }
+
         var colorRenderCanvas = enabledElement.renderingTools.colorRenderCanvas;
         
         // The ww/wc is identity and not inverted - get a canvas with the image rendered into it for
@@ -147,6 +142,10 @@
         // save the canvas context state and apply the viewport properties
         context.save();
         cornerstone.setToPixelCoordinateSystem(enabledElement, context);
+
+        if (!enabledElement.renderingTools) {
+            enabledElement.renderingTools = {};
+        }
 
         var renderCanvas;
         if (enabledElement.options && enabledElement.options.renderer &&

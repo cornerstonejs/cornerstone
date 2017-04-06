@@ -84,15 +84,10 @@
 
     function getRenderCanvas(enabledElement, image, invalidated)
     {
-        if (!enabledElement.renderingTools || !enabledElement.renderingTools.grayscaleRenderCanvas) {
-            enabledElement.renderingTools = {
-                grayscaleRenderCanvas: document.createElement('canvas'),
-                grayscaleRenderCanvasContext: null,
-                grayscaleRenderCanvasData: null,
-                lastRenderedImageId: null,
-                lastRenderedViewport: null
-            };
+        if (!enabledElement.renderingTools.grayscaleRenderCanvas) {
+            enabledElement.renderingTools.grayscaleRenderCanvas = document.createElement('canvas');
         }
+
         var grayscaleRenderCanvas = enabledElement.renderingTools.grayscaleRenderCanvas;
         
         // apply the lut to the stored pixel data onto the render canvas
@@ -154,6 +149,10 @@
 
         // Save the canvas context state and apply the viewport properties
         cornerstone.setToPixelCoordinateSystem(enabledElement, context);
+
+        if (!enabledElement.renderingTools) {
+            enabledElement.renderingTools = {};
+        }
 
         var renderCanvas;
         if (enabledElement.options && enabledElement.options.renderer &&
