@@ -1,4 +1,4 @@
-/*! cornerstone - v0.10.6 - 2017-04-12 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.10.6 - 2017-04-14 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 if(typeof cornerstone === 'undefined'){
     cornerstone = {
         internal : {},
@@ -2474,29 +2474,25 @@ if(typeof cornerstone === 'undefined'){
         var localLut = lut;
         var localCanvasImageDataData = canvasImageDataData;
 
-        // Wrap this intensive loop in an IIFE to prevent de-optimization if
-        // the image Object has members added to it.
-        (function () {
-            // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
-            // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
-            if(minPixelValue < 0){
-                while(storedPixelDataIndex < numPixels) {
-                    localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // red
-                    localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // green
-                    localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex] + (-minPixelValue)]; // blue
-                    storedPixelDataIndex+=2;
-                    canvasImageDataIndex+=2;
-                }
-            }else{
-                while(storedPixelDataIndex < numPixels) {
-                    localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // red
-                    localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // green
-                    localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex]]; // blue
-                    storedPixelDataIndex+=2;
-                    canvasImageDataIndex+=2;
-                }
+        // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
+        // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
+        if(minPixelValue < 0){
+            while(storedPixelDataIndex < numPixels) {
+                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // red
+                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // green
+                localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex] + (-minPixelValue)]; // blue
+                storedPixelDataIndex+=2;
+                canvasImageDataIndex+=2;
             }
-        })();
+        }else{
+            while(storedPixelDataIndex < numPixels) {
+                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // red
+                localCanvasImageDataData[canvasImageDataIndex++] = localLut[storedPixelData[storedPixelDataIndex++]]; // green
+                localCanvasImageDataData[canvasImageDataIndex] = localLut[storedPixelData[storedPixelDataIndex]]; // blue
+                storedPixelDataIndex+=2;
+                canvasImageDataIndex+=2;
+            }
+        }
     }
 
     // Module exports
@@ -2537,21 +2533,19 @@ if(typeof cornerstone === 'undefined'){
         var localLut = lut;
         var localCanvasImageDataData = canvasImageDataData;
 
-        (function () {
-            // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
-            // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
-            if(minPixelValue < 0){
-                while(storedPixelDataIndex < localNumPixels) {
-                    localCanvasImageDataData[canvasImageDataIndex] = localLut[localPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // alpha
-                    canvasImageDataIndex += 4;
-                }
-            }else{
-                while(storedPixelDataIndex < localNumPixels) {
-                    localCanvasImageDataData[canvasImageDataIndex] = localLut[localPixelData[storedPixelDataIndex++]]; // alpha
-                    canvasImageDataIndex += 4;
-                }
+        // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
+        // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
+        if(minPixelValue < 0){
+            while(storedPixelDataIndex < localNumPixels) {
+                localCanvasImageDataData[canvasImageDataIndex] = localLut[localPixelData[storedPixelDataIndex++] + (-minPixelValue)]; // alpha
+                canvasImageDataIndex += 4;
             }
-        })();
+        }else{
+            while(storedPixelDataIndex < localNumPixels) {
+                localCanvasImageDataData[canvasImageDataIndex] = localLut[localPixelData[storedPixelDataIndex++]]; // alpha
+                canvasImageDataIndex += 4;
+            }
+        }
     }
 
     // Module exports
