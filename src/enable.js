@@ -38,6 +38,7 @@
             invalid: false, // true if image needs to be drawn, false if not
             needsRedraw:true,
             options: options,
+            layers: [],
             data : {}
         };
         cornerstone.addEnabledElement(el);
@@ -49,33 +50,12 @@
             if (el.canvas === undefined){
                 return;
             }
-            if (el.needsRedraw && el.image !== undefined){
-                var start = new Date();
-                var render = el.image.render;
 
-                if(!render) {
-                    render = el.image.color ? cornerstone.renderColorImage : cornerstone.renderGrayscaleImage;
-                }
-
-                render(el, el.invalid);
-
-                var context = el.canvas.getContext('2d');
-
-                var end = new Date();
-                var diff = end - start;
-
-                var eventData = {
-                    viewport: el.viewport,
-                    element: el.element,
-                    image: el.image,
-                    enabledElement: el,
-                    canvasContext: context,
-                    renderTimeInMs: diff
-                };
+            if (el.needsRedraw) {
+                cornerstone.drawImageSync(el, el.invalid);
 
                 el.invalid = false;
                 el.needsRedraw = false;
-                $(el.element).trigger("CornerstoneImageRendered", eventData);
             }
 
             cornerstone.requestAnimationFrame(draw);

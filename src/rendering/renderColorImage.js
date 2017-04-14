@@ -6,6 +6,12 @@
 
     "use strict";
 
+    function ensuresRenderingTools(enabledElement) {
+        if (!enabledElement.renderingTools) {
+            enabledElement.renderingTools = {};
+        }
+    }
+
     function initializeColorRenderCanvas(enabledElement, image)
     {
         var colorRenderCanvas = enabledElement.renderingTools.colorRenderCanvas;
@@ -143,9 +149,7 @@
         context.save();
         cornerstone.setToPixelCoordinateSystem(enabledElement, context);
 
-        if (!enabledElement.renderingTools) {
-            enabledElement.renderingTools = {};
-        }
+        ensuresRenderingTools(enabledElement);
 
         var renderCanvas;
         if (enabledElement.options && enabledElement.options.renderer &&
@@ -174,7 +178,43 @@
         enabledElement.renderingTools.lastRenderedViewport = lastRenderedViewport;
     }
 
+    function addColorLayer(layer, invalidated) {
+        if(layer === undefined) {
+            throw "drawImage: layer parameter must not be undefined";
+        }
+
+        var image = layer.image;
+        if(image === undefined) {
+            throw "drawImage: image must be loaded before it can be drawn";
+        }
+
+        ensuresRenderingTools(layer);
+
+        layer.canvas = getRenderCanvas(layer, image, invalidated);
+        var context = layer.canvas.getContext('2d');
+
+        // turn off image smooth/interpolation if pixelReplication is set in the viewport
+        if(layer.viewport.pixelReplication === true) {
+            context.imageSmoothingEnabled = false;
+            context.mozImageSmoothingEnabled = false; // firefox doesn't support imageSmoothingEnabled yet
+        } else {
+            context.imageSmoothingEnabled = true;
+            context.mozImageSmoothingEnabled = true;
+        }
+
+        layer.renderingTools.lastRenderedImageId = image.imageId;
+        var lastRenderedViewport = {};
+        lastRenderedViewport.windowCenter = layer.viewport.voi.windowCenter;
+        lastRenderedViewport.windowWidth = layer.viewport.voi.windowWidth;
+        lastRenderedViewport.invert = layer.viewport.invert;
+        lastRenderedViewport.rotation = layer.viewport.rotation;
+        lastRenderedViewport.hflip = layer.viewport.hflip;
+        lastRenderedViewport.vflip = layer.viewport.vflip;
+        layer.renderingTools.lastRenderedViewport = lastRenderedViewport;
+    }
+
     // Module exports
     cornerstone.rendering.colorImage = renderColorImage;
     cornerstone.renderColorImage = renderColorImage;
+    cornerstone.addColorLayer = addColorLayer;
 }(cornerstone));

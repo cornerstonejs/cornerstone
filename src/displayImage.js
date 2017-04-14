@@ -19,8 +19,12 @@
         }
 
         var enabledElement = cornerstone.getEnabledElement(element);
-
         enabledElement.image = image;
+
+        var activeLayer = cornerstone.getActiveLayer(element);
+        if(activeLayer) {
+            activeLayer.image = image;
+        }
 
         if(enabledElement.viewport === undefined) {
             enabledElement.viewport = cornerstone.internal.getDefaultViewport(enabledElement.canvas, image);
