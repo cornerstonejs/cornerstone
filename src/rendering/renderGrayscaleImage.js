@@ -6,6 +6,12 @@
 
     "use strict";
 
+    function ensuresRenderingTools(enabledElement) {
+        if (!enabledElement.renderingTools) {
+            enabledElement.renderingTools = {};
+        }
+    }
+
     function initializeGrayscaleRenderCanvas(enabledElement, image)
     {
         var grayscaleRenderCanvas = enabledElement.renderingTools.grayscaleRenderCanvas;
@@ -150,9 +156,7 @@
         // Save the canvas context state and apply the viewport properties
         cornerstone.setToPixelCoordinateSystem(enabledElement, context);
 
-        if (!enabledElement.renderingTools) {
-            enabledElement.renderingTools = {};
-        }
+        ensuresRenderingTools(enabledElement);
 
         var renderCanvas;
         if (enabledElement.options && enabledElement.options.renderer &&
@@ -182,7 +186,50 @@
         enabledElement.renderingTools.lastRenderedViewport = lastRenderedViewport;
     }
 
+    /**
+     * API function to draw a grayscale image to a given layer
+     * @param layer
+     * @param invalidated - true if pixel data has been invaldiated and cached rendering should not be used
+     */
+    function addGrayscaleLayer(layer, invalidated) {
+        if(layer === undefined) {
+            throw "drawImage: layer parameter must not be undefined";
+        }
+
+        var image = layer.image;
+        if(image === undefined) {
+            throw "drawImage: image must be loaded before it can be drawn";
+        }
+
+        ensuresRenderingTools(layer);
+
+        layer.canvas = getRenderCanvas(layer, image, invalidated);
+        var context = layer.canvas.getContext('2d');
+
+        // turn off image smooth/interpolation if pixelReplication is set in the viewport
+        if(layer.viewport.pixelReplication === true) {
+            context.imageSmoothingEnabled = false;
+            context.mozImageSmoothingEnabled = false; // firefox doesn't support imageSmoothingEnabled yet
+        } else {
+            context.imageSmoothingEnabled = true;
+            context.mozImageSmoothingEnabled = true;
+        }
+
+        layer.renderingTools.lastRenderedImageId = image.imageId;
+        var lastRenderedViewport = {};
+        lastRenderedViewport.windowCenter = layer.viewport.voi.windowCenter;
+        lastRenderedViewport.windowWidth = layer.viewport.voi.windowWidth;
+        lastRenderedViewport.invert = layer.viewport.invert;
+        lastRenderedViewport.rotation = layer.viewport.rotation;
+        lastRenderedViewport.hflip = layer.viewport.hflip;
+        lastRenderedViewport.vflip = layer.viewport.vflip;
+        lastRenderedViewport.modalityLUT = layer.viewport.modalityLUT;
+        lastRenderedViewport.voiLUT = layer.viewport.voiLUT;
+        layer.renderingTools.lastRenderedViewport = lastRenderedViewport;
+    }
+
     // Module exports
+    cornerstone.addGrayscaleLayer = addGrayscaleLayer;
     cornerstone.rendering.grayscaleImage = renderGrayscaleImage;
     cornerstone.renderGrayscaleImage = renderGrayscaleImage;
 

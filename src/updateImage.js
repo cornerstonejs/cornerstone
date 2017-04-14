@@ -12,7 +12,7 @@
     function updateImage(element, invalidated) {
         var enabledElement = cornerstone.getEnabledElement(element);
 
-        if(enabledElement.image === undefined) {
+        if(!enabledElement.image && !enabledElement.layers) {
             throw "updateImage: image has not been loaded yet";
         }
 
