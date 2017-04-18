@@ -27,19 +27,19 @@
     function getLut(image, viewport)
     {
         // if we have a cached lut and it has the right values, return it immediately
-        if(image.lut !== undefined &&
-            image.lut.windowCenter === viewport.voi.windowCenter &&
-            image.lut.windowWidth === viewport.voi.windowWidth &&
-            image.lut.invert === viewport.invert) {
-            return image.lut;
+        if(image.cachedLut !== undefined &&
+            image.cachedLut.windowCenter === viewport.voi.windowCenter &&
+            image.cachedLut.windowWidth === viewport.voi.windowWidth &&
+            image.cachedLut.invert === viewport.invert) {
+            return image.cachedLut.lutArray;
         }
 
         // lut is invalid or not present, regenerate it and cache it
         cornerstone.generateLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert);
-        image.lut.windowWidth = viewport.voi.windowWidth;
-        image.lut.windowCenter = viewport.voi.windowCenter;
-        image.lut.invert = viewport.invert;
-        return image.lut;
+        image.cachedLut.windowWidth = viewport.voi.windowWidth;
+        image.cachedLut.windowCenter = viewport.voi.windowCenter;
+        image.cachedLut.invert = viewport.invert;
+        return image.cachedLut.lutArray;
     }
 
     function doesImageNeedToBeRendered(enabledElement, image)
@@ -95,14 +95,19 @@
         }
 
         // get the lut to use
+        var start = (window.performance ? performance.now() : Data.now());
         var colorLut = getLut(image, enabledElement.viewport);
+        image.stats.lastLutGenerateTime = (window.performance ? performance.now() : Data.now()) - start;
 
         var colorRenderCanvasData = enabledElement.renderingTools.colorRenderCanvasData;
         var colorRenderCanvasContext = enabledElement.renderingTools.colorRenderCanvasContext;
         // the color image voi/invert has been modified - apply the lut to the underlying
         // pixel data and put it into the renderCanvas
         cornerstone.storedColorPixelDataToCanvasImageData(image, colorLut, colorRenderCanvasData.data);
+
+        start = (window.performance ? performance.now() : Data.now());
         colorRenderCanvasContext.putImageData(colorRenderCanvasData, 0, 0);
+        image.stats.lastPutImageDataTime = (window.performance ? performance.now() : Data.now()) - start;
         return colorRenderCanvas;
     }
 

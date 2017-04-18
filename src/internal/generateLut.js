@@ -8,10 +8,11 @@
 
   function generateLutNew(image, windowWidth, windowCenter, invert, modalityLUT, voiLUT)
   {
-    if(image.lut === undefined) {
-      image.lut =  new Int16Array(image.maxPixelValue - Math.min(image.minPixelValue,0)+1);
+    if(image.cachedLut === undefined) {
+      image.cachedLut = {};
+      image.cachedLut.lutArray =  new Uint8ClampedArray(image.maxPixelValue - Math.min(image.minPixelValue,0)+1);
     }
-    var lut = image.lut;
+    var lut = image.cachedLut.lutArray;
     var maxPixelValue = image.maxPixelValue;
     var minPixelValue = image.minPixelValue;
 
@@ -29,13 +30,10 @@
 
     for(storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++)
     {
-      modalityLutValue = mlutfn(storedValue);
-      voiLutValue = vlutfn(modalityLutValue);
-      clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
       if(!invert) {
-        lut[storedValue+ (-offset)] = Math.round(clampedValue);
+        lut[storedValue + (-offset)] = vlutfn(mlutfn(storedValue));
       } else {
-        lut[storedValue + (-offset)] = Math.round(255 - clampedValue);
+        lut[storedValue + (-offset)] = 255 - vlutfn(mlutfn(storedValue));
       }
     }
     return lut;
@@ -56,10 +54,11 @@
       return generateLutNew(image, windowWidth, windowCenter, invert, modalityLUT, voiLUT);
     }
 
-    if(image.lut === undefined) {
-      image.lut =  new Int16Array(image.maxPixelValue - Math.min(image.minPixelValue,0)+1);
+    if(image.cachedLut === undefined) {
+      image.cachedLut = {};
+      image.cachedLut.lutArray =  new Uint8ClampedArray(image.maxPixelValue - Math.min(image.minPixelValue,0)+1);
     }
-    var lut = image.lut;
+    var lut = image.cachedLut.lutArray;
 
     var maxPixelValue = image.maxPixelValue;
     var minPixelValue = image.minPixelValue;
@@ -87,8 +86,7 @@
       {
         modalityLutValue =  storedValue * slope + intercept;
         voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
-        clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
-        lut[storedValue + (-offset)] = Math.round(255 - clampedValue);
+        lut[storedValue + (-offset)] = voiLutValue;
       }
     }
     else {
@@ -96,8 +94,7 @@
       {
         modalityLutValue = storedValue * slope + intercept;
         voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
-        clampedValue = Math.min(Math.max(voiLutValue, 0), 255);
-        lut[storedValue+ (-offset)] = Math.round(clampedValue);
+        lut[storedValue+ (-offset)] = voiLutValue;
       }
     }
   }

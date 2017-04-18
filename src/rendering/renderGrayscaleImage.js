@@ -40,24 +40,24 @@
     function getLut(image, viewport, invalidated)
     {
         // if we have a cached lut and it has the right values, return it immediately
-        if(image.lut !== undefined &&
-            image.lut.windowCenter === viewport.voi.windowCenter &&
-            image.lut.windowWidth === viewport.voi.windowWidth &&
-            lutMatches(image.lut.modalityLUT, viewport.modalityLUT) &&
-            lutMatches(image.lut.voiLUT, viewport.voiLUT) &&
-            image.lut.invert === viewport.invert &&
+         if(image.cachedLut !== undefined &&
+            image.cachedLut.windowCenter === viewport.voi.windowCenter &&
+            image.cachedLut.windowWidth === viewport.voi.windowWidth &&
+            lutMatches(image.cachedLut.modalityLUT, viewport.modalityLUT) &&
+            lutMatches(image.cachedLut.voiLUT, viewport.voiLUT) &&
+            image.cachedLut.invert === viewport.invert &&
             invalidated !== true) {
-            return image.lut;
+            return image.cachedLut.lutArray;
         }
 
         // lut is invalid or not present, regenerate it and cache it
         cornerstone.generateLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert, viewport.modalityLUT, viewport.voiLUT);
-        image.lut.windowWidth = viewport.voi.windowWidth;
-        image.lut.windowCenter = viewport.voi.windowCenter;
-        image.lut.invert = viewport.invert;
-        image.lut.voiLUT = viewport.voiLUT;
-        image.lut.modalityLUT = viewport.modalityLUT;
-        return image.lut;
+        image.cachedLut.windowWidth = viewport.voi.windowWidth;
+        image.cachedLut.windowCenter = viewport.voi.windowCenter;
+        image.cachedLut.invert = viewport.invert;
+        image.cachedLut.voiLUT = viewport.voiLUT;
+        image.cachedLut.modalityLUT = viewport.modalityLUT;
+        return image.cachedLut.lutArray;
     }
 
     function doesImageNeedToBeRendered(enabledElement, image)
@@ -104,13 +104,19 @@
         }
 
         // get the lut to use
+        var start = (window.performance ? performance.now() : Data.now());
         var lut = getLut(image, enabledElement.viewport, invalidated);
+        image.stats.lastLutGenerateTime = (window.performance ? performance.now() : Data.now()) - start;
         
         var grayscaleRenderCanvasData = enabledElement.renderingTools.grayscaleRenderCanvasData;
         var grayscaleRenderCanvasContext = enabledElement.renderingTools.grayscaleRenderCanvasContext;
         // gray scale image - apply the lut and put the resulting image onto the render canvas
         cornerstone.storedPixelDataToCanvasImageData(image, lut, grayscaleRenderCanvasData.data);
+
+        start = (window.performance ? performance.now() : Data.now());
         grayscaleRenderCanvasContext.putImageData(grayscaleRenderCanvasData, 0, 0);
+        image.stats.lastPutImageDataTime = (window.performance ? performance.now() : Data.now()) - start;
+
         return grayscaleRenderCanvas;
     }
 

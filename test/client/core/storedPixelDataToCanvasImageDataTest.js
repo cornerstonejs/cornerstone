@@ -11,7 +11,8 @@
             maxPixelValue: 1,
             width: 1,
             height: 2,
-            getPixelData : function() {return [0,1];}
+            getPixelData : function() {return new Uint16Array([0,1]);},
+            stats: {}
         };
 
         // Act
@@ -37,7 +38,8 @@
             maxPixelValue: 0,
             width: 1,
             height: 2,
-            getPixelData : function() {return [-1,0];}
+            getPixelData : function() {return new Int16Array([-1,0]);},
+            stats: {}
         };
 
         // Act
@@ -65,7 +67,8 @@
             maxPixelValue: 2,
             width: 1,
             height: 2,
-            getPixelData : function() {return [1,2];}
+            getPixelData : function() {return new Uint16Array([1,2]);},
+            stats: {}
         };
 
         // Act

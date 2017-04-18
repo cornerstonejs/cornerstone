@@ -53,6 +53,14 @@
                 var start = new Date();
                 var render = el.image.render;
 
+                el.image.stats = {
+                    lastGetPixelDataTime:-1.0,
+                    laststoredPixelDataToCanvasImageDataTime:-1.0,
+                    lastPutImageDataTime:-1.0,
+                    lastRenderTime:-1.0,
+                    lastLutGenerateTime:-1.0,
+                };
+
                 if(!render) {
                     render = el.image.color ? cornerstone.renderColorImage : cornerstone.renderGrayscaleImage;
                 }
@@ -72,6 +80,8 @@
                     canvasContext: context,
                     renderTimeInMs: diff
                 };
+
+                el.image.stats.lastRenderTime = diff;
 
                 el.invalid = false;
                 el.needsRedraw = false;
