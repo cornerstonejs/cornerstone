@@ -1207,8 +1207,8 @@ if(typeof cornerstone === 'undefined'){
         if(enabledElement.lastImageTimeStamp !== undefined) {
             var timeSinceLastImage = now.getTime() - enabledElement.lastImageTimeStamp;
             frameRate = (1000 / timeSinceLastImage).toFixed();
-        } else {
         }
+        
         enabledElement.lastImageTimeStamp = now.getTime();
 
         var newImageEventData = {
@@ -2474,12 +2474,12 @@ if(typeof cornerstone === 'undefined'){
     function storedColorPixelDataToCanvasImageData(image, lut, canvasImageDataData)
     {
 
-        var start = (window.performance ? performance.now() : Data.now());
+        var start = (window.performance ? performance.now() : Date.now());
         var pixelData = image.getPixelData();
-        image.stats.lastGetPixelDataTime = (window.performance ? performance.now() : Data.now()) - start;
+        image.stats.lastGetPixelDataTime = (window.performance ? performance.now() : Date.now()) - start;
 
 
-        start = (window.performance ? performance.now() : Data.now());
+        start = (window.performance ? performance.now() : Date.now());
         var minPixelValue = image.minPixelValue;
         var canvasImageDataIndex = 0;
         var storedPixelDataIndex = 0;
@@ -2504,7 +2504,7 @@ if(typeof cornerstone === 'undefined'){
                 canvasImageDataIndex+=2;
             }
         }
-        image.stats.laststoredPixelDataToCanvasImageDataTime = (window.performance ? performance.now() : Data.now()) - start;
+        image.stats.laststoredPixelDataToCanvasImageDataTime = (window.performance ? performance.now() : Date.now()) - start;
     }
 
     // Module exports
@@ -2536,16 +2536,16 @@ if(typeof cornerstone === 'undefined'){
      */
     function storedPixelDataToCanvasImageData(image, lut, canvasImageDataData)
     {
-        var start = (window.performance ? performance.now() : Data.now());
+        var start = (window.performance ? performance.now() : Date.now());
         var pixelData = image.getPixelData();
-        image.stats.lastGetPixelDataTime = (window.performance ? performance.now() : Data.now()) - start;
+        image.stats.lastGetPixelDataTime = (window.performance ? performance.now() : Date.now()) - start;
 
         var minPixelValue = image.minPixelValue;
         var canvasImageDataIndex = 3;
         var storedPixelDataIndex = 0;
         var numPixels = pixelData.length;
 
-        start = (window.performance ? performance.now() : Data.now());
+        start = (window.performance ? performance.now() : Date.now());
         // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
         // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
 
@@ -2580,7 +2580,7 @@ if(typeof cornerstone === 'undefined'){
                 }
             }
         }
-        image.stats.laststoredPixelDataToCanvasImageDataTime = (window.performance ? performance.now() : Data.now()) - start;
+        image.stats.laststoredPixelDataToCanvasImageDataTime = (window.performance ? performance.now() : Date.now()) - start;
     }
 
     // Module exports
@@ -3104,9 +3104,9 @@ if(typeof cornerstone === 'undefined'){
         }
 
         // get the lut to use
-        var start = (window.performance ? performance.now() : Data.now());
+        var start = (window.performance ? performance.now() : Date.now());
         var colorLut = getLut(image, enabledElement.viewport);
-        image.stats.lastLutGenerateTime = (window.performance ? performance.now() : Data.now()) - start;
+        image.stats.lastLutGenerateTime = (window.performance ? performance.now() : Date.now()) - start;
 
         var colorRenderCanvasData = enabledElement.renderingTools.colorRenderCanvasData;
         var colorRenderCanvasContext = enabledElement.renderingTools.colorRenderCanvasContext;
@@ -3114,9 +3114,9 @@ if(typeof cornerstone === 'undefined'){
         // pixel data and put it into the renderCanvas
         cornerstone.storedColorPixelDataToCanvasImageData(image, colorLut, colorRenderCanvasData.data);
 
-        start = (window.performance ? performance.now() : Data.now());
+        start = (window.performance ? performance.now() : Date.now());
         colorRenderCanvasContext.putImageData(colorRenderCanvasData, 0, 0);
-        image.stats.lastPutImageDataTime = (window.performance ? performance.now() : Data.now()) - start;
+        image.stats.lastPutImageDataTime = (window.performance ? performance.now() : Date.now()) - start;
         return colorRenderCanvas;
     }
 
@@ -3299,18 +3299,18 @@ if(typeof cornerstone === 'undefined'){
         }
 
         // get the lut to use
-        var start = (window.performance ? performance.now() : Data.now());
+        var start = (window.performance ? performance.now() : Date.now());
         var lut = getLut(image, enabledElement.viewport, invalidated);
-        image.stats.lastLutGenerateTime = (window.performance ? performance.now() : Data.now()) - start;
+        image.stats.lastLutGenerateTime = (window.performance ? performance.now() : Date.now()) - start;
         
         var grayscaleRenderCanvasData = enabledElement.renderingTools.grayscaleRenderCanvasData;
         var grayscaleRenderCanvasContext = enabledElement.renderingTools.grayscaleRenderCanvasContext;
         // gray scale image - apply the lut and put the resulting image onto the render canvas
         cornerstone.storedPixelDataToCanvasImageData(image, lut, grayscaleRenderCanvasData.data);
 
-        start = (window.performance ? performance.now() : Data.now());
+        start = (window.performance ? performance.now() : Date.now());
         grayscaleRenderCanvasContext.putImageData(grayscaleRenderCanvasData, 0, 0);
-        image.stats.lastPutImageDataTime = (window.performance ? performance.now() : Data.now()) - start;
+        image.stats.lastPutImageDataTime = (window.performance ? performance.now() : Date.now()) - start;
 
         return grayscaleRenderCanvas;
     }

@@ -41,8 +41,8 @@
         if(enabledElement.lastImageTimeStamp !== undefined) {
             var timeSinceLastImage = now.getTime() - enabledElement.lastImageTimeStamp;
             frameRate = (1000 / timeSinceLastImage).toFixed();
-        } else {
         }
+        
         enabledElement.lastImageTimeStamp = now.getTime();
 
         var newImageEventData = {

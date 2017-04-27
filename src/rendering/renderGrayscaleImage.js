@@ -104,18 +104,18 @@
         }
 
         // get the lut to use
-        var start = (window.performance ? performance.now() : Data.now());
+        var start = (window.performance ? performance.now() : Date.now());
         var lut = getLut(image, enabledElement.viewport, invalidated);
-        image.stats.lastLutGenerateTime = (window.performance ? performance.now() : Data.now()) - start;
+        image.stats.lastLutGenerateTime = (window.performance ? performance.now() : Date.now()) - start;
         
         var grayscaleRenderCanvasData = enabledElement.renderingTools.grayscaleRenderCanvasData;
         var grayscaleRenderCanvasContext = enabledElement.renderingTools.grayscaleRenderCanvasContext;
         // gray scale image - apply the lut and put the resulting image onto the render canvas
         cornerstone.storedPixelDataToCanvasImageData(image, lut, grayscaleRenderCanvasData.data);
 
-        start = (window.performance ? performance.now() : Data.now());
+        start = (window.performance ? performance.now() : Date.now());
         grayscaleRenderCanvasContext.putImageData(grayscaleRenderCanvasData, 0, 0);
-        image.stats.lastPutImageDataTime = (window.performance ? performance.now() : Data.now()) - start;
+        image.stats.lastPutImageDataTime = (window.performance ? performance.now() : Date.now()) - start;
 
         return grayscaleRenderCanvas;
     }

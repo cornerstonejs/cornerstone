@@ -8,12 +8,12 @@
     function storedColorPixelDataToCanvasImageData(image, lut, canvasImageDataData)
     {
 
-        var start = (window.performance ? performance.now() : Data.now());
+        var start = (window.performance ? performance.now() : Date.now());
         var pixelData = image.getPixelData();
-        image.stats.lastGetPixelDataTime = (window.performance ? performance.now() : Data.now()) - start;
+        image.stats.lastGetPixelDataTime = (window.performance ? performance.now() : Date.now()) - start;
 
 
-        start = (window.performance ? performance.now() : Data.now());
+        start = (window.performance ? performance.now() : Date.now());
         var minPixelValue = image.minPixelValue;
         var canvasImageDataIndex = 0;
         var storedPixelDataIndex = 0;
@@ -38,7 +38,7 @@
                 canvasImageDataIndex+=2;
             }
         }
-        image.stats.laststoredPixelDataToCanvasImageDataTime = (window.performance ? performance.now() : Data.now()) - start;
+        image.stats.laststoredPixelDataToCanvasImageDataTime = (window.performance ? performance.now() : Date.now()) - start;
     }
 
     // Module exports

@@ -21,16 +21,16 @@
      */
     function storedPixelDataToCanvasImageData(image, lut, canvasImageDataData)
     {
-        var start = (window.performance ? performance.now() : Data.now());
+        var start = (window.performance ? performance.now() : Date.now());
         var pixelData = image.getPixelData();
-        image.stats.lastGetPixelDataTime = (window.performance ? performance.now() : Data.now()) - start;
+        image.stats.lastGetPixelDataTime = (window.performance ? performance.now() : Date.now()) - start;
 
         var minPixelValue = image.minPixelValue;
         var canvasImageDataIndex = 3;
         var storedPixelDataIndex = 0;
         var numPixels = pixelData.length;
 
-        start = (window.performance ? performance.now() : Data.now());
+        start = (window.performance ? performance.now() : Date.now());
         // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
         // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
 
@@ -65,7 +65,7 @@
                 }
             }
         }
-        image.stats.laststoredPixelDataToCanvasImageDataTime = (window.performance ? performance.now() : Data.now()) - start;
+        image.stats.laststoredPixelDataToCanvasImageDataTime = (window.performance ? performance.now() : Date.now()) - start;
     }
 
     // Module exports
