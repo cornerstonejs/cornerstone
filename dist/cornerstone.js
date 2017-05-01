@@ -1,4 +1,4 @@
-/*! cornerstone - v0.10.8 - 2017-04-27 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - v0.10.8 - 2017-05-01 | (c) 2014 Chris Hafey | https://github.com/chafey/cornerstone */
 if(typeof cornerstone === 'undefined'){
     cornerstone = {
         internal : {},
@@ -2280,7 +2280,7 @@ if(typeof cornerstone === 'undefined'){
       {
         modalityLutValue =  storedValue * slope + intercept;
         voiLutValue = (((modalityLutValue - (localWindowCenter)) / (localWindowWidth) + 0.5) * 255.0);
-        lut[storedValue + (-offset)] = voiLutValue;
+        lut[storedValue + (-offset)] = 255 - voiLutValue;
       }
     }
     else {
