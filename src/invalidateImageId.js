@@ -1,22 +1,21 @@
 /**
  * This module contains a function to immediately invalidate an image
  */
-(function (cornerstone) {
 
-    "use strict";
+import { getEnabledElementsByImageId } from './enabledElements.js';
+import drawImage from './internal/drawImage.js';
 
-    /**
-     * Forces the image to be updated/redrawn for the specified enabled element
-     * @param element
-     */
-    function invalidateImageId(imageId) {
+/**
+ * Forces the image to be updated/redrawn for the all enabled elements
+ * displaying the specified imageId
+ *
+ * @param imageId
+ */
+export default function (imageId) {
 
-        var enabledElements = cornerstone.getEnabledElementsByImageId(imageId);
-        enabledElements.forEach(function(enabledElement) {
-            cornerstone.drawImage(enabledElement, true);
-        });
-    }
+  const enabledElements = getEnabledElementsByImageId(imageId);
 
-    // module exports
-    cornerstone.invalidateImageId = invalidateImageId;
-}(cornerstone));
+  enabledElements.forEach(function (enabledElement) {
+    drawImage(enabledElement, true);
+  });
+}

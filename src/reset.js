@@ -1,21 +1,15 @@
+import { getEnabledElement } from './enabledElements.js';
+import getDefaultViewport from './internal/getDefaultViewport.js';
+import updateImage from './updateImage.js';
+
 /**
+ * Resets the viewport to the default settings
+ *
+ * @param element
  */
-(function (cornerstone) {
+export default function (element) {
+  const enabledElement = getEnabledElement(element);
 
-  "use strict";
-
-  /**
-   * Resets the viewport to the default settings
-   *
-   * @param element
-   */
-  function reset(element)
-  {
-    var enabledElement = cornerstone.getEnabledElement(element);
-    var defaultViewport = cornerstone.internal.getDefaultViewport(enabledElement.canvas, enabledElement.image);
-    enabledElement.viewport = defaultViewport;
-    cornerstone.updateImage(element);
-  }
-
-  cornerstone.reset = reset;
-}(cornerstone));
+  enabledElement.viewport = getDefaultViewport(enabledElement.canvas, enabledElement.image);
+  updateImage(element);
+}

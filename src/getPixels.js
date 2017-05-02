@@ -1,25 +1,20 @@
 /**
  * This module returns a subset of the stored pixels of an image
  */
-(function (cornerstone) {
 
-    "use strict";
+import { getEnabledElement } from './enabledElements.js';
+import getStoredPixels from './getStoredPixels.js';
+import getModalityLUT from './internal/getModalityLUT.js';
 
-    /**
-     * Returns array of pixels with modality LUT transformation applied
-     */
-    function getPixels(element, x, y, width, height) {
+/**
+ * Returns array of pixels with modality LUT transformation applied
+ */
+export default function (element, x, y, width, height) {
 
-        var storedPixels = cornerstone.getStoredPixels(element, x, y, width, height);
-        var ee = cornerstone.getEnabledElement(element);
+  const storedPixels = getStoredPixels(element, x, y, width, height);
+  const ee = getEnabledElement(element);
 
-        var mlutfn = cornerstone.internal.getModalityLUT(ee.image.slope, ee.image.intercept, ee.viewport.modalityLUT);
+  const mlutfn = getModalityLUT(ee.image.slope, ee.image.intercept, ee.viewport.modalityLUT);
 
-        var modalityPixels = storedPixels.map(mlutfn);
-
-        return modalityPixels;
-    }
-
-    // module exports
-    cornerstone.getPixels = getPixels;
-}(cornerstone));
+  return storedPixels.map(mlutfn);
+}

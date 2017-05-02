@@ -1,63 +1,62 @@
 /**
  * This module is responsible for enabling an element to display images with cornerstone
  */
-(function ($, cornerstone) {
 
-    "use strict";
+import { getEnabledElement } from './enabledElements.js';
+import getDefaultViewport from './internal/getDefaultViewport.js';
+import updateImage from './updateImage.js';
 
-    /**
-     * sets a new image object for a given element
-     * @param element
-     * @param image
-     */
-    function displayImage(element, image, viewport) {
-        if(element === undefined) {
-            throw "displayImage: parameter element cannot be undefined";
-        }
-        if(image === undefined) {
-            throw "displayImage: parameter image cannot be undefined";
-        }
+/**
+ * Sets a new image object for a given element
+ * @param element
+ * @param image
+ * @param viewport
+ */
+export default function (element, image, viewport) {
+  if (element === undefined) {
+    throw 'displayImage: parameter element cannot be undefined';
+  }
+  if (image === undefined) {
+    throw 'displayImage: parameter image cannot be undefined';
+  }
 
-        var enabledElement = cornerstone.getEnabledElement(element);
+  const enabledElement = getEnabledElement(element);
 
-        enabledElement.image = image;
+  enabledElement.image = image;
 
-        if(enabledElement.viewport === undefined) {
-            enabledElement.viewport = cornerstone.internal.getDefaultViewport(enabledElement.canvas, image);
-        }
+  if (enabledElement.viewport === undefined) {
+    enabledElement.viewport = getDefaultViewport(enabledElement.canvas, image);
+  }
 
-        // merge viewport
-        if(viewport) {
-            for(var attrname in viewport)
-            {
-                if(viewport[attrname] !== null) {
-                    enabledElement.viewport[attrname] = viewport[attrname];
-                }
-            }
-        }
-
-        var now = new Date();
-        var frameRate;
-        if(enabledElement.lastImageTimeStamp !== undefined) {
-            var timeSinceLastImage = now.getTime() - enabledElement.lastImageTimeStamp;
-            frameRate = (1000 / timeSinceLastImage).toFixed();
-        }
-        
-        enabledElement.lastImageTimeStamp = now.getTime();
-
-        var newImageEventData = {
-            viewport : enabledElement.viewport,
-            element : enabledElement.element,
-            image : enabledElement.image,
-            enabledElement : enabledElement,
-            frameRate : frameRate
-        };
-
-        $(enabledElement.element).trigger("CornerstoneNewImage", newImageEventData);
-
-        cornerstone.updateImage(element);
+    // Merge viewport
+  if (viewport) {
+    for (const attrname in viewport) {
+      if (viewport[attrname] !== null) {
+        enabledElement.viewport[attrname] = viewport[attrname];
+      }
     }
+  }
 
-    // module/private exports
-    cornerstone.displayImage = displayImage;
-}($, cornerstone));
+  const now = new Date();
+  let frameRate;
+
+  if (enabledElement.lastImageTimeStamp !== undefined) {
+    const timeSinceLastImage = now.getTime() - enabledElement.lastImageTimeStamp;
+
+    frameRate = (1000 / timeSinceLastImage).toFixed();
+  }
+
+  enabledElement.lastImageTimeStamp = now.getTime();
+
+  const newImageEventData = {
+    viewport: enabledElement.viewport,
+    element: enabledElement.element,
+    image: enabledElement.image,
+    enabledElement,
+    frameRate
+  };
+
+  $(enabledElement.element).trigger('CornerstoneNewImage', newImageEventData);
+
+  updateImage(element);
+}

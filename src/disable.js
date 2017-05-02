@@ -1,36 +1,32 @@
-(function (cornerstone) {
+import { getEnabledElements } from './enabledElements.js';
 
-    "use strict";
+export default function (element) {
+  if (element === undefined) {
+    throw 'disable: element element must not be undefined';
+  }
 
-    function disable(element) {
-        if(element === undefined) {
-            throw "disable: element element must not be undefined";
-        }
+  // Search for this element in this list of enabled elements
+  const enabledElements = getEnabledElements();
 
-        // Search for this element in this list of enabled elements
-        var enabledElements = cornerstone.getEnabledElements();
-        for(var i=0; i < enabledElements.length; i++) {
-            if(enabledElements[i].element === element) {
-                // We found it!
+  for (let i = 0; i < enabledElements.length; i++) {
+    if (enabledElements[i].element === element) {
+      // We found it!
 
-                // Fire an event so dependencies can cleanup
-                var eventData = {
-                    element : element
-                };
-                $(element).trigger("CornerstoneElementDisabled", eventData);
+      // Fire an event so dependencies can cleanup
+      const eventData = {
+        element
+      };
 
-                // remove the child dom elements that we created (e.g.canvas)
-                enabledElements[i].element.removeChild(enabledElements[i].canvas);
-                enabledElements[i].canvas = undefined;
+      $(element).trigger('CornerstoneElementDisabled', eventData);
 
-                // remove this element from the list of enabled elements
-                enabledElements.splice(i, 1);
-                return;
-            }
-        }
+          // Remove the child dom elements that we created (e.g.canvas)
+      enabledElements[i].element.removeChild(enabledElements[i].canvas);
+      enabledElements[i].canvas = undefined;
+
+          // Remove this element from the list of enabled elements
+      enabledElements.splice(i, 1);
+
+      break;
     }
-
-    // module/private exports
-    cornerstone.disable = disable;
-
-}(cornerstone));
+  }
+}

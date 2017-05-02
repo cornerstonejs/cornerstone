@@ -1,0 +1,21 @@
+{
+  "source": {
+    "include": "./src"
+  },
+  "opts": {
+    "template": "node_modules/docdash",
+    "encoding": "utf8",
+    "destination": "documentation/",
+    "recurse": true,
+    "verbose": true
+  },
+  "templates": {
+    "default": {
+      "includeDate": false
+    }
+  },
+  "docdash": {
+    "static": true,
+    "sort": true
+  }
+}

@@ -1,87 +1,70 @@
-(function (cornerstone) {
+// Pack RGB images into a 3-channel RGB texture
+const rgbShader = {};
 
-    "use strict";
+function storedPixelDataToImageData (image) {
+  const minPixelValue = image.minPixelValue;
+  let canvasImageDataIndex = 0;
+  let storedPixelDataIndex = 0;
+    // Only 3 channels, since we use WebGL's RGB texture format
+  const numStoredPixels = image.width * image.height * 4;
+  const numOutputPixels = image.width * image.height * 3;
+  const storedPixelData = image.getPixelData();
+  const data = new Uint8Array(numOutputPixels);
 
-    if (!cornerstone.webGL) {
-        cornerstone.webGL = {};
+    // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
+    // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
+  if (minPixelValue < 0) {
+    while (storedPixelDataIndex < numStoredPixels) {
+      data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++] + (-minPixelValue); // Red
+      data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++] + (-minPixelValue); // Green
+      data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++] + (-minPixelValue); // Blue
+      storedPixelDataIndex += 1; // The stored pixel data has 4 channels
     }
-
-    if (!cornerstone.webGL.shaders) {
-        cornerstone.webGL.shaders = {};
+  } else {
+    while (storedPixelDataIndex < numStoredPixels) {
+      data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++]; // Red
+      data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++]; // Green
+      data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++]; // Blue
+      storedPixelDataIndex += 1; // The stored pixel data has 4 channels
     }
+  }
 
-    if (!cornerstone.webGL.dataUtilities) {
-        cornerstone.webGL.dataUtilities = {};
-    }
+  return data;
+}
 
-    // Pack RGB images into a 3-channel RGB texture
-    var shader = {};
+export const rgbDataUtilities = {
+  storedPixelDataToImageData
+};
 
-    function storedPixelDataToImageData(image) {
-        var minPixelValue = image.minPixelValue;
-        var canvasImageDataIndex = 0;
-        var storedPixelDataIndex = 0;
-        // Only 3 channels, since we use WebGL's RGB texture format
-        var numStoredPixels = image.width * image.height * 4;
-        var numOutputPixels = image.width * image.height * 3;
-        var storedPixelData = image.getPixelData();
-        var data = new Uint8Array(numOutputPixels);
+rgbShader.frag = 'precision mediump float;' +
+    'uniform sampler2D u_image;' +
+    'uniform float ww;' +
+    'uniform float wc;' +
+    'uniform float slope;' +
+    'uniform float intercept;' +
+    'uniform float minPixelValue;' +
+    'uniform int invert;' +
+    'varying vec2 v_texCoord;' +
 
-        // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
-        // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
-        if (minPixelValue < 0){
-            while (storedPixelDataIndex < numStoredPixels) {
-                data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++] + (-minPixelValue); // red
-                data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++] + (-minPixelValue); // green
-                data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++] + (-minPixelValue); // blue
-                storedPixelDataIndex += 1; // The stored pixel data has 4 channels
-            }
-        } else {
-            while (storedPixelDataIndex < numStoredPixels) {
-                data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++]; // red
-                data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++]; // green
-                data[canvasImageDataIndex++] = storedPixelData[storedPixelDataIndex++]; // blue
-                storedPixelDataIndex += 1; // The stored pixel data has 4 channels
-            }
-        }
-        return data;
-    }
+    'void main() {' +
 
-    cornerstone.webGL.dataUtilities.rgb = {
-        storedPixelDataToImageData: storedPixelDataToImageData
-    };
+        // Get texture
+        'vec3 color = texture2D(u_image, v_texCoord).xyz;' +
 
-    shader.frag = 'precision mediump float;' +
-        'uniform sampler2D u_image;' +
-        'uniform float ww;' +
-        'uniform float wc;' +
-        'uniform float slope;' +
-        'uniform float intercept;' +
-        'uniform float minPixelValue;' +
-        'uniform int invert;' +
-        'varying vec2 v_texCoord;' +
+        // Rescale based on slope and intercept
+        'color = color * 256.0 * slope + intercept;' +
 
-        'void main() {' +
-            
-            // Get texture
-            'vec3 color = texture2D(u_image, v_texCoord).xyz;' +
+        // Apply window settings
+        'float center0 = wc - 0.5 - minPixelValue;' +
+        'float width0 = max(ww, 1.0);' +
+        'color = (color - center0) / width0 + 0.5;' +
 
-            // Rescale based on slope and intercept 
-            'color = color * 256.0 * slope + intercept;' +
-            
-            // Apply window settings
-            'float center0 = wc - 0.5 - minPixelValue;'+
-            'float width0 = max(ww, 1.0);' +
-            'color = (color - center0) / width0 + 0.5;'+
+        // RGBA output
+        'gl_FragColor = vec4(color, 1);' +
 
-            // RGBA output
-            'gl_FragColor = vec4(color, 1);' +
-            
-            // Apply any inversion necessary
-            'if (invert == 1)' +
-                'gl_FragColor.rgb = 1. - gl_FragColor.rgb;' +
-        '}';
+        // Apply any inversion necessary
+        'if (invert == 1)' +
+            'gl_FragColor.rgb = 1. - gl_FragColor.rgb;' +
+    '}';
 
-    cornerstone.webGL.shaders.rgb = shader;
-
-}(cornerstone));
+export { rgbShader };

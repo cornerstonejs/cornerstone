@@ -1,102 +1,95 @@
 /**
  * This module deals with ImageLoaders, loading images and caching images
  */
+import { getImagePromise, putImagePromise } from './imageCache.js';
 
-(function ($, cornerstone) {
+const imageLoaders = {};
 
-    "use strict";
+let unknownImageLoader;
 
-    var imageLoaders = {};
+function loadImageFromImageLoader (imageId, options) {
+  const colonIndex = imageId.indexOf(':');
+  const scheme = imageId.substring(0, colonIndex);
+  const loader = imageLoaders[scheme];
+  let imagePromise;
 
-    var unknownImageLoader;
+  if (loader === undefined || loader === null) {
+    if (unknownImageLoader !== undefined) {
+      imagePromise = unknownImageLoader(imageId);
 
-    function loadImageFromImageLoader(imageId, options) {
-        var colonIndex = imageId.indexOf(":");
-        var scheme = imageId.substring(0, colonIndex);
-        var loader = imageLoaders[scheme];
-        var imagePromise;
-        if(loader === undefined || loader === null) {
-            if(unknownImageLoader !== undefined) {
-                imagePromise = unknownImageLoader(imageId);
-                return imagePromise;
-            }
-            else {
-                return undefined;
-            }
-        }
-        imagePromise = loader(imageId, options);
-
-        // broadcast an image loaded event once the image is loaded
-        // This is based on the idea here: http://stackoverflow.com/questions/3279809/global-custom-events-in-jquery
-        imagePromise.then(function(image) {
-            $(cornerstone).trigger('CornerstoneImageLoaded', {image: image});
-        });
-
-        return imagePromise;
+      return imagePromise;
     }
 
-    // Loads an image given an imageId and optional priority and returns a promise which will resolve
-    // to the loaded image object or fail if an error occurred.  The loaded image
-    // is not stored in the cache
-    function loadImage(imageId, options) {
-        if(imageId === undefined) {
-            throw "loadImage: parameter imageId must not be undefined";
-        }
+    return;
 
-        var imagePromise = cornerstone.imageCache.getImagePromise(imageId);
-        if(imagePromise !== undefined) {
-            return imagePromise;
-        }
+  }
+  imagePromise = loader(imageId, options);
 
-        imagePromise = loadImageFromImageLoader(imageId, options);
-        if(imagePromise === undefined) {
-            throw "loadImage: no image loader for imageId";
-        }
+  // Broadcast an image loaded event once the image is loaded
+  imagePromise.then(function (image) {
+    $(cornerstone).trigger('CornerstoneImageLoaded', { image });
+  });
 
-        return imagePromise;
-    }
+  return imagePromise;
+}
 
-    // Loads an image given an imageId and optional priority and returns a promise which will resolve
-    // to the loaded image object or fail if an error occurred.  The image is
-    // stored in the cache
-    function loadAndCacheImage(imageId, options) {
-        if(imageId === undefined) {
-            throw "loadAndCacheImage: parameter imageId must not be undefined";
-        }
+// Loads an image given an imageId and optional priority and returns a promise which will resolve
+// To the loaded image object or fail if an error occurred.  The loaded image
+// Is not stored in the cache
+export function loadImage (imageId, options) {
+  if (imageId === undefined) {
+    throw 'loadImage: parameter imageId must not be undefined';
+  }
 
-        var imagePromise = cornerstone.imageCache.getImagePromise(imageId);
-        if(imagePromise !== undefined) {
-            return imagePromise;
-        }
+  let imagePromise = getImagePromise(imageId);
 
-        imagePromise = loadImageFromImageLoader(imageId, options);
-        if(imagePromise === undefined) {
-            throw "loadAndCacheImage: no image loader for imageId";
-        }
+  if (imagePromise !== undefined) {
+    return imagePromise;
+  }
 
-        cornerstone.imageCache.putImagePromise(imageId, imagePromise);
+  imagePromise = loadImageFromImageLoader(imageId, options);
+  if (imagePromise === undefined) {
+    throw 'loadImage: no image loader for imageId';
+  }
 
-        return imagePromise;
-    }
+  return imagePromise;
+}
+
+// Loads an image given an imageId and optional priority and returns a promise which will resolve
+// To the loaded image object or fail if an error occurred.  The image is
+// Stored in the cache
+export function loadAndCacheImage (imageId, options) {
+  if (imageId === undefined) {
+    throw 'loadAndCacheImage: parameter imageId must not be undefined';
+  }
+
+  let imagePromise = getImagePromise(imageId);
+
+  if (imagePromise !== undefined) {
+    return imagePromise;
+  }
+
+  imagePromise = loadImageFromImageLoader(imageId, options);
+  if (imagePromise === undefined) {
+    throw 'loadAndCacheImage: no image loader for imageId';
+  }
+
+  putImagePromise(imageId, imagePromise);
+
+  return imagePromise;
+}
 
 
-    // registers an imageLoader plugin with cornerstone for the specified scheme
-    function registerImageLoader(scheme, imageLoader) {
-        imageLoaders[scheme] = imageLoader;
-    }
+// Registers an imageLoader plugin with cornerstone for the specified scheme
+export function registerImageLoader (scheme, imageLoader) {
+  imageLoaders[scheme] = imageLoader;
+}
 
-    // Registers a new unknownImageLoader and returns the previous one (if it exists)
-    function registerUnknownImageLoader(imageLoader) {
-        var oldImageLoader = unknownImageLoader;
-        unknownImageLoader = imageLoader;
-        return oldImageLoader;
-    }
+// Registers a new unknownImageLoader and returns the previous one (if it exists)
+export function registerUnknownImageLoader (imageLoader) {
+  const oldImageLoader = unknownImageLoader;
 
-    // module exports
+  unknownImageLoader = imageLoader;
 
-    cornerstone.loadImage = loadImage;
-    cornerstone.loadAndCacheImage = loadAndCacheImage;
-    cornerstone.registerImageLoader = registerImageLoader;
-    cornerstone.registerUnknownImageLoader = registerUnknownImageLoader;
-
-}($, cornerstone));
+  return oldImageLoader;
+}

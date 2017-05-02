@@ -5,7 +5,7 @@
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- cornerstone css - provides some useful css classes -->
-    <link href="../../dist/cornerstone.css" rel="stylesheet">
+    <link href="../cornerstone.css" rel="stylesheet">
 
 </head>
 <body>
@@ -98,7 +98,7 @@
             context.strokeStyle = 'white';
             context.stroke();
 
-            $('#topright').text("Render Time:" + cornerstone.lastRenderTimeInMs + " ms");
+            $('#topright').text("Render Time:" + eventData.renderTimeInMs + " ms");
             $('#bottomleft').text("WW/WL:" + Math.round(eventData.viewport.voi.windowWidth) + "/" + Math.round(eventData.viewport.voi.windowCenter));
             $('#bottomright').text("Zoom:" + eventData.viewport.scale.toFixed(2));
 

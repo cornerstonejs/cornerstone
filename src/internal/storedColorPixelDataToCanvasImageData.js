@@ -1,48 +1,43 @@
+import now from './now';
+
 /**
- * This module contains a function to convert stored pixel values to display pixel values using a LUT
+ * Converts stored pixel values to display pixel values using a LUT
+ *
+ * @param image
+ * @param lut
+ * @param canvasImageDataData
  */
-(function (cornerstone) {
+export default function (image, lut, canvasImageDataData) {
 
-    "use strict";
+  let start = now();
+  const pixelData = image.getPixelData();
 
-    function storedColorPixelDataToCanvasImageData(image, lut, canvasImageDataData)
-    {
+  image.stats.lastGetPixelDataTime = now() - start;
 
-        var start = (window.performance ? performance.now() : Date.now());
-        var pixelData = image.getPixelData();
-        image.stats.lastGetPixelDataTime = (window.performance ? performance.now() : Date.now()) - start;
+  start = now();
+  const minPixelValue = image.minPixelValue;
+  let canvasImageDataIndex = 0;
+  let storedPixelDataIndex = 0;
+  const numPixels = pixelData.length;
 
-
-        start = (window.performance ? performance.now() : Date.now());
-        var minPixelValue = image.minPixelValue;
-        var canvasImageDataIndex = 0;
-        var storedPixelDataIndex = 0;
-        var numPixels = pixelData.length;
-
-        // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
-        // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
-        if(minPixelValue < 0){
-            while(storedPixelDataIndex < numPixels) {
-                canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // red
-                canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // green
-                canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex] + (-minPixelValue)]; // blue
-                storedPixelDataIndex+=2;
-                canvasImageDataIndex+=2;
-            }
-        }else{
-            while(storedPixelDataIndex < numPixels) {
-                canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++]]; // red
-                canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++]]; // green
-                canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex]]; // blue
-                storedPixelDataIndex+=2;
-                canvasImageDataIndex+=2;
-            }
-        }
-        image.stats.laststoredPixelDataToCanvasImageDataTime = (window.performance ? performance.now() : Date.now()) - start;
+    // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
+    // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
+  if (minPixelValue < 0) {
+    while (storedPixelDataIndex < numPixels) {
+      canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // Red
+      canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // Green
+      canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex] + (-minPixelValue)]; // Blue
+      storedPixelDataIndex += 2;
+      canvasImageDataIndex += 2;
     }
-
-    // Module exports
-    cornerstone.internal.storedColorPixelDataToCanvasImageData = storedColorPixelDataToCanvasImageData;
-    cornerstone.storedColorPixelDataToCanvasImageData = storedColorPixelDataToCanvasImageData;
-
-}(cornerstone));
+  } else {
+    while (storedPixelDataIndex < numPixels) {
+      canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++]]; // Red
+      canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++]]; // Green
+      canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex]]; // Blue
+      storedPixelDataIndex += 2;
+      canvasImageDataIndex += 2;
+    }
+  }
+  image.stats.laststoredPixelDataToCanvasImageDataTime = now() - start;
+}

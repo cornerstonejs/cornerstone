@@ -1,86 +1,80 @@
-(function (cornerstone) {
+/**
+ * Creates and compiles a shader.
+ *
+ * @param {!WebGLRenderingContext} gl The WebGL Context.
+ * @param {string} shaderSource The GLSL source code for the shader.
+ * @param {number} shaderType The type of shader, VERTEX_SHADER or FRAGMENT_SHADER.
+ *
+ * @return {!WebGLShader} The shader.
+ */
+function compileShader (gl, shaderSource, shaderType) {
 
-    "use strict";
+    // Create the shader object
+  const shader = gl.createShader(shaderType);
 
-    if (!cornerstone.webGL) {
-        cornerstone.webGL = {};
-    }
+    // Set the shader source code.
+  gl.shaderSource(shader, shaderSource);
 
-    /**
-     * Creates and compiles a shader.
-     *
-     * @param {!WebGLRenderingContext} gl The WebGL Context.
-     * @param {string} shaderSource The GLSL source code for the shader.
-     * @param {number} shaderType The type of shader, VERTEX_SHADER or FRAGMENT_SHADER.
-     *     
-     * @return {!WebGLShader} The shader.
-     */
-    function compileShader(gl, shaderSource, shaderType) {
-        
-        // Create the shader object
-        var shader = gl.createShader(shaderType);
+    // Compile the shader
+  gl.compileShader(shader);
 
-        // Set the shader source code.
-        gl.shaderSource(shader, shaderSource);
+    // Check if it compiled
+  const success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
 
-        // Compile the shader
-        gl.compileShader(shader);
+  if (!success && !gl.isContextLost()) {
+        // Something went wrong during compilation; get the error
+    const infoLog = gl.getShaderInfoLog(shader);
 
-        // Check if it compiled
-        var success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-        if (!success && !gl.isContextLost()) {
-            // Something went wrong during compilation; get the error
-            var infoLog = gl.getShaderInfoLog(shader);
-            console.error("Could not compile shader:\n" + infoLog);
-        }
+    console.error(`Could not compile shader:\n${infoLog}`);
+  }
 
-        return shader;
-    }
+  return shader;
+}
 
-    /**
-     * Creates a program from 2 shaders.
-     *
-     * @param {!WebGLRenderingContext) gl The WebGL context.
-     * @param {!WebGLShader} vertexShader A vertex shader.
-     * @param {!WebGLShader} fragmentShader A fragment shader.
-     * @return {!WebGLProgram} A program.
-     */
-    function createProgram(gl, vertexShader, fragmentShader) {
-        
-        // create a program.
-        var program = gl.createProgram();
+/**
+ * Creates a program from 2 shaders.
+ *
+ * @param {!WebGLRenderingContext} gl The WebGL context.
+ * @param {!WebGLShader} vertexShader A vertex shader.
+ * @param {!WebGLShader} fragmentShader A fragment shader.
+ * @return {!WebGLProgram} A program.
+ */
+function createProgram (gl, vertexShader, fragmentShader) {
 
-        // attach the shaders.
-        gl.attachShader(program, vertexShader);
-        gl.attachShader(program, fragmentShader);
+    // Create a program.
+  const program = gl.createProgram();
 
-        // link the program.
-        gl.linkProgram(program);
+    // Attach the shaders.
+  gl.attachShader(program, vertexShader);
+  gl.attachShader(program, fragmentShader);
 
-        // Check if it linked.
-        var success = gl.getProgramParameter(program, gl.LINK_STATUS);
-        if (!success && !gl.isContextLost()) {
-            // something went wrong with the link
-            var infoLog = gl.getProgramInfoLog(program);
-            console.error("WebGL program filed to link:\n" + infoLog);
-        }
+    // Link the program.
+  gl.linkProgram(program);
 
-        return program;
-    }
+    // Check if it linked.
+  const success = gl.getProgramParameter(program, gl.LINK_STATUS);
 
-    /**
-     * Creates a program from 2 shaders source (Strings)
-     * @param  {!WebGLRenderingContext} gl              The WebGL context.
-     * @param  {!WebGLShader} vertexShaderSrc   Vertex shader string
-     * @param  {!WebGLShader} fragShaderSrc Fragment shader string
-     * @return {!WebGLProgram}                 A program
-     */
-    function createProgramFromString(gl, vertexShaderSrc, fragShaderSrc) {
-        var vertexShader = compileShader(gl, vertexShaderSrc, gl.VERTEX_SHADER);
-        var fragShader = compileShader(gl, fragShaderSrc, gl.FRAGMENT_SHADER);
-        return createProgram(gl, vertexShader, fragShader);
-    }
+  if (!success && !gl.isContextLost()) {
+        // Something went wrong with the link
+    const infoLog = gl.getProgramInfoLog(program);
 
-    cornerstone.webGL.createProgramFromString = createProgramFromString;
+    console.error(`WebGL program filed to link:\n${infoLog}`);
+  }
 
-}(cornerstone));
+  return program;
+}
+
+/**
+ * Creates a program from 2 shaders source (Strings)
+ * @param  {!WebGLRenderingContext} gl              The WebGL context.
+ * @param  {!WebGLShader} vertexShaderSrc   Vertex shader string
+ * @param  {!WebGLShader} fragShaderSrc Fragment shader string
+ * @return {!WebGLProgram}                 A program
+ */
+export default function (gl, vertexShaderSrc, fragShaderSrc) {
+  const vertexShader = compileShader(gl, vertexShaderSrc, gl.VERTEX_SHADER);
+  const fragShader = compileShader(gl, fragShaderSrc, gl.FRAGMENT_SHADER);
+
+
+  return createProgram(gl, vertexShader, fragShader);
+}

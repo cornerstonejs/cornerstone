@@ -1,101 +1,103 @@
 /**
  * This module is responsible for enabling an element to display images with cornerstone
  */
-(function (cornerstone) {
 
-    "use strict";
+import { addEnabledElement } from './enabledElements.js';
+import resize from './resize.js';
+import requestAnimationFrame from './internal/requestAnimationFrame.js';
+import { renderColorImage } from './rendering/renderColorImage';
+import { renderGrayscaleImage } from './rendering/renderGrayscaleImage';
+import webGL from './webgl/index.js';
 
-    function enable(element, options) {
-        if(element === undefined) {
-            throw "enable: parameter element cannot be undefined";
-        }
+export default function (element, options) {
+  if (element === undefined) {
+    throw 'enable: parameter element cannot be undefined';
+  }
 
-        // If this enabled element has the option set for WebGL, we should
-        // check if this device actually supports it
-        if (options && options.renderer && options.renderer.toLowerCase() === 'webgl') {
-            if (cornerstone.webGL.renderer.isWebGLAvailable()) {
-                // If WebGL is available on the device, initialize the renderer
-                // and return the renderCanvas from the WebGL rendering path
-                console.log('Using WebGL rendering path');
-                
-                cornerstone.webGL.renderer.initRenderer();
-                options.renderer = 'webgl';
-            } else {
-                // If WebGL is not available on this device, we will fall back
-                // to using the Canvas renderer
-                console.error('WebGL not available, falling back to Canvas renderer');
-                delete options.renderer;
-            }
-        }
+    // If this enabled element has the option set for WebGL, we should
+    // Check if this device actually supports it
+  if (options && options.renderer && options.renderer.toLowerCase() === 'webgl') {
+    if (webGL.renderer.isWebGLAvailable()) {
+            // If WebGL is available on the device, initialize the renderer
+            // And return the renderCanvas from the WebGL rendering path
+      console.log('Using WebGL rendering path');
 
-        var canvas = document.createElement('canvas');
-        element.appendChild(canvas);
+      webGL.renderer.initRenderer();
+      options.renderer = 'webgl';
+    } else {
+            // If WebGL is not available on this device, we will fall back
+            // To using the Canvas renderer
+      console.error('WebGL not available, falling back to Canvas renderer');
+      delete options.renderer;
+    }
+  }
 
-        var el = {
-            element: element,
-            canvas: canvas,
-            image : undefined, // will be set once image is loaded
-            invalid: false, // true if image needs to be drawn, false if not
-            needsRedraw:true,
-            options: options,
-            data : {}
-        };
-        cornerstone.addEnabledElement(el);
+  const canvas = document.createElement('canvas');
 
-        cornerstone.resize(element, true);
+  element.appendChild(canvas);
 
+  const el = {
+    element,
+    canvas,
+    image: undefined, // Will be set once image is loaded
+    invalid: false, // True if image needs to be drawn, false if not
+    needsRedraw: true,
+    options,
+    data: {}
+  };
 
-        function draw() {
-            if (el.canvas === undefined){
-                return;
-            }
-            if (el.needsRedraw && el.image !== undefined){
-                var start = new Date();
-                var render = el.image.render;
+  addEnabledElement(el);
 
-                el.image.stats = {
-                    lastGetPixelDataTime:-1.0,
-                    laststoredPixelDataToCanvasImageDataTime:-1.0,
-                    lastPutImageDataTime:-1.0,
-                    lastRenderTime:-1.0,
-                    lastLutGenerateTime:-1.0,
-                };
+  resize(element, true);
 
-                if(!render) {
-                    render = el.image.color ? cornerstone.renderColorImage : cornerstone.renderGrayscaleImage;
-                }
+  function draw () {
+    if (el.canvas === undefined) {
+      return;
+    }
+    if (el.needsRedraw && el.image !== undefined) {
+      const start = new Date();
+      let render = el.image.render;
 
-                render(el, el.invalid);
+      el.image.stats = {
+        lastGetPixelDataTime: -1.0,
+        laststoredPixelDataToCanvasImageDataTime: -1.0,
+        lastPutImageDataTime: -1.0,
+        lastRenderTime: -1.0,
+        lastLutGenerateTime: -1.0
+      };
 
-                var context = el.canvas.getContext('2d');
+      if (!render) {
+        render = el.image.color ? renderColorImage : renderGrayscaleImage;
+      }
 
-                var end = new Date();
-                var diff = end - start;
+      render(el, el.invalid);
 
-                var eventData = {
-                    viewport: el.viewport,
-                    element: el.element,
-                    image: el.image,
-                    enabledElement: el,
-                    canvasContext: context,
-                    renderTimeInMs: diff
-                };
+      const context = el.canvas.getContext('2d');
 
-                el.image.stats.lastRenderTime = diff;
+      const end = new Date();
+      const diff = end - start;
 
-                el.invalid = false;
-                el.needsRedraw = false;
-                $(el.element).trigger("CornerstoneImageRendered", eventData);
-            }
+      const eventData = {
+        viewport: el.viewport,
+        element: el.element,
+        image: el.image,
+        enabledElement: el,
+        canvasContext: context,
+        renderTimeInMs: diff
+      };
 
-            cornerstone.requestAnimationFrame(draw);
-        }
+      el.image.stats.lastRenderTime = diff;
 
-        draw();
+      el.invalid = false;
+      el.needsRedraw = false;
 
-        return element;
+      $(el.element).trigger('CornerstoneImageRendered', eventData);
     }
 
-    // module/private exports
-    cornerstone.enable = enable;
-}(cornerstone));
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+
+  return element;
+}

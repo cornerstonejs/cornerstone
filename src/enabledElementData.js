@@ -1,23 +1,17 @@
-(function (cornerstone) {
+import { getEnabledElement } from './enabledElements.js';
 
-    "use strict";
+export function getElementData (el, dataType) {
+  const ee = getEnabledElement(el);
 
-    function getElementData(el, dataType) {
-        var ee = cornerstone.getEnabledElement(el);
-        if(ee.data.hasOwnProperty(dataType) === false)
-        {
-            ee.data[dataType] = {};
-        }
-        return ee.data[dataType];
-    }
+  if (ee.data.hasOwnProperty(dataType) === false) {
+    ee.data[dataType] = {};
+  }
 
-    function removeElementData(el, dataType) {
-        var ee = cornerstone.getEnabledElement(el);
-        delete ee.data[dataType];
-    }
+  return ee.data[dataType];
+}
 
-    // module/private exports
-    cornerstone.getElementData = getElementData;
-    cornerstone.removeElementData = removeElementData;
+export function removeElementData (el, dataType) {
+  const ee = getEnabledElement(el);
 
-}(cornerstone));
+  delete ee.data[dataType];
+}
