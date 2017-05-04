@@ -7,6 +7,8 @@ import { default as storedPixelDataToCanvasImageData } from './storedPixelDataTo
 import { default as storedColorPixelDataToCanvasImageData } from './storedColorPixelDataToCanvasImageData';
 import { default as getTransform } from './getTransform';
 import { default as calculateTransform } from './calculateTransform';
+import { Transform } from './transform.js';
+
 
 export default {
   drawImage,
@@ -17,5 +19,6 @@ export default {
   storedPixelDataToCanvasImageData,
   storedColorPixelDataToCanvasImageData,
   getTransform,
-  calculateTransform
+  calculateTransform,
+  Transform
 };

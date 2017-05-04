@@ -1,4 +1,4 @@
-/*! cornerstone - 0.10.8 - 2017-41-02 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - 0.10.8 - 2017-41-04 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -65,7 +65,7 @@ var cornerstone =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 50);
+/******/ 	return __webpack_require__(__webpack_require__.s = 51);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -573,7 +573,7 @@ var _getModalityLUT = __webpack_require__(21);
 
 var _getModalityLUT2 = _interopRequireDefault(_getModalityLUT);
 
-var _getVOILut = __webpack_require__(51);
+var _getVOILut = __webpack_require__(52);
 
 var _getVOILut2 = _interopRequireDefault(_getVOILut);
 
@@ -986,7 +986,7 @@ exports.default = function (enabledElement, scale) {
   return transform;
 };
 
-var _transform = __webpack_require__(52);
+var _transform = __webpack_require__(23);
 
 /***/ }),
 /* 14 */
@@ -999,9 +999,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _colormap = __webpack_require__(48);
+var _colormap = __webpack_require__(49);
 
-var _lookupTable = __webpack_require__(49);
+var _lookupTable = __webpack_require__(50);
 
 exports.default = {
   getColormap: _colormap.getColormap,
@@ -1477,11 +1477,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _renderer = __webpack_require__(53);
 
-var _createProgramFromString = __webpack_require__(23);
+var _createProgramFromString = __webpack_require__(24);
 
 var _createProgramFromString2 = _interopRequireDefault(_createProgramFromString);
 
-var _textureCache = __webpack_require__(24);
+var _textureCache = __webpack_require__(25);
 
 var _textureCache2 = _interopRequireDefault(_textureCache);
 
@@ -1577,6 +1577,154 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+// By Simon Sarris
+// Www.simonsarris.com
+// Sarris@acm.org
+//
+// Free to use and distribute at will
+// So long as you are nice to people, etc
+
+// Simple class for keeping track of the current transformation matrix
+
+// For instance:
+//    Var t = new Transform();
+//    T.rotate(5);
+//    Var m = t.m;
+//    Ctx.setTransform(m[0], m[1], m[2], m[3], m[4], m[5]);
+
+// Is equivalent to:
+//    Ctx.rotate(5);
+
+// But now you can retrieve it :)
+
+
+// Remember that this does not account for any CSS transforms applied to the canvas
+var Transform = exports.Transform = function () {
+  function Transform() {
+    _classCallCheck(this, Transform);
+
+    this.reset();
+  }
+
+  _createClass(Transform, [{
+    key: "reset",
+    value: function reset() {
+      this.m = [1, 0, 0, 1, 0, 0];
+    }
+  }, {
+    key: "clone",
+    value: function clone() {
+      var transform = new Transform();
+
+      transform.m[0] = this.m[0];
+      transform.m[1] = this.m[1];
+      transform.m[2] = this.m[2];
+      transform.m[3] = this.m[3];
+      transform.m[4] = this.m[4];
+      transform.m[5] = this.m[5];
+
+      return transform;
+    }
+  }, {
+    key: "multiply",
+    value: function multiply(matrix) {
+      var m11 = this.m[0] * matrix.m[0] + this.m[2] * matrix.m[1];
+      var m12 = this.m[1] * matrix.m[0] + this.m[3] * matrix.m[1];
+
+      var m21 = this.m[0] * matrix.m[2] + this.m[2] * matrix.m[3];
+      var m22 = this.m[1] * matrix.m[2] + this.m[3] * matrix.m[3];
+
+      var dx = this.m[0] * matrix.m[4] + this.m[2] * matrix.m[5] + this.m[4];
+      var dy = this.m[1] * matrix.m[4] + this.m[3] * matrix.m[5] + this.m[5];
+
+      this.m[0] = m11;
+      this.m[1] = m12;
+      this.m[2] = m21;
+      this.m[3] = m22;
+      this.m[4] = dx;
+      this.m[5] = dy;
+    }
+  }, {
+    key: "invert",
+    value: function invert() {
+      var d = 1 / (this.m[0] * this.m[3] - this.m[1] * this.m[2]);
+      var m0 = this.m[3] * d;
+      var m1 = -this.m[1] * d;
+      var m2 = -this.m[2] * d;
+      var m3 = this.m[0] * d;
+      var m4 = d * (this.m[2] * this.m[5] - this.m[3] * this.m[4]);
+      var m5 = d * (this.m[1] * this.m[4] - this.m[0] * this.m[5]);
+
+      this.m[0] = m0;
+      this.m[1] = m1;
+      this.m[2] = m2;
+      this.m[3] = m3;
+      this.m[4] = m4;
+      this.m[5] = m5;
+    }
+  }, {
+    key: "rotate",
+    value: function rotate(rad) {
+      var c = Math.cos(rad);
+      var s = Math.sin(rad);
+      var m11 = this.m[0] * c + this.m[2] * s;
+      var m12 = this.m[1] * c + this.m[3] * s;
+      var m21 = this.m[0] * -s + this.m[2] * c;
+      var m22 = this.m[1] * -s + this.m[3] * c;
+
+      this.m[0] = m11;
+      this.m[1] = m12;
+      this.m[2] = m21;
+      this.m[3] = m22;
+    }
+  }, {
+    key: "translate",
+    value: function translate(x, y) {
+      this.m[4] += this.m[0] * x + this.m[2] * y;
+      this.m[5] += this.m[1] * x + this.m[3] * y;
+    }
+  }, {
+    key: "scale",
+    value: function scale(sx, sy) {
+      this.m[0] *= sx;
+      this.m[1] *= sx;
+      this.m[2] *= sy;
+      this.m[3] *= sy;
+    }
+  }, {
+    key: "transformPoint",
+    value: function transformPoint(px, py) {
+      var x = px;
+      var y = py;
+
+      px = x * this.m[0] + y * this.m[2] + this.m[4];
+      py = x * this.m[1] + y * this.m[3] + this.m[5];
+
+      return {
+        x: px,
+        y: py
+      };
+    }
+  }]);
+
+  return Transform;
+}();
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 exports.default = function (gl, vertexShaderSrc, fragShaderSrc) {
   var vertexShader = compileShader(gl, vertexShaderSrc, gl.VERTEX_SHADER);
   var fragShader = compileShader(gl, fragShaderSrc, gl.FRAGMENT_SHADER);
@@ -1659,7 +1807,7 @@ function createProgram(gl, vertexShader, fragmentShader) {
  */
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1824,7 +1972,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1852,7 +2000,7 @@ var _getTransform2 = _interopRequireDefault(_getTransform);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1896,7 +2044,7 @@ exports.default = function (element) {
 var _enabledElements = __webpack_require__(0);
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1968,7 +2116,7 @@ var _updateImage2 = _interopRequireDefault(_updateImage);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1997,7 +2145,7 @@ var _drawImage2 = _interopRequireDefault(_drawImage);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2028,7 +2176,7 @@ var _drawImage2 = _interopRequireDefault(_drawImage);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2152,7 +2300,7 @@ var _index2 = _interopRequireDefault(_index);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2183,7 +2331,7 @@ function removeElementData(el, dataType) {
 }
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2357,7 +2505,7 @@ exports.convertToFalseColorImage = convertToFalseColorImage;
 exports.restoreImage = restoreImage;
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2382,7 +2530,7 @@ var _getDefaultViewport2 = _interopRequireDefault(_getDefaultViewport);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2401,7 +2549,7 @@ exports.default = function (element) {
 var _enabledElements = __webpack_require__(0);
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2434,7 +2582,7 @@ var _getModalityLUT2 = _interopRequireDefault(_getModalityLUT);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2476,7 +2624,7 @@ exports.default = function (element) {
 var _enabledElements = __webpack_require__(0);
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2585,7 +2733,7 @@ function registerUnknownImageLoader(imageLoader) {
 }
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2631,6 +2779,8 @@ var _calculateTransform = __webpack_require__(13);
 
 var _calculateTransform2 = _interopRequireDefault(_calculateTransform);
 
+var _transform = __webpack_require__(23);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
@@ -2642,11 +2792,12 @@ exports.default = {
   storedPixelDataToCanvasImageData: _storedPixelDataToCanvasImageData2.default,
   storedColorPixelDataToCanvasImageData: _storedColorPixelDataToCanvasImageData2.default,
   getTransform: _getTransform2.default,
-  calculateTransform: _calculateTransform2.default
+  calculateTransform: _calculateTransform2.default,
+  Transform: _transform.Transform
 };
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2671,7 +2822,7 @@ exports.default = function (element) {
 var _enabledElements = __webpack_require__(0);
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2699,7 +2850,7 @@ var _drawImage2 = _interopRequireDefault(_drawImage);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2778,7 +2929,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2818,7 +2969,7 @@ var _getTransform2 = _interopRequireDefault(_getTransform);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2895,7 +3046,7 @@ var _index2 = _interopRequireDefault(_index);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2921,7 +3072,7 @@ var _getTransform2 = _interopRequireDefault(_getTransform);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2944,7 +3095,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2974,7 +3125,7 @@ var _updateImage2 = _interopRequireDefault(_updateImage);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3028,7 +3179,7 @@ var _updateImage2 = _interopRequireDefault(_updateImage);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3489,7 +3640,7 @@ function getColormap(id, colormapData) {
 }
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3834,7 +3985,7 @@ function LookupTable() {
 }
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3907,7 +4058,7 @@ Object.defineProperty(exports, 'storedColorPixelDataToCanvasImageData', {
   }
 });
 
-var _index = __webpack_require__(38);
+var _index = __webpack_require__(39);
 
 Object.defineProperty(exports, 'internal', {
   enumerable: true,
@@ -3943,7 +4094,7 @@ Object.defineProperty(exports, 'renderWebImage', {
   }
 });
 
-var _canvasToPixel = __webpack_require__(25);
+var _canvasToPixel = __webpack_require__(26);
 
 Object.defineProperty(exports, 'canvasToPixel', {
   enumerable: true,
@@ -3952,7 +4103,7 @@ Object.defineProperty(exports, 'canvasToPixel', {
   }
 });
 
-var _disable = __webpack_require__(26);
+var _disable = __webpack_require__(27);
 
 Object.defineProperty(exports, 'disable', {
   enumerable: true,
@@ -3961,7 +4112,7 @@ Object.defineProperty(exports, 'disable', {
   }
 });
 
-var _displayImage = __webpack_require__(27);
+var _displayImage = __webpack_require__(28);
 
 Object.defineProperty(exports, 'displayImage', {
   enumerable: true,
@@ -3970,7 +4121,7 @@ Object.defineProperty(exports, 'displayImage', {
   }
 });
 
-var _draw = __webpack_require__(28);
+var _draw = __webpack_require__(29);
 
 Object.defineProperty(exports, 'draw', {
   enumerable: true,
@@ -3979,7 +4130,7 @@ Object.defineProperty(exports, 'draw', {
   }
 });
 
-var _drawInvalidated = __webpack_require__(29);
+var _drawInvalidated = __webpack_require__(30);
 
 Object.defineProperty(exports, 'drawInvalidated', {
   enumerable: true,
@@ -3988,7 +4139,7 @@ Object.defineProperty(exports, 'drawInvalidated', {
   }
 });
 
-var _enable = __webpack_require__(30);
+var _enable = __webpack_require__(31);
 
 Object.defineProperty(exports, 'enable', {
   enumerable: true,
@@ -3997,7 +4148,7 @@ Object.defineProperty(exports, 'enable', {
   }
 });
 
-var _enabledElementData = __webpack_require__(31);
+var _enabledElementData = __webpack_require__(32);
 
 Object.defineProperty(exports, 'getElementData', {
   enumerable: true,
@@ -4048,7 +4199,7 @@ Object.defineProperty(exports, 'fitToWindow', {
   }
 });
 
-var _getDefaultViewportForImage = __webpack_require__(33);
+var _getDefaultViewportForImage = __webpack_require__(34);
 
 Object.defineProperty(exports, 'getDefaultViewportForImage', {
   enumerable: true,
@@ -4057,7 +4208,7 @@ Object.defineProperty(exports, 'getDefaultViewportForImage', {
   }
 });
 
-var _getImage = __webpack_require__(34);
+var _getImage = __webpack_require__(35);
 
 Object.defineProperty(exports, 'getImage', {
   enumerable: true,
@@ -4066,7 +4217,7 @@ Object.defineProperty(exports, 'getImage', {
   }
 });
 
-var _getPixels = __webpack_require__(35);
+var _getPixels = __webpack_require__(36);
 
 Object.defineProperty(exports, 'getPixels', {
   enumerable: true,
@@ -4084,7 +4235,7 @@ Object.defineProperty(exports, 'getStoredPixels', {
   }
 });
 
-var _getViewport = __webpack_require__(36);
+var _getViewport = __webpack_require__(37);
 
 Object.defineProperty(exports, 'getViewport', {
   enumerable: true,
@@ -4093,7 +4244,7 @@ Object.defineProperty(exports, 'getViewport', {
   }
 });
 
-var _imageLoader = __webpack_require__(37);
+var _imageLoader = __webpack_require__(38);
 
 Object.defineProperty(exports, 'loadImage', {
   enumerable: true,
@@ -4120,7 +4271,7 @@ Object.defineProperty(exports, 'registerUnknownImageLoader', {
   }
 });
 
-var _invalidate = __webpack_require__(39);
+var _invalidate = __webpack_require__(40);
 
 Object.defineProperty(exports, 'invalidate', {
   enumerable: true,
@@ -4129,7 +4280,7 @@ Object.defineProperty(exports, 'invalidate', {
   }
 });
 
-var _invalidateImageId = __webpack_require__(40);
+var _invalidateImageId = __webpack_require__(41);
 
 Object.defineProperty(exports, 'invalidateImageId', {
   enumerable: true,
@@ -4138,7 +4289,7 @@ Object.defineProperty(exports, 'invalidateImageId', {
   }
 });
 
-var _pageToPixel = __webpack_require__(42);
+var _pageToPixel = __webpack_require__(43);
 
 Object.defineProperty(exports, 'pageToPixel', {
   enumerable: true,
@@ -4147,7 +4298,7 @@ Object.defineProperty(exports, 'pageToPixel', {
   }
 });
 
-var _pixelToCanvas = __webpack_require__(44);
+var _pixelToCanvas = __webpack_require__(45);
 
 Object.defineProperty(exports, 'pixelToCanvas', {
   enumerable: true,
@@ -4156,7 +4307,7 @@ Object.defineProperty(exports, 'pixelToCanvas', {
   }
 });
 
-var _reset = __webpack_require__(46);
+var _reset = __webpack_require__(47);
 
 Object.defineProperty(exports, 'reset', {
   enumerable: true,
@@ -4183,7 +4334,7 @@ Object.defineProperty(exports, 'setToPixelCoordinateSystem', {
   }
 });
 
-var _setViewport = __webpack_require__(47);
+var _setViewport = __webpack_require__(48);
 
 Object.defineProperty(exports, 'setViewport', {
   enumerable: true,
@@ -4201,7 +4352,7 @@ Object.defineProperty(exports, 'updateImage', {
   }
 });
 
-var _pixelDataToFalseColorData = __webpack_require__(43);
+var _pixelDataToFalseColorData = __webpack_require__(44);
 
 Object.defineProperty(exports, 'pixelDataToFalseColorData', {
   enumerable: true,
@@ -4210,7 +4361,7 @@ Object.defineProperty(exports, 'pixelDataToFalseColorData', {
   }
 });
 
-var _index2 = __webpack_require__(45);
+var _index2 = __webpack_require__(46);
 
 Object.defineProperty(exports, 'rendering', {
   enumerable: true,
@@ -4228,7 +4379,7 @@ Object.defineProperty(exports, 'imageCache', {
   }
 });
 
-var _metaData = __webpack_require__(41);
+var _metaData = __webpack_require__(42);
 
 Object.defineProperty(exports, 'metaData', {
   enumerable: true,
@@ -4255,7 +4406,7 @@ Object.defineProperty(exports, 'colors', {
   }
 });
 
-var _falseColorMapping = __webpack_require__(32);
+var _falseColorMapping = __webpack_require__(33);
 
 Object.defineProperty(exports, 'convertImageToFalseColorImage', {
   enumerable: true,
@@ -4279,7 +4430,7 @@ Object.defineProperty(exports, 'restoreImage', {
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4327,133 +4478,6 @@ function generateNonLinearVOILUT(voiLUT) {
 }
 
 /***/ }),
-/* 52 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Transform = Transform;
-// Last updated November 2011
-// By Simon Sarris
-// Www.simonsarris.com
-// Sarris@acm.org
-//
-// Free to use and distribute at will
-// So long as you are nice to people, etc
-
-// Simple class for keeping track of the current transformation matrix
-
-// For instance:
-//    Var t = new Transform();
-//    T.rotate(5);
-//    Var m = t.m;
-//    Ctx.setTransform(m[0], m[1], m[2], m[3], m[4], m[5]);
-
-// Is equivalent to:
-//    Ctx.rotate(5);
-
-// But now you can retrieve it :)
-
-
-// Remember that this does not account for any CSS transforms applied to the canvas
-function Transform() {
-  this.reset();
-}
-
-Transform.prototype.reset = function () {
-  this.m = [1, 0, 0, 1, 0, 0];
-};
-
-Transform.prototype.clone = function () {
-  var transform = new Transform();
-
-  transform.m[0] = this.m[0];
-  transform.m[1] = this.m[1];
-  transform.m[2] = this.m[2];
-  transform.m[3] = this.m[3];
-  transform.m[4] = this.m[4];
-  transform.m[5] = this.m[5];
-
-  return transform;
-};
-
-Transform.prototype.multiply = function (matrix) {
-  var m11 = this.m[0] * matrix.m[0] + this.m[2] * matrix.m[1];
-  var m12 = this.m[1] * matrix.m[0] + this.m[3] * matrix.m[1];
-
-  var m21 = this.m[0] * matrix.m[2] + this.m[2] * matrix.m[3];
-  var m22 = this.m[1] * matrix.m[2] + this.m[3] * matrix.m[3];
-
-  var dx = this.m[0] * matrix.m[4] + this.m[2] * matrix.m[5] + this.m[4];
-  var dy = this.m[1] * matrix.m[4] + this.m[3] * matrix.m[5] + this.m[5];
-
-  this.m[0] = m11;
-  this.m[1] = m12;
-  this.m[2] = m21;
-  this.m[3] = m22;
-  this.m[4] = dx;
-  this.m[5] = dy;
-};
-
-Transform.prototype.invert = function () {
-  var d = 1 / (this.m[0] * this.m[3] - this.m[1] * this.m[2]);
-  var m0 = this.m[3] * d;
-  var m1 = -this.m[1] * d;
-  var m2 = -this.m[2] * d;
-  var m3 = this.m[0] * d;
-  var m4 = d * (this.m[2] * this.m[5] - this.m[3] * this.m[4]);
-  var m5 = d * (this.m[1] * this.m[4] - this.m[0] * this.m[5]);
-
-  this.m[0] = m0;
-  this.m[1] = m1;
-  this.m[2] = m2;
-  this.m[3] = m3;
-  this.m[4] = m4;
-  this.m[5] = m5;
-};
-
-Transform.prototype.rotate = function (rad) {
-  var c = Math.cos(rad);
-  var s = Math.sin(rad);
-  var m11 = this.m[0] * c + this.m[2] * s;
-  var m12 = this.m[1] * c + this.m[3] * s;
-  var m21 = this.m[0] * -s + this.m[2] * c;
-  var m22 = this.m[1] * -s + this.m[3] * c;
-
-  this.m[0] = m11;
-  this.m[1] = m12;
-  this.m[2] = m21;
-  this.m[3] = m22;
-};
-
-Transform.prototype.translate = function (x, y) {
-  this.m[4] += this.m[0] * x + this.m[2] * y;
-  this.m[5] += this.m[1] * x + this.m[3] * y;
-};
-
-Transform.prototype.scale = function (sx, sy) {
-  this.m[0] *= sx;
-  this.m[1] *= sx;
-  this.m[2] *= sy;
-  this.m[3] *= sy;
-};
-
-Transform.prototype.transformPoint = function (px, py) {
-  var x = px;
-  var y = py;
-
-  px = x * this.m[0] + y * this.m[2] + this.m[4];
-  py = x * this.m[1] + y * this.m[3] + this.m[5];
-
-  return { x: px,
-    y: py };
-};
-
-/***/ }),
 /* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4473,11 +4497,11 @@ var _index = __webpack_require__(54);
 
 var _vertexShader = __webpack_require__(60);
 
-var _textureCache = __webpack_require__(24);
+var _textureCache = __webpack_require__(25);
 
 var _textureCache2 = _interopRequireDefault(_textureCache);
 
-var _createProgramFromString = __webpack_require__(23);
+var _createProgramFromString = __webpack_require__(24);
 
 var _createProgramFromString2 = _interopRequireDefault(_createProgramFromString);
 
