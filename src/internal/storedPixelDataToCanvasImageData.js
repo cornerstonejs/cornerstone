@@ -15,21 +15,22 @@ import now from './now';
  * @param canvasImageDataData canvasImageData.data buffer filled with white pixels
  */
 export default function (image, lut, canvasImageDataData) {
-  const pixelData = image.getPixelData();
-  const minPixelValue = image.minPixelValue;
-  let canvasImageDataIndex = 3;
-  let storedPixelDataIndex = 0;
-  const numPixels = pixelData.length;
-
   let start = now();
+  const pixelData = image.getPixelData();
 
   image.stats.lastGetPixelDataTime = now() - start;
 
-  start = now();
+  const numPixels = pixelData.length;
+  const minPixelValue = image.minPixelValue;
+  let canvasImageDataIndex = 3;
+  let storedPixelDataIndex = 0;
+
+
     // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
     // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
 
     // Added two paths (Int16Array, Uint16Array) to avoid polymorphic deoptimization in chrome.
+  start = now();
   if (pixelData instanceof Int16Array) {
     if (minPixelValue < 0) {
       while (storedPixelDataIndex < numPixels) {

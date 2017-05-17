@@ -14,7 +14,6 @@ export default function (image, lut, canvasImageDataData) {
 
   image.stats.lastGetPixelDataTime = now() - start;
 
-  start = now();
   const minPixelValue = image.minPixelValue;
   let canvasImageDataIndex = 0;
   let storedPixelDataIndex = 0;
@@ -22,6 +21,7 @@ export default function (image, lut, canvasImageDataData) {
 
     // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
     // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
+  start = now();
   if (minPixelValue < 0) {
     while (storedPixelDataIndex < numPixels) {
       canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // Red

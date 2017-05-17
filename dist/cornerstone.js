@@ -1,4 +1,4 @@
-/*! cornerstone - 0.10.8 - 2017-41-04 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - 0.10.8 - 2017-41-17 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -620,7 +620,6 @@ exports.default = function (image, lut, canvasImageDataData) {
 
   image.stats.lastGetPixelDataTime = (0, _now2.default)() - start;
 
-  start = (0, _now2.default)();
   var minPixelValue = image.minPixelValue;
   var canvasImageDataIndex = 0;
   var storedPixelDataIndex = 0;
@@ -628,6 +627,7 @@ exports.default = function (image, lut, canvasImageDataData) {
 
   // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
   // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
+  start = (0, _now2.default)();
   if (minPixelValue < 0) {
     while (storedPixelDataIndex < numPixels) {
       canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++] + -minPixelValue]; // Red
@@ -666,21 +666,21 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 exports.default = function (image, lut, canvasImageDataData) {
-  var pixelData = image.getPixelData();
-  var minPixelValue = image.minPixelValue;
-  var canvasImageDataIndex = 3;
-  var storedPixelDataIndex = 0;
-  var numPixels = pixelData.length;
-
   var start = (0, _now2.default)();
+  var pixelData = image.getPixelData();
 
   image.stats.lastGetPixelDataTime = (0, _now2.default)() - start;
 
-  start = (0, _now2.default)();
+  var numPixels = pixelData.length;
+  var minPixelValue = image.minPixelValue;
+  var canvasImageDataIndex = 3;
+  var storedPixelDataIndex = 0;
+
   // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
   // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
 
   // Added two paths (Int16Array, Uint16Array) to avoid polymorphic deoptimization in chrome.
+  start = (0, _now2.default)();
   if (pixelData instanceof Int16Array) {
     if (minPixelValue < 0) {
       while (storedPixelDataIndex < numPixels) {
