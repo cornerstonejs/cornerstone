@@ -1,6 +1,15 @@
-/*! cornerstone - 0.10.9 - 2017-05-19 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
-var cornerstone =
-/******/ (function(modules) { // webpackBootstrap
+/*! cornerstone-core - 0.10.9 - 2017-05-22 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define("cornerstone", [], factory);
+	else if(typeof exports === 'object')
+		exports["cornerstone"] = factory();
+	else
+		root["cornerstone"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -5152,4 +5161,5 @@ var vertexShader = exports.vertexShader = 'attribute vec2 a_position;' + 'attrib
 
 /***/ })
 /******/ ]);
+});
 //# sourceMappingURL=cornerstone.js.map

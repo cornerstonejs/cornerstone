@@ -1,5 +1,5 @@
 {
-  "name": "cornerstone",
+  "name": "cornerstone-core",
   "version": "0.10.9",
   "description": "HTML5 Medical Image Viewer Component",
   "main": "./dist/cornerstone.min.js",
@@ -64,6 +64,6 @@
     "webpack": "^2.4.1"
   },
   "dependencies": {
-    "jquery": "^3.2.1"
+    "jquery": "^2.2.4"
   }
 }
