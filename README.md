@@ -6,7 +6,7 @@ repository contains the Cornerstone Core component which is a lightweight JavaSc
 medical images in modern web browsers that support the HTML5 canvas element.
 Cornerstone Core is not meant to be a complete application itself, but instead a component
 that can be used as part of larger more complex applications.  See the
-[CornerstoneDemo](http://chafey.github.io/cornerstoneDemo/) for an example of using the various Cornerstone
+[OHIF Viewer](http://viewer.ohif.org/) for an example of using the various Cornerstone
 libraries to build a simple study viewer.
 
 Cornerstone Core is agnostic to the actual container used to store image pixels as well as the transport mechanism
@@ -48,9 +48,9 @@ Get a packaged source file:
 * [cornerstone.js](https://raw.githubusercontent.com/chafey/cornerstone/master/dist/cornerstone.js)
 * [cornerstone.min.js](https://raw.githubusercontent.com/chafey/cornerstone/master/dist/cornerstone.min.js)
 
-Or install via [Bower](http://bower.io/):
+Or install via [NPM](https://www.npmjs.com/):
 
-> bower install cornerstone
+> npm install cornerstone-core
 
 
 Key Features
@@ -82,9 +82,9 @@ Links
 
 [CornerstoneTools](https://github.com/chafey/cornerstoneTools) - A library of common tools that can be used with Cornerstone
 
-[CornerstoneWADOImageLoader ](https://github.com/chafey/cornerstoneWADOImageLoader) - A Cornerstone Image Loader that works with WADO-URI, WADO-RS and DICOM P10 files
+[CornerstoneWADOImageLoader](https://github.com/chafey/cornerstoneWADOImageLoader) - A Cornerstone Image Loader that works with WADO-URI, WADO-RS and DICOM P10 files
 
-[dicomParser ](https://github.com/chafey/dicomParser) - A JavaScript library designed to parse DICOM for web browsers
+[dicomParser](https://github.com/chafey/dicomParser) - A JavaScript library designed to parse DICOM for web browsers
 
 Code Contributors
 =================
@@ -113,14 +113,11 @@ is very true in medical imaging.  When a patient is going through a disease proc
 and confusion.  Medical terminology amplifies these issues as it is hard to understand and therefore
 disempowering.  Medical imaging allows a mysterious health issue to be visualized and therefore brings a
 level of understanding that just can't be accomplished via textual information found in lab or radiology
-reports.  By helping a patient (and its supporting friends/family) connect with the disease visually through
-images, it is believed that fear, anxiety and confusion will all be reduced which
+reports.  By helping a patient (and its supporting friends/family) connect with the disease visually through images, it is believed that fear, anxiety and confusion will all be reduced which
 will increase optimism and therefore patient outcomes.
 
 It is my hope that this library be used to build a variety of applications and experiences
-to deliver on this vision.  The MIT license allows this library to be used in any type of application - personal,
-open source and commercial and is therefore appropriate to support this vision.  If you are reading this,
-I hope you can join me in this mission as there is still a lot to be done.
+to deliver on this vision.  The MIT license allows this library to be used in any type of application - personal, open source and commercial and is therefore appropriate to support this vision.  If you are reading this, I hope you can join me in this mission as there is still a lot to be done.
 
 _Why doesn't Cornerstone natively support the display of DICOM images?_
 
@@ -136,24 +133,15 @@ and that will be accomplished by supporting as many types of image containers an
 Another side effect of this approach is that the code base is smaller and easier to understand since
 it is focused on doing exactly one thing.  That being said, it is is expected that the majority of images
 displayed using this library will have originated as DICOM images.  It is therefore important to make sure
-that there are no limitations with respect to displaying the different types of DICOM images and have robust
-supporting libraries for DICOM.  Separate libraries to add DICOM specific support already exist, check out the
-[CornerstoneWADOImageLoader](https://github.com/chafey/cornerstoneWADOImageLoader) library and
-the [dicomParser](https://github.com/chafey/dicomParser) library.
+that there are no limitations with respect to displaying the different types of DICOM images and have robust supporting libraries for DICOM.  Separate libraries to add DICOM specific support already exist, check out the [CornerstoneWADOImageLoader](https://github.com/chafey/cornerstoneWADOImageLoader) library and the [dicomParser](https://github.com/chafey/dicomParser) library.
 
 _Why doesn't Cornerstone include basic tools like ww/wc using the mouse?_
 
 There is no standard for user interaction in medical imaging and a wide variety of interaction paradigms exist.
-For example, one medical imaging application may use the left mouse button to adjust ww/wc and another may use the
-right mouse button.  The main reason this library does not include tools is that it wants to reach the widest possible
-adoption and that will only be accomplished by making any interaction paradigm possible.  No tools
-are therefore provided with this library allowing users of the library to choose
-whatever interaction paradigm they like.  It is also hoped that this approach will make it easier for developers
-to experiment with new user input mechanisms like [Kinect](http://en.wikipedia.org/wiki/Kinect) or
-[Accelerometer](http://en.wikipedia.org/wiki/Accelerometer).  Another side effect of this
+For example, one medical imaging application may use the left mouse button to adjust ww/wc and another may use the right mouse button.  The main reason this library does not include tools is that it wants to reach the widest possible adoption and that will only be accomplished by making any interaction paradigm possible.  No tools are therefore provided with this library allowing users of the library to choose
+whatever interaction paradigm they like.  It is also hoped that this approach will make it easier for developers to experiment with new user input mechanisms like [Kinect](http://en.wikipedia.org/wiki/Kinect) or [Accelerometer](http://en.wikipedia.org/wiki/Accelerometer).  Another side effect of this
 approach is that the code base is smaller and easier to understand since it is focused on doing exactly one
-thing.  Tools are provided using the separate [CornerstoneTools](https://github.com/chafey/cornerstoneTools)
-if desired.
+thing.  Tools are provided using the separate [CornerstoneTools](https://github.com/chafey/cornerstoneTools) if desired.
 
 _Why doesn't this library support older browsers like IE8?_
 
@@ -164,19 +152,12 @@ polyfills available.  Sorry, upgrade your browser.
 _Why doesn't this library support stacks of images?_
 
 Images stack functionality such as a CT series or MRI series can actually be quite complex.  Regardless of
-what stack functionality is desired, all stacks ultimately need to be able to display a single image and that
-is what this library is focused on doing.  Stack functionality is therefore pushed up to a higher layer.  The
-[CornerstoneTools](https://github.com/chafey/cornerstoneTools) contains stack functionality and is a good place
-to look to see how various stack related functionality is implemented.
+what stack functionality is desired, all stacks ultimately need to be able to display a single image and that is what this library is focused on doing.  Stack functionality is therefore pushed up to a higher layer.  The [CornerstoneTools](https://github.com/chafey/cornerstoneTools) contains stack functionality and is a good place to look to see how various stack related functionality is implemented.
 
 _How do you envision this library supporting 3D functionality such as MPR, MIP and VR?_
 
 This library would be responsible for displaying the rendered image to the user.  The rendering of the
-3D image would be done by some other library - perhaps on the server side.  This library is purely 2D and has
-no knowledge of 3D image space.  It will probably make sense to have several layers on top of this library
-to provide 3D functionality.  For example, one layer that has a 3D viewport with properties such as transformation
-matrix, slice thickness, transfer function/LUT, segmentation masks, etc.  And another 3D tools layer that provides
-various tools on top of the 3d viewport (rotate, zoom, segment, scroll, etc).
+3D image would be done by some other library - perhaps on the server side.  This library is purely 2D and has no knowledge of 3D image space.  It will probably make sense to have several layers on top of this library to provide 3D functionality.  For example, one layer that has a 3D viewport with properties such as transformation matrix, slice thickness, transfer function/LUT, segmentation masks, etc.  And another 3D tools layer that provides various tools on top of the 3d viewport (rotate, zoom, segment, scroll, etc).
 
 OHIF/Cornerstone is working with the 3DSlicer project to integrate the two.  I also expect to implement
 client side MPR at some point as the browsers seem to be handling large memory much better.
@@ -194,8 +175,7 @@ _Any guidance on submitting changes?_
 While I do appreciate code contributions, I will not merge it unless it meets the following criteria:
 
 * Functionality is appropriate for the repository.  Consider posting on the forum if you are not sure
-* Code quality is acceptable.  I don't have coding standards defined, but make sure it passes jshint and looks like
-   the rest of the code in the repository.
+* Code quality is acceptable.  I don't have coding standards defined, but make sure it passes ESLint and looks like the rest of the code in the repository.
 * Quality of design is acceptable.  This is a bit subjective so you should consider posting on the forum for specific guidance
 
 I will provide feedback on your pull request if it fails to meet any of the above.
@@ -205,8 +185,7 @@ It is highly probably that I will reject a large pull request due to the time it
 
 _Will you add feature XYZ for me?_
 
-If it is in the roadmap, I intend to implement it some day - probably when I actually need it.  If you really need
-something now and are willing to pay for it, try posting on the cornerstone platform google group
+If it is in the roadmap, I intend to implement it some day - probably when I actually need it.  If you really need something now and are willing to pay for it, try posting on the cornerstone platform google group
 
 Copyright
 =========

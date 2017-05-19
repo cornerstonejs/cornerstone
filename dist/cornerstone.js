@@ -1,4 +1,4 @@
-/*! cornerstone - 0.10.8 - 2017-05-18 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone - 0.10.9 - 2017-05-19 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
 var cornerstone =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
