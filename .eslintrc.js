@@ -72,10 +72,10 @@ module.exports = {
       }
     ],
     //'line-comment-position': 'warn',
-    'linebreak-style': [
+    /*'linebreak-style': [
       'warn',
       'unix'
-    ],
+    ],*/
     'lines-around-comment': 'warn',
     'lines-around-directive': 'warn',
     'max-depth': 'warn',
