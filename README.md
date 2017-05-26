@@ -1,3 +1,6 @@
+[![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url] [![Build Status][travis-image]][travis-url]
+[![Coverage Status][coverage-image]][coverage-url]
+
 Cornerstone Core
 ================
 
@@ -192,4 +195,15 @@ Copyright
 
 Copyright 2016 Chris Hafey [chafey@gmail.com](mailto:chafey@gmail.com)
 
+[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
+[license-url]: LICENSE
 
+[npm-url]: https://npmjs.org/package/cornerstone-core
+[npm-version-image]: http://img.shields.io/npm/v/cornerstone-core.svg?style=flat
+[npm-downloads-image]: http://img.shields.io/npm/dm/cornerstone-core.svg?style=flat
+
+[travis-url]: http://travis-ci.org/swederik/cornerstone
+[travis-image]: http://img.shields.io/travis/swederik/cornerstone/develop.svg?style=flat
+
+[coverage-url]: https://coveralls.io/github/swederik/cornerstone?branch=master
+[coverage-image]: https://coveralls.io/repos/github/swederik/cornerstone/badge.svg?branch=master
