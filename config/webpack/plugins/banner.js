@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
-const rootPath = process.env.PWD;
-const pkgPath = path.resolve(rootPath, "package");
+const rootPath = process.cwd();
+const pkgPath = path.join(rootPath, "package");
 const pkg = require(pkgPath);
 
 const getCurrentDate = () => {

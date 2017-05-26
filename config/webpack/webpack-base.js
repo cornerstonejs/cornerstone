@@ -1,14 +1,14 @@
 const path = require('path');
 const webpack = require('webpack');
-const rootPath = process.env.PWD;
-const context = path.resolve(rootPath, "src");
-const outputPath = path.resolve(rootPath, 'dist');
-const bannerPlugin = require('./plugins/banner');
+const rootPath = process.cwd();
+const context = path.join(rootPath, "src");
+const outputPath = path.join(rootPath, 'dist');
+const bannerPlugin = require(path.join(__dirname, 'plugins', 'banner.js'));
 
 module.exports = {
   context: context,
   entry: {
-    cornerstone: './index.js'
+    cornerstone: path.join(context, 'index.js')
   },
   target: 'web',
   output: {
