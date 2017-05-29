@@ -2,7 +2,7 @@ import { getEnabledElements } from './enabledElements.js';
 
 export default function (element) {
   if (element === undefined) {
-    throw 'disable: element element must not be undefined';
+    throw new Error('disable: element must not be undefined');
   }
 
   // Search for this element in this list of enabled elements
@@ -19,11 +19,11 @@ export default function (element) {
 
       $(element).trigger('CornerstoneElementDisabled', eventData);
 
-          // Remove the child dom elements that we created (e.g.canvas)
+      // Remove the child DOM elements that we created (e.g.canvas)
       enabledElements[i].element.removeChild(enabledElements[i].canvas);
       enabledElements[i].canvas = undefined;
 
-          // Remove this element from the list of enabled elements
+      // Remove this element from the list of enabled elements
       enabledElements.splice(i, 1);
 
       break;

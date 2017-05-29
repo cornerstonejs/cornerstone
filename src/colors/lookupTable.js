@@ -77,7 +77,7 @@ export function LookupTable () {
 
   this.HSVToRGB = function (hue, sat, val) {
     if (hue > 1) {
-      throw 'HSVToRGB expects hue < 1';
+      throw new Error('HSVToRGB expects hue < 1');
     }
 
     const rgb = [];

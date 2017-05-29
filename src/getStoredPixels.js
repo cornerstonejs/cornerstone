@@ -1,7 +1,3 @@
-/**
- * This module returns a subset of the stored pixels of an image
- */
-
 import { getEnabledElement } from './enabledElements.js';
 
 /**
@@ -15,7 +11,7 @@ import { getEnabledElement } from './enabledElements.js';
  */
 export default function (element, x, y, width, height) {
   if (element === undefined) {
-    throw 'getStoredPixels: parameter element must not be undefined';
+    throw new Error('getStoredPixels: parameter element must not be undefined');
   }
 
   x = Math.round(x);

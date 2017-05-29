@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import generateLut from '../src/internal/generateLut';
+import generateLut from '../../src/internal/generateLut';
 
 describe('generateLut', function () {
   it('min pixel < 0', function () {

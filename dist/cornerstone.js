@@ -1,4 +1,4 @@
-/*! cornerstone-core - 0.10.10 - 2017-05-26 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone-core - 0.10.10 - 2017-05-29 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -74,7 +74,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 51);
+/******/ 	return __webpack_require__(__webpack_require__.s = 52);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -95,7 +95,7 @@ var enabledElements = [];
 
 function getEnabledElement(element) {
   if (element === undefined) {
-    throw 'getEnabledElement: parameter element must not be undefined';
+    throw new Error('getEnabledElement: parameter element must not be undefined');
   }
   for (var i = 0; i < enabledElements.length; i++) {
     if (enabledElements[i].element === element) {
@@ -103,12 +103,12 @@ function getEnabledElement(element) {
     }
   }
 
-  throw 'element not enabled';
+  throw new Error('element not enabled');
 }
 
 function addEnabledElement(enabledElement) {
   if (enabledElement === undefined) {
-    throw 'getEnabledElement: enabledElement element must not be undefined';
+    throw new Error('getEnabledElement: enabledElement element must not be undefined');
   }
 
   enabledElements.push(enabledElement);
@@ -145,7 +145,7 @@ exports.default = function (element, invalidated) {
   var enabledElement = (0, _enabledElements.getEnabledElement)(element);
 
   if (enabledElement.image === undefined) {
-    throw 'updateImage: image has not been loaded yet';
+    throw new Error('updateImage: image has not been loaded yet');
   }
 
   (0, _drawImage2.default)(enabledElement, invalidated);
@@ -190,11 +190,11 @@ Object.defineProperty(exports, "__esModule", {
 
 exports.default = function (canvas, image) {
   if (canvas === undefined) {
-    throw 'getDefaultViewport: parameter canvas must not be undefined';
+    throw new Error('getDefaultViewport: parameter canvas must not be undefined');
   }
 
   if (image === undefined) {
-    throw 'getDefaultViewport: parameter image must not be undefined';
+    throw new Error('getDefaultViewport: parameter image must not be undefined');
   }
 
   var viewport = {
@@ -419,12 +419,12 @@ function getRenderCanvas(enabledElement, image, invalidated) {
 function renderColorImage(enabledElement, invalidated) {
 
   if (enabledElement === undefined) {
-    throw 'drawImage: enabledElement parameter must not be undefined';
+    throw new Error('drawImage: enabledElement parameter must not be undefined');
   }
   var image = enabledElement.image;
 
   if (image === undefined) {
-    throw 'drawImage: image must be loaded before it can be drawn';
+    throw new Error('drawImage: image must be loaded before it can be drawn');
   }
 
   // Get the canvas context and reset the transform
@@ -494,10 +494,10 @@ Object.defineProperty(exports, "__esModule", {
 
 exports.default = function (enabledElement, context, scale) {
   if (enabledElement === undefined) {
-    throw 'setToPixelCoordinateSystem: parameter enabledElement must not be undefined';
+    throw new Error('setToPixelCoordinateSystem: parameter enabledElement must not be undefined');
   }
   if (context === undefined) {
-    throw 'setToPixelCoordinateSystem: parameter context must not be undefined';
+    throw new Error('setToPixelCoordinateSystem: parameter context must not be undefined');
   }
 
   var transform = (0, _calculateTransform2.default)(enabledElement, scale);
@@ -578,11 +578,11 @@ exports.default = function (image, windowWidth, windowCenter, invert, modalityLU
   return lut;
 };
 
-var _getModalityLUT = __webpack_require__(21);
+var _getModalityLUT = __webpack_require__(22);
 
 var _getModalityLUT2 = _interopRequireDefault(_getModalityLUT);
 
-var _getVOILut = __webpack_require__(52);
+var _getVOILut = __webpack_require__(53);
 
 var _getVOILut2 = _interopRequireDefault(_getVOILut);
 
@@ -657,7 +657,7 @@ exports.default = function (image, lut, canvasImageDataData) {
   image.stats.laststoredPixelDataToCanvasImageDataTime = (0, _now2.default)() - start;
 };
 
-var _now = __webpack_require__(22);
+var _now = __webpack_require__(23);
 
 var _now2 = _interopRequireDefault(_now);
 
@@ -722,7 +722,7 @@ exports.default = function (image, lut, canvasImageDataData) {
   image.stats.laststoredPixelDataToCanvasImageDataTime = (0, _now2.default)() - start;
 };
 
-var _now = __webpack_require__(22);
+var _now = __webpack_require__(23);
 
 var _now2 = _interopRequireDefault(_now);
 
@@ -864,13 +864,13 @@ function getRenderCanvas(enabledElement, image, invalidated) {
  */
 function renderGrayscaleImage(enabledElement, invalidated) {
   if (enabledElement === undefined) {
-    throw 'drawImage: enabledElement parameter must not be undefined';
+    throw new Error('drawImage: enabledElement parameter must not be undefined');
   }
 
   var image = enabledElement.image;
 
   if (image === undefined) {
-    throw 'drawImage: image must be loaded before it can be drawn';
+    throw new Error('drawImage: image must be loaded before it can be drawn');
   }
 
   // Get the canvas context and reset the transform
@@ -995,7 +995,7 @@ exports.default = function (enabledElement, scale) {
   return transform;
 };
 
-var _transform = __webpack_require__(23);
+var _transform = __webpack_require__(24);
 
 /***/ }),
 /* 14 */
@@ -1008,9 +1008,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _colormap = __webpack_require__(49);
+var _colormap = __webpack_require__(50);
 
-var _lookupTable = __webpack_require__(50);
+var _lookupTable = __webpack_require__(51);
 
 exports.default = {
   getColormap: _colormap.getColormap,
@@ -1091,7 +1091,7 @@ Object.defineProperty(exports, "__esModule", {
 
 exports.default = function (element, x, y, width, height) {
   if (element === undefined) {
-    throw 'getStoredPixels: parameter element must not be undefined';
+    throw new Error('getStoredPixels: parameter element must not be undefined');
   }
 
   x = Math.round(x);
@@ -1124,6 +1124,7 @@ var _enabledElements = __webpack_require__(0);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.cachedImages = undefined;
 exports.setMaximumSizeBytes = setMaximumSizeBytes;
 exports.putImagePromise = putImagePromise;
 exports.getImagePromise = getImagePromise;
@@ -1131,6 +1132,13 @@ exports.removeImagePromise = removeImagePromise;
 exports.getCacheInfo = getCacheInfo;
 exports.purgeCache = purgeCache;
 exports.changeImageIdCacheSize = changeImageIdCacheSize;
+
+var _namespace = __webpack_require__(18);
+
+var _namespace2 = _interopRequireDefault(_namespace);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 /**
  * This module deals with caching images
  */
@@ -1145,10 +1153,10 @@ var cachedImages = exports.cachedImages = [];
 
 function setMaximumSizeBytes(numBytes) {
   if (numBytes === undefined) {
-    throw 'setMaximumSizeBytes: parameter numBytes must not be undefined';
+    throw new Error('setMaximumSizeBytes: parameter numBytes must not be undefined');
   }
   if (numBytes.toFixed === undefined) {
-    throw 'setMaximumSizeBytes: parameter numBytes must be a number';
+    throw new Error('setMaximumSizeBytes: parameter numBytes must be a number');
   }
 
   maximumSizeInBytes = numBytes;
@@ -1182,24 +1190,23 @@ function purgeCacheIfNecessary() {
 
     removeImagePromise(imageId);
 
-    $(cornerstone).trigger('CornerstoneImageCachePromiseRemoved', { imageId: imageId });
+    $(document).trigger('CornerstoneImageCachePromiseRemoved', { imageId: imageId });
   }
 
   var cacheInfo = getCacheInfo();
 
-  $(cornerstone).trigger('CornerstoneImageCacheFull', cacheInfo);
+  $(document).trigger('CornerstoneImageCacheFull', cacheInfo);
 }
 
 function putImagePromise(imageId, imagePromise) {
   if (imageId === undefined) {
-    throw 'getImagePromise: imageId must not be undefined';
+    throw new Error('getImagePromise: imageId must not be undefined');
   }
   if (imagePromise === undefined) {
-    throw 'getImagePromise: imagePromise must not be undefined';
+    throw new Error('getImagePromise: imagePromise must not be undefined');
   }
-
   if (imageCacheDict.hasOwnProperty(imageId) === true) {
-    throw 'putImagePromise: imageId already in cache';
+    throw new Error('putImagePromise: imageId already in cache');
   }
 
   var cachedImage = {
@@ -1219,10 +1226,10 @@ function putImagePromise(imageId, imagePromise) {
     cachedImage.image = image;
 
     if (image.sizeInBytes === undefined) {
-      throw 'putImagePromise: image does not have sizeInBytes property or';
+      throw new Error('putImagePromise: sizeInBytes must not be undefined');
     }
     if (image.sizeInBytes.toFixed === undefined) {
-      throw 'putImagePromise: image.sizeInBytes is not a number';
+      throw new Error('putImagePromise: image.sizeInBytes is not a number');
     }
 
     cachedImage.sizeInBytes = image.sizeInBytes;
@@ -1235,7 +1242,7 @@ function putImagePromise(imageId, imagePromise) {
 
 function getImagePromise(imageId) {
   if (imageId === undefined) {
-    throw 'getImagePromise: imageId must not be undefined';
+    throw new Error('getImagePromise: imageId must not be undefined');
   }
   var cachedImage = imageCacheDict[imageId];
 
@@ -1251,12 +1258,12 @@ function getImagePromise(imageId) {
 
 function removeImagePromise(imageId) {
   if (imageId === undefined) {
-    throw 'removeImagePromise: imageId must not be undefined';
+    throw new Error('removeImagePromise: imageId must not be undefined');
   }
   var cachedImage = imageCacheDict[imageId];
 
   if (cachedImage === undefined) {
-    throw 'removeImagePromise: imageId must not be undefined';
+    throw new Error('removeImagePromise: imageId must not be undefined');
   }
 
   cachedImage.imagePromise.reject();
@@ -1265,8 +1272,6 @@ function removeImagePromise(imageId) {
   decache(cachedImage.imagePromise, cachedImage.imageId);
 
   delete imageCacheDict[imageId];
-
-  return cachedImage.imagePromise;
 }
 
 function getCacheInfo() {
@@ -1305,6 +1310,7 @@ function changeImageIdCacheSize(imageId, newCacheSize) {
       var cacheSizeDifference = newCacheSize - image.sizeInBytes;
 
       image.sizeInBytes = newCacheSize;
+      cacheEntry.sizeInBytes = newCacheSize;
       cacheSizeInBytes += cacheSizeDifference;
     });
   }
@@ -1324,6 +1330,22 @@ exports.default = {
 
 /***/ }),
 /* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var cornerstone = {
+  name: 'cornerstone-core'
+};
+
+exports.default = cornerstone;
+
+/***/ }),
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1354,12 +1376,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function renderWebImage(enabledElement, invalidated) {
 
   if (enabledElement === undefined) {
-    throw 'drawImage: enabledElement parameter must not be undefined';
+    throw new Error('drawImage: enabledElement parameter must not be undefined');
   }
   var image = enabledElement.image;
 
   if (image === undefined) {
-    throw 'drawImage: image must be loaded before it can be drawn';
+    throw new Error('drawImage: image must be loaded before it can be drawn');
   }
 
   // Get the canvas context and reset the transform
@@ -1393,7 +1415,7 @@ function renderWebImage(enabledElement, invalidated) {
 }
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1474,7 +1496,7 @@ function setCanvasSize(element, canvas) {
  */
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1484,13 +1506,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _renderer = __webpack_require__(53);
+var _renderer = __webpack_require__(54);
 
-var _createProgramFromString = __webpack_require__(24);
+var _createProgramFromString = __webpack_require__(25);
 
 var _createProgramFromString2 = _interopRequireDefault(_createProgramFromString);
 
-var _textureCache = __webpack_require__(25);
+var _textureCache = __webpack_require__(26);
 
 var _textureCache2 = _interopRequireDefault(_textureCache);
 
@@ -1509,7 +1531,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1557,7 +1579,7 @@ function generateNonLinearModalityLUT(modalityLUT) {
 }
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1576,7 +1598,7 @@ exports.default = function () {
 };
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1724,7 +1746,7 @@ var Transform = exports.Transform = function () {
 }();
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1816,7 +1838,7 @@ function createProgram(gl, vertexShader, fragmentShader) {
  */
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1882,10 +1904,10 @@ function purgeCacheIfNecessary() {
 
 function setMaximumSizeBytes(numBytes) {
   if (numBytes === undefined) {
-    throw 'setMaximumSizeBytes: parameter numBytes must not be undefined';
+    throw new Error('setMaximumSizeBytes: parameter numBytes must not be undefined');
   }
   if (numBytes.toFixed === undefined) {
-    throw 'setMaximumSizeBytes: parameter numBytes must be a number';
+    throw new Error('setMaximumSizeBytes: parameter numBytes must be a number');
   }
 
   maximumSizeInBytes = numBytes;
@@ -1896,19 +1918,19 @@ function putImageTexture(image, imageTexture) {
   var imageId = image.imageId;
 
   if (image === undefined) {
-    throw 'putImageTexture: image must not be undefined';
+    throw new Error('putImageTexture: image must not be undefined');
   }
 
   if (imageId === undefined) {
-    throw 'putImageTexture: imageId must not be undefined';
+    throw new Error('putImageTexture: imageId must not be undefined');
   }
 
   if (imageTexture === undefined) {
-    throw 'putImageTexture: imageTexture must not be undefined';
+    throw new Error('putImageTexture: imageTexture must not be undefined');
   }
 
   if (Object.prototype.hasOwnProperty.call(imageCache, imageId) === true) {
-    throw 'putImageTexture: imageId already in cache';
+    throw new Error('putImageTexture: imageId already in cache');
   }
 
   var cachedImage = {
@@ -1922,10 +1944,10 @@ function putImageTexture(image, imageTexture) {
   cachedImages.push(cachedImage);
 
   if (imageTexture.sizeInBytes === undefined) {
-    throw 'putImageTexture: imageTexture does not have sizeInBytes property or';
+    throw new Error('putImageTexture: imageTexture.sizeInBytes must not be undefined');
   }
   if (imageTexture.sizeInBytes.toFixed === undefined) {
-    throw 'putImageTexture: imageTexture.sizeInBytes is not a number';
+    throw new Error('putImageTexture: imageTexture.sizeInBytes is not a number');
   }
   cacheSizeInBytes += cachedImage.sizeInBytes;
   purgeCacheIfNecessary();
@@ -1933,12 +1955,12 @@ function putImageTexture(image, imageTexture) {
 
 function getImageTexture(imageId) {
   if (imageId === undefined) {
-    throw 'getImageTexture: imageId must not be undefined';
+    throw new Error('getImageTexture: imageId must not be undefined');
   }
   var cachedImage = imageCache[imageId];
 
   if (cachedImage === undefined) {
-    return undefined;
+    return;
   }
 
   // Bump time stamp for cached image
@@ -1949,12 +1971,12 @@ function getImageTexture(imageId) {
 
 function removeImageTexture(imageId) {
   if (imageId === undefined) {
-    throw 'removeImageTexture: imageId must not be undefined';
+    throw new Error('removeImageTexture: imageId must not be undefined');
   }
   var cachedImage = imageCache[imageId];
 
   if (cachedImage === undefined) {
-    throw 'removeImageTexture: imageId must not be undefined';
+    throw new Error('removeImageTexture: imageId must not be undefined');
   }
   cachedImages.splice(cachedImages.indexOf(cachedImage), 1);
   cacheSizeInBytes -= cachedImage.sizeInBytes;
@@ -1981,7 +2003,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2009,7 +2031,7 @@ var _getTransform2 = _interopRequireDefault(_getTransform);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2021,7 +2043,7 @@ Object.defineProperty(exports, "__esModule", {
 
 exports.default = function (element) {
   if (element === undefined) {
-    throw 'disable: element element must not be undefined';
+    throw new Error('disable: element must not be undefined');
   }
 
   // Search for this element in this list of enabled elements
@@ -2038,7 +2060,7 @@ exports.default = function (element) {
 
       $(element).trigger('CornerstoneElementDisabled', eventData);
 
-      // Remove the child dom elements that we created (e.g.canvas)
+      // Remove the child DOM elements that we created (e.g.canvas)
       enabledElements[i].element.removeChild(enabledElements[i].canvas);
       enabledElements[i].canvas = undefined;
 
@@ -2053,7 +2075,7 @@ exports.default = function (element) {
 var _enabledElements = __webpack_require__(0);
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2065,10 +2087,10 @@ Object.defineProperty(exports, "__esModule", {
 
 exports.default = function (element, image, viewport) {
   if (element === undefined) {
-    throw 'displayImage: parameter element cannot be undefined';
+    throw new Error('displayImage: parameter element must not be undefined');
   }
   if (image === undefined) {
-    throw 'displayImage: parameter image cannot be undefined';
+    throw new Error('displayImage: parameter image must not be undefined');
   }
 
   var enabledElement = (0, _enabledElements.getEnabledElement)(element);
@@ -2125,7 +2147,7 @@ var _updateImage2 = _interopRequireDefault(_updateImage);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2139,7 +2161,7 @@ exports.default = function (element) {
   var enabledElement = (0, _enabledElements.getEnabledElement)(element);
 
   if (enabledElement.image === undefined) {
-    throw 'draw: image has not been loaded yet';
+    throw new Error('draw: image has not been loaded yet');
   }
 
   (0, _drawImage2.default)(enabledElement);
@@ -2154,7 +2176,7 @@ var _drawImage2 = _interopRequireDefault(_drawImage);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2185,7 +2207,7 @@ var _drawImage2 = _interopRequireDefault(_drawImage);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2197,7 +2219,7 @@ Object.defineProperty(exports, "__esModule", {
 
 exports.default = function (element, options) {
   if (element === undefined) {
-    throw 'enable: parameter element cannot be undefined';
+    throw new Error('enable: parameter element cannot be undefined');
   }
 
   // If this enabled element has the option set for WebGL, we should
@@ -2206,8 +2228,6 @@ exports.default = function (element, options) {
     if (_index2.default.renderer.isWebGLAvailable()) {
       // If WebGL is available on the device, initialize the renderer
       // And return the renderCanvas from the WebGL rendering path
-      console.log('Using WebGL rendering path');
-
       _index2.default.renderer.initRenderer();
       options.renderer = 'webgl';
     } else {
@@ -2290,7 +2310,7 @@ exports.default = function (element, options) {
 
 var _enabledElements = __webpack_require__(0);
 
-var _resize = __webpack_require__(19);
+var _resize = __webpack_require__(20);
 
 var _resize2 = _interopRequireDefault(_resize);
 
@@ -2302,14 +2322,14 @@ var _renderColorImage = __webpack_require__(5);
 
 var _renderGrayscaleImage = __webpack_require__(12);
 
-var _index = __webpack_require__(20);
+var _index = __webpack_require__(21);
 
 var _index2 = _interopRequireDefault(_index);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2340,7 +2360,7 @@ function removeElementData(el, dataType) {
 }
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2447,7 +2467,7 @@ function restoreImage(image) {
  */
 function convertImageToFalseColorImage(image, colormap) {
   if (image.color && !image.falseColor) {
-    throw 'Color transforms are not implemented yet';
+    throw new Error('Color transforms are not implemented yet');
   }
 
   // User can pass a colormap id or a colormap object
@@ -2514,7 +2534,7 @@ exports.convertToFalseColorImage = convertToFalseColorImage;
 exports.restoreImage = restoreImage;
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2539,7 +2559,7 @@ var _getDefaultViewport2 = _interopRequireDefault(_getDefaultViewport);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2558,7 +2578,7 @@ exports.default = function (element) {
 var _enabledElements = __webpack_require__(0);
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2569,10 +2589,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 exports.default = function (element, x, y, width, height) {
-
   var storedPixels = (0, _getStoredPixels2.default)(element, x, y, width, height);
   var ee = (0, _enabledElements.getEnabledElement)(element);
-
   var mlutfn = (0, _getModalityLUT2.default)(ee.image.slope, ee.image.intercept, ee.viewport.modalityLUT);
 
   return storedPixels.map(mlutfn);
@@ -2584,14 +2602,14 @@ var _getStoredPixels = __webpack_require__(16);
 
 var _getStoredPixels2 = _interopRequireDefault(_getStoredPixels);
 
-var _getModalityLUT = __webpack_require__(21);
+var _getModalityLUT = __webpack_require__(22);
 
 var _getModalityLUT2 = _interopRequireDefault(_getModalityLUT);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2633,7 +2651,7 @@ exports.default = function (element) {
 var _enabledElements = __webpack_require__(0);
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2686,7 +2704,7 @@ function loadImageFromImageLoader(imageId, options) {
 // Is not stored in the cache
 function loadImage(imageId, options) {
   if (imageId === undefined) {
-    throw 'loadImage: parameter imageId must not be undefined';
+    throw new Error('loadImage: parameter imageId must not be undefined');
   }
 
   var imagePromise = (0, _imageCache.getImagePromise)(imageId);
@@ -2697,7 +2715,7 @@ function loadImage(imageId, options) {
 
   imagePromise = loadImageFromImageLoader(imageId, options);
   if (imagePromise === undefined) {
-    throw 'loadImage: no image loader for imageId';
+    throw new Error('loadImage: no image loader for imageId');
   }
 
   return imagePromise;
@@ -2708,7 +2726,7 @@ function loadImage(imageId, options) {
 // Stored in the cache
 function loadAndCacheImage(imageId, options) {
   if (imageId === undefined) {
-    throw 'loadAndCacheImage: parameter imageId must not be undefined';
+    throw new Error('loadAndCacheImage: parameter imageId must not be undefined');
   }
 
   var imagePromise = (0, _imageCache.getImagePromise)(imageId);
@@ -2719,7 +2737,7 @@ function loadAndCacheImage(imageId, options) {
 
   imagePromise = loadImageFromImageLoader(imageId, options);
   if (imagePromise === undefined) {
-    throw 'loadAndCacheImage: no image loader for imageId';
+    throw new Error('loadAndCacheImage: no image loader for imageId');
   }
 
   (0, _imageCache.putImagePromise)(imageId, imagePromise);
@@ -2742,7 +2760,7 @@ function registerUnknownImageLoader(imageLoader) {
 }
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2788,7 +2806,7 @@ var _calculateTransform = __webpack_require__(13);
 
 var _calculateTransform2 = _interopRequireDefault(_calculateTransform);
 
-var _transform = __webpack_require__(23);
+var _transform = __webpack_require__(24);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2806,7 +2824,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2831,7 +2849,7 @@ exports.default = function (element) {
 var _enabledElements = __webpack_require__(0);
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2859,7 +2877,7 @@ var _drawImage2 = _interopRequireDefault(_drawImage);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2938,7 +2956,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2952,7 +2970,7 @@ exports.default = function (element, pageX, pageY) {
   var enabledElement = (0, _enabledElements.getEnabledElement)(element);
 
   if (enabledElement.image === undefined) {
-    throw 'image has not been loaded yet';
+    throw new Error('image has not been loaded yet');
   }
 
   // Convert the pageX and pageY to the canvas client coordinates
@@ -2978,7 +2996,7 @@ var _getTransform2 = _interopRequireDefault(_getTransform);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2990,7 +3008,7 @@ Object.defineProperty(exports, "__esModule", {
 
 exports.default = function (image, lookupTable) {
   if (image.color && !image.falseColor) {
-    throw 'Color transforms are not implemented yet';
+    throw new Error('Color transforms are not implemented yet');
   }
 
   var minPixelValue = image.minPixelValue;
@@ -3055,7 +3073,7 @@ var _index2 = _interopRequireDefault(_index);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3081,7 +3099,7 @@ var _getTransform2 = _interopRequireDefault(_getTransform);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3095,7 +3113,7 @@ var _renderColorImage = __webpack_require__(5);
 
 var _renderGrayscaleImage = __webpack_require__(12);
 
-var _renderWebImage = __webpack_require__(18);
+var _renderWebImage = __webpack_require__(19);
 
 exports.default = {
   colorImage: _renderColorImage.renderColorImage,
@@ -3104,7 +3122,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3134,7 +3152,7 @@ var _updateImage2 = _interopRequireDefault(_updateImage);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3188,7 +3206,7 @@ var _updateImage2 = _interopRequireDefault(_updateImage);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3649,7 +3667,7 @@ function getColormap(id, colormapData) {
 }
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3737,7 +3755,7 @@ function LookupTable() {
 
   this.HSVToRGB = function (hue, sat, val) {
     if (hue > 1) {
-      throw 'HSVToRGB expects hue < 1';
+      throw new Error('HSVToRGB expects hue < 1');
     }
 
     var rgb = [];
@@ -3994,7 +4012,7 @@ function LookupTable() {
 }
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4067,7 +4085,7 @@ Object.defineProperty(exports, 'storedColorPixelDataToCanvasImageData', {
   }
 });
 
-var _index = __webpack_require__(39);
+var _index = __webpack_require__(40);
 
 Object.defineProperty(exports, 'internal', {
   enumerable: true,
@@ -4094,7 +4112,7 @@ Object.defineProperty(exports, 'renderGrayscaleImage', {
   }
 });
 
-var _renderWebImage = __webpack_require__(18);
+var _renderWebImage = __webpack_require__(19);
 
 Object.defineProperty(exports, 'renderWebImage', {
   enumerable: true,
@@ -4103,7 +4121,7 @@ Object.defineProperty(exports, 'renderWebImage', {
   }
 });
 
-var _canvasToPixel = __webpack_require__(26);
+var _canvasToPixel = __webpack_require__(27);
 
 Object.defineProperty(exports, 'canvasToPixel', {
   enumerable: true,
@@ -4112,7 +4130,7 @@ Object.defineProperty(exports, 'canvasToPixel', {
   }
 });
 
-var _disable = __webpack_require__(27);
+var _disable = __webpack_require__(28);
 
 Object.defineProperty(exports, 'disable', {
   enumerable: true,
@@ -4121,7 +4139,7 @@ Object.defineProperty(exports, 'disable', {
   }
 });
 
-var _displayImage = __webpack_require__(28);
+var _displayImage = __webpack_require__(29);
 
 Object.defineProperty(exports, 'displayImage', {
   enumerable: true,
@@ -4130,7 +4148,7 @@ Object.defineProperty(exports, 'displayImage', {
   }
 });
 
-var _draw = __webpack_require__(29);
+var _draw = __webpack_require__(30);
 
 Object.defineProperty(exports, 'draw', {
   enumerable: true,
@@ -4139,7 +4157,7 @@ Object.defineProperty(exports, 'draw', {
   }
 });
 
-var _drawInvalidated = __webpack_require__(30);
+var _drawInvalidated = __webpack_require__(31);
 
 Object.defineProperty(exports, 'drawInvalidated', {
   enumerable: true,
@@ -4148,7 +4166,7 @@ Object.defineProperty(exports, 'drawInvalidated', {
   }
 });
 
-var _enable = __webpack_require__(31);
+var _enable = __webpack_require__(32);
 
 Object.defineProperty(exports, 'enable', {
   enumerable: true,
@@ -4157,7 +4175,7 @@ Object.defineProperty(exports, 'enable', {
   }
 });
 
-var _enabledElementData = __webpack_require__(32);
+var _enabledElementData = __webpack_require__(33);
 
 Object.defineProperty(exports, 'getElementData', {
   enumerable: true,
@@ -4208,7 +4226,7 @@ Object.defineProperty(exports, 'fitToWindow', {
   }
 });
 
-var _getDefaultViewportForImage = __webpack_require__(34);
+var _getDefaultViewportForImage = __webpack_require__(35);
 
 Object.defineProperty(exports, 'getDefaultViewportForImage', {
   enumerable: true,
@@ -4217,7 +4235,7 @@ Object.defineProperty(exports, 'getDefaultViewportForImage', {
   }
 });
 
-var _getImage = __webpack_require__(35);
+var _getImage = __webpack_require__(36);
 
 Object.defineProperty(exports, 'getImage', {
   enumerable: true,
@@ -4226,7 +4244,7 @@ Object.defineProperty(exports, 'getImage', {
   }
 });
 
-var _getPixels = __webpack_require__(36);
+var _getPixels = __webpack_require__(37);
 
 Object.defineProperty(exports, 'getPixels', {
   enumerable: true,
@@ -4244,7 +4262,7 @@ Object.defineProperty(exports, 'getStoredPixels', {
   }
 });
 
-var _getViewport = __webpack_require__(37);
+var _getViewport = __webpack_require__(38);
 
 Object.defineProperty(exports, 'getViewport', {
   enumerable: true,
@@ -4253,7 +4271,7 @@ Object.defineProperty(exports, 'getViewport', {
   }
 });
 
-var _imageLoader = __webpack_require__(38);
+var _imageLoader = __webpack_require__(39);
 
 Object.defineProperty(exports, 'loadImage', {
   enumerable: true,
@@ -4280,7 +4298,7 @@ Object.defineProperty(exports, 'registerUnknownImageLoader', {
   }
 });
 
-var _invalidate = __webpack_require__(40);
+var _invalidate = __webpack_require__(41);
 
 Object.defineProperty(exports, 'invalidate', {
   enumerable: true,
@@ -4289,7 +4307,7 @@ Object.defineProperty(exports, 'invalidate', {
   }
 });
 
-var _invalidateImageId = __webpack_require__(41);
+var _invalidateImageId = __webpack_require__(42);
 
 Object.defineProperty(exports, 'invalidateImageId', {
   enumerable: true,
@@ -4298,7 +4316,7 @@ Object.defineProperty(exports, 'invalidateImageId', {
   }
 });
 
-var _pageToPixel = __webpack_require__(43);
+var _pageToPixel = __webpack_require__(44);
 
 Object.defineProperty(exports, 'pageToPixel', {
   enumerable: true,
@@ -4307,7 +4325,7 @@ Object.defineProperty(exports, 'pageToPixel', {
   }
 });
 
-var _pixelToCanvas = __webpack_require__(45);
+var _pixelToCanvas = __webpack_require__(46);
 
 Object.defineProperty(exports, 'pixelToCanvas', {
   enumerable: true,
@@ -4316,7 +4334,7 @@ Object.defineProperty(exports, 'pixelToCanvas', {
   }
 });
 
-var _reset = __webpack_require__(47);
+var _reset = __webpack_require__(48);
 
 Object.defineProperty(exports, 'reset', {
   enumerable: true,
@@ -4325,7 +4343,7 @@ Object.defineProperty(exports, 'reset', {
   }
 });
 
-var _resize = __webpack_require__(19);
+var _resize = __webpack_require__(20);
 
 Object.defineProperty(exports, 'resize', {
   enumerable: true,
@@ -4343,7 +4361,7 @@ Object.defineProperty(exports, 'setToPixelCoordinateSystem', {
   }
 });
 
-var _setViewport = __webpack_require__(48);
+var _setViewport = __webpack_require__(49);
 
 Object.defineProperty(exports, 'setViewport', {
   enumerable: true,
@@ -4361,7 +4379,7 @@ Object.defineProperty(exports, 'updateImage', {
   }
 });
 
-var _pixelDataToFalseColorData = __webpack_require__(44);
+var _pixelDataToFalseColorData = __webpack_require__(45);
 
 Object.defineProperty(exports, 'pixelDataToFalseColorData', {
   enumerable: true,
@@ -4370,7 +4388,7 @@ Object.defineProperty(exports, 'pixelDataToFalseColorData', {
   }
 });
 
-var _index2 = __webpack_require__(46);
+var _index2 = __webpack_require__(47);
 
 Object.defineProperty(exports, 'rendering', {
   enumerable: true,
@@ -4388,7 +4406,7 @@ Object.defineProperty(exports, 'imageCache', {
   }
 });
 
-var _metaData = __webpack_require__(42);
+var _metaData = __webpack_require__(43);
 
 Object.defineProperty(exports, 'metaData', {
   enumerable: true,
@@ -4397,7 +4415,7 @@ Object.defineProperty(exports, 'metaData', {
   }
 });
 
-var _index3 = __webpack_require__(20);
+var _index3 = __webpack_require__(21);
 
 Object.defineProperty(exports, 'webGL', {
   enumerable: true,
@@ -4415,7 +4433,7 @@ Object.defineProperty(exports, 'colors', {
   }
 });
 
-var _falseColorMapping = __webpack_require__(33);
+var _falseColorMapping = __webpack_require__(34);
 
 Object.defineProperty(exports, 'convertImageToFalseColorImage', {
   enumerable: true,
@@ -4436,10 +4454,19 @@ Object.defineProperty(exports, 'restoreImage', {
   }
 });
 
+var _namespace = __webpack_require__(18);
+
+Object.defineProperty(exports, 'cornerstone', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_namespace).default;
+  }
+});
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4487,7 +4514,7 @@ function generateNonLinearVOILUT(voiLUT) {
 }
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4502,15 +4529,15 @@ exports.initRenderer = initRenderer;
 exports.render = render;
 exports.isWebGLAvailable = isWebGLAvailable;
 
-var _index = __webpack_require__(54);
+var _index = __webpack_require__(55);
 
-var _vertexShader = __webpack_require__(60);
+var _vertexShader = __webpack_require__(61);
 
-var _textureCache = __webpack_require__(25);
+var _textureCache = __webpack_require__(26);
 
 var _textureCache2 = _interopRequireDefault(_textureCache);
 
-var _createProgramFromString = __webpack_require__(24);
+var _createProgramFromString = __webpack_require__(25);
 
 var _createProgramFromString2 = _interopRequireDefault(_createProgramFromString);
 
@@ -4605,7 +4632,7 @@ function initWebGL(canvas) {
     canvas.removeEventListener('webglcontextrestored', handleRestoredContext, false);
     canvas.addEventListener('webglcontextrestored', handleRestoredContext, false);
   } catch (error) {
-    throw 'Error creating WebGL context';
+    throw new Error('Error creating WebGL context');
   }
 
   // If we don't have a GL context, give up now
@@ -4814,7 +4841,7 @@ function isWebGLAvailable() {
 }
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4825,15 +4852,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.dataUtilities = exports.shaders = undefined;
 
-var _int = __webpack_require__(55);
+var _int = __webpack_require__(56);
 
-var _int2 = __webpack_require__(56);
+var _int2 = __webpack_require__(57);
 
-var _rgb = __webpack_require__(57);
+var _rgb = __webpack_require__(58);
 
-var _uint = __webpack_require__(58);
+var _uint = __webpack_require__(59);
 
-var _uint2 = __webpack_require__(59);
+var _uint2 = __webpack_require__(60);
 
 var shaders = {
   int16: _int.int16Shader,
@@ -4855,7 +4882,7 @@ exports.shaders = shaders;
 exports.dataUtilities = dataUtilities;
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4917,7 +4944,7 @@ int16Shader.frag = 'precision mediump float;' + 'uniform sampler2D u_image;' + '
 exports.int16Shader = int16Shader;
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4970,7 +4997,7 @@ int8Shader.frag = 'precision mediump float;' + 'uniform sampler2D u_image;' + 'u
 exports.int8Shader = int8Shader;
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5037,7 +5064,7 @@ rgbShader.frag = 'precision mediump float;' + 'uniform sampler2D u_image;' + 'un
 exports.rgbShader = rgbShader;
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5098,7 +5125,7 @@ uint16Shader.frag = 'precision mediump float;' + 'uniform sampler2D u_image;' + 
 exports.uint16Shader = uint16Shader;
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5148,7 +5175,7 @@ uint8Shader.frag = 'precision mediump float;' + 'uniform sampler2D u_image;' + '
 exports.uint8Shader = uint8Shader;
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

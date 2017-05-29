@@ -89,7 +89,7 @@ function restoreImage (image) {
    */
 function convertImageToFalseColorImage (image, colormap) {
   if (image.color && !image.falseColor) {
-    throw 'Color transforms are not implemented yet';
+    throw new Error('Color transforms are not implemented yet');
   }
 
   // User can pass a colormap id or a colormap object

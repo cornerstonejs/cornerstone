@@ -38,7 +38,7 @@ function loadImageFromImageLoader (imageId, options) {
 // Is not stored in the cache
 export function loadImage (imageId, options) {
   if (imageId === undefined) {
-    throw 'loadImage: parameter imageId must not be undefined';
+    throw new Error('loadImage: parameter imageId must not be undefined');
   }
 
   let imagePromise = getImagePromise(imageId);
@@ -49,7 +49,7 @@ export function loadImage (imageId, options) {
 
   imagePromise = loadImageFromImageLoader(imageId, options);
   if (imagePromise === undefined) {
-    throw 'loadImage: no image loader for imageId';
+    throw new Error('loadImage: no image loader for imageId');
   }
 
   return imagePromise;
@@ -60,7 +60,7 @@ export function loadImage (imageId, options) {
 // Stored in the cache
 export function loadAndCacheImage (imageId, options) {
   if (imageId === undefined) {
-    throw 'loadAndCacheImage: parameter imageId must not be undefined';
+    throw new Error('loadAndCacheImage: parameter imageId must not be undefined');
   }
 
   let imagePromise = getImagePromise(imageId);
@@ -71,7 +71,7 @@ export function loadAndCacheImage (imageId, options) {
 
   imagePromise = loadImageFromImageLoader(imageId, options);
   if (imagePromise === undefined) {
-    throw 'loadAndCacheImage: no image loader for imageId';
+    throw new Error('loadAndCacheImage: no image loader for imageId');
   }
 
   putImagePromise(imageId, imagePromise);

@@ -98,7 +98,7 @@ function initWebGL (canvas) {
     canvas.addEventListener('webglcontextrestored', handleRestoredContext, false);
 
   } catch (error) {
-    throw 'Error creating WebGL context';
+    throw new Error('Error creating WebGL context');
   }
 
     // If we don't have a GL context, give up now

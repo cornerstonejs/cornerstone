@@ -55,10 +55,10 @@ function purgeCacheIfNecessary () {
 
 function setMaximumSizeBytes (numBytes) {
   if (numBytes === undefined) {
-    throw 'setMaximumSizeBytes: parameter numBytes must not be undefined';
+    throw new Error('setMaximumSizeBytes: parameter numBytes must not be undefined');
   }
   if (numBytes.toFixed === undefined) {
-    throw 'setMaximumSizeBytes: parameter numBytes must be a number';
+    throw new Error('setMaximumSizeBytes: parameter numBytes must be a number');
   }
 
   maximumSizeInBytes = numBytes;
@@ -69,19 +69,19 @@ function putImageTexture (image, imageTexture) {
   const imageId = image.imageId;
 
   if (image === undefined) {
-    throw 'putImageTexture: image must not be undefined';
+    throw new Error('putImageTexture: image must not be undefined');
   }
 
   if (imageId === undefined) {
-    throw 'putImageTexture: imageId must not be undefined';
+    throw new Error('putImageTexture: imageId must not be undefined');
   }
 
   if (imageTexture === undefined) {
-    throw 'putImageTexture: imageTexture must not be undefined';
+    throw new Error('putImageTexture: imageTexture must not be undefined');
   }
 
   if (Object.prototype.hasOwnProperty.call(imageCache, imageId) === true) {
-    throw 'putImageTexture: imageId already in cache';
+    throw new Error('putImageTexture: imageId already in cache');
   }
 
   const cachedImage = {
@@ -95,10 +95,10 @@ function putImageTexture (image, imageTexture) {
   cachedImages.push(cachedImage);
 
   if (imageTexture.sizeInBytes === undefined) {
-    throw 'putImageTexture: imageTexture does not have sizeInBytes property or';
+    throw new Error('putImageTexture: imageTexture.sizeInBytes must not be undefined');
   }
   if (imageTexture.sizeInBytes.toFixed === undefined) {
-    throw 'putImageTexture: imageTexture.sizeInBytes is not a number';
+    throw new Error('putImageTexture: imageTexture.sizeInBytes is not a number');
   }
   cacheSizeInBytes += cachedImage.sizeInBytes;
   purgeCacheIfNecessary();
@@ -106,12 +106,12 @@ function putImageTexture (image, imageTexture) {
 
 function getImageTexture (imageId) {
   if (imageId === undefined) {
-    throw 'getImageTexture: imageId must not be undefined';
+    throw new Error('getImageTexture: imageId must not be undefined');
   }
   const cachedImage = imageCache[imageId];
 
   if (cachedImage === undefined) {
-    return undefined;
+    return;
   }
 
     // Bump time stamp for cached image
@@ -122,12 +122,12 @@ function getImageTexture (imageId) {
 
 function removeImageTexture (imageId) {
   if (imageId === undefined) {
-    throw 'removeImageTexture: imageId must not be undefined';
+    throw new Error('removeImageTexture: imageId must not be undefined');
   }
   const cachedImage = imageCache[imageId];
 
   if (cachedImage === undefined) {
-    throw 'removeImageTexture: imageId must not be undefined';
+    throw new Error('removeImageTexture: imageId must not be undefined');
   }
   cachedImages.splice(cachedImages.indexOf(cachedImage), 1);
   cacheSizeInBytes -= cachedImage.sizeInBytes;

@@ -60,3 +60,5 @@ export { default as colors } from './colors/index';
 export { convertImageToFalseColorImage,
   convertToFalseColorImage,
   restoreImage } from './falseColorMapping';
+
+export { default as cornerstone } from './namespace';

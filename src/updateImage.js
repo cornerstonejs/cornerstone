@@ -13,7 +13,7 @@ export default function (element, invalidated) {
   const enabledElement = getEnabledElement(element);
 
   if (enabledElement.image === undefined) {
-    throw 'updateImage: image has not been loaded yet';
+    throw new Error('updateImage: image has not been loaded yet');
   }
 
   drawImage(enabledElement, invalidated);

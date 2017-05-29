@@ -14,10 +14,10 @@ import calculateTransform from './internal/calculateTransform.js';
  */
 export default function (enabledElement, context, scale) {
   if (enabledElement === undefined) {
-    throw 'setToPixelCoordinateSystem: parameter enabledElement must not be undefined';
+    throw new Error('setToPixelCoordinateSystem: parameter enabledElement must not be undefined');
   }
   if (context === undefined) {
-    throw 'setToPixelCoordinateSystem: parameter context must not be undefined';
+    throw new Error('setToPixelCoordinateSystem: parameter context must not be undefined');
   }
 
   const transform = calculateTransform(enabledElement, scale);

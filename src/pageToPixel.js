@@ -17,7 +17,7 @@ export default function (element, pageX, pageY) {
   const enabledElement = getEnabledElement(element);
 
   if (enabledElement.image === undefined) {
-    throw 'image has not been loaded yet';
+    throw new Error('image has not been loaded yet');
   }
 
   // Convert the pageX and pageY to the canvas client coordinates

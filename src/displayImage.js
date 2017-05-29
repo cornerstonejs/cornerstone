@@ -14,10 +14,10 @@ import updateImage from './updateImage.js';
  */
 export default function (element, image, viewport) {
   if (element === undefined) {
-    throw 'displayImage: parameter element cannot be undefined';
+    throw new Error('displayImage: parameter element must not be undefined');
   }
   if (image === undefined) {
-    throw 'displayImage: parameter image cannot be undefined';
+    throw new Error('displayImage: parameter image must not be undefined');
   }
 
   const enabledElement = getEnabledElement(element);

@@ -6,7 +6,7 @@
 
 function generateLinearVOILUT (windowWidth, windowCenter) {
   return function (modalityLutValue) {
-    return (((modalityLutValue - (windowCenter)) / (windowWidth) + 0.5) * 255.0);
+    return ((modalityLutValue - windowCenter) / windowWidth + 0.5) * 255.0;
   };
 }
 

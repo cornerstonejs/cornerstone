@@ -11,22 +11,20 @@ import webGL from './webgl/index.js';
 
 export default function (element, options) {
   if (element === undefined) {
-    throw 'enable: parameter element cannot be undefined';
+    throw new Error('enable: parameter element cannot be undefined');
   }
 
-    // If this enabled element has the option set for WebGL, we should
-    // Check if this device actually supports it
+  // If this enabled element has the option set for WebGL, we should
+  // Check if this device actually supports it
   if (options && options.renderer && options.renderer.toLowerCase() === 'webgl') {
     if (webGL.renderer.isWebGLAvailable()) {
-            // If WebGL is available on the device, initialize the renderer
-            // And return the renderCanvas from the WebGL rendering path
-      console.log('Using WebGL rendering path');
-
+      // If WebGL is available on the device, initialize the renderer
+      // And return the renderCanvas from the WebGL rendering path
       webGL.renderer.initRenderer();
       options.renderer = 'webgl';
     } else {
-            // If WebGL is not available on this device, we will fall back
-            // To using the Canvas renderer
+      // If WebGL is not available on this device, we will fall back
+      // To using the Canvas renderer
       console.error('WebGL not available, falling back to Canvas renderer');
       delete options.renderer;
     }

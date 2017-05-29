@@ -12,11 +12,11 @@
  */
 export default function (canvas, image) {
   if (canvas === undefined) {
-    throw 'getDefaultViewport: parameter canvas must not be undefined';
+    throw new Error('getDefaultViewport: parameter canvas must not be undefined');
   }
 
   if (image === undefined) {
-    throw 'getDefaultViewport: parameter image must not be undefined';
+    throw new Error('getDefaultViewport: parameter image must not be undefined');
   }
 
   const viewport = {
@@ -38,7 +38,7 @@ export default function (canvas, image) {
     voiLUT: image.voiLUT
   };
 
-    // Fit image to window
+  // Fit image to window
   const verticalScale = canvas.height / image.rows;
   const horizontalScale = canvas.width / image.columns;
 

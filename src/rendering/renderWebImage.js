@@ -13,12 +13,12 @@ import { renderColorImage } from './renderColorImage';
 export function renderWebImage (enabledElement, invalidated) {
 
   if (enabledElement === undefined) {
-    throw 'drawImage: enabledElement parameter must not be undefined';
+    throw new Error('drawImage: enabledElement parameter must not be undefined');
   }
   const image = enabledElement.image;
 
   if (image === undefined) {
-    throw 'drawImage: image must be loaded before it can be drawn';
+    throw new Error('drawImage: image must be loaded before it can be drawn');
   }
 
     // Get the canvas context and reset the transform

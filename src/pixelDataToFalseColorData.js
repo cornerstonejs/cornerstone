@@ -8,7 +8,7 @@ import colors from './colors/index';
  */
 export default function (image, lookupTable) {
   if (image.color && !image.falseColor) {
-    throw 'Color transforms are not implemented yet';
+    throw new Error('Color transforms are not implemented yet');
   }
 
   const minPixelValue = image.minPixelValue;

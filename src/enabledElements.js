@@ -2,7 +2,7 @@ const enabledElements = [];
 
 export function getEnabledElement (element) {
   if (element === undefined) {
-    throw 'getEnabledElement: parameter element must not be undefined';
+    throw new Error('getEnabledElement: parameter element must not be undefined');
   }
   for (let i = 0; i < enabledElements.length; i++) {
     if (enabledElements[i].element === element) {
@@ -10,12 +10,12 @@ export function getEnabledElement (element) {
     }
   }
 
-  throw 'element not enabled';
+  throw new Error('element not enabled');
 }
 
 export function addEnabledElement (enabledElement) {
   if (enabledElement === undefined) {
-    throw 'getEnabledElement: enabledElement element must not be undefined';
+    throw new Error('getEnabledElement: enabledElement element must not be undefined');
   }
 
   enabledElements.push(enabledElement);

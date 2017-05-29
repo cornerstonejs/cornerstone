@@ -20,6 +20,7 @@ module.exports = {
   frameworks: ['mocha'],
   reporters: ['progress', 'coverage'],
   files: [
+    'node_modules/jquery/dist/jquery.js',
     'test/*_test.js',
     'test/**/*_test.js'
   ],
@@ -57,5 +58,15 @@ module.exports = {
       {type: 'text', subdir: '.', file: 'text.txt'},
       {type: 'text-summary', subdir: '.', file: 'text-summary.txt'}
     ]
+  },
+
+  client: {
+    captureConsole: true,
+  },
+
+  browserConsoleLogOptions: {
+    level: 'log',
+    format: '%b %T: %m',
+    terminal: true
   }
 };
