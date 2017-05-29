@@ -21,6 +21,7 @@ export default function (element, image, viewport) {
   }
 
   const enabledElement = getEnabledElement(element);
+  const oldImage = enabledElement.image;
 
   enabledElement.image = image;
 
@@ -52,6 +53,7 @@ export default function (element, image, viewport) {
     viewport: enabledElement.viewport,
     element: enabledElement.element,
     image: enabledElement.image,
+    oldImage,
     enabledElement,
     frameRate
   };
