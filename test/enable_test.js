@@ -43,7 +43,7 @@ describe('Enable a DOM Element for Canvas Renderer', function () {
     assert.equal(enabledElements.length, 1);
   });
 
-  /*it('should be retrievable by the displayed imageId', function() {
+  /* it('should be retrievable by the displayed imageId', function() {
   });*/
 
   afterEach(function () {

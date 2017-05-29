@@ -640,10 +640,13 @@ export function getColormapsList () {
 }
 
 /**
-* Convert the image of a element to a false color image
-* @param id
-* @param colormapData - An object that can contain a name, numColors, gama, segmentedData and/or colors
-*/
+ * Convert the image of a element to a false color image
+ *
+ * @param {string} id The ID of the colormap
+ * @param {Object} colormapData - An object that can contain a name, numColors, gama, segmentedData and/or colors
+ *
+ * @returns {*} The Colormap Object
+ */
 export function getColormap (id, colormapData) {
   let colormap = colormapsData[id];
 

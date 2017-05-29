@@ -1,5 +1,13 @@
 const int8Shader = {};
 
+/**
+ * Convert stored pixel data to image data.
+ *
+ * Store data in Uint8Array
+ *
+ * @param {Image} image A Cornerstone Image Object
+ * @returns {Uint8Array} The image data for use by the WebGL shader
+ */
 function storedPixelDataToImageData (image) {
     // Transfer image data to alpha channel of WebGL texture
     // Store data in Uint8Array

@@ -4,6 +4,10 @@ import updateImage from './updateImage.js';
 
 /**
  * This module is responsible for enabling an element to display images with cornerstone
+ *
+ * @param {HTMLElement} element The DOM element enabled for Cornerstone
+ * @param {HTMLElement} canvas The Canvas DOM element within the DOM element enabled for Cornerstone
+ * @returns {void}
  */
 function setCanvasSize (element, canvas) {
     // The device pixel ratio is 1.0 for normal displays and > 1.0
@@ -35,8 +39,10 @@ function setCanvasSize (element, canvas) {
 
 /**
  * Resizes an enabled element and optionally fits the image to window
- * @param element
- * @param fitViewportToWindow true to refit, false to leave viewport parameters as they are
+ *
+ * @param {HTMLElement} element The DOM element enabled for Cornerstone
+ * @param {Boolean} fitViewportToWindow true to refit, false to leave viewport parameters as they are
+ * @returns {void}
  */
 export default function (element, fitViewportToWindow) {
 

@@ -1,6 +1,13 @@
-// Pack RGB images into a 3-channel RGB texture
 const rgbShader = {};
 
+/**
+ * Convert stored pixel data to image data.
+ *
+ * Pack RGB images into a 3-channel RGB texture
+ *
+ * @param {Image} image A Cornerstone Image Object
+ * @returns {Uint8Array} The image data for use by the WebGL shader
+ */
 function storedPixelDataToImageData (image) {
   const minPixelValue = image.minPixelValue;
   let canvasImageDataIndex = 0;

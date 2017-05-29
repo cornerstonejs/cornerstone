@@ -4,6 +4,7 @@
 import generateLut from '../internal/generateLut.js';
 import storedPixelDataToCanvasImageData from '../internal/storedPixelDataToCanvasImageData';
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem';
+import now from '../internal/now';
 
 function initializeGrayscaleRenderCanvas (enabledElement, image) {
   const grayscaleRenderCanvas = enabledElement.renderingTools.grayscaleRenderCanvas;
@@ -65,20 +66,17 @@ function doesImageNeedToBeRendered (enabledElement, image) {
   const lastRenderedImageId = enabledElement.renderingTools.lastRenderedImageId;
   const lastRenderedViewport = enabledElement.renderingTools.lastRenderedViewport;
 
-  if (image.imageId !== lastRenderedImageId ||
-        lastRenderedViewport.windowCenter !== enabledElement.viewport.voi.windowCenter ||
-        lastRenderedViewport.windowWidth !== enabledElement.viewport.voi.windowWidth ||
-        lastRenderedViewport.invert !== enabledElement.viewport.invert ||
-        lastRenderedViewport.rotation !== enabledElement.viewport.rotation ||
-        lastRenderedViewport.hflip !== enabledElement.viewport.hflip ||
-        lastRenderedViewport.vflip !== enabledElement.viewport.vflip ||
-        lastRenderedViewport.modalityLUT !== enabledElement.viewport.modalityLUT ||
-        lastRenderedViewport.voiLUT !== enabledElement.viewport.voiLUT
-        ) {
-    return true;
-  }
-
-  return false;
+  return (
+    image.imageId !== lastRenderedImageId ||
+    lastRenderedViewport.windowCenter !== enabledElement.viewport.voi.windowCenter ||
+    lastRenderedViewport.windowWidth !== enabledElement.viewport.voi.windowWidth ||
+    lastRenderedViewport.invert !== enabledElement.viewport.invert ||
+    lastRenderedViewport.rotation !== enabledElement.viewport.rotation ||
+    lastRenderedViewport.hflip !== enabledElement.viewport.hflip ||
+    lastRenderedViewport.vflip !== enabledElement.viewport.vflip ||
+    lastRenderedViewport.modalityLUT !== enabledElement.viewport.modalityLUT ||
+    lastRenderedViewport.voiLUT !== enabledElement.viewport.voiLUT
+  );
 }
 
 function getRenderCanvas (enabledElement, image, invalidated) {
@@ -102,10 +100,10 @@ function getRenderCanvas (enabledElement, image, invalidated) {
   }
 
     // Get the lut to use
-  let start = (window.performance ? performance.now() : Date.now());
+  let start = now();
   const lut = getLut(image, enabledElement.viewport, invalidated);
 
-  image.stats.lastLutGenerateTime = (window.performance ? performance.now() : Date.now()) - start;
+  image.stats.lastLutGenerateTime = now() - start;
 
   const grayscaleRenderCanvasData = enabledElement.renderingTools.grayscaleRenderCanvasData;
   const grayscaleRenderCanvasContext = enabledElement.renderingTools.grayscaleRenderCanvasContext;
@@ -113,17 +111,19 @@ function getRenderCanvas (enabledElement, image, invalidated) {
 
   storedPixelDataToCanvasImageData(image, lut, grayscaleRenderCanvasData.data);
 
-  start = (window.performance ? performance.now() : Date.now());
+  start = now();
   grayscaleRenderCanvasContext.putImageData(grayscaleRenderCanvasData, 0, 0);
-  image.stats.lastPutImageDataTime = (window.performance ? performance.now() : Date.now()) - start;
+  image.stats.lastPutImageDataTime = now() - start;
 
   return grayscaleRenderCanvas;
 }
 
 /**
  * API function to draw a grayscale image to a given enabledElement
- * @param enabledElement
- * @param invalidated - true if pixel data has been invaldiated and cached rendering should not be used
+ *
+ * @param {EnabledElement} enabledElement The Cornerstone Enabled Element to redraw
+ * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
+ * @returns {void}
  */
 export function renderGrayscaleImage (enabledElement, invalidated) {
   if (enabledElement === undefined) {

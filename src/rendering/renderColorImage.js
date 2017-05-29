@@ -46,18 +46,15 @@ function doesImageNeedToBeRendered (enabledElement, image) {
   const lastRenderedImageId = enabledElement.renderingTools.lastRenderedImageId;
   const lastRenderedViewport = enabledElement.renderingTools.lastRenderedViewport;
 
-  if (image.imageId !== lastRenderedImageId ||
-        lastRenderedViewport.windowCenter !== enabledElement.viewport.voi.windowCenter ||
-        lastRenderedViewport.windowWidth !== enabledElement.viewport.voi.windowWidth ||
-        lastRenderedViewport.invert !== enabledElement.viewport.invert ||
-        lastRenderedViewport.rotation !== enabledElement.viewport.rotation ||
-        lastRenderedViewport.hflip !== enabledElement.viewport.hflip ||
-        lastRenderedViewport.vflip !== enabledElement.viewport.vflip
-        ) {
-    return true;
-  }
-
-  return false;
+  return (
+    image.imageId !== lastRenderedImageId ||
+    lastRenderedViewport.windowCenter !== enabledElement.viewport.voi.windowCenter ||
+    lastRenderedViewport.windowWidth !== enabledElement.viewport.voi.windowWidth ||
+    lastRenderedViewport.invert !== enabledElement.viewport.invert ||
+    lastRenderedViewport.rotation !== enabledElement.viewport.rotation ||
+    lastRenderedViewport.hflip !== enabledElement.viewport.hflip ||
+    lastRenderedViewport.vflip !== enabledElement.viewport.vflip
+  );
 }
 
 function getRenderCanvas (enabledElement, image, invalidated) {
@@ -112,8 +109,10 @@ function getRenderCanvas (enabledElement, image, invalidated) {
 
 /**
  * API function to render a color image to an enabled element
- * @param enabledElement
- * @param invalidated - true if pixel data has been invaldiated and cached rendering should not be used
+ *
+ * @param {EnabledElement} enabledElement The Cornerstone Enabled Element to redraw
+ * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
+ * @returns {void}
  */
 export function renderColorImage (enabledElement, invalidated) {
 

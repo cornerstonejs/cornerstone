@@ -6,9 +6,9 @@
 
 /**
  * Creates a new viewport object containing default values for the image and canvas
- * @param canvas
- * @param image
- * @returns viewport object
+ * @param {HTMLElement} canvas A Canvas DOM element
+ * @param {Image} image A Cornerstone Image Object
+ * @returns {Viewport} viewport object
  */
 export default function (canvas, image) {
   if (canvas === undefined) {
@@ -42,11 +42,7 @@ export default function (canvas, image) {
   const verticalScale = canvas.height / image.rows;
   const horizontalScale = canvas.width / image.columns;
 
-  if (horizontalScale < verticalScale) {
-    viewport.scale = horizontalScale;
-  } else {
-    viewport.scale = verticalScale;
-  }
+  viewport.scale = Math.min(horizontalScale, verticalScale);
 
   return viewport;
 }

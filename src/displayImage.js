@@ -1,16 +1,17 @@
-/**
- * This module is responsible for enabling an element to display images with cornerstone
- */
-
 import { getEnabledElement } from './enabledElements.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import updateImage from './updateImage.js';
+import now from './internal/now.js';
 
 /**
- * Sets a new image object for a given element
- * @param element
- * @param image
- * @param viewport
+ * Sets a new image object for a given element.
+ *
+ * Will also apply an optional viewport setting.
+ *
+ * @param {HTMLElement} element An HTML Element enabled for Cornerstone
+ * @param {Object} image An Image loaded by a Cornerstone Image Loader
+ * @param {Object} [viewport] A set of Cornerstone viewport parameters
+ * @returns {void}
  */
 export default function (element, image, viewport) {
   if (element === undefined) {
@@ -38,16 +39,15 @@ export default function (element, image, viewport) {
     }
   }
 
-  const now = new Date();
   let frameRate;
 
   if (enabledElement.lastImageTimeStamp !== undefined) {
-    const timeSinceLastImage = now.getTime() - enabledElement.lastImageTimeStamp;
+    const timeSinceLastImage = now() - enabledElement.lastImageTimeStamp;
 
     frameRate = (1000 / timeSinceLastImage).toFixed();
   }
 
-  enabledElement.lastImageTimeStamp = now.getTime();
+  enabledElement.lastImageTimeStamp = now();
 
   const newImageEventData = {
     viewport: enabledElement.viewport,

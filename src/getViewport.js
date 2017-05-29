@@ -1,13 +1,10 @@
-/**
- * This module contains functions to deal with getting and setting the viewport for an enabled element
- */
-
 import { getEnabledElement } from './enabledElements.js';
 
 /**
- * Returns the viewport for the specified enabled element
- * @param element
- * @returns {*}
+ * Retrieves the viewport for the specified enabled element
+ *
+ * @param {HTMLElement} element The DOM element enabled for Cornerstone
+ * @returns {Viewport|undefined} The Cornerstone Viewport settings for this element, if they exist. Otherwise, undefined
  */
 export default function (element) {
   const enabledElement = getEnabledElement(element);

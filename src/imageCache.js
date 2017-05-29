@@ -124,7 +124,7 @@ export function removeImagePromise (imageId) {
   const cachedImage = imageCacheDict[imageId];
 
   if (cachedImage === undefined) {
-    throw new Error('removeImagePromise: imageId must not be undefined');
+    throw new Error('removeImagePromise: imageId was not present in imageCache');
   }
 
   cachedImage.imagePromise.reject();

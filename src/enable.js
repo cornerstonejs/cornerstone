@@ -9,6 +9,14 @@ import { renderColorImage } from './rendering/renderColorImage';
 import { renderGrayscaleImage } from './rendering/renderGrayscaleImage';
 import webGL from './webgl/index.js';
 
+/**
+ * Enable an HTML Element for use in Cornerstone
+ *
+ * @param {HTMLElement} element An HTML Element enabled for Cornerstone
+ * @param {Object} options Options for the enabledElement
+ *
+ * @return {void}
+ */
 export default function (element, options) {
   if (element === undefined) {
     throw new Error('enable: parameter element cannot be undefined');
@@ -48,6 +56,11 @@ export default function (element, options) {
 
   resize(element, true);
 
+  /**
+   * Draw the image immediately
+   *
+   * @returns {void}
+   */
   function draw () {
     if (el.canvas === undefined) {
       return;
@@ -58,7 +71,7 @@ export default function (element, options) {
 
       el.image.stats = {
         lastGetPixelDataTime: -1.0,
-        laststoredPixelDataToCanvasImageDataTime: -1.0,
+        lastStoredPixelDataToCanvasImageDataTime: -1.0,
         lastPutImageDataTime: -1.0,
         lastRenderTime: -1.0,
         lastLutGenerateTime: -1.0
@@ -96,6 +109,4 @@ export default function (element, options) {
   }
 
   draw();
-
-  return element;
 }

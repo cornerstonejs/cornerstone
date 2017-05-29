@@ -1,17 +1,15 @@
-/**
- * This module contains a helper function to covert page coordinates to pixel coordinates
- */
-
 import { getEnabledElement } from './enabledElements.js';
 import getTransform from './internal/getTransform.js';
 
 /**
  * Converts a point in the page coordinate system to the pixel coordinate
  * system
- * @param element
- * @param pageX
- * @param pageY
- * @returns {{x: number, y: number}}
+ *
+ * @param {HTMLElement} element The Cornerstone element within which the input point lies
+ * @param {Number} pageX The x value in the page coordinate system
+ * @param {Number} pageY The y value in the page coordinate system
+ *
+ * @returns {{x: Number, y: Number}} The transformed point in the pixel coordinate system
  */
 export default function (element, pageX, pageY) {
   const enabledElement = getEnabledElement(element);

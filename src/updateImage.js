@@ -2,14 +2,13 @@ import { getEnabledElement } from './enabledElements.js';
 import drawImage from './internal/drawImage.js';
 
 /**
- * This module contains a function to immediately redraw an image
- */
-/**
  * Forces the image to be updated/redrawn for the specified enabled element
- * @param element
- * @param invalidated
+ * @param {HTMLElement} element An HTML Element enabled for Cornerstone
+ * @param {Boolean} [invalidated=false] Whether or not the image pixel data has been changed, necessitating a redraw
+ *
+ * @returns {void}
  */
-export default function (element, invalidated) {
+export default function (element, invalidated = false) {
   const enabledElement = getEnabledElement(element);
 
   if (enabledElement.image === undefined) {

@@ -241,7 +241,7 @@ module.exports = {
       'warn',
       'never'
     ],
-    //'valid-jsdoc': 'warn',
+    'valid-jsdoc': 'warn',
     'vars-on-top': 'warn',
     'wrap-iife': ['warn', 'inside'],
     'wrap-regex': 'warn',

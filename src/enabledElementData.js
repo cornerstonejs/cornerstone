@@ -1,7 +1,15 @@
 import { getEnabledElement } from './enabledElements.js';
 
-export function getElementData (el, dataType) {
-  const ee = getEnabledElement(el);
+/**
+ * Retrieves any data for a Cornerstone enabledElement for a specific string
+ * dataType
+ *
+ * @param {HTMLElement} element An HTML Element enabled for Cornerstone
+ * @param {string} dataType A string name for an arbitrary set of data
+ * @returns {*} Whatever data is stored for this enabled element
+ */
+export function getElementData (element, dataType) {
+  const ee = getEnabledElement(element);
 
   if (ee.data.hasOwnProperty(dataType) === false) {
     ee.data[dataType] = {};
@@ -10,8 +18,17 @@ export function getElementData (el, dataType) {
   return ee.data[dataType];
 }
 
-export function removeElementData (el, dataType) {
-  const ee = getEnabledElement(el);
+/**
+ * Clears any data for a Cornerstone enabledElement for a specific string
+ * dataType
+ *
+ * @param {HTMLElement} element An HTML Element enabled for Cornerstone
+ * @param {string} dataType A string name for an arbitrary set of data
+ *
+ * @returns {void}
+ */
+export function removeElementData (element, dataType) {
+  const ee = getEnabledElement(element);
 
   delete ee.data[dataType];
 }

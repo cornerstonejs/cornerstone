@@ -5,7 +5,8 @@ import updateImage from './updateImage.js';
 /**
  * Resets the viewport to the default settings
  *
- * @param element
+ * @param {HTMLElement} element An HTML Element enabled for Cornerstone
+ * @returns {void}
  */
 export default function (element) {
   const enabledElement = getEnabledElement(element);

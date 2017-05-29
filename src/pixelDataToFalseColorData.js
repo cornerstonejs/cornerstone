@@ -3,8 +3,10 @@ import colors from './colors/index';
 /**
  * Converts the image pixel data into a false color data
  *
- * @param image
- * @param lookupTable
+ * @param {Image} image A Cornerstone Image Object
+ * @param {Object} lookupTable A lookup table Object
+ *
+ * @returns {void}
  */
 export default function (image, lookupTable) {
   if (image.color && !image.falseColor) {

@@ -5,12 +5,12 @@ const providers = [];
 
 /**
  * Adds a metadata provider with the specified priority
- * @param provider
- * @param priority - 0 is default/normal, > 0 is high, < 0 is low
+ * @param {Function} provider Metadata provider function
+ * @param {Number} [priority=0] - 0 is default/normal, > 0 is high, < 0 is low
+ *
+ * @returns {void}
  */
-export function addProvider (provider, priority) {
-  priority = priority || 0; // Default priority
-
+export function addProvider (provider, priority = 0) {
   let i;
 
   // Find the right spot to insert this provider based on priority
@@ -25,19 +25,21 @@ export function addProvider (provider, priority) {
     priority,
     provider
   });
-
 }
 
 /**
  * Removes the specified provider
- * @param provider
+ *
+ * @param {Function} provider Metadata provider function
+ *
+ * @returns {void}
  */
 export function removeProvider (provider) {
   for (let i = 0; i < providers.length; i++) {
     if (providers[i].provider === provider) {
       providers.splice(i, 1);
 
-      return;
+      break;
     }
   }
 }
@@ -46,8 +48,10 @@ export function removeProvider (provider) {
  * Gets metadata from the registered metadata providers.  Will call each one from highest priority to lowest
  * until one responds
  *
- * @param type
- * @param imageId
+ * @param {String} type The type of metadata requested from the metadata store
+ * @param {String} imageId The Cornerstone Image Object's imageId
+ *
+ * @returns {*} The metadata retrieved from the metadata store
  */
 function getMetaData (type, imageId) {
   // Invoke each provider in priority order until one returns something

@@ -8,7 +8,8 @@ import drawImage from './internal/drawImage.js';
 /**
  * Immediately draws the enabled element
  *
- * @param element
+ * @param {HTMLElement} element An HTML Element enabled for Cornerstone
+ * @returns {void}
  */
 export default function (element) {
   const enabledElement = getEnabledElement(element);

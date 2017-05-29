@@ -1,6 +1,14 @@
 import { getEnabledElement } from './enabledElements';
 import updateImage from './updateImage';
+import pixelDataToFalseColorData from './pixelDataToFalseColorData';
 
+/**
+ * Retrieves the minimum and maximum pixel values from an Array of pixel data
+ *
+ * @param {Array} pixelData The input pixel data array
+ *
+ * @returns {{minPixelValue: Number, maxPixelValue: Number}} The minimum and maximum pixel values in the input Array
+ */
 function getPixelValues (pixelData) {
   let minPixelValue = Number.MAX_VALUE;
   let maxPixelValue = Number.MIN_VALUE;
@@ -19,6 +27,14 @@ function getPixelValues (pixelData) {
   };
 }
 
+/**
+ * Retrieve a function that will allow an image object to be reset to its original form
+ * after a false color mapping transformation
+ *
+ * @param {Image} image A Cornerstone Image Object
+ *
+ * @return {Function} A function for resetting an Image Object to its original form
+ */
 function getRestoreImageMethod (image) {
   if (image.restore) {
     return image.restore;
@@ -51,15 +67,23 @@ function getRestoreImageMethod (image) {
       };
     }
 
-          // Remove some attributes added by false color mapping
+    // Remove some attributes added by false color mapping
     delete image.origPixelData;
     delete image.colormapId;
     delete image.falseColor;
   };
 }
 
-  // User can pass a colormap or its id as string to some of these public functions.
+  //
   // Then we need to make sure it will be converted into a colormap object if it's as string.
+
+/**
+ * User can pass a colormap or its id as string to some of these public functions.
+ * Then we need to make sure it will be converted into a colormap object if it's a string.
+ *
+ * @param {*} colormap A colormap ID or Object
+ * @return {*} The colormap
+ */
 function ensuresColormap (colormap) {
   if (colormap && (typeof colormap === 'string')) {
     colormap = cornerstone.colors.getColormap(colormap);
@@ -68,10 +92,12 @@ function ensuresColormap (colormap) {
   return colormap;
 }
 
-  /**
-   * Restores a false color image to its original version
-   * @param image
-   */
+/**
+ * Restores a false color image to its original version
+ *
+ * @param {Image} image A Cornerstone Image Object
+ * @returns {Boolean} True if the image object had a valid restore function, which was run. Otherwise, false.
+ */
 function restoreImage (image) {
   if (image.restore && (typeof image.restore === 'function')) {
     image.restore();
@@ -82,11 +108,13 @@ function restoreImage (image) {
   return false;
 }
 
-  /**
-   * Convert an image to a false color image
-   * @param image
-   * @param colormap - it can be a colormap object or a colormap id (string)
-   */
+/**
+ * Convert an image to a false color image
+ * @param {Image} image A Cornerstone Image Object
+ * @param {String|Object} colormap - it can be a colormap object or a colormap id (string)
+ *
+ * @returns {Boolean} - Whether or not the image has been converted to a false color image
+ */
 function convertImageToFalseColorImage (image, colormap) {
   if (image.color && !image.falseColor) {
     throw new Error('Color transforms are not implemented yet');
@@ -118,29 +146,32 @@ function convertImageToFalseColorImage (image, colormap) {
 
     lookupTable.setTableRange(minPixelValue, maxPixelValue);
 
-          // Update the pixel data and render the new image
-    cornerstone.pixelDataToFalseColorData(image, lookupTable);
+    // Update the pixel data and render the new image
+    pixelDataToFalseColorData(image, lookupTable);
 
-          // Update min and max pixel values
+    // Update min and max pixel values
     const pixelValues = getPixelValues(image.getPixelData());
 
     image.minPixelValue = pixelValues.minPixelValue;
     image.maxPixelValue = pixelValues.maxPixelValue;
 
-          // Cache the last colormapId used for performance
-          // Then it doesn't need to be re-rendered on next
-          // Time if the user hasn't updated it
+    // Cache the last colormapId used for performance
+    // Then it doesn't need to be re-rendered on next
+    // Time if the user hasn't updated it
     image.colormapId = colormapId;
   }
 
-      // Return `true` to tell the caller that the image has got updated
+  // Return `true` to tell the caller that the image has got updated
   return true;
 }
 
 /**
  * Convert the image of a element to a false color image
- * @param element
- * @param colormap - it can be a colormap object or a colormap id (string)
+ *
+ * @param {HTMLElement} element The Cornerstone element
+ * @param {*} colormap - it can be a colormap object or a colormap id (string)
+ *
+ * @returns {void}
  */
 function convertToFalseColorImage (element, colormap) {
   const enabledElement = getEnabledElement(element);

@@ -8,9 +8,10 @@ import calculateTransform from './internal/calculateTransform.js';
 /**
  * Sets the canvas context transformation matrix to the pixel coordinate system.  This allows
  * geometry to be driven using the canvas context using coordinates in the pixel coordinate system
- * @param enabledElement
- * @param context
- * @param scale optional scale to apply
+ * @param {EnabledElement} enabledElement The
+ * @param {CanvasRenderingContext2D} context The CanvasRenderingContext2D for the enabledElement's Canvas
+ * @param {Number} scale Optional scale to apply
+ * @returns {void}
  */
 export default function (enabledElement, context, scale) {
   if (enabledElement === undefined) {
