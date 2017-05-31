@@ -26,7 +26,6 @@ function generateNonLinearModalityLUT (modalityLUT) {
     }
 
     return modalityLUT.lut[sp];
-
   };
 }
 

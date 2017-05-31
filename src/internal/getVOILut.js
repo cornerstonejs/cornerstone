@@ -3,7 +3,7 @@
 /**
  * Volume of Interest Lookup Table Function
  *
- * @typedef VOILUTFunction
+ * @typedef {Function} VOILUTFunction
  *
  * @param {Number} modalityLutValue
  * @returns {Number} transformed value
