@@ -3,11 +3,9 @@ import { assert } from 'chai';
 import enable from '../src/enable';
 import displayImage from '../src/displayImage';
 import fitToWindow from '../src/fitToWindow';
-import getDefaultViewport from '../src/internal/getDefaultViewport';
 import setViewport from '../src/setViewport';
 import getViewport from '../src/getViewport';
 import disable from '../src/disable';
-import { getEnabledElement } from '../src/enabledElements';
 
 describe('fitToWindow', function () {
   beforeEach(function () {
@@ -40,13 +38,10 @@ describe('fitToWindow', function () {
 
   it('should fit the image to the element so that all pixels are visible', function () {
     // Arrange
-    const element = this.element;
-    const image = this.image;
-
     displayImage(this.element, this.image);
 
     // Act
-    const originalViewport = getViewport(this.element);
+    // const originalViewport = getViewport(this.element);
 
     fitToWindow(this.element);
 
@@ -62,9 +57,6 @@ describe('fitToWindow', function () {
 
   it('should fit the image properly if the image is rotated', function () {
     // Arrange
-    const element = this.element;
-    const image = this.image;
-
     displayImage(this.element, this.image);
 
     // Act

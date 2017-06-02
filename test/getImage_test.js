@@ -4,7 +4,6 @@ import enable from '../src/enable';
 import displayImage from '../src/displayImage';
 import getImage from '../src/getImage';
 import disable from '../src/disable';
-import { getEnabledElement } from '../src/enabledElements';
 
 describe('getImage', function () {
   beforeEach(function () {

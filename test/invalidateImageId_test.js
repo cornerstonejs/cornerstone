@@ -65,7 +65,6 @@ describe('invalidateImageId', function () {
   });
 
   it('should invalidate all elements which are showing this image', function () {
-    const element = this.element;
     const enabledElement1 = getEnabledElement(this.element1);
     const enabledElement2 = getEnabledElement(this.element2);
     const enabledElement3 = getEnabledElement(this.element3);

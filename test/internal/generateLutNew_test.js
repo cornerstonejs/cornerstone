@@ -32,10 +32,10 @@ describe('generateLutNew', function () {
     const lut = generateLutNew(image, this.windowWidth, this.windowCenter, invert, this.modalityLUT, this.voiLUT);
 
     // Assert
-    //assert.equal(lut.length, 3, 'lut length is 3');
-    //assert.equal(lut[0], 0, 'lut entry 0 is 0');
-    //assert.equal(lut[1], 128, 'lut entry 1 is 128');
-    //assert.equal(lut[2], 255, 'lut entry 2 is 255');
+    // assert.equal(lut.length, 3, 'lut length is 3');
+    // assert.equal(lut[0], 0, 'lut entry 0 is 0');
+    // assert.equal(lut[1], 128, 'lut entry 1 is 128');
+    // assert.equal(lut[2], 255, 'lut entry 2 is 255');
   });
 
   it('min pixel = 0', function () {
@@ -55,10 +55,10 @@ describe('generateLutNew', function () {
     const lut = generateLutNew(image, this.windowWidth, this.windowCenter, invert, this.modalityLUT, this.voiLUT);
 
     // Assert
-    //assert.equal(lut.length, 3, 'lut length is 3');
-    //assert.equal(lut[0], 0, 'lut entry 0 is 0');
-    //assert.equal(lut[1], 128, 'lut entry 1 is 128');
-    //assert.equal(lut[2], 255, 'lut entry 2 is 255');
+    // assert.equal(lut.length, 3, 'lut length is 3');
+    // assert.equal(lut[0], 0, 'lut entry 0 is 0');
+    // assert.equal(lut[1], 128, 'lut entry 1 is 128');
+    // assert.equal(lut[2], 255, 'lut entry 2 is 255');
   });
 
   it('should handle inverted images', function () {
@@ -78,9 +78,9 @@ describe('generateLutNew', function () {
     const lut = generateLutNew(image, this.windowWidth, this.windowCenter, invert, this.modalityLUT, this.voiLUT);
 
     // Assert
-    //assert.equal(lut.length, 3, 'lut length is 3');
-    //assert.equal(lut[0], 255, 'lut entry 0 is 255');
-    //assert.equal(lut[1], 127, 'lut entry 1 is 127');
-    //assert.equal(lut[2], 0, 'lut entry 2 is 0');
+    // assert.equal(lut.length, 3, 'lut length is 3');
+    // assert.equal(lut[0], 255, 'lut entry 0 is 255');
+    // assert.equal(lut[1], 127, 'lut entry 1 is 127');
+    // assert.equal(lut[2], 0, 'lut entry 2 is 0');
   });
 });

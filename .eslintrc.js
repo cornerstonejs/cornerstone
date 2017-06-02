@@ -190,7 +190,7 @@ module.exports = {
     'no-useless-return': 'off',
     'no-var': 'warn',
     'no-void': 'warn',
-    'no-warning-comments': 'warn',
+    //'no-warning-comments': 'warn',
     'no-whitespace-before-property': 'warn',
     'no-with': 'warn',
     'object-curly-spacing': [

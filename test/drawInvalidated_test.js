@@ -68,15 +68,13 @@ describe('drawInvalidated', function () {
   it('should draw only the invalidated elements', function (done) {
     // Arrange
     const element1 = this.element1;
-    const enabledElement1 = getEnabledElement(this.element1);
-    const image1 = this.image1;
 
     const element2 = this.element2;
     const enabledElement2 = getEnabledElement(this.element2);
     const image2 = this.image2;
 
     // Assert
-    $(element1).on('CornerstoneImageRendered', function (event, eventData) {
+    $(element1).on('CornerstoneImageRendered', function () {
       // If element1 is redrawn, then this test has failed.
       // Only element2 should be redrawn.
       done();

@@ -39,9 +39,6 @@ describe('reset', function () {
 
   it('should reset the element to the default viewport', function () {
     // Arrange
-    const element = this.element;
-    const image = this.image;
-
     displayImage(this.element, this.image);
     const enabledElement = getEnabledElement(this.element);
 
