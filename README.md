@@ -203,7 +203,7 @@ Copyright 2016 Chris Hafey [chafey@gmail.com](mailto:chafey@gmail.com)
 [npm-downloads-image]: http://img.shields.io/npm/dm/cornerstone-core.svg?style=flat
 
 [travis-url]: http://travis-ci.org/chafey/cornerstone
-[travis-image]: http://img.shields.io/travis/chafey/cornerstone/develop.svg?style=flat
+[travis-image]: https://travis-ci.org/chafey/cornerstone.svg?branch=master
 
 [coverage-url]: https://coveralls.io/github/chafey/cornerstone?branch=master
 [coverage-image]: https://coveralls.io/repos/github/chafey/cornerstone/badge.svg?branch=master
