@@ -202,8 +202,8 @@ Copyright 2016 Chris Hafey [chafey@gmail.com](mailto:chafey@gmail.com)
 [npm-version-image]: http://img.shields.io/npm/v/cornerstone-core.svg?style=flat
 [npm-downloads-image]: http://img.shields.io/npm/dm/cornerstone-core.svg?style=flat
 
-[travis-url]: http://travis-ci.org/swederik/cornerstone
-[travis-image]: http://img.shields.io/travis/swederik/cornerstone/develop.svg?style=flat
+[travis-url]: http://travis-ci.org/chafey/cornerstone
+[travis-image]: http://img.shields.io/travis/chafey/cornerstone/develop.svg?style=flat
 
-[coverage-url]: https://coveralls.io/github/swederik/cornerstone?branch=master
-[coverage-image]: https://coveralls.io/repos/github/swederik/cornerstone/badge.svg?branch=master
+[coverage-url]: https://coveralls.io/github/chafey/cornerstone?branch=master
+[coverage-image]: https://coveralls.io/repos/github/chafey/cornerstone/badge.svg?branch=master
