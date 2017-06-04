@@ -105,8 +105,14 @@
                 imageId: 'pet://1',
                 options: {
                     name: 'PET',
-                    opacity: 0.3,
-                    colormap: 'hotIron'
+                    opacity: 0.7,
+                    viewport: {
+                        colormap: 'hotIron',
+                        voi: {
+                            windowWidth: 30,
+                            windowCenter: 16
+                        }
+                    }
                 }
             }
         ];
@@ -171,7 +177,7 @@
 
         $('#colormaps').change(function() {
             var layer = cornerstone.getActiveLayer(element);
-            layer.options.colormap = $('#colormaps').val();
+            layer.viewport.colormap = $('#colormaps').val();
             cornerstone.updateImage(element);
         });
 
@@ -212,7 +218,7 @@
         element.addEventListener('cornerstoneactivelayerchanged', function(e) {
             var eventData = e.detail;
             var layer = cornerstone.getActiveLayer(element);
-            var colormap = layer.options.colormap || '';
+            var colormap = layer.viewport.colormap || '';
             var opacity = layer.options.opacity == null ? 1 : layer.options.opacity;
             var visible = layer.options.visible !== false ? 1 : 0;
 
@@ -248,22 +254,35 @@
             var lastX = e.pageX;
             var lastY = e.pageY;
 
+            var mouseButton = e.which;
 
             $(document).mousemove(function (e) {
-                var deltaX = e.pageX - lastX,
-                        deltaY = e.pageY - lastY;
-                lastX = e.pageX;
-                lastY = e.pageY;
+              var deltaX = e.pageX - lastX
+              var deltaY = e.pageY - lastY;
+              lastX = e.pageX;
+              lastY = e.pageY;  
 
-                var viewport = cornerstone.getViewport(element);
+              var viewport = cornerstone.getViewport(element);
+
+              if (mouseButton == 1) {
+                viewport.voi.windowWidth += (deltaX / viewport.scale);
+                viewport.voi.windowCenter += (deltaY / viewport.scale);
+                cornerstone.setViewport(element, viewport);
+                $('#bottomleft').text("WW/WL:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
+              } else if (mouseButton == 2) {
                 viewport.translation.x += (deltaX / viewport.scale);
                 viewport.translation.y += (deltaY / viewport.scale);
                 cornerstone.setViewport(element, viewport);
+              } else if (mouseButton == 3) {
+                viewport.scale += (deltaY / 100);
+                cornerstone.setViewport(element, viewport);
+                $('#bottomright').text("Zoom: " + viewport.scale.toFixed(2) + "x");
+              }
             });
 
             $(document).mouseup(function (e) {
-                $(document).unbind('mousemove');
-                $(document).unbind('mouseup');
+              $(document).unbind('mousemove');
+              $(document).unbind('mouseup');
             });
         });
 

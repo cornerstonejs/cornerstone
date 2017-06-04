@@ -1,26 +1,16 @@
 import { getLayers, getActiveLayer, getVisibleLayers } from '../layers.js';
-import { addColorLayer } from '../rendering/renderColorImage.js';
 import { addGrayscaleLayer } from '../rendering/renderGrayscaleImage.js';
-import { convertImageToFalseColorImage, restoreImage } from '../falseColorMapping.js';
+import { addColorLayer } from '../rendering/renderColorImage.js';
+import { addPseudoColorLayer } from '../rendering/renderPseudoColorImage.js';
+import { addLabelMapLayer } from '../rendering/renderLabelMapImage.js';
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
 
 // This is used to keep each of the layers' viewports in sync with the active layer
-const syncedViewports = {};
+const originalViewportScale = {};
 
-// Create a copy of the properties that will be cached when syncing viewports
-function cloneViewport (viewport) {
-  return {
-    rotation: viewport.rotation,
-    scale: viewport.scale,
-    translation: {
-      x: viewport.translation.x,
-      y: viewport.translation.y
-    },
-    hflip: viewport.hflip,
-    vflip: viewport.vflip
-  };
+function getViewportRatio (baseLayerId, targetLayerId) {
+  return originalViewportScale[targetLayerId] / originalViewportScale[baseLayerId];
 }
-
 
 // Sync all viewports based on active layer's viewport
 function syncViewports (layers, activeLayer) {
@@ -28,13 +18,18 @@ function syncViewports (layers, activeLayer) {
   // loop through the layers
   layers.forEach((layer) => {
     // Don't do anything to the active layer
-    if (layer === activeLayer) {
+    // Don't do anything if this layer has no viewport
+    if (layer === activeLayer ||
+        !layer.viewport ||
+        !activeLayer.viewport) {
       return;
     }
 
-    const activeLayerSyncedViewport = syncedViewports[activeLayer.layerId];
-    const currentLayerSyncedViewport = syncedViewports[layer.layerId] || layer.viewport;
-    const viewportRatio = currentLayerSyncedViewport.scale / activeLayerSyncedViewport.scale;
+    if (!originalViewportScale[layer.layerId]) {
+      originalViewportScale[layer.layerId] = layer.viewport.scale;
+    }
+
+    const viewportRatio = getViewportRatio(activeLayer.layerId, layer.layerId);
 
     // Update the layer's translation and scale to keep them in sync with the first image
     // based on the ratios between the images
@@ -59,50 +54,33 @@ function syncViewports (layers, activeLayer) {
  */
 function renderLayers (context, layers, invalidated) {
   // Loop through each layer and draw it to the canvas
-  layers.forEach((layer) => {
-    context.save();
-
+  layers.forEach((layer, index) => {
     if (!layer.image) {
       return;
     }
+
+    context.save();
 
     // Set the layer's canvas to the pixel coordinate system
     layer.canvas = context.canvas;
     setToPixelCoordinateSystem(layer, context);
 
-    // Convert the image to false color image if layer.options.colormap
-    // exists or try to restore the original pixel data otherwise
-    let pixelDataUpdated;
-
-    if (layer.options.colormap && layer.image.colormapId !== layer.options.colormap) {
-      // If the options for this layer specify a colormap, but the image
-      // in the layer does not yet have this colormap set, convert
-      // the pixel data to this colormap and update the viewport.
-      pixelDataUpdated = convertImageToFalseColorImage(layer.image, layer.options.colormap);
-      layer.viewport.voi = {
-        windowWidth: layer.image.windowWidth,
-        windowCenter: layer.image.windowCenter
-      };
-    } else if (!layer.options.colormap && layer.image.colormapId) {
-      // If the image for this layer still has a colormapId, but the
-      // colormap has been removed from the options for this layer,
-      // undo the conversion from the original pixel data to the false
-      // color mapped pixel data and update the viewport.
-      pixelDataUpdated = restoreImage(layer.image);
-      layer.viewport.voi = {
-        windowWidth: layer.image.windowWidth,
-        windowCenter: layer.image.windowCenter
-      };
-    }
-
-    // If the image got updated it needs to be re-rendered
-    invalidated = invalidated || pixelDataUpdated;
-
     // Render into the layer's canvas
-    if (layer.image.color === true) {
-      addColorLayer(layer, invalidated);
+    const colormap = layer.viewport.colormap || layer.options.colormap;
+    const labelmap = layer.viewport.labelmap;
+    const isInvalid = layer.invalid || invalidated;
+
+    if (colormap && colormap !== '' && labelmap === true) {
+      addLabelMapLayer(layer, isInvalid);
+    } else if (colormap && colormap !== '') {
+      addPseudoColorLayer(layer, isInvalid);
+    } else if (layer.image.color === true) {
+      addColorLayer(layer, isInvalid);
     } else {
-      addGrayscaleLayer(layer, invalidated);
+      // If this is the base layer, use the alpha channel for rendering of the grayscale image
+      const useAlphaChannel = (index === 0);
+
+      addGrayscaleLayer(layer, isInvalid, useAlphaChannel);
     }
 
     // Apply any global opacity settings that have been defined for this layer
@@ -125,8 +103,9 @@ function renderLayers (context, layers, invalidated) {
     const { width, height } = layer.image;
 
     context.drawImage(layer.canvas, 0, 0, width, height, 0, 0, width, height);
-
     context.restore();
+
+    layer.invalid = false;
   });
 }
 
@@ -152,7 +131,9 @@ export default function (enabledElement, invalidated) {
   // copies to calculate anything later (ratio, translation offset, rotation offset, etc)
   if (resynced) {
     allLayers.forEach(function (layer) {
-      syncedViewports[layer.layerId] = cloneViewport(layer.viewport);
+      if (layer.viewport) {
+        originalViewportScale[layer.layerId] = layer.viewport.scale;
+      }
     });
   }
 

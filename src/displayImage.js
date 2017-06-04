@@ -2,7 +2,7 @@ import { getEnabledElement } from './enabledElements.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import updateImage from './updateImage.js';
 import now from './internal/now.js';
-import { getActiveLayer } from './layers.js';
+import { setLayerImage } from './layers.js';
 import triggerEvent from './triggerEvent.js';
 
 /**
@@ -29,9 +29,7 @@ export default function (element, image, viewport) {
   enabledElement.image = image;
 
   if (enabledElement.layers && enabledElement.layers.length) {
-    const activeLayer = getActiveLayer(element);
-
-    activeLayer.image = image;
+    setLayerImage(element, image);
   }
 
   if (enabledElement.viewport === undefined) {

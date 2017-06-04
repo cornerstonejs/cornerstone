@@ -92,10 +92,10 @@ function getRenderCanvas (enabledElement, image, invalidated) {
  * @returns {void}
  */
 export function renderColorImage (enabledElement, invalidated) {
-
   if (enabledElement === undefined) {
     throw new Error('renderColorImage: enabledElement parameter must not be undefined');
   }
+
   const image = enabledElement.image;
 
   if (image === undefined) {

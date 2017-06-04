@@ -24,6 +24,8 @@ export default function (element, viewport) {
   enabledElement.viewport.vflip = viewport.vflip;
   enabledElement.viewport.modalityLUT = viewport.modalityLUT;
   enabledElement.viewport.voiLUT = viewport.voiLUT;
+  enabledElement.viewport.colormap = viewport.colormap;
+  enabledElement.viewport.labelmap = viewport.labelmap;
 
   // Prevent window width from being too small (note that values close to zero are valid and can occur with
   // PET images in particular)

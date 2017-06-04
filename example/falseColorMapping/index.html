@@ -105,6 +105,7 @@
         // Load the example image and display it
         cornerstone.loadImage(imageId).then(function(image) {
             cornerstone.displayImage(element, image);
+
             viewport = cornerstone.getViewport(element);
             $('#bottomright').text("Zoom: " + viewport.scale.toFixed(2) + "x");
             $('#bottomleft').text("WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
@@ -150,10 +151,10 @@
         // Dropdown listener to get the new colormap
         // selected by the user and update the image
         function colormapChanged() {
-            var image = cornerstone.getEnabledElement(element).image;
+            var enabledElement = cornerstone.getEnabledElement(element);
+            var viewport = cornerstone.getViewport(element);
+            var image = enabledElement.image;
             var colormapId = $('#colormaps').val();
-            var minPixelValue = image.minPixelValue || 0;
-            var maxPixelValue = image.maxPixelValue || 255;
             var colormap;
 
             // Use selected the first option ("Select...")
@@ -165,7 +166,8 @@
                 colormap = cornerstone.colors.getColormap(colormapId);
             }
 
-            cornerstone.convertToFalseColorImage(element, colormap);
+            viewport.colormap = colormap;
+            cornerstone.setViewport(element, viewport);
             cornerstone.updateImage(element, true);
 
             // Update the colorbar at the top of the image

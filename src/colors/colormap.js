@@ -1,6 +1,6 @@
 import LookupTable from './lookupTable.js';
 
-const COLOR_BLACK = [0, 0, 0, 255];
+const COLOR_TRANSPARENT = [0, 0, 0, 0];
 
 // Colormaps
 //
@@ -682,7 +682,7 @@ export function getColormap (id, colormapData) {
 
     setNumberOfColors (numColors) {
       while (colormap.colors.length < numColors) {
-        colormap.colors.push(COLOR_BLACK);
+        colormap.colors.push(COLOR_TRANSPARENT);
       }
 
       colormap.colors.length = numColors;
@@ -693,7 +693,7 @@ export function getColormap (id, colormapData) {
         return colormap.colors[index];
       }
 
-      return COLOR_BLACK;
+      return COLOR_TRANSPARENT;
     },
 
     getColorRepeating (index) {
@@ -735,12 +735,11 @@ export function getColormap (id, colormapData) {
         return;
       }
 
-      let i;
       const numColors = colormap.colors.length;
 
       lut.setNumberOfTableValues(numColors);
 
-      for (i = 0; i < numColors; i++) {
+      for (let i = 0; i < numColors; i++) {
         lut.setTableValue(i, colormap.colors[i]);
       }
     },

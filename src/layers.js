@@ -39,6 +39,10 @@ function triggerEvent (eventName, enabledElement, layerId) {
  * @returns {void}
  */
 export function rescaleImage (baseLayer, targetLayer) {
+  if (baseLayer.layerId === targetLayer.layerId) {
+    throw new Error('rescaleImage: both arguments represent the same layer');
+  }
+
   const baseImage = baseLayer.image;
   const targetImage = targetLayer.image;
 
@@ -78,12 +82,16 @@ export function addLayer (element, image, options) {
   const layerId = guid();
   const enabledElement = getEnabledElement(element);
   const layers = enabledElement.layers;
-  let viewport = getDefaultViewport(enabledElement.canvas, image);
+  let viewport;
 
-  // Override the defaults if any optional viewport settings
-  // have been specified
-  if (options && options.viewport) {
-    viewport = Object.assign(viewport, options.viewport);
+  if (image) {
+    viewport = getDefaultViewport(enabledElement.canvas, image);
+
+    // Override the defaults if any optional viewport settings
+    // have been specified
+    if (options && options.viewport) {
+      viewport = Object.assign(viewport, options.viewport);
+    }
   }
 
   // Set syncViewports to true by default when a new layer is added
@@ -101,18 +109,18 @@ export function addLayer (element, image, options) {
 
   // Rescale the new layer based on the base layer to make sure
   // they will have a proportional size (pixel spacing)
-  if (layers.length) {
+  if (layers.length && image) {
     rescaleImage(layers[0], newLayer);
   }
 
   layers.push(newLayer);
 
+  triggerEvent('CornerstoneLayerAdded', enabledElement, layerId);
+
   // Set the layer as active if it's the first layer added
-  if (layers.length === 1) {
+  if (layers.length === 1 && image) {
     setActiveLayer(element, layerId);
   }
-
-  triggerEvent('CornerstoneLayerAdded', enabledElement, layerId);
 
   return layerId;
 }
@@ -170,6 +178,13 @@ export function getLayers (element) {
   return enabledElement.layers;
 }
 
+/**
+ * Retrieve all visible layers for a Cornerstone element
+ *
+ * @param {HTMLElement} element The DOM element enabled for Cornerstone
+ *
+ * @return {EnabledElementLayer[]} An array of layers
+ */
 export function getVisibleLayers (element) {
   const enabledElement = getEnabledElement(element);
 
@@ -201,12 +216,63 @@ export function setActiveLayer (element, layerId) {
 
   const layer = enabledElement.layers[index];
 
+  if (!layer.image) {
+    throw new Error('setActiveLayer: layer with undefined image cannot be set as active.');
+  }
+
   enabledElement.activeLayerId = layerId;
   enabledElement.image = layer.image;
   enabledElement.viewport = layer.viewport;
 
   updateImage(element);
   triggerEvent('CornerstoneActiveLayerChanged', enabledElement, layerId);
+}
+
+/**
+ * Set a new image for a specific layerId
+ *
+ * @param {HTMLElement} element The DOM element enabled for Cornerstone
+ * @param {Image} image The image to be displayed in this layer
+ * @param {String} [layerId] The unique identifier for the layer
+ * @returns {void}
+ */
+export function setLayerImage (element, image, layerId) {
+  const enabledElement = getEnabledElement(element);
+  const baseLayer = enabledElement.layers[0];
+
+  let layer;
+
+  if (layerId) {
+    layer = getLayer(element, layerId);
+  } else {
+    layer = getActiveLayer(element);
+  }
+
+  if (!layer) {
+    throw new Error('setLayerImage: Layer not found');
+  }
+
+  layer.image = image;
+
+  if (!image) {
+    layer.viewport = undefined;
+
+    return;
+  }
+
+  if (!layer.viewport) {
+    const defaultViewport = getDefaultViewport(enabledElement.canvas, image);
+
+    // Override the defaults if any optional viewport settings
+    // have been specified
+    if (layer.options && layer.options.viewport) {
+      layer.viewport = Object.assign(defaultViewport, layer.options.viewport);
+    }
+
+    if (baseLayer.layerId !== layerId) {
+      rescaleImage(baseLayer, layer);
+    }
+  }
 }
 
 /**

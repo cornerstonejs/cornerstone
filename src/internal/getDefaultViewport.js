@@ -1,5 +1,6 @@
 /**
  * Creates a new viewport object containing default values for the image and canvas
+ *
  * @param {HTMLElement} canvas A Canvas DOM element
  * @param {Image} image A Cornerstone Image Object
  * @returns {Viewport} viewport object
@@ -10,7 +11,26 @@ export default function (canvas, image) {
   }
 
   if (image === undefined) {
-    throw new Error('getDefaultViewport: parameter image must not be undefined');
+    return {
+      scale: 1,
+      translation: {
+        x: 0,
+        y: 0
+      },
+      voi: {
+        windowWidth: undefined,
+        windowCenter: undefined
+      },
+      invert: false,
+      pixelReplication: false,
+      rotation: 0,
+      hflip: false,
+      vflip: false,
+      modalityLUT: undefined,
+      voiLUT: undefined,
+      colormap: undefined,
+      labelmap: false
+    };
   }
 
   // Fit image to window
@@ -34,6 +54,8 @@ export default function (canvas, image) {
     hflip: false,
     vflip: false,
     modalityLUT: image.modalityLUT,
-    voiLUT: image.voiLUT
+    voiLUT: image.voiLUT,
+    colormap: image.colormap,
+    labelmap: Boolean(image.labelmap)
   };
 }

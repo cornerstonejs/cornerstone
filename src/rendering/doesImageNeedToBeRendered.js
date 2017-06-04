@@ -12,6 +12,7 @@ export default function (enabledElement, image) {
     lastRenderedViewport.hflip !== enabledElement.viewport.hflip ||
     lastRenderedViewport.vflip !== enabledElement.viewport.vflip ||
     lastRenderedViewport.modalityLUT !== enabledElement.viewport.modalityLUT ||
-    lastRenderedViewport.voiLUT !== enabledElement.viewport.voiLUT
+    lastRenderedViewport.voiLUT !== enabledElement.viewport.voiLUT ||
+    lastRenderedViewport.colormap !== enabledElement.viewport.colormap
   );
 }

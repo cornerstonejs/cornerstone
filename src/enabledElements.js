@@ -68,6 +68,8 @@ const enabledElements = [];
  * @property {Array} [origPixelData] - Original pixel data for an image after it has undergone false color mapping
  * @property {ImageStats} [stats] - Statistics for the last redraw of the image
  * @property {Object} cachedLut - Cached Lookup Table for this image.
+ * @property {String|Colormap} [colormap] - an optional colormap ID or colormap object (from colors/colormap.js). This will be applied during rendering to convert the image to pseudocolor
+ * @property {Boolean} [labelmap=false] - whether or not to render this image as a label map (i.e. skip modality and VOI LUT pipelines and use only a color lookup table)
  */
 
 /**
@@ -85,6 +87,8 @@ const enabledElements = [];
  * @property {Number} [rotation=0] - the rotation of the image (90 degree increments). Default is 0
  * @property {LUT} [modalityLUT] - the modality LUT to apply or undefined if none
  * @property {LUT} [voiLUT] - the modality LUT to apply or undefined if none
+ * @property {String|Colormap} [colormap] - an optional colormap ID or colormap object (from colors/colormap.js). This will be applied during rendering to convert the image to pseudocolor
+ * @property {Boolean} [labelmap=false] - whether or not to render this image as a label map (i.e. skip modality and VOI LUT pipelines and use only a color lookup table)
  */
 
 /**
