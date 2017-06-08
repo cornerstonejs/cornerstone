@@ -1,3 +1,18 @@
+# Version 0.11.0
+
+- Switch events to fire on cornerstone.events instead of cornerstone. This was broken when Cornerstone was loaded as a module.
+  Note: If you are currently using $(cornerstone).on(...) to monitor image load progress or cache changes, you need to change this to
+  $(cornerstone.events).on(...)
+
+- Add previous image information in CornerstoneNewImage event
+- Fix build issues on Windows
+- Fix missing devDependency for Istanbul in package.json
+- Add a number of unit tests, ESLint fixes, and JSDoc comments
+
+# Version 0.10.10
+
+- Fix issues with package.json and Webpack configuration
+
 # Version 0.10.9
 
 - Migrate to new build process with Webpack and Babel. Remove grunt.
