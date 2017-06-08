@@ -2,6 +2,7 @@
  * This module deals with ImageLoaders, loading images and caching images
  */
 import { getImagePromise, putImagePromise } from './imageCache.js';
+import events from './events';
 
 const imageLoaders = {};
 
@@ -38,7 +39,7 @@ function loadImageFromImageLoader (imageId, options) {
 
   // Broadcast an image loaded event once the image is loaded
   imagePromise.then(function (image) {
-    $(cornerstone).trigger('CornerstoneImageLoaded', { image });
+    $(events).trigger('CornerstoneImageLoaded', { image });
   });
 
   return imagePromise;

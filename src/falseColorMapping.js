@@ -1,6 +1,7 @@
 import { getEnabledElement } from './enabledElements';
 import updateImage from './updateImage';
 import pixelDataToFalseColorData from './pixelDataToFalseColorData';
+import { getColormap } from './colors/colormap';
 
 /**
  * Retrieves the minimum and maximum pixel values from an Array of pixel data
@@ -86,7 +87,7 @@ function getRestoreImageMethod (image) {
  */
 function ensuresColormap (colormap) {
   if (colormap && (typeof colormap === 'string')) {
-    colormap = cornerstone.colors.getColormap(colormap);
+    colormap = getColormap(colormap);
   }
 
   return colormap;

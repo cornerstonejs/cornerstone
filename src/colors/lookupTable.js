@@ -6,7 +6,7 @@ const BELOW_RANGE_COLOR_INDEX = 0;
 const ABOVE_RANGE_COLOR_INDEX = 1;
 const NAN_COLOR_INDEX = 2;
 
-export function LookupTable () {
+export default function LookupTable () {
   this.NumberOfColors = 256;
   this.Ramp = 'linear';
   this.TableRange = [0, 255];

@@ -4,6 +4,7 @@
 import generateLut from '../internal/generateLut.js';
 import storedColorPixelDataToCanvasImageData from '../internal/storedColorPixelDataToCanvasImageData';
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem';
+import webGL from '../webgl/';
 
 function initializeColorRenderCanvas (enabledElement, image) {
   const colorRenderCanvas = enabledElement.renderingTools.colorRenderCanvas;
@@ -157,7 +158,7 @@ export function renderColorImage (enabledElement, invalidated) {
     enabledElement.options.renderer.toLowerCase() === 'webgl') {
     // If this enabled element has the option set for WebGL, we should
     // User it as our renderer.
-    renderCanvas = cornerstone.webGL.renderer.render(enabledElement);
+    renderCanvas = webGL.renderer.render(enabledElement);
   } else {
     // If no options are set we will retrieve the renderCanvas through the
     // Normal Canvas rendering path

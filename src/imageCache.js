@@ -10,7 +10,7 @@ const imageCacheDict = {};
 // Array of cachedImage objects
 export const cachedImages = [];
 
-import cornerstone from './namespace';
+import events from './events';
 
 export function setMaximumSizeBytes (numBytes) {
   if (numBytes === undefined) {
@@ -51,12 +51,12 @@ function purgeCacheIfNecessary () {
 
     removeImagePromise(imageId);
 
-    $(cornerstone).trigger('CornerstoneImageCachePromiseRemoved', { imageId });
+    $(events).trigger('CornerstoneImageCachePromiseRemoved', { imageId });
   }
 
   const cacheInfo = getCacheInfo();
 
-  $(cornerstone).trigger('CornerstoneImageCacheFull', cacheInfo);
+  $(events).trigger('CornerstoneImageCacheFull', cacheInfo);
 }
 
 export function putImagePromise (imageId, imagePromise) {

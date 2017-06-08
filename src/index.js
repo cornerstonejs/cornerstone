@@ -61,4 +61,4 @@ export { convertImageToFalseColorImage,
   convertToFalseColorImage,
   restoreImage } from './falseColorMapping';
 
-export { default as cornerstone } from './namespace';
+export { default as events } from './events';

@@ -1,3 +1,5 @@
+import LookupTable from './lookupTable';
+
 const COLOR_BLACK = [0, 0, 0, 255];
 
 // Colormaps
@@ -744,7 +746,7 @@ export function getColormap (id, colormapData) {
     },
 
     createLookupTable () {
-      const lut = new cornerstone.colors.LookupTable();
+      const lut = new LookupTable();
 
       this.buildLookupTable(lut);
 

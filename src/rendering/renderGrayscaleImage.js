@@ -5,6 +5,7 @@ import generateLut from '../internal/generateLut.js';
 import storedPixelDataToCanvasImageData from '../internal/storedPixelDataToCanvasImageData';
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem';
 import now from '../internal/now';
+import webGL from '../webgl/';
 
 function initializeGrayscaleRenderCanvas (enabledElement, image) {
   const grayscaleRenderCanvas = enabledElement.renderingTools.grayscaleRenderCanvas;
@@ -167,7 +168,7 @@ export function renderGrayscaleImage (enabledElement, invalidated) {
         enabledElement.options.renderer.toLowerCase() === 'webgl') {
         // If this enabled element has the option set for WebGL, we should
         // User it as our renderer.
-    renderCanvas = cornerstone.webGL.renderer.render(enabledElement);
+    renderCanvas = webGL.renderer.render(enabledElement);
   } else {
         // If no options are set we will retrieve the renderCanvas through the
         // Normal Canvas rendering path

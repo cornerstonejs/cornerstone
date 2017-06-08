@@ -9,7 +9,7 @@ import { setMaximumSizeBytes,
          purgeCache,
          changeImageIdCacheSize } from '../src/imageCache';
 
-import cornerstone from '../src/namespace';
+import events from '../src/events';
 
 describe('Set maximum cache size', function () {
   it('should allow setting of cache size', function () {
@@ -230,7 +230,7 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
     getImagePromise('imageId-6');
 
     // Setup event listeners to check that the promise removed and cache full events have fired properly
-    $(cornerstone).one('CornerstoneImageCachePromiseRemoved', (event, imageId) => {
+    $(events).one('CornerstoneImageCachePromiseRemoved', (event, imageId) => {
       // Detect that the earliest image added has been removed
 
       // TODO: Figure out how to change the test setup to ensure the same
@@ -242,7 +242,7 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
       done();
     });
 
-    $(cornerstone).one('CornerstoneImageCacheFull', (event, cacheInfo) => {
+    $(events).one('CornerstoneImageCacheFull', (event, cacheInfo) => {
       const currentInfo = getCacheInfo();
 
       assert.equal(cacheInfo, currentInfo);

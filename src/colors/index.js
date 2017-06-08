@@ -1,5 +1,5 @@
 import { getColormap, getColormapsList } from './colormap';
-import { LookupTable } from './lookupTable';
+import LookupTable from './lookupTable';
 
 export default {
   getColormap,
