@@ -61,10 +61,13 @@ export default function (element, options) {
    *
    * @returns {void}
    */
-  function draw () {
+  function draw (timestamp) {
     if (el.canvas === undefined) {
       return;
     }
+
+    $(el.element).trigger('CornerstonePreRender', { enabledElement: el, timestamp: timestamp });
+
     if (el.needsRedraw && el.image !== undefined) {
       const start = new Date();
       let render = el.image.render;
