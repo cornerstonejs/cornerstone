@@ -1,9 +1,9 @@
 /* eslint no-bitwise: 0 */
 
 import { shaders, dataUtilities } from './shaders/index.js';
-import { vertexShader } from './vertexShader';
-import textureCache from './textureCache';
-import createProgramFromString from './createProgramFromString';
+import { vertexShader } from './vertexShader.js';
+import textureCache from './textureCache.js';
+import createProgramFromString from './createProgramFromString.js';
 
 const renderCanvas = document.createElement('canvas');
 let gl;

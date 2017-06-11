@@ -1,8 +1,8 @@
-import { int16Shader, int16DataUtilities } from './int16';
-import { int8Shader, int8DataUtilities } from './int8';
-import { rgbShader, rgbDataUtilities } from './rgb';
-import { uint16Shader, uint16DataUtilities } from './uint16';
-import { uint8Shader, uint8DataUtilities } from './uint8';
+import { int16Shader, int16DataUtilities } from './int16.js';
+import { int8Shader, int8DataUtilities } from './int8.js';
+import { rgbShader, rgbDataUtilities } from './rgb.js';
+import { uint16Shader, uint16DataUtilities } from './uint16.js';
+import { uint8Shader, uint8DataUtilities } from './uint8.js';
 
 const shaders = {
   int16: int16Shader,

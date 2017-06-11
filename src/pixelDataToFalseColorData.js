@@ -1,4 +1,4 @@
-import colors from './colors/index';
+import colors from './colors/index.js';
 
 /**
  * Converts the image pixel data into a false color data

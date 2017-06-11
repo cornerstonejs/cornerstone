@@ -1,10 +1,10 @@
 import { assert } from 'chai';
 
-import enable from '../src/enable';
-import displayImage from '../src/displayImage';
-import invalidate from '../src/invalidate';
-import disable from '../src/disable';
-import { getEnabledElement } from '../src/enabledElements';
+import enable from '../src/enable.js';
+import displayImage from '../src/displayImage.js';
+import invalidate from '../src/invalidate.js';
+import disable from '../src/disable.js';
+import { getEnabledElement } from '../src/enabledElements.js';
 
 describe('invalidate', function () {
   beforeEach(function () {

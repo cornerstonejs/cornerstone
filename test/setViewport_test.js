@@ -1,10 +1,10 @@
 import { assert } from 'chai';
 
-import enable from '../src/enable';
-import displayImage from '../src/displayImage';
-import setViewport from '../src/setViewport';
-import getViewport from '../src/getViewport';
-import disable from '../src/disable';
+import enable from '../src/enable.js';
+import displayImage from '../src/displayImage.js';
+import setViewport from '../src/setViewport.js';
+import getViewport from '../src/getViewport.js';
+import disable from '../src/disable.js';
 
 const MIN_WINDOW_WIDTH = 0.000001;
 const MIN_VIEWPORT_SCALE = 0.0001;

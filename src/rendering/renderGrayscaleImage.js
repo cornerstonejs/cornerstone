@@ -2,10 +2,10 @@
  * This module is responsible for drawing a grayscale image
  */
 import generateLut from '../internal/generateLut.js';
-import storedPixelDataToCanvasImageData from '../internal/storedPixelDataToCanvasImageData';
-import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem';
-import now from '../internal/now';
-import webGL from '../webgl/';
+import storedPixelDataToCanvasImageData from '../internal/storedPixelDataToCanvasImageData.js';
+import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
+import now from '../internal/now.js';
+import webGL from '../webgl/index.js';
 
 function initializeGrayscaleRenderCanvas (enabledElement, image) {
   const grayscaleRenderCanvas = enabledElement.renderingTools.grayscaleRenderCanvas;

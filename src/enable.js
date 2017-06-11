@@ -5,8 +5,8 @@
 import { addEnabledElement } from './enabledElements.js';
 import resize from './resize.js';
 import requestAnimationFrame from './internal/requestAnimationFrame.js';
-import { renderColorImage } from './rendering/renderColorImage';
-import { renderGrayscaleImage } from './rendering/renderGrayscaleImage';
+import { renderColorImage } from './rendering/renderColorImage.js';
+import { renderGrayscaleImage } from './rendering/renderGrayscaleImage.js';
 import webGL from './webgl/index.js';
 
 /**

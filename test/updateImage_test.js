@@ -1,9 +1,9 @@
 import { assert } from 'chai';
 
-import enable from '../src/enable';
-import displayImage from '../src/displayImage';
-import updateImage from '../src/updateImage';
-import disable from '../src/disable';
+import enable from '../src/enable.js';
+import displayImage from '../src/displayImage.js';
+import updateImage from '../src/updateImage.js';
+import disable from '../src/disable.js';
 
 describe('Update a displayed image', function () {
   beforeEach(function () {

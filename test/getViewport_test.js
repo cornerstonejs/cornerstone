@@ -1,8 +1,8 @@
 import { assert } from 'chai';
 
-import enable from '../src/enable';
-import getViewport from '../src/getViewport';
-import disable from '../src/disable';
+import enable from '../src/enable.js';
+import getViewport from '../src/getViewport.js';
+import disable from '../src/disable.js';
 
 describe('Set an enabled element\'s viewport', function () {
   beforeEach(function () {

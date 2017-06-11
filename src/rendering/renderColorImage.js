@@ -2,9 +2,9 @@
  * This module is responsible for drawing an image to an enabled elements canvas element
  */
 import generateLut from '../internal/generateLut.js';
-import storedColorPixelDataToCanvasImageData from '../internal/storedColorPixelDataToCanvasImageData';
-import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem';
-import webGL from '../webgl/';
+import storedColorPixelDataToCanvasImageData from '../internal/storedColorPixelDataToCanvasImageData.js';
+import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
+import webGL from '../webgl/index.js';
 
 function initializeColorRenderCanvas (enabledElement, image) {
   const colorRenderCanvas = enabledElement.renderingTools.colorRenderCanvas;

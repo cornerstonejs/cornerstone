@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import generateLutNew from '../../src/internal/generateLutNew';
+import generateLutNew from '../../src/internal/generateLutNew.js';
 
 describe('generateLutNew', function () {
   beforeEach(function () {

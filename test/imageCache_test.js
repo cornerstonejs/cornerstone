@@ -7,9 +7,9 @@ import { setMaximumSizeBytes,
          removeImagePromise,
          getCacheInfo,
          purgeCache,
-         changeImageIdCacheSize } from '../src/imageCache';
+         changeImageIdCacheSize } from '../src/imageCache.js';
 
-import events from '../src/events';
+import events from '../src/events.js';
 
 describe('Set maximum cache size', function () {
   it('should allow setting of cache size', function () {

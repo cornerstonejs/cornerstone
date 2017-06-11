@@ -1,64 +1,64 @@
 // Internal (some of these are from old internal/legacy expose)
-export { default as drawImage } from './internal/drawImage';
-export { default as generateLut } from './internal/generateLut';
-export { default as generateLutNew } from './internal/generateLutNew';
-export { default as getDefaultViewport } from './internal/getDefaultViewport';
-export { default as requestAnimationFrame } from './internal/requestAnimationFrame';
-export { default as storedPixelDataToCanvasImageData } from './internal/storedPixelDataToCanvasImageData';
-export { default as storedColorPixelDataToCanvasImageData } from './internal/storedColorPixelDataToCanvasImageData';
+export { default as drawImage } from './internal/drawImage.js';
+export { default as generateLut } from './internal/generateLut.js';
+export { default as generateLutNew } from './internal/generateLutNew.js';
+export { default as getDefaultViewport } from './internal/getDefaultViewport.js';
+export { default as requestAnimationFrame } from './internal/requestAnimationFrame.js';
+export { default as storedPixelDataToCanvasImageData } from './internal/storedPixelDataToCanvasImageData.js';
+export { default as storedColorPixelDataToCanvasImageData } from './internal/storedColorPixelDataToCanvasImageData.js';
 
-export { default as internal } from './internal/index';
+export { default as internal } from './internal/index.js';
 
 // Rendering
-export { renderColorImage } from './rendering/renderColorImage';
-export { renderGrayscaleImage } from './rendering/renderGrayscaleImage';
-export { renderWebImage } from './rendering/renderWebImage';
+export { renderColorImage } from './rendering/renderColorImage.js';
+export { renderGrayscaleImage } from './rendering/renderGrayscaleImage.js';
+export { renderWebImage } from './rendering/renderWebImage.js';
 
-export { default as canvasToPixel } from './canvasToPixel';
-export { default as disable } from './disable';
-export { default as displayImage } from './displayImage';
-export { default as draw } from './draw';
-export { default as drawInvalidated } from './drawInvalidated';
-export { default as enable } from './enable';
-export { getElementData, removeElementData } from './enabledElementData';
+export { default as canvasToPixel } from './canvasToPixel.js';
+export { default as disable } from './disable.js';
+export { default as displayImage } from './displayImage.js';
+export { default as draw } from './draw.js';
+export { default as drawInvalidated } from './drawInvalidated.js';
+export { default as enable } from './enable.js';
+export { getElementData, removeElementData } from './enabledElementData.js';
 export {
   getEnabledElement,
   addEnabledElement,
   getEnabledElementsByImageId,
   getEnabledElements
-} from './enabledElements';
-export { default as fitToWindow } from './fitToWindow';
-export { default as getDefaultViewportForImage } from './getDefaultViewportForImage';
-export { default as getImage } from './getImage';
-export { default as getPixels } from './getPixels';
-export { default as getStoredPixels } from './getStoredPixels';
-export { default as getViewport } from './getViewport';
+} from './enabledElements.js';
+export { default as fitToWindow } from './fitToWindow.js';
+export { default as getDefaultViewportForImage } from './getDefaultViewportForImage.js';
+export { default as getImage } from './getImage.js';
+export { default as getPixels } from './getPixels.js';
+export { default as getStoredPixels } from './getStoredPixels.js';
+export { default as getViewport } from './getViewport.js';
 export {
   loadImage,
   loadAndCacheImage,
   registerImageLoader,
   registerUnknownImageLoader
-} from './imageLoader';
+} from './imageLoader.js';
 
-export { default as invalidate } from './invalidate';
-export { default as invalidateImageId } from './invalidateImageId';
-export { default as pageToPixel } from './pageToPixel';
-export { default as pixelToCanvas } from './pixelToCanvas';
-export { default as reset } from './reset';
-export { default as resize } from './resize';
-export { default as setToPixelCoordinateSystem } from './setToPixelCoordinateSystem';
-export { default as setViewport } from './setViewport';
-export { default as updateImage } from './updateImage';
-export { default as pixelDataToFalseColorData } from './pixelDataToFalseColorData';
+export { default as invalidate } from './invalidate.js';
+export { default as invalidateImageId } from './invalidateImageId.js';
+export { default as pageToPixel } from './pageToPixel.js';
+export { default as pixelToCanvas } from './pixelToCanvas.js';
+export { default as reset } from './reset.js';
+export { default as resize } from './resize.js';
+export { default as setToPixelCoordinateSystem } from './setToPixelCoordinateSystem.js';
+export { default as setViewport } from './setViewport.js';
+export { default as updateImage } from './updateImage.js';
+export { default as pixelDataToFalseColorData } from './pixelDataToFalseColorData.js';
 
-export { default as rendering } from './rendering/index';
-export { default as imageCache } from './imageCache';
-export { default as metaData } from './metaData';
-export { default as webGL } from './webgl/index';
-export { default as colors } from './colors/index';
+export { default as rendering } from './rendering/index.js';
+export { default as imageCache } from './imageCache.js';
+export { default as metaData } from './metaData.js';
+export { default as webGL } from './webgl/index.js';
+export { default as colors } from './colors/index.js';
 
 export { convertImageToFalseColorImage,
   convertToFalseColorImage,
-  restoreImage } from './falseColorMapping';
+  restoreImage } from './falseColorMapping.js';
 
-export { default as events } from './events';
+export { default as events } from './events.js';

@@ -1,4 +1,4 @@
-import now from './now';
+import now from './now.js';
 
 /**
  * This function transforms stored pixel values into a canvas image data buffer

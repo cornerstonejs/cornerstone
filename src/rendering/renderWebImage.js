@@ -1,8 +1,8 @@
 /**
  * This module is responsible for drawing an image to an enabled elements canvas element
  */
-import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem';
-import { renderColorImage } from './renderColorImage';
+import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
+import { renderColorImage } from './renderColorImage.js';
 
 /**
  * API function to draw a standard web image (PNG, JPG) to an enabledImage

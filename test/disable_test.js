@@ -1,8 +1,8 @@
 import { assert } from 'chai';
 
-import enable from '../src/enable';
-import disable from '../src/disable';
-import { getEnabledElement, getEnabledElements } from '../src/enabledElements';
+import enable from '../src/enable.js';
+import disable from '../src/disable.js';
+import { getEnabledElement, getEnabledElements } from '../src/enabledElements.js';
 
 describe('Disable an Element', function () {
   beforeEach(function () {

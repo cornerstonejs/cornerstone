@@ -1,4 +1,4 @@
-import LookupTable from './lookupTable';
+import LookupTable from './lookupTable.js';
 
 const COLOR_BLACK = [0, 0, 0, 255];
 

@@ -1,9 +1,9 @@
 import { assert } from 'chai';
 
-import enable from '../src/enable';
-import displayImage from '../src/displayImage';
-import getStoredPixels from '../src/getStoredPixels';
-import disable from '../src/disable';
+import enable from '../src/enable.js';
+import displayImage from '../src/displayImage.js';
+import getStoredPixels from '../src/getStoredPixels.js';
+import disable from '../src/disable.js';
 
 describe('getStoredPixels', function () {
   beforeEach(function () {
