@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import getVOILut from '../../src/internal/getVOILut';
+import getVOILut from '../../src/internal/getVOILut.js';
 
 describe('getVOILut', function () {
   beforeEach(function () {

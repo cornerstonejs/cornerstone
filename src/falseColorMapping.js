@@ -1,7 +1,7 @@
-import { getEnabledElement } from './enabledElements';
-import updateImage from './updateImage';
-import pixelDataToFalseColorData from './pixelDataToFalseColorData';
-import { getColormap } from './colors/colormap';
+import { getEnabledElement } from './enabledElements.js';
+import updateImage from './updateImage.js';
+import pixelDataToFalseColorData from './pixelDataToFalseColorData.js';
+import { getColormap } from './colors/colormap.js';
 
 /**
  * Retrieves the minimum and maximum pixel values from an Array of pixel data

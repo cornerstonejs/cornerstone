@@ -1,12 +1,12 @@
 import { assert } from 'chai';
 
-import enable from '../src/enable';
-import displayImage from '../src/displayImage';
-import reset from '../src/reset';
-import getDefaultViewport from '../src/internal/getDefaultViewport';
-import getViewport from '../src/getViewport';
-import disable from '../src/disable';
-import { getEnabledElement } from '../src/enabledElements';
+import enable from '../src/enable.js';
+import displayImage from '../src/displayImage.js';
+import reset from '../src/reset.js';
+import getDefaultViewport from '../src/internal/getDefaultViewport.js';
+import getViewport from '../src/getViewport.js';
+import disable from '../src/disable.js';
+import { getEnabledElement } from '../src/enabledElements.js';
 
 describe('reset', function () {
   beforeEach(function () {

@@ -1,11 +1,11 @@
 import { assert } from 'chai';
 
-import enable from '../src/enable';
-import displayImage from '../src/displayImage';
-import fitToWindow from '../src/fitToWindow';
-import setViewport from '../src/setViewport';
-import getViewport from '../src/getViewport';
-import disable from '../src/disable';
+import enable from '../src/enable.js';
+import displayImage from '../src/displayImage.js';
+import fitToWindow from '../src/fitToWindow.js';
+import setViewport from '../src/setViewport.js';
+import getViewport from '../src/getViewport.js';
+import disable from '../src/disable.js';
 
 describe('fitToWindow', function () {
   beforeEach(function () {

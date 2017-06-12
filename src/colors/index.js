@@ -1,5 +1,5 @@
-import { getColormap, getColormapsList } from './colormap';
-import LookupTable from './lookupTable';
+import { getColormap, getColormapsList } from './colormap.js';
+import LookupTable from './lookupTable.js';
 
 export default {
   getColormap,

@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import storedPixelDataToCanvasImageData from '../../src/internal/storedPixelDataToCanvasImageData';
+import storedPixelDataToCanvasImageData from '../../src/internal/storedPixelDataToCanvasImageData.js';
 
 describe('storedPixelDataToCanvasImageData', function () {
   it('storedPixelDataToCanvasImageData minPixel = 0', function () {

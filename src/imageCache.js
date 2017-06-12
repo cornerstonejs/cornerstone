@@ -10,7 +10,7 @@ const imageCacheDict = {};
 // Array of cachedImage objects
 export const cachedImages = [];
 
-import events from './events';
+import events from './events.js';
 
 export function setMaximumSizeBytes (numBytes) {
   if (numBytes === undefined) {

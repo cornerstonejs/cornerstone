@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import getModalityLUT from '../../src/internal/getModalityLUT';
+import getModalityLUT from '../../src/internal/getModalityLUT.js';
 
 describe('getModalityLUT', function () {
   beforeEach(function () {
