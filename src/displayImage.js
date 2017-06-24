@@ -2,6 +2,7 @@ import { getEnabledElement } from './enabledElements.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import updateImage from './updateImage.js';
 import now from './internal/now.js';
+import { getActiveLayer } from './layers.js';
 
 /**
  * Sets a new image object for a given element.
@@ -25,6 +26,12 @@ export default function (element, image, viewport) {
   const oldImage = enabledElement.image;
 
   enabledElement.image = image;
+
+  if (enabledElement.layers && enabledElement.layers.length) {
+    const activeLayer = getActiveLayer(element);
+
+    activeLayer.image = image;
+  }
 
   if (enabledElement.viewport === undefined) {
     enabledElement.viewport = getDefaultViewport(enabledElement.canvas, image);

@@ -1,5 +1,12 @@
 import { Transform } from './transform.js';
 
+/**
+ * Calculate the transform for a Cornerstone enabled element
+ *
+ * @param {EnabledElement} enabledElement The Cornerstone Enabled Element
+ * @param {Number} [scale] The viewport scale
+ * @return {Transform} The current transform
+ */
 export default function (enabledElement, scale) {
 
   const transform = new Transform();
@@ -38,11 +45,11 @@ export default function (enabledElement, scale) {
   }
 
   if (scale !== undefined) {
-        // Apply the font scale
+    // Apply the font scale
     transform.scale(scale, scale);
   }
 
-    // Apply Flip if required
+  // Apply Flip if required
   if (enabledElement.viewport.hflip) {
     transform.scale(-1, 1);
   }

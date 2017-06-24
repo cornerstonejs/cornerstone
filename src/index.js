@@ -27,6 +27,17 @@ export {
   getEnabledElementsByImageId,
   getEnabledElements
 } from './enabledElements.js';
+
+export {
+  addLayer,
+  removeLayer,
+  getLayer,
+  getLayers,
+  getVisibleLayers,
+  setActiveLayer,
+  getActiveLayer
+} from './layers.js';
+
 export { default as fitToWindow } from './fitToWindow.js';
 export { default as getDefaultViewportForImage } from './getDefaultViewportForImage.js';
 export { default as getImage } from './getImage.js';

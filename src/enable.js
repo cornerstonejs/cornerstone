@@ -4,10 +4,14 @@
 
 import { addEnabledElement } from './enabledElements.js';
 import resize from './resize.js';
+import drawImageSync from './internal/drawImageSync.js';
 import requestAnimationFrame from './internal/requestAnimationFrame.js';
-import { renderColorImage } from './rendering/renderColorImage.js';
-import { renderGrayscaleImage } from './rendering/renderGrayscaleImage.js';
 import webGL from './webgl/index.js';
+
+function hasImageOrLayers (enabledElement) {
+  return enabledElement.image !== undefined || enabledElement.layers.length;
+}
+
 
 /**
  * Enable an HTML Element for use in Cornerstone
@@ -42,17 +46,19 @@ export default function (element, options) {
 
   element.appendChild(canvas);
 
-  const el = {
+  const enabledElement = {
     element,
     canvas,
     image: undefined, // Will be set once image is loaded
     invalid: false, // True if image needs to be drawn, false if not
     needsRedraw: true,
     options,
-    data: {}
+    layers: [],
+    data: {},
+    renderingTools: {}
   };
 
-  addEnabledElement(el);
+  addEnabledElement(enabledElement);
 
   resize(element, true);
 
@@ -63,51 +69,17 @@ export default function (element, options) {
    * @returns {void}
    */
   function draw (timestamp) {
-    if (el.canvas === undefined) {
+    if (enabledElement.canvas === undefined) {
       return;
     }
 
-    $(el.element).trigger('CornerstonePreRender', { enabledElement: el,
-      timestamp });
+    $(enabledElement.element).trigger('CornerstonePreRender', {
+      enabledElement,
+      timestamp
+    });
 
-    if (el.needsRedraw && el.image !== undefined) {
-      const start = new Date();
-      let render = el.image.render;
-
-      el.image.stats = {
-        lastGetPixelDataTime: -1.0,
-        lastStoredPixelDataToCanvasImageDataTime: -1.0,
-        lastPutImageDataTime: -1.0,
-        lastRenderTime: -1.0,
-        lastLutGenerateTime: -1.0
-      };
-
-      if (!render) {
-        render = el.image.color ? renderColorImage : renderGrayscaleImage;
-      }
-
-      render(el, el.invalid);
-
-      const context = el.canvas.getContext('2d');
-
-      const end = new Date();
-      const diff = end - start;
-
-      const eventData = {
-        viewport: el.viewport,
-        element: el.element,
-        image: el.image,
-        enabledElement: el,
-        canvasContext: context,
-        renderTimeInMs: diff
-      };
-
-      el.image.stats.lastRenderTime = diff;
-
-      el.invalid = false;
-      el.needsRedraw = false;
-
-      $(el.element).trigger('CornerstoneImageRendered', eventData);
+    if (enabledElement.needsRedraw && hasImageOrLayers(enabledElement)) {
+      drawImageSync(enabledElement, enabledElement.invalid);
     }
 
     requestAnimationFrame(draw);

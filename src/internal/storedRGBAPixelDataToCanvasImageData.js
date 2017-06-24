@@ -1,9 +1,7 @@
-import now from './now';
+import now from './now.js';
 
 /**
- * Converts stored color pixel values to display pixel values using a LUT.
- *
- * Note: Skips alpha value for any input image pixel data.
+ * Converts stored RGBA color pixel values to display pixel values using a LUT.
  *
  * @param {Image} image A Cornerstone Image Object
  * @param {Array} lut Lookup table array
@@ -30,17 +28,15 @@ export default function (image, lut, canvasImageDataData) {
     while (storedPixelDataIndex < numPixels) {
       canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // Red
       canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // Green
-      canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex] + (-minPixelValue)]; // Blue
-      storedPixelDataIndex += 2;
-      canvasImageDataIndex += 2;
+      canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // Blue
+      canvasImageDataData[canvasImageDataIndex++] = pixelData[storedPixelDataIndex++];
     }
   } else {
     while (storedPixelDataIndex < numPixels) {
       canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++]]; // Red
       canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++]]; // Green
-      canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex]]; // Blue
-      storedPixelDataIndex += 2;
-      canvasImageDataIndex += 2;
+      canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++]]; // Blue
+      canvasImageDataData[canvasImageDataIndex++] = pixelData[storedPixelDataIndex++];
     }
   }
   image.stats.lastStoredPixelDataToCanvasImageDataTime = now() - start;
