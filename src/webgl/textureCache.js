@@ -1,3 +1,5 @@
+import events from '../events.js';
+
 /**
  * This module deals with caching image textures in VRAM for WebGL
  */
@@ -45,12 +47,12 @@ function purgeCacheIfNecessary () {
     delete imageCache[lastCachedImage.imageId];
     cachedImages.pop();
 
-    $(cornerstone).trigger('CornerstoneWebGLTextureRemoved', { imageId: lastCachedImage.imageId });
+    $(events).trigger('CornerstoneWebGLTextureRemoved', { imageId: lastCachedImage.imageId });
   }
 
   const cacheInfo = getCacheInfo();
 
-  $(cornerstone).trigger('CornerstoneWebGLTextureCacheFull', cacheInfo);
+  $(events).trigger('CornerstoneWebGLTextureCacheFull', cacheInfo);
 }
 
 function setMaximumSizeBytes (numBytes) {
