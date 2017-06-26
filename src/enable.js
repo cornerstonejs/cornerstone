@@ -59,6 +59,7 @@ export default function (element, options) {
   /**
    * Draw the image immediately
    *
+   * @param {DOMHighResTimeStamp} timestamp The current time for when requestAnimationFrame starts to fire callbacks
    * @returns {void}
    */
   function draw (timestamp) {
@@ -66,7 +67,8 @@ export default function (element, options) {
       return;
     }
 
-    $(el.element).trigger('CornerstonePreRender', { enabledElement: el, timestamp: timestamp });
+    $(el.element).trigger('CornerstonePreRender', { enabledElement: el,
+      timestamp });
 
     if (el.needsRedraw && el.image !== undefined) {
       const start = new Date();

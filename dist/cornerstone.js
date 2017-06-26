@@ -1,4 +1,4 @@
-/*! cornerstone-core - 0.11.0 - 2017-06-08 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone-core - 0.11.1 - 2017-06-26 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -439,9 +439,9 @@ var _setToPixelCoordinateSystem = __webpack_require__(6);
 
 var _setToPixelCoordinateSystem2 = _interopRequireDefault(_setToPixelCoordinateSystem);
 
-var _webgl = __webpack_require__(7);
+var _index = __webpack_require__(7);
 
-var _webgl2 = _interopRequireDefault(_webgl);
+var _index2 = _interopRequireDefault(_index);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -582,7 +582,7 @@ function renderColorImage(enabledElement, invalidated) {
   if (enabledElement.options && enabledElement.options.renderer && enabledElement.options.renderer.toLowerCase() === 'webgl') {
     // If this enabled element has the option set for WebGL, we should
     // User it as our renderer.
-    renderCanvas = _webgl2.default.renderer.render(enabledElement);
+    renderCanvas = _index2.default.renderer.render(enabledElement);
   } else {
     // If no options are set we will retrieve the renderCanvas through the
     // Normal Canvas rendering path
@@ -954,9 +954,9 @@ var _now = __webpack_require__(9);
 
 var _now2 = _interopRequireDefault(_now);
 
-var _webgl = __webpack_require__(7);
+var _index = __webpack_require__(7);
 
-var _webgl2 = _interopRequireDefault(_webgl);
+var _index2 = _interopRequireDefault(_index);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1107,7 +1107,7 @@ function renderGrayscaleImage(enabledElement, invalidated) {
   if (enabledElement.options && enabledElement.options.renderer && enabledElement.options.renderer.toLowerCase() === 'webgl') {
     // If this enabled element has the option set for WebGL, we should
     // User it as our renderer.
-    renderCanvas = _webgl2.default.renderer.render(enabledElement);
+    renderCanvas = _index2.default.renderer.render(enabledElement);
   } else {
     // If no options are set we will retrieve the renderCanvas through the
     // Normal Canvas rendering path
@@ -3306,10 +3306,13 @@ exports.default = function (element, options) {
    *
    * @returns {void}
    */
-  function draw() {
+  function draw(timestamp) {
     if (el.canvas === undefined) {
       return;
     }
+
+    $(el.element).trigger('CornerstonePreRender', { enabledElement: el, timestamp: timestamp });
+
     if (el.needsRedraw && el.image !== undefined) {
       var start = new Date();
       var render = el.image.render;
