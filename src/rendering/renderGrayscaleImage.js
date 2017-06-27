@@ -69,6 +69,7 @@ function doesImageNeedToBeRendered (enabledElement, image) {
 
   return (
     image.imageId !== lastRenderedImageId ||
+    !lastRenderedViewport ||
     lastRenderedViewport.windowCenter !== enabledElement.viewport.voi.windowCenter ||
     lastRenderedViewport.windowWidth !== enabledElement.viewport.voi.windowWidth ||
     lastRenderedViewport.invert !== enabledElement.viewport.invert ||
@@ -104,6 +105,7 @@ function getRenderCanvas (enabledElement, image, invalidated) {
   let start = now();
   const lut = getLut(image, enabledElement.viewport, invalidated);
 
+  image.stats = image.stats || {};
   image.stats.lastLutGenerateTime = now() - start;
 
   const grayscaleRenderCanvasData = enabledElement.renderingTools.grayscaleRenderCanvasData;
@@ -191,3 +193,48 @@ export function renderGrayscaleImage (enabledElement, invalidated) {
   lastRenderedViewport.voiLUT = enabledElement.viewport.voiLUT;
   enabledElement.renderingTools.lastRenderedViewport = lastRenderedViewport;
 }
+
+/**
+ * API function to draw a grayscale image to a given layer
+ *
+ * @param {EnabledElementLayer} layer The layer that the image will be added to
+ * @param {Boolean} invalidated - true if pixel data has been invaldiated and cached rendering should not be used
+ * @returns {void}
+ */
+export function addGrayscaleLayer (layer, invalidated) {
+  if (layer === undefined) {
+    throw new Error('addGrayscaleLayer: layer parameter must not be undefined');
+  }
+
+  const image = layer.image;
+
+  if (image === undefined) {
+    throw new Error('addGrayscaleLayer: image must be loaded before it can be drawn');
+  }
+
+  layer.renderingTools = layer.renderingTools || {};
+  layer.canvas = getRenderCanvas(layer, image, invalidated);
+
+  const context = layer.canvas.getContext('2d');
+
+  if (layer.viewport.pixelReplication === true) {
+    context.imageSmoothingEnabled = false;
+    context.mozImageSmoothingEnabled = false;
+  } else {
+    context.imageSmoothingEnabled = true;
+    context.mozImageSmoothingEnabled = true;
+  }
+
+  const lastRenderedViewport = {
+    windowCenter: layer.viewport.voi.windowCenter,
+    windowWidth: layer.viewport.voi.windowWidth,
+    invert: layer.viewport.invert,
+    rotation: layer.viewport.rotation,
+    hflip: layer.viewport.hflip,
+    vflip: layer.viewport.vflip
+  };
+
+  layer.renderingTools.lastRenderedImageId = image.imageId;
+  layer.renderingTools.lastRenderedViewport = lastRenderedViewport;
+}
+

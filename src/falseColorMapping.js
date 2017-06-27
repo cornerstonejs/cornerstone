@@ -1,5 +1,4 @@
 import { getEnabledElement } from './enabledElements.js';
-import updateImage from './updateImage.js';
 import pixelDataToFalseColorData from './pixelDataToFalseColorData.js';
 import { getColormap } from './colors/colormap.js';
 
@@ -43,7 +42,7 @@ function getRestoreImageMethod (image) {
 
   const color = image.color;
   const rgba = image.rgba;
-  const lut = image.lut;
+  const cachedLut = image.cachedLut;
   const slope = image.slope;
   const windowWidth = image.windowWidth;
   const windowCenter = image.windowCenter;
@@ -53,7 +52,7 @@ function getRestoreImageMethod (image) {
   return function () {
     image.color = color;
     image.rgba = rgba;
-    image.lut = lut;
+    image.cachedLut = cachedLut;
     image.slope = slope;
     image.windowWidth = windowWidth;
     image.windowCenter = windowCenter;
@@ -69,9 +68,9 @@ function getRestoreImageMethod (image) {
     }
 
     // Remove some attributes added by false color mapping
-    delete image.origPixelData;
-    delete image.colormapId;
-    delete image.falseColor;
+    image.origPixelData = undefined;
+    image.colormapId = undefined;
+    image.falseColor = undefined;
   };
 }
 
@@ -176,11 +175,9 @@ function convertImageToFalseColorImage (image, colormap) {
  */
 function convertToFalseColorImage (element, colormap) {
   const enabledElement = getEnabledElement(element);
-  const falseColorImageUpdated = convertImageToFalseColorImage(enabledElement.image, colormap);
 
-  if (falseColorImageUpdated) {
-    updateImage(element, true);
-  }
+
+  return convertImageToFalseColorImage(enabledElement.image, colormap);
 }
 
 export { convertImageToFalseColorImage,

@@ -11,7 +11,7 @@ import drawImage from './internal/drawImage.js';
 export default function (element, invalidated = false) {
   const enabledElement = getEnabledElement(element);
 
-  if (enabledElement.image === undefined) {
+  if (enabledElement.image === undefined && !enabledElement.layers.length) {
     throw new Error('updateImage: image has not been loaded yet');
   }
 

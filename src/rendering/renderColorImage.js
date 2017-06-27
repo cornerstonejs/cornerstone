@@ -3,6 +3,7 @@
  */
 import generateLut from '../internal/generateLut.js';
 import storedColorPixelDataToCanvasImageData from '../internal/storedColorPixelDataToCanvasImageData.js';
+import storedRGBAPixelDataToCanvasImageData from '../internal/storedRGBAPixelDataToCanvasImageData.js';
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
 import webGL from '../webgl/index.js';
 
@@ -49,6 +50,7 @@ function doesImageNeedToBeRendered (enabledElement, image) {
 
   return (
     image.imageId !== lastRenderedImageId ||
+    !lastRenderedViewport ||
     lastRenderedViewport.windowCenter !== enabledElement.viewport.voi.windowCenter ||
     lastRenderedViewport.windowWidth !== enabledElement.viewport.voi.windowWidth ||
     lastRenderedViewport.invert !== enabledElement.viewport.invert ||
@@ -92,6 +94,7 @@ function getRenderCanvas (enabledElement, image, invalidated) {
   let start = (window.performance ? performance.now() : Date.now());
   const colorLut = getLut(image, enabledElement.viewport);
 
+  image.stats = image.stats || {};
   image.stats.lastLutGenerateTime = (window.performance ? performance.now() : Date.now()) - start;
 
   const colorRenderCanvasData = enabledElement.renderingTools.colorRenderCanvasData;
@@ -99,7 +102,11 @@ function getRenderCanvas (enabledElement, image, invalidated) {
 
   // The color image voi/invert has been modified - apply the lut to the underlying
   // Pixel data and put it into the renderCanvas
-  storedColorPixelDataToCanvasImageData(image, colorLut, colorRenderCanvasData.data);
+  if (image.rgba) {
+    storedRGBAPixelDataToCanvasImageData(image, colorLut, colorRenderCanvasData.data);
+  } else {
+    storedColorPixelDataToCanvasImageData(image, colorLut, colorRenderCanvasData.data);
+  }
 
   start = (window.performance ? performance.now() : Date.now());
   colorRenderCanvasContext.putImageData(colorRenderCanvasData, 0, 0);
@@ -148,10 +155,6 @@ export function renderColorImage (enabledElement, invalidated) {
   context.save();
   setToPixelCoordinateSystem(enabledElement, context);
 
-  if (!enabledElement.renderingTools) {
-    enabledElement.renderingTools = {};
-  }
-
   let renderCanvas;
 
   if (enabledElement.options && enabledElement.options.renderer &&
@@ -179,4 +182,44 @@ export function renderColorImage (enabledElement, invalidated) {
   lastRenderedViewport.hflip = enabledElement.viewport.hflip;
   lastRenderedViewport.vflip = enabledElement.viewport.vflip;
   enabledElement.renderingTools.lastRenderedViewport = lastRenderedViewport;
+}
+
+export function addColorLayer (layer, invalidated) {
+  if (layer === undefined) {
+    throw new Error('addColorLayer: layer parameter must not be undefined');
+  }
+
+  const image = layer.image;
+
+  // All multi-layer images should include the alpha value
+  image.rgba = true;
+
+  if (image === undefined) {
+    throw new Error('addColorLayer: image must be loaded before it can be drawn');
+  }
+
+  layer.renderingTools = layer.renderingTools || {};
+  layer.canvas = getRenderCanvas(layer, image, invalidated);
+
+  const context = layer.canvas.getContext('2d');
+
+  if (layer.viewport.pixelReplication === true) {
+    context.imageSmoothingEnabled = false;
+    context.mozImageSmoothingEnabled = false;
+  } else {
+    context.imageSmoothingEnabled = true;
+    context.mozImageSmoothingEnabled = true;
+  }
+
+  const lastRenderedViewport = {
+    windowCenter: layer.viewport.voi.windowCenter,
+    windowWidth: layer.viewport.voi.windowWidth,
+    invert: layer.viewport.invert,
+    rotation: layer.viewport.rotation,
+    hflip: layer.viewport.hflip,
+    vflip: layer.viewport.vflip
+  };
+
+  layer.renderingTools.lastRenderedImageId = image.imageId;
+  layer.renderingTools.lastRenderedViewport = lastRenderedViewport;
 }

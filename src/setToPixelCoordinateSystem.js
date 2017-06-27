@@ -10,7 +10,7 @@ import calculateTransform from './internal/calculateTransform.js';
  * geometry to be driven using the canvas context using coordinates in the pixel coordinate system
  * @param {EnabledElement} enabledElement The
  * @param {CanvasRenderingContext2D} context The CanvasRenderingContext2D for the enabledElement's Canvas
- * @param {Number} scale Optional scale to apply
+ * @param {Number} [scale] Optional scale to apply
  * @returns {void}
  */
 export default function (enabledElement, context, scale) {

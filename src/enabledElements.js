@@ -95,6 +95,25 @@ const enabledElements = [];
  * @property {HTMLElement} element - The DOM element which has been enabled for use by Cornerstone
  * @property {Image} [image] - The image currently displayed in the enabledElement
  * @property {Viewport} [viewport] - The current viewport settings of the enabledElement
+ * @property {HTMLCanvasElement} [canvas] - The current canvas for this enabledElement
+ * @property {Boolean} invalid - Whether or not the image pixel data underlying the enabledElement has been changed, necessitating a redraw
+ * @property {Boolean} needsRedraw - A flag for triggering a redraw of the canvas without re-retrieving the pixel data, since it remains valid
+ * @property {[EnabledElementLayer]} [layers] - The layers that have been added to the enabledElement
+ * @property {Boolean} [syncViewports] - Whether or not to synchronize the viewport parameters
+ * for each of the enabled element's layers
+ * @property {Boolean} [lastSyncViewportsState] - The previous state for the sync viewport boolean
+ */
+
+/**
+ * An Enabled Element Layer in Cornerstone
+ *
+ * @typedef {Object} EnabledElementLayer
+ *
+ * @property {HTMLElement} element - The DOM element which has been enabled for use by Cornerstone
+ * @property {Image} [image] - The image currently displayed in the enabledElement
+ * @property {Viewport} [viewport] - The current viewport settings of the enabledElement
+ * @property {HTMLCanvasElement} [canvas] - The current canvas for this enabledElement
+ * @property {Object} [options] - Layer drawing options
  * @property {Boolean} invalid - Whether or not the image pixel data underlying the enabledElement has been changed, necessitating a redraw
  * @property {Boolean} needsRedraw - A flag for triggering a redraw of the canvas without re-retrieving the pixel data, since it remains valid
  */

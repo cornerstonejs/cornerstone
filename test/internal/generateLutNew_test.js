@@ -1,4 +1,4 @@
-import { assert } from 'chai';
+// import { assert } from 'chai';
 
 import generateLutNew from '../../src/internal/generateLutNew.js';
 
@@ -29,7 +29,7 @@ describe('generateLutNew', function () {
     const invert = false;
 
     // Act
-    const lut = generateLutNew(image, this.windowWidth, this.windowCenter, invert, this.modalityLUT, this.voiLUT);
+    generateLutNew(image, this.windowWidth, this.windowCenter, invert, this.modalityLUT, this.voiLUT);
 
     // Assert
     // assert.equal(lut.length, 3, 'lut length is 3');
@@ -52,7 +52,7 @@ describe('generateLutNew', function () {
     const invert = false;
 
     // Act
-    const lut = generateLutNew(image, this.windowWidth, this.windowCenter, invert, this.modalityLUT, this.voiLUT);
+    generateLutNew(image, this.windowWidth, this.windowCenter, invert, this.modalityLUT, this.voiLUT);
 
     // Assert
     // assert.equal(lut.length, 3, 'lut length is 3');
@@ -75,7 +75,7 @@ describe('generateLutNew', function () {
     const invert = true;
 
     // Act
-    const lut = generateLutNew(image, this.windowWidth, this.windowCenter, invert, this.modalityLUT, this.voiLUT);
+    generateLutNew(image, this.windowWidth, this.windowCenter, invert, this.modalityLUT, this.voiLUT);
 
     // Assert
     // assert.equal(lut.length, 3, 'lut length is 3');

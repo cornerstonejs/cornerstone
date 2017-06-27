@@ -59,9 +59,14 @@
 <script>
     $(document).ready(function() {
         // image enable the elements
-        var mr1 = cornerstone.enable(document.getElementById('mr1'));
-        var mr2 = cornerstone.enable(document.getElementById('mr2'));
-        var mr3 = cornerstone.enable(document.getElementById('ct1'));
+        var mr1 = document.getElementById('mr1');
+        cornerstone.enable(mr1);
+
+        var mr2 = document.getElementById('mr2');
+        cornerstone.enable(mr2);
+        
+        var ct1 = document.getElementById('ct1');
+        cornerstone.enable(ct1);
 
         // load and display the images
         cornerstone.loadAndCacheImage('example://1').then(function(image) {
