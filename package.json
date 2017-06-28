@@ -61,6 +61,7 @@
     "karma-mocha": "^1.3.0",
     "karma-phantomjs-launcher": "^1.0.4",
     "karma-webpack": "^2.0.3",
+    "lodash": "~4.17.4",
     "mocha": "^3.2.0",
     "opn-cli": "^3.1.0",
     "phantomjs-polyfill-find": "github:ptim/phantomjs-polyfill-find",
