@@ -23,18 +23,18 @@ export default function (enabledElement, invalidated) {
     // Start measuring the time needed to draw the image/layers
   const start = now();
 
+  image.stats = {
+    lastGetPixelDataTime: -1.0,
+    lastStoredPixelDataToCanvasImageDataTime: -1.0,
+    lastPutImageDataTime: -1.0,
+    lastRenderTime: -1.0,
+    lastLutGenerateTime: -1.0
+  };
+
   if (layers && layers.length) {
     drawCompositeImage(enabledElement, invalidated);
   } else if (image) {
     let render = image.render;
-
-    image.stats = {
-      lastGetPixelDataTime: -1.0,
-      lastStoredPixelDataToCanvasImageDataTime: -1.0,
-      lastPutImageDataTime: -1.0,
-      lastRenderTime: -1.0,
-      lastLutGenerateTime: -1.0
-    };
 
     if (!render) {
       render = image.color ? renderColorImage : renderGrayscaleImage;

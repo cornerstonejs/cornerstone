@@ -1,4 +1,4 @@
-/*! cornerstone-core - 0.12.0 - 2017-06-27 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone-core - 0.12.0 - 2017-06-28 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -5341,18 +5341,18 @@ exports.default = function (enabledElement, invalidated) {
   // Start measuring the time needed to draw the image/layers
   var start = (0, _now2.default)();
 
+  image.stats = {
+    lastGetPixelDataTime: -1.0,
+    lastStoredPixelDataToCanvasImageDataTime: -1.0,
+    lastPutImageDataTime: -1.0,
+    lastRenderTime: -1.0,
+    lastLutGenerateTime: -1.0
+  };
+
   if (layers && layers.length) {
     (0, _drawCompositeImage2.default)(enabledElement, invalidated);
   } else if (image) {
     var render = image.render;
-
-    image.stats = {
-      lastGetPixelDataTime: -1.0,
-      lastStoredPixelDataToCanvasImageDataTime: -1.0,
-      lastPutImageDataTime: -1.0,
-      lastRenderTime: -1.0,
-      lastLutGenerateTime: -1.0
-    };
 
     if (!render) {
       render = image.color ? _renderColorImage.renderColorImage : _renderGrayscaleImage.renderGrayscaleImage;
