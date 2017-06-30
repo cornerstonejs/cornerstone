@@ -3,22 +3,10 @@ import { addColorLayer } from '../rendering/renderColorImage.js';
 import { addGrayscaleLayer } from '../rendering/renderGrayscaleImage.js';
 import { convertImageToFalseColorImage, restoreImage } from '../falseColorMapping.js';
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
+import cloneViewportPositionParameters from './cloneViewportPositionParameters.js';
 
 // This is used to keep each of the layers' viewports in sync with the active layer
 const syncedViewports = {};
-
-// Create a copy of the properties that will be cached when syncing viewports
-function cloneViewport (viewport) {
-  return {
-    rotation: viewport.rotation,
-    scale: viewport.scale,
-    translation: {
-      x: viewport.translation.x,
-      y: viewport.translation.y
-    }
-  };
-}
-
 
 // Sync all viewports based on active layer's viewport
 function syncViewports (layers, activeLayer) {
@@ -59,6 +47,10 @@ function renderLayers (context, activeLayer, layers, invalidated) {
 
   // Loop through each layer and draw it to the canvas
   layers.forEach((layer) => {
+    if (!layer.image) {
+      return;
+    }
+
     context.save();
 
     // Set the layer's canvas to the pixel coordinate system
@@ -77,6 +69,13 @@ function renderLayers (context, activeLayer, layers, invalidated) {
 
     // If the image got updated it needs to be re-rendered
     invalidated = invalidated || pixelDataUpdated;
+
+    if (layer.viewport.voi === undefined) {
+      layer.viewport.voi = {
+        windowCenter: layer.image.windowCenter || 127,
+        windowWidth: layer.image.windowWidth || 255
+      };
+    }
 
     // Render into the layer's canvas
     if (layer.image.color === true) {
@@ -125,7 +124,7 @@ export default function (enabledElement, invalidated) {
   // copies to calculate anything later (ratio, translation offset, rotation offset, etc)
   if (resynced) {
     allLayers.forEach(function (layer) {
-      syncedViewports[layer.layerId] = cloneViewport(layer.viewport);
+      syncedViewports[layer.layerId] = cloneViewportPositionParameters(layer.viewport);
     });
   }
 

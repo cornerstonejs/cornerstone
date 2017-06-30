@@ -6,6 +6,8 @@ import { getEnabledElement } from './enabledElements.js';
 import metaData from './metaData.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import updateImage from './updateImage.js';
+import cloneViewportPositionParameters from './internal/cloneViewportPositionParameters.js';
+
 
 /**
  * Helper function to trigger an event on a Cornerstone element with
@@ -80,9 +82,10 @@ export function addLayer (element, image, options) {
   const layerId = guid();
   const enabledElement = getEnabledElement(element);
   const layers = enabledElement.layers;
-  const viewport = getDefaultViewport(enabledElement.canvas, image);
+  const defaultViewport = getDefaultViewport(enabledElement.canvas, image);
+  const viewport = cloneViewportPositionParameters(defaultViewport);
 
-    // Set syncViewports to true by default when a new layer is added
+  // Set syncViewports to true by default when a new layer is added
   if (enabledElement.syncViewports !== false) {
     enabledElement.syncViewports = true;
   }
