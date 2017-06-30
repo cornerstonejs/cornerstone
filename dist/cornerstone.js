@@ -5257,7 +5257,7 @@ function syncViewports(layers, activeLayer) {
       return;
     }
 
-    var activeLayerSyncedViewport = syncedViewports[activeLayer.layerId];
+    var activeLayerSyncedViewport = syncedViewports[activeLayer.layerId] || activeLayer.viewport;
     var currentLayerSyncedViewport = syncedViewports[layer.layerId] || layer.viewport;
     var viewportRatio = currentLayerSyncedViewport.scale / activeLayerSyncedViewport.scale;
 
