@@ -1,3 +1,12 @@
+# Version 0.12.2
+
+- Fix VOILUT rendering for Agfa images (issue #106)
+
+# Version 0.12.1
+
+- Fix NPM dependencies, added this changelog
+- Fix viewport sync in composite image example 
+
 # Version 0.12.0
 
 - Add layer API support for drawing composite images

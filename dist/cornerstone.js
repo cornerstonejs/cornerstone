@@ -1,4 +1,4 @@
-/*! cornerstone-core - 0.12.1 - 2017-06-28 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone-core - 0.12.2 - 2017-07-19 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -5414,6 +5414,8 @@ exports.default = function (windowWidth, windowCenter, voiLUT) {
   return generateLinearVOILUT(windowWidth, windowCenter);
 };
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 /* eslint no-bitwise: 0 */
 
 /**
@@ -5445,7 +5447,9 @@ function generateLinearVOILUT(windowWidth, windowCenter) {
  * @returns {VOILUTFunction} VOI LUT mapping function
  */
 function generateNonLinearVOILUT(voiLUT) {
-  var shift = voiLUT.numBitsPerEntry - 8;
+  // We don't trust the voiLUT.numBitsPerEntry, mainly thanks to Agfa!
+  var bitsPerEntry = Math.max.apply(Math, _toConsumableArray(voiLUT.lut)).toString(2).length;
+  var shift = bitsPerEntry - 8;
   var minValue = voiLUT.lut[0] >> shift;
   var maxValue = voiLUT.lut[voiLUT.lut.length - 1] >> shift;
   var maxValueMapped = voiLUT.firstValueMapped + voiLUT.lut.length - 1;
