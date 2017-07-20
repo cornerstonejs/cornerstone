@@ -50,12 +50,28 @@ export default function (enabledElement, scale) {
   }
 
   // Apply Flip if required
+  const cos = transform.m[0];
+  const sin = transform.m[1];
+  const isXHorizontal = Math.abs(cos) >= Math.abs(sin);
+
   if (enabledElement.viewport.hflip) {
-    transform.scale(-1, 1);
+    if (isXHorizontal) {
+      // Flip horizontal => flip x
+      transform.scale(-1, 1);
+    } else {
+      // Flip horizontal => flip y
+      transform.scale(1, -1);
+    }
   }
 
   if (enabledElement.viewport.vflip) {
-    transform.scale(1, -1);
+    if (isXHorizontal) {
+      // Flip vertical => flip y
+      transform.scale(1, -1);
+    } else {
+      // Flip vertical => flip x
+      transform.scale(-1, 1);
+    }
   }
 
     // Translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
