@@ -15,17 +15,7 @@ export default function (element) {
     return;
   }
 
-  let computeVoiAttrs;
-
-  if (viewport.computeVoi !== undefined) {
-    computeVoiAttrs = {
-      forceAutoVoi: viewport.computeVoi.forceAutoVoi,
-      type: viewport.computeVoi.type,
-      voiPresetIndex: viewport.computeVoi.voiPresetIndex
-    };
-  }
-
-  return {
+  const result = {
     scale: viewport.scale,
     translation: {
       x: viewport.translation.x,
@@ -35,7 +25,6 @@ export default function (element) {
       windowWidth: viewport.voi.windowWidth,
       windowCenter: viewport.voi.windowCenter
     },
-    computeVoi: computeVoiAttrs,
     invert: viewport.invert,
     pixelReplication: viewport.pixelReplication,
     rotation: viewport.rotation,
@@ -44,4 +33,14 @@ export default function (element) {
     modalityLUT: viewport.modalityLUT,
     voiLUT: viewport.voiLUT
   };
+
+  if (viewport.computeVoi !== undefined) {
+    result.computeVoi = {
+      forceAutoVoi: viewport.computeVoi.forceAutoVoi,
+      type: viewport.computeVoi.type,
+      voiPresetIndex: viewport.computeVoi.voiPresetIndex
+    };
+  }
+
+  return result;
 }
