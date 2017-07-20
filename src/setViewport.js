@@ -2,6 +2,7 @@
  * This module contains functions to deal with getting and setting the viewport for an enabled element
  */
 
+import computeVoi from './computeVoi.js';
 import { getEnabledElement } from './enabledElements.js';
 import updateImage from './updateImage.js';
 
@@ -31,6 +32,15 @@ export default function (element, viewport) {
   enabledElement.viewport.vflip = viewport.vflip;
   enabledElement.viewport.modalityLUT = viewport.modalityLUT;
   enabledElement.viewport.voiLUT = viewport.voiLUT;
+
+  if (viewport.computeVoi !== undefined) {
+    enabledElement.viewport.computeVoi = {
+      forceAutoVoi: viewport.computeVoi.forceAutoVoi,
+      type: viewport.computeVoi.type,
+      voiPresetIndex: viewport.computeVoi.voiPresetIndex
+    };
+    computeVoi(enabledElement.viewport, enabledElement.image);
+  }
 
   // Prevent window width from being too small (note that values close to zero are valid and can occur with
   // PET images in particular)

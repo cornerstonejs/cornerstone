@@ -1,3 +1,4 @@
+import computeVoi from './computeVoi.js';
 import { getEnabledElement } from './enabledElements.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import updateImage from './updateImage.js';
@@ -44,6 +45,10 @@ export default function (element, image, viewport) {
         enabledElement.viewport[attrname] = viewport[attrname];
       }
     }
+  }
+
+  if (enabledElement.viewport.computeVoi !== undefined) {
+    computeVoi(enabledElement.viewport, enabledElement.image);
   }
 
   let frameRate;

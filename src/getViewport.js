@@ -15,6 +15,16 @@ export default function (element) {
     return;
   }
 
+  let computeVoiAttrs;
+
+  if (viewport.computeVoi !== undefined) {
+    computeVoiAttrs = {
+      forceAutoVoi: viewport.computeVoi.forceAutoVoi,
+      type: viewport.computeVoi.type,
+      voiPresetIndex: viewport.computeVoi.voiPresetIndex
+    };
+  }
+
   return {
     scale: viewport.scale,
     translation: {
@@ -25,6 +35,7 @@ export default function (element) {
       windowWidth: viewport.voi.windowWidth,
       windowCenter: viewport.voi.windowCenter
     },
+    computeVoi: computeVoiAttrs,
     invert: viewport.invert,
     pixelReplication: viewport.pixelReplication,
     rotation: viewport.rotation,
