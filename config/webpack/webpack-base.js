@@ -26,6 +26,9 @@ module.exports = {
   devtool: 'source-map',
   externals: {
     jquery: {
+      commonjs: "jquery",
+      commonjs2: "jquery",
+      amd: "jquery",
       root: '$'
     }
   },
