@@ -67,7 +67,7 @@
     "phantomjs-polyfill-find": "github:ptim/phantomjs-polyfill-find",
     "phantomjs-polyfill-find-index": "^1.0.1",
     "shx": "^0.2.2",
-    "webpack": "^2.4.1"
+    "webpack": "^3.1.0"
   },
   "dependencies": {
     "jquery": "^2.2.4"
