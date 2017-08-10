@@ -10,7 +10,7 @@
  * @param {Image} image A Cornerstone Image Object
  * @returns {Viewport} viewport object
  */
-export default function (canvas, image) {
+let defaultViewportFunction = function (canvas, image) {
   if (canvas === undefined) {
     throw new Error('getDefaultViewport: parameter canvas must not be undefined');
   }
@@ -45,4 +45,16 @@ export default function (canvas, image) {
   viewport.scale = Math.min(horizontalScale, verticalScale);
 
   return viewport;
+};
+
+export default function (canvas, image) {
+  return defaultViewportFunction(canvas, image);
+}
+
+export function getDefaultViewportFunction () {
+  return defaultViewportFunction;
+}
+
+export function setDefaultViewportFunction (newDefaultViewportFunction) {
+  defaultViewportFunction = newDefaultViewportFunction;
 }
