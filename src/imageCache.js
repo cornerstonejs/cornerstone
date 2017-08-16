@@ -83,6 +83,11 @@ export function putImagePromise (imageId, imagePromise) {
   cachedImages.push(cachedImage);
 
   imagePromise.then(function (image) {
+    if (cachedImages.indexOf(cachedImage) === -1) {
+      // If the image has been purged before being loaded, we stop here.
+      return;
+    }
+
     cachedImage.loaded = true;
     cachedImage.image = image;
 
