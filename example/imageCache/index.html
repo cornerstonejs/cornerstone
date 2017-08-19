@@ -58,7 +58,7 @@
 </div>
 </body>
 
-<!-- cornerstone depends on jQuery so it must be loaded first-->
+<!-- example depends on jQuery -->
 <script src="../jquery.min.js"></script>
 
 <!-- include the cornerstone library -->
@@ -162,12 +162,9 @@
             };
 
 
-            // Create a deferred object, resolve it with the image object we just created and return the
-            // deferred to cornerstone.  Cornerstone will get the image object by calling then() on the
-            // deferred
-            var deferred = $.Deferred();
-            deferred.resolve(image);
-            return deferred;
+            // Creates a promise object, resolves it with the image object we just created and returns it
+            // to cornerstone.  Cornerstone will get the image object by calling then() on the promise.
+            return Promise.resolve(image);
         }
 
         cornerstone.registerImageLoader('colorImageLoader', loadImage);
@@ -179,7 +176,7 @@
         function onImageRendered(e, eventData) {
             $('#topright').text("Render Time:" + eventData.renderTimeInMs + " ms");
         }
-        $(element).on("CornerstoneImageRendered", onImageRendered);
+        cornerstone.pubSub(element).subscribe("CornerstoneImageRendered", onImageRendered);
 
         // load image and display it
         var imageId = "colorImageLoader://1";

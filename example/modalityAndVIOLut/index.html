@@ -35,7 +35,7 @@
 </div>
 </body>
 
-<!-- cornerstone depends on jQuery so it must be loaded first-->
+<!-- example depends on jQuery -->
 <script src="../jquery.min.js"></script>
 
 <!-- include the cornerstone library -->
@@ -112,12 +112,9 @@
                 sizeInBytes: width * height * 2
             };
 
-            // Create a deferred object, resolve it with the image object we just created and return the
-            // deferred to cornerstone.  Cornerstone will get the image object by calling then() on the
-            // deferred
-            var deferred = $.Deferred();
-            deferred.resolve(image);
-            return deferred;
+            // Creates a promise object, resolves it with the image object we just created and returns it
+            // to cornerstone.  Cornerstone will get the image object by calling then() on the promise.
+            return Promise.resolve(image);
         }
 
         cornerstone.registerImageLoader('myImageLoader', loadImage);
@@ -128,7 +125,7 @@
 
         // load the image and display it
         var imageId = 'myImageLoader://1';
-        cornerstone.loadImage(imageId).done(function(image) {
+        cornerstone.loadImage(imageId).then(function(image) {
             cornerstone.displayImage(element, image);
         });
 

@@ -74,7 +74,7 @@ This is an example of WebGL use in cornerstone
 </div>
 </body>
 
-<!-- cornerstone depends on jQuery so it must be loaded first-->
+<!-- example depends on jQuery -->
 <script src="../jquery.min.js"></script>
 
 <!-- include the cornerstone library -->
@@ -99,8 +99,8 @@ This is an example of WebGL use in cornerstone
             $(eventData.element).siblings('.bottomright').text("Zoom:" + eventData.viewport.scale.toFixed(2));
 
         }
-        $(element).on("CornerstoneImageRendered", onImageRendered);
-        $(elementWebGL).on("CornerstoneImageRendered", onImageRendered);
+        cornerstone.pubSub(element).subscribe("CornerstoneImageRendered", onImageRendered);
+        cornerstone.pubSub(elementWebGL).subscribe("CornerstoneImageRendered", onImageRendered);
 
         var imageId = 'example://1';
 

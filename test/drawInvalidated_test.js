@@ -5,6 +5,7 @@ import displayImage from '../src/displayImage.js';
 import drawInvalidated from '../src/drawInvalidated.js';
 import disable from '../src/disable.js';
 import { getEnabledElement } from '../src/enabledElements.js';
+import pubSub from '../src/pubSub.js';
 
 describe('drawInvalidated', function () {
   beforeEach(function () {
@@ -73,23 +74,32 @@ describe('drawInvalidated', function () {
     const enabledElement2 = getEnabledElement(this.element2);
     const image2 = this.image2;
 
-    // Assert
-    $(element1).on('CornerstoneImageRendered', function () {
-      // If element1 is redrawn, then this test has failed.
-      // Only element2 should be redrawn.
-      done();
-    });
+    // There must be a timeout before subscribing so that the pubSub event while enabling
+    // the element is not fetched (also fires an async CornerstoneImageRendered event).
+    setTimeout(function () {
+      // Assert
+      const token1 = pubSub(element1).subscribe('CornerstoneImageRendered', function () {
+        pubSub(element1).unsubscribe(token1);
 
-    $(element2).on('CornerstoneImageRendered', function (event, eventData) {
-      // Make sure element2 is redrawn since it has been invalidated
-      assert.equal(eventData.element, element2);
-      assert.equal(eventData.image, image2);
-      done();
-    });
+        // If element1 is redrawn, then this test has failed.
+        // Only element2 should be redrawn.
+        assert.isOk(false);
+        done();
+      });
 
-    // Act
-    enabledElement2.invalid = true;
-    drawInvalidated();
+      const token2 = pubSub(element2).subscribe('CornerstoneImageRendered', function (event, eventData) {
+        pubSub(element2).unsubscribe(token2);
+
+        // Make sure element2 is redrawn since it has been invalidated
+        assert.equal(eventData.element, element2);
+        assert.equal(eventData.image, image2);
+        done();
+      });
+
+      // Act
+      enabledElement2.invalid = true;
+      drawInvalidated();
+    }, 100);
   });
 
   it('should draw all invalidated elements', function (done) {
@@ -102,26 +112,34 @@ describe('drawInvalidated', function () {
     const enabledElement2 = getEnabledElement(this.element2);
     const image2 = this.image2;
 
-    // Assert
-    $(element1).on('CornerstoneImageRendered', function (event, eventData) {
-      // If element1 is redrawn, then this test has failed.
-      // Only element2 should be redrawn.
-      assert.equal(eventData.element, element1);
-      assert.equal(eventData.image, image1);
-      done();
-    });
+    // There must be a timeout before subscribing so that the pubSub event while enabling
+    // the element is not fetched (also fires an async CornerstoneImageRendered event).
+    setTimeout(function () {
+      // Assert
+      const token1 = pubSub(element1).subscribe('CornerstoneImageRendered', function (event, eventData) {
+        pubSub(element1).unsubscribe(token1);
 
-    $(element2).on('CornerstoneImageRendered', function (event, eventData) {
-      // Make sure element2 is redrawn since it has been invalidated
-      assert.equal(eventData.element, element2);
-      assert.equal(eventData.image, image2);
-      done();
-    });
+        // If element1 is redrawn, then this test has failed.
+        // Only element2 should be redrawn.
+        assert.equal(eventData.element, element1);
+        assert.equal(eventData.image, image1);
+        done();
+      });
 
-    // Act
-    enabledElement1.invalid = true;
-    enabledElement2.invalid = true;
-    drawInvalidated();
+      const token2 = pubSub(element2).subscribe('CornerstoneImageRendered', function (event, eventData) {
+        pubSub(element2).unsubscribe(token2);
+
+        // Make sure element2 is redrawn since it has been invalidated
+        assert.equal(eventData.element, element2);
+        assert.equal(eventData.image, image2);
+        done();
+      });
+
+      // Act
+      enabledElement1.invalid = true;
+      enabledElement2.invalid = true;
+      drawInvalidated();
+    }, 100);
   });
 
   afterEach(function () {

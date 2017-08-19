@@ -4,6 +4,7 @@ import enable from '../src/enable.js';
 import displayImage from '../src/displayImage.js';
 import disable from '../src/disable.js';
 import { getEnabledElement } from '../src/enabledElements.js';
+import pubSub from '../src/pubSub.js';
 
 describe('Display an image', function () {
   beforeEach(function () {
@@ -57,7 +58,9 @@ describe('Display an image', function () {
     const element = this.element;
     const image = this.image;
 
-    $(element).on('CornerstoneNewImage', function (event, eventData) {
+    const token = pubSub(element).subscribe('CornerstoneNewImage', function (event, eventData) {
+      pubSub(element).unsubscribe(token);
+
       // Assert
       assert.equal(eventData.element, element);
       assert.equal(eventData.image, image);
@@ -88,7 +91,9 @@ describe('Display an image', function () {
       vflip: true
     };
 
-    $(element).on('CornerstoneNewImage', function (event, eventData) {
+    const token = pubSub(element).subscribe('CornerstoneNewImage', function (event, eventData) {
+      pubSub(element).unsubscribe(token);
+
       // Assert
       assert.equal(eventData.element, element);
       assert.equal(eventData.image, image);
@@ -134,12 +139,14 @@ describe('Display an image', function () {
     const image = this.image;
     const viewport = this.viewport;
 
-    $(element).on('CornerstoneNewImage', function (event, eventData) {
+    const token = pubSub(element).subscribe('CornerstoneNewImage', function (event, eventData) {
       // Assert
       assert.equal(eventData.element, element);
       assert.equal(eventData.image, image);
 
       if (eventData.frameRate) {
+        pubSub(element).unsubscribe(token);
+
         // Note: FrameRate is returned as a String since it uses toFixed
         assert.equal(eventData.frameRate, '1');
         assert.isDefined(eventData.enabledElement.lastImageTimeStamp);

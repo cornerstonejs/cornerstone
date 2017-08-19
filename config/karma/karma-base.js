@@ -20,6 +20,7 @@ module.exports = {
   frameworks: ['mocha'],
   reporters: ['progress', 'coverage'],
   files: [
+    'node_modules/babel-polyfill/dist/polyfill.js',
     'node_modules/phantomjs-polyfill-find-index/findIndex-polyfill.js',
     'node_modules/phantomjs-polyfill-find/find-polyfill.js',
     'node_modules/jquery/dist/jquery.js',

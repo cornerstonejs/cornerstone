@@ -7,6 +7,7 @@ import resize from './resize.js';
 import drawImageSync from './internal/drawImageSync.js';
 import requestAnimationFrame from './internal/requestAnimationFrame.js';
 import webGL from './webgl/index.js';
+import pubSub from './pubSub.js';
 
 function hasImageOrLayers (enabledElement) {
   return enabledElement.image !== undefined || enabledElement.layers.length;
@@ -73,7 +74,7 @@ export default function (element, options) {
       return;
     }
 
-    $(enabledElement.element).trigger('CornerstonePreRender', {
+    pubSub(enabledElement.element).publish('CornerstonePreRender', {
       enabledElement,
       timestamp
     });

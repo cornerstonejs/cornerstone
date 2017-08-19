@@ -4,6 +4,7 @@ import enable from '../src/enable.js';
 import displayImage from '../src/displayImage.js';
 import draw from '../src/draw.js';
 import disable from '../src/disable.js';
+import pubSub from '../src/pubSub.js';
 
 describe('draw', function () {
   beforeEach(function () {
@@ -46,7 +47,9 @@ describe('draw', function () {
 
     displayImage(this.element, this.image);
 
-    $(element).on('CornerstoneImageRendered', function (event, eventData) {
+    const token = pubSub(element).subscribe('CornerstoneImageRendered', function (event, eventData) {
+      pubSub(element).unsubscribe(token);
+
       // Assert
       assert.equal(eventData.element, element);
       assert.equal(eventData.image, image);

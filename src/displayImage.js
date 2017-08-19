@@ -3,6 +3,7 @@ import getDefaultViewport from './internal/getDefaultViewport.js';
 import updateImage from './updateImage.js';
 import now from './internal/now.js';
 import { getActiveLayer } from './layers.js';
+import pubSub from './pubSub.js';
 
 /**
  * Sets a new image object for a given element.
@@ -65,7 +66,7 @@ export default function (element, image, viewport) {
     frameRate
   };
 
-  $(enabledElement.element).trigger('CornerstoneNewImage', newImageEventData);
+  pubSub(enabledElement.element).publish('CornerstoneNewImage', newImageEventData);
 
   updateImage(element);
 }

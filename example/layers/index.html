@@ -73,7 +73,7 @@
 </div>
 </body>
 
-<!-- cornerstone depends on jQuery so it must be loaded first-->
+<!-- example depends on jQuery -->
 <script src="../jquery.min.js"></script>
 
 <!-- include the cornerstone library -->
@@ -115,9 +115,7 @@
         // This method will wait for all images to be loaded (`loadImages`)
         // before adding the layers
         function loadLayers() {
-            loadImages().then(function() {
-                var images = Array.prototype.slice.call(arguments);
-                
+            loadImages().then(function (images) {
                 images.forEach(function(image, index) {
                     var layer = layers[index];
                     var layerId = cornerstone.addLayer(element, image, layer.options);
@@ -148,7 +146,7 @@
                 promises.push(loadPromise);
             });
 
-            return $.when.apply($, promises);
+            return Promise.all(promises);
         }
 
         // Select the right layer in the dropdown
