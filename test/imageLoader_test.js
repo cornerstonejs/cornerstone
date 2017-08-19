@@ -5,7 +5,7 @@ import { registerImageLoader,
        registerUnknownImageLoader,
        loadImage,
        loadAndCacheImage } from '../src/index';
-import events from '../src/events.js';
+
 import pubSub from '../src/pubSub.js';
 
 describe('imageLoader registration module', function () {
@@ -30,8 +30,8 @@ describe('imageLoader registration module', function () {
   it('should fire CornerstoneImageLoaded without cache', function (done) {
     registerImageLoader(this.exampleScheme1, this.exampleImageLoader1);
 
-    const token = pubSub(events).subscribe('CornerstoneImageLoaded', function () {
-      pubSub(events).unsubscribe(token);
+    const token = pubSub().subscribe('CornerstoneImageLoaded', function () {
+      pubSub().unsubscribe(token);
       done();
     });
 
@@ -41,8 +41,8 @@ describe('imageLoader registration module', function () {
   it('should fire CornerstoneImageLoaded with cache', function (done) {
     registerImageLoader(this.exampleScheme1, this.exampleImageLoader1);
 
-    const token = pubSub(events).subscribe('CornerstoneImageLoaded', function () {
-      pubSub(events).unsubscribe(token);
+    const token = pubSub().subscribe('CornerstoneImageLoaded', function () {
+      pubSub().unsubscribe(token);
       done();
     });
 

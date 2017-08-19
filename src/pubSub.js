@@ -67,9 +67,14 @@ class PubSub {
   }
 }
 
+const globalInstance = new PubSub();
 const instances = new Map();
 
 export default function (element) {
+  if (!element) {
+    return globalInstance;
+  }
+
   if (!instances.has(element)) {
     instances.set(element, new PubSub(element));
   }

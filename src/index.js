@@ -72,5 +72,4 @@ export { convertImageToFalseColorImage,
   convertToFalseColorImage,
   restoreImage } from './falseColorMapping.js';
 
-export { default as events } from './events.js';
 export { default as pubSub } from './pubSub.js';

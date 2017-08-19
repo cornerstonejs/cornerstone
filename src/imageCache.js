@@ -10,7 +10,6 @@ const imageCacheDict = {};
 // Array of cachedImage objects
 export const cachedImages = [];
 
-import events from './events.js';
 import pubSub from './pubSub.js';
 
 export function setMaximumSizeBytes (numBytes) {
@@ -31,7 +30,7 @@ function purgeCacheIfNecessary () {
     return;
   }
 
-  pubSub(events).publish('CornerstoneImageCacheFull', getCacheInfo());
+  pubSub().publish('CornerstoneImageCacheFull', getCacheInfo());
 
   // Cache size has been exceeded, create list of images sorted by timeStamp
   // So we can purge the least recently used image
@@ -54,10 +53,10 @@ function purgeCacheIfNecessary () {
 
     removeImagePromise(imageId);
 
-    pubSub(events).publish('CornerstoneImageCachePromiseRemoved', imageId);
+    pubSub().publish('CornerstoneImageCachePromiseRemoved', imageId);
   }
 
-  pubSub(events).publish('CornerstoneImageCacheCleaned', getCacheInfo());
+  pubSub().publish('CornerstoneImageCacheCleaned', getCacheInfo());
 }
 
 export function putImagePromise (imageId, imagePromise) {

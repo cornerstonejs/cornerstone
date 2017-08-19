@@ -8,7 +8,6 @@ import { setMaximumSizeBytes,
          purgeCache,
          changeImageIdCacheSize } from '../src/imageCache.js';
 
-import events from '../src/events.js';
 import pubSub from '../src/pubSub.js';
 
 describe('Set maximum cache size', function () {
@@ -202,8 +201,8 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
       putImagePromise(image.imageId, imagePromise);
     }
 
-    const token = pubSub(events).subscribe('CornerstoneImageCacheFull', (event, cacheInfo) => {
-      pubSub(events).unsubscribe(token);
+    const token = pubSub().subscribe('CornerstoneImageCacheFull', (event, cacheInfo) => {
+      pubSub().unsubscribe(token);
 
       const currentInfo = getCacheInfo();
 
@@ -239,8 +238,8 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
       putImagePromise(image.imageId, imagePromise);
     }
 
-    const token = pubSub(events).subscribe('CornerstoneImageCacheCleaned', (event, cacheInfo) => {
-      pubSub(events).unsubscribe(token);
+    const token = pubSub().subscribe('CornerstoneImageCacheCleaned', (event, cacheInfo) => {
+      pubSub().unsubscribe(token);
 
       const currentInfo = getCacheInfo();
 
@@ -279,8 +278,8 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
     }
 
     // Setup event listeners to check that the promise removed and cache full events have fired properly
-    const token = pubSub(events).subscribe('CornerstoneImageCachePromiseRemoved', (event, imageId) => {
-      pubSub(events).unsubscribe(token);
+    const token = pubSub().subscribe('CornerstoneImageCachePromiseRemoved', (event, imageId) => {
+      pubSub().unsubscribe(token);
 
       // Assert
       // Detect that the earliest image added has been removed

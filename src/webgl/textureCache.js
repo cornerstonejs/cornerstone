@@ -1,4 +1,3 @@
-import events from '../events.js';
 import pubSub from '../pubSub.js';
 
 /**
@@ -48,12 +47,12 @@ function purgeCacheIfNecessary () {
     delete imageCache[lastCachedImage.imageId];
     cachedImages.pop();
 
-    pubSub(events).publish('CornerstoneWebGLTextureRemoved', { imageId: lastCachedImage.imageId });
+    pubSub().publish('CornerstoneWebGLTextureRemoved', { imageId: lastCachedImage.imageId });
   }
 
   const cacheInfo = getCacheInfo();
 
-  pubSub(events).publish('CornerstoneWebGLTextureCacheFull', cacheInfo);
+  pubSub().publish('CornerstoneWebGLTextureCacheFull', cacheInfo);
 }
 
 function setMaximumSizeBytes (numBytes) {
