@@ -58,9 +58,7 @@ describe('Display an image', function () {
     const element = this.element;
     const image = this.image;
 
-    const token = pubSub(element).subscribe('CornerstoneNewImage', function (event, eventData) {
-      pubSub(element).unsubscribe(token);
-
+    pubSub(element).subscribe('CornerstoneNewImage', function (event, eventData) {
       // Assert
       assert.equal(eventData.element, element);
       assert.equal(eventData.image, image);
@@ -91,9 +89,7 @@ describe('Display an image', function () {
       vflip: true
     };
 
-    const token = pubSub(element).subscribe('CornerstoneNewImage', function (event, eventData) {
-      pubSub(element).unsubscribe(token);
-
+    pubSub(element).subscribe('CornerstoneNewImage', function (event, eventData) {
       // Assert
       assert.equal(eventData.element, element);
       assert.equal(eventData.image, image);
@@ -139,14 +135,12 @@ describe('Display an image', function () {
     const image = this.image;
     const viewport = this.viewport;
 
-    const token = pubSub(element).subscribe('CornerstoneNewImage', function (event, eventData) {
+    pubSub(element).subscribe('CornerstoneNewImage', function (event, eventData) {
       // Assert
       assert.equal(eventData.element, element);
       assert.equal(eventData.image, image);
 
       if (eventData.frameRate) {
-        pubSub(element).unsubscribe(token);
-
         // Note: FrameRate is returned as a String since it uses toFixed
         assert.equal(eventData.frameRate, '1');
         assert.isDefined(eventData.enabledElement.lastImageTimeStamp);

@@ -47,9 +47,7 @@ describe('Update a displayed image', function () {
     updateImage(element);
 
     // Assert
-    const token = pubSub(element).subscribe('CornerstoneImageRendered', function (event, eventData) {
-      pubSub(element).unsubscribe(token);
-
+    pubSub(element).subscribe('CornerstoneImageRendered', function (event, eventData) {
       assert.equal(eventData.element, element);
       done();
     });

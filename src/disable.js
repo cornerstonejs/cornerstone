@@ -36,4 +36,6 @@ export default function (element) {
       break;
     }
   }
+
+  pubSub(element).unsubscribeAll();
 }

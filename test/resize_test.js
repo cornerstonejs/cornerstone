@@ -1,5 +1,8 @@
+import { assert } from 'chai';
+
 import resize from '../src/resize.js';
 import enable from '../src/enable.js';
+import disable from '../src/disable.js';
 import pubSub from '../src/pubSub.js';
 
 describe('resize canvas to parent element module', function () {
@@ -8,11 +11,13 @@ describe('resize canvas to parent element module', function () {
 
     enable(element, {});
 
-    const token = pubSub(element).subscribe('CornerstoneElementResized', function () {
-      pubSub(element).unsubscribe(token);
+    pubSub(element).subscribe('CornerstoneElementResized', function () {
+      assert.isOk(true);
       done();
     });
 
     resize(element, false);
+
+    disable(element);
   });
 });

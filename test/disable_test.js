@@ -28,9 +28,7 @@ describe('Disable an Element', function () {
     const element2 = this.element2;
 
     // Assert
-    const token = pubSub(element2).subscribe('CornerstoneElementDisabled', function (event, eventData) {
-      pubSub(element2).unsubscribe(token);
-
+    pubSub(element2).subscribe('CornerstoneElementDisabled', function (event, eventData) {
       assert.equal(eventData.element, element2);
       done();
     });

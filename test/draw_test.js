@@ -47,9 +47,7 @@ describe('draw', function () {
 
     displayImage(this.element, this.image);
 
-    const token = pubSub(element).subscribe('CornerstoneImageRendered', function (event, eventData) {
-      pubSub(element).unsubscribe(token);
-
+    pubSub(element).subscribe('CornerstoneImageRendered', function (event, eventData) {
       // Assert
       assert.equal(eventData.element, element);
       assert.equal(eventData.image, image);

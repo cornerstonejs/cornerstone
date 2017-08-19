@@ -4,7 +4,8 @@
  */
 
 class PubSub {
-  constructor () {
+  constructor (element) {
+    this.element = element;
     this.subUid = -1;
     this.topics = {};
   }
@@ -40,6 +41,16 @@ class PubSub {
     return false;
   }
 
+  unsubscribeAll () {
+    for (const i in this.topics) {
+      this.topics[i].length = 0;
+    }
+
+    Object.keys(this.topics).forEach((key) => {
+      delete this.topics[key];
+    });
+  }
+
   publish (topic, args) {
     if (!this.topics[topic]) {
       return false;
@@ -60,7 +71,7 @@ const instances = new Map();
 
 export default function (element) {
   if (!instances.has(element)) {
-    instances.set(element, new PubSub());
+    instances.set(element, new PubSub(element));
   }
 
   return instances.get(element);

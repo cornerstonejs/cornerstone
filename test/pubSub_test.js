@@ -27,14 +27,28 @@ describe('pub/sub module', function () {
     pubSub(this.element1).publish(this.topic, this.args);
   });
 
-  it('allows to unsubscribe', function () {
+  it('allows to unsubscribe a single subscription', function () {
     const token = pubSub(this.element1).subscribe(this.topic, function () {
-      pubSub(this.element1).unsubscribe(token);
-
       assert.isOk(false, 'should not be called as not subscribed');
     });
 
     pubSub(this.element1).unsubscribe(token);
+
+    pubSub(this.element1).publish(this.topic, this.args);
+  });
+
+  it('allows to unsubscribe all subscriptions', function () {
+    const topic1 = 'topic1';
+    const topic2 = 'topic2';
+
+    pubSub(this.element1).subscribe(topic1, function () {
+      assert.isOk(false, 'should not be called as not subscribed');
+    });
+    pubSub(this.element1).subscribe(topic2, function () {
+      assert.isOk(false, 'should not be called as not subscribed');
+    });
+
+    pubSub(this.element1).unsubscribeAll();
 
     pubSub(this.element1).publish(this.topic, this.args);
   });

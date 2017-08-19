@@ -10,7 +10,6 @@ import pubSub from '../src/pubSub.js';
 describe('drawInvalidated', function () {
   beforeEach(function () {
     // Arrange
-    this.element = document.createElement('div');
     const height = 2;
     const width = 2;
 
@@ -78,18 +77,14 @@ describe('drawInvalidated', function () {
     // the element is not fetched (also fires an async CornerstoneImageRendered event).
     setTimeout(function () {
       // Assert
-      const token1 = pubSub(element1).subscribe('CornerstoneImageRendered', function () {
-        pubSub(element1).unsubscribe(token1);
-
+      pubSub(element1).subscribe('CornerstoneImageRendered', function () {
         // If element1 is redrawn, then this test has failed.
         // Only element2 should be redrawn.
         assert.isOk(false);
         done();
       });
 
-      const token2 = pubSub(element2).subscribe('CornerstoneImageRendered', function (event, eventData) {
-        pubSub(element2).unsubscribe(token2);
-
+      pubSub(element2).subscribe('CornerstoneImageRendered', function (event, eventData) {
         // Make sure element2 is redrawn since it has been invalidated
         assert.equal(eventData.element, element2);
         assert.equal(eventData.image, image2);
@@ -116,9 +111,7 @@ describe('drawInvalidated', function () {
     // the element is not fetched (also fires an async CornerstoneImageRendered event).
     setTimeout(function () {
       // Assert
-      const token1 = pubSub(element1).subscribe('CornerstoneImageRendered', function (event, eventData) {
-        pubSub(element1).unsubscribe(token1);
-
+      pubSub(element1).subscribe('CornerstoneImageRendered', function (event, eventData) {
         // If element1 is redrawn, then this test has failed.
         // Only element2 should be redrawn.
         assert.equal(eventData.element, element1);
@@ -126,9 +119,7 @@ describe('drawInvalidated', function () {
         done();
       });
 
-      const token2 = pubSub(element2).subscribe('CornerstoneImageRendered', function (event, eventData) {
-        pubSub(element2).unsubscribe(token2);
-
+      pubSub(element2).subscribe('CornerstoneImageRendered', function (event, eventData) {
         // Make sure element2 is redrawn since it has been invalidated
         assert.equal(eventData.element, element2);
         assert.equal(eventData.image, image2);
@@ -143,6 +134,7 @@ describe('drawInvalidated', function () {
   });
 
   afterEach(function () {
-    disable(this.element);
+    disable(this.element1);
+    disable(this.element2);
   });
 });

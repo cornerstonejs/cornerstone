@@ -97,9 +97,7 @@ describe('layers', function () {
 
   it('addLayers: should fire CornerstoneLayerAdded', function (done) {
     // Arrange
-    const token = pubSub(this.element).subscribe('CornerstoneLayerAdded', (event, eventData) => {
-      pubSub(this.element).unsubscribe(token);
-
+    pubSub(this.element).subscribe('CornerstoneLayerAdded', (event, eventData) => {
       // Assert
       expect(eventData).to.be.an('object');
       expect(eventData);
@@ -224,9 +222,7 @@ describe('layers', function () {
 
     const layerId2 = addLayer(this.element, this.image2);
 
-    const token = pubSub(this.element).subscribe('CornerstoneActiveLayerChanged', (event, eventData) => {
-      pubSub(this.element).unsubscribe(token);
-
+    pubSub(this.element).subscribe('CornerstoneActiveLayerChanged', (event, eventData) => {
       // Assert
       expect(eventData.layerId).to.equal(layerId2);
       done();

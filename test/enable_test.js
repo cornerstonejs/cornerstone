@@ -17,9 +17,7 @@ describe('Enable a DOM Element for Canvas Renderer', function () {
     const options = this.options;
 
     // Assert
-    const token = pubSub(element).subscribe('CornerstonePreRender', function (event, eventData) {
-      pubSub(element).unsubscribe(token);
-
+    pubSub(element).subscribe('CornerstonePreRender', function (event, eventData) {
       assert.equal(eventData.enabledElement.element, element);
       done();
     });

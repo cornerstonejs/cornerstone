@@ -43,9 +43,7 @@ describe('invalidate', function () {
     const element = this.element;
     const enabledElement = getEnabledElement(this.element);
 
-    const token = pubSub(element).subscribe('CornerstoneInvalidated', function (event, eventData) {
-      pubSub(element).unsubscribe(token);
-
+    pubSub(element).subscribe('CornerstoneInvalidated', function (event, eventData) {
       // Assert
       assert.equal(eventData.element, element);
       done();

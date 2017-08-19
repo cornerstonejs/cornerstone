@@ -80,9 +80,7 @@ describe('layers', function () {
     addLayer(this.element, this.image1);
     addLayer(this.element, this.image2);
 
-    const token = pubSub(this.element).subscribe('CornerstoneImageRendered', (event, eventData) => {
-      pubSub(this.element).unsubscribe(token);
-
+    pubSub(this.element).subscribe('CornerstoneImageRendered', (event, eventData) => {
       // Assert
       assert.equal(eventData.element, this.element);
       done();
@@ -99,9 +97,7 @@ describe('layers', function () {
       opacity: 0.7
     });
 
-    const token = pubSub(this.element).subscribe('CornerstoneImageRendered', (event, eventData) => {
-      pubSub(this.element).unsubscribe(token);
-
+    pubSub(this.element).subscribe('CornerstoneImageRendered', (event, eventData) => {
       // Assert
       assert.equal(eventData.element, this.element);
       done();
@@ -118,9 +114,7 @@ describe('layers', function () {
       colormap: 'Blues'
     });
 
-    const token = pubSub(this.element).subscribe('CornerstoneImageRendered', (event, eventData) => {
-      pubSub(this.element).unsubscribe(token);
-
+    pubSub(this.element).subscribe('CornerstoneImageRendered', (event, eventData) => {
       // Assert
       assert.equal(eventData.element, this.element);
       done();
