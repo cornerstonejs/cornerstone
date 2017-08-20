@@ -1,4 +1,4 @@
-/*! cornerstone-core - 0.12.2 - 2017-08-19 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone-core - 0.12.2 - 2017-08-20 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -315,7 +315,7 @@ var PubSub = function () {
 
   _createClass(PubSub, [{
     key: "subscribe",
-    value: function subscribe(topic, func) {
+    value: function subscribe(topic, func, extras) {
       if (!this.topics[topic]) {
         this.topics[topic] = [];
       }
@@ -324,7 +324,8 @@ var PubSub = function () {
 
       this.topics[topic].push({
         token: token,
-        func: func
+        func: func,
+        extras: extras
       });
 
       return token;
@@ -370,7 +371,9 @@ var PubSub = function () {
       var len = subscribers ? subscribers.length : 0;
 
       while (len--) {
-        subscribers[len].func(topic, args);
+        var subscriber = subscribers[len];
+
+        subscriber.func(topic, args, subscriber.extras);
       }
 
       return true;

@@ -10,7 +10,7 @@ class PubSub {
     this.topics = {};
   }
 
-  subscribe (topic, func) {
+  subscribe (topic, func, extras) {
     if (!this.topics[topic]) {
       this.topics[topic] = [];
     }
@@ -19,7 +19,8 @@ class PubSub {
 
     this.topics[topic].push({
       token,
-      func
+      func,
+      extras
     });
 
     return token;
@@ -60,7 +61,9 @@ class PubSub {
     let len = subscribers ? subscribers.length : 0;
 
     while (len--) {
-      subscribers[len].func(topic, args);
+      const subscriber = subscribers[len];
+
+      subscriber.func(topic, args, subscriber.extras);
     }
 
     return true;

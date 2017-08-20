@@ -15,14 +15,27 @@ describe('pub/sub module', function () {
   });
 
   it('allows to publish to subscribers', function (done) {
-    const that = this;
-    const token = pubSub(this.element1).subscribe(this.topic, function (topic, args) {
+    const token = pubSub(this.element1).subscribe(this.topic, (topic, args) => {
       pubSub(this.element1).unsubscribe(token);
 
-      assert.equal(topic, that.topic);
-      assert.equal(args, that.args);
+      assert.equal(topic, this.topic);
+      assert.equal(args, this.args);
       done();
     });
+
+    pubSub(this.element1).publish(this.topic, this.args);
+  });
+
+  it('allows to publish to subscribers with additional arguments', function (done) {
+    const extras = 'additionalArgs';
+    const token = pubSub(this.element1).subscribe(this.topic, (topic, args, extraArgs) => {
+      pubSub(this.element1).unsubscribe(token);
+
+      assert.equal(topic, this.topic);
+      assert.equal(args, this.args);
+      assert.equal(extraArgs, 'additionalArgs');
+      done();
+    }, extras);
 
     pubSub(this.element1).publish(this.topic, this.args);
   });
