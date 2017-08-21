@@ -151,6 +151,13 @@ export function getCacheInfo () {
 // This method should only be called by `removeImagePromise` because it's
 // The one that knows how to deal with shared cache keys and cache size.
 function decache (imagePromise) {
+  // imagePromise.decache (cornerstone-wado-image-loader > 0.14.6)
+  if (imagePromise.decache) {
+    imagePromise.decache();
+
+    return;
+  }
+  // image.decache (cornerstone-wado-image-loader <= 0.14.6)
   imagePromise.then(function (image) {
     if (image.decache) {
       image.decache();
