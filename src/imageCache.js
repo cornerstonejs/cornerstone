@@ -153,7 +153,7 @@ export function getCacheInfo () {
 function decache (imagePromise) {
   // imagePromise.decache (cornerstone-wado-image-loader > 0.14.6)
   if (imagePromise.decache) {
-    imagePromise.decache();
+    imagePromise.always(imagePromise.decache);
 
     return;
   }
