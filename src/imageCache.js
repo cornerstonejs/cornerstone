@@ -132,7 +132,6 @@ export function removeImagePromise (imageId) {
     throw new Error('removeImagePromise: imageId was not present in imageCache');
   }
 
-  cachedImage.imagePromise.reject();
   cachedImages.splice(cachedImages.indexOf(cachedImage), 1);
   cacheSizeInBytes -= cachedImage.sizeInBytes;
   decache(cachedImage.imagePromise);
