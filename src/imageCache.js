@@ -156,6 +156,13 @@ function decache (imagePromise) {
       imagePromise.decache();
     }
   });
+
+  // image.decache (cornerstone-wado-image-loader <= 0.14.6)
+  imagePromise.then(function (image) {
+    if (image.decache) {
+      image.decache();
+    }
+  });
 }
 
 export function purgeCache () {
