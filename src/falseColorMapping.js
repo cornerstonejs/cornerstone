@@ -155,6 +155,9 @@ function convertImageToFalseColorImage (image, colormap) {
     image.minPixelValue = pixelValues.minPixelValue;
     image.maxPixelValue = pixelValues.maxPixelValue;
 
+    image.windowWidth = 255;
+    image.windowCenter = 128;
+
     // Cache the last colormapId used for performance
     // Then it doesn't need to be re-rendered on next
     // Time if the user hasn't updated it

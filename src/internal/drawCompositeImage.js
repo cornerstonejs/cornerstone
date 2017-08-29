@@ -61,6 +61,10 @@ function renderLayers (context, activeLayer, layers, invalidated) {
   layers.forEach((layer) => {
     context.save();
 
+    if (!layer.image) {
+      return;
+    }
+
     // Set the layer's canvas to the pixel coordinate system
     layer.canvas = canvas;
     setToPixelCoordinateSystem(layer, context);
@@ -69,10 +73,25 @@ function renderLayers (context, activeLayer, layers, invalidated) {
     // exists or try to restore the original pixel data otherwise
     let pixelDataUpdated;
 
-    if (layer.options.colormap) {
+    if (layer.options.colormap && layer.image.colormapId !== layer.options.colormap) {
+      // If the options for this layer specify a colormap, but the image
+      // in the layer does not yet have this colormap set, convert
+      // the pixel data to this colormap and update the viewport.
       pixelDataUpdated = convertImageToFalseColorImage(layer.image, layer.options.colormap);
-    } else {
+      layer.viewport.voi = {
+        windowWidth: layer.image.windowWidth,
+        windowCenter: layer.image.windowCenter
+      };
+    } else if (!layer.options.colormap && layer.image.colormapId) {
+      // If the image for this layer still has a colormapId, but the
+      // colormap has been removed from the options for this layer,
+      // undo the conversion from the original pixel data to the false
+      // color mapped pixel data and update the viewport.
       pixelDataUpdated = restoreImage(layer.image);
+      layer.viewport.voi = {
+        windowWidth: layer.image.windowWidth,
+        windowCenter: layer.image.windowCenter
+      };
     }
 
     // If the image got updated it needs to be re-rendered
@@ -94,6 +113,16 @@ function renderLayers (context, activeLayer, layers, invalidated) {
 
     if (layer.options && layer.options.fillStyle) {
       context.fillStyle = layer.options.fillStyle;
+    }
+
+    // Set the pixelReplication property before drawing from the layer into the
+    // composite canvas
+    if (layer.viewport.pixelReplication === true) {
+      context.imageSmoothingEnabled = false;
+      context.mozImageSmoothingEnabled = false;
+    } else {
+      context.imageSmoothingEnabled = true;
+      context.mozImageSmoothingEnabled = true;
     }
 
     // Draw from the current layer's canvas onto the enabled element's canvas

@@ -78,9 +78,15 @@ export function addLayer (element, image, options) {
   const layerId = guid();
   const enabledElement = getEnabledElement(element);
   const layers = enabledElement.layers;
-  const viewport = getDefaultViewport(enabledElement.canvas, image);
+  let viewport = getDefaultViewport(enabledElement.canvas, image);
 
-    // Set syncViewports to true by default when a new layer is added
+  // Override the defaults if any optional viewport settings
+  // have been specified
+  if (options.viewport) {
+    viewport = Object.assign(viewport, options.viewport);
+  }
+
+  // Set syncViewports to true by default when a new layer is added
   if (enabledElement.syncViewports !== false) {
     enabledElement.syncViewports = true;
   }
