@@ -1448,7 +1448,7 @@ function addLayer(element, image, options) {
 
   // Override the defaults if any optional viewport settings
   // have been specified
-  if (options.viewport) {
+  if (options && options.viewport) {
     viewport = Object.assign(viewport, options.viewport);
   }
 
@@ -2634,6 +2634,7 @@ exports.default = function (image, lookupTable) {
   image.rgba = true;
   image.lut = undefined;
   image.slope = 1;
+  image.intercept = 0;
   image.minPixelValue = 0;
   image.maxPixelValue = 255;
   image.windowWidth = 255;
