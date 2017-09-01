@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import { getEnabledElement } from './enabledElements.js';
 import fitToWindow from './fitToWindow.js';
 import updateImage from './updateImage.js';

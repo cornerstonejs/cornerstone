@@ -10,6 +10,7 @@ const imageCacheDict = {};
 // Array of cachedImage objects
 export const cachedImages = [];
 
+import $ from 'jquery';
 import events from './events.js';
 
 export function setMaximumSizeBytes (numBytes) {
