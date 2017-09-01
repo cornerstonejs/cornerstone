@@ -5,6 +5,7 @@ import displayImage from '../src/displayImage.js';
 import invalidate from '../src/invalidate.js';
 import disable from '../src/disable.js';
 import { getEnabledElement } from '../src/enabledElements.js';
+import pubSub from '../src/pubSub.js';
 
 describe('invalidate', function () {
   beforeEach(function () {
@@ -42,7 +43,7 @@ describe('invalidate', function () {
     const element = this.element;
     const enabledElement = getEnabledElement(this.element);
 
-    $(element).on('CornerstoneInvalidated', function (event, eventData) {
+    pubSub(element).subscribe('CornerstoneInvalidated', function (event, eventData) {
       // Assert
       assert.equal(eventData.element, element);
       done();

@@ -3,32 +3,35 @@ import { assert } from 'chai';
 import enable from '../src/enable.js';
 import disable from '../src/disable.js';
 import { getEnabledElement, getEnabledElements } from '../src/enabledElements.js';
+import pubSub from '../src/pubSub.js';
 
 describe('Enable a DOM Element for Canvas Renderer', function () {
   beforeEach(function () {
     // Arrange
     this.element = document.createElement('div');
-    const options = {};
-
-    // Act
-    enable(this.element, options);
+    this.options = {};
   });
 
-  it('should fire CornerstoneImageRendered', function () {
+  it('should fire CornerstonePreRender', function (done) {
     const element = this.element;
+    const options = this.options;
 
     // Assert
-    $(element).on('CornerstoneImageRendered', function (event, eventData) {
-      assert.equal(eventData.element, element);
+    pubSub(element).subscribe('CornerstonePreRender', function (event, eventData) {
+      assert.equal(eventData.enabledElement.element, element);
+      done();
     });
 
-    const enabledElement = getEnabledElement(element);
-
-    assert.equal(enabledElement.element, element);
+    // Act
+    enable(element, options);
   });
 
   it('should be available in the enabledElement array', function () {
     const element = this.element;
+    const options = this.options;
+
+    // Act
+    enable(element, options);
 
     // Assert
     const enabledElement = getEnabledElement(element);
@@ -37,6 +40,12 @@ describe('Enable a DOM Element for Canvas Renderer', function () {
   });
 
   it('should be the only entry in the enabledElement array', function () {
+    const element = this.element;
+    const options = this.options;
+
+    // Act
+    enable(element, options);
+
     // Assert
     const enabledElements = getEnabledElements();
 

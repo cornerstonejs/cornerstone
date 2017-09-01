@@ -2,7 +2,7 @@
  * This module deals with ImageLoaders, loading images and caching images
  */
 import { getImagePromise, putImagePromise } from './imageCache.js';
-import events from './events.js';
+import pubSub from './pubSub.js';
 
 const imageLoaders = {};
 
@@ -17,7 +17,7 @@ let unknownImageLoader;
  * @param {String} imageId A Cornerstone Image Object's imageId
  * @param {Object} [options] Options to be passed to the Image Loader
  *
- * @returns {Deferred} A jQuery Deferred which can be used to act after an image is loaded or loading fails
+ * @returns {Promise} A Promise object which can be used to act after an image is loaded or loading fails
  */
 function loadImageFromImageLoader (imageId, options) {
   const colonIndex = imageId.indexOf(':');
@@ -39,7 +39,7 @@ function loadImageFromImageLoader (imageId, options) {
 
   // Broadcast an image loaded event once the image is loaded
   imagePromise.then(function (image) {
-    $(events).trigger('CornerstoneImageLoaded', { image });
+    pubSub().publish('CornerstoneImageLoaded', { image });
   });
 
   return imagePromise;
@@ -52,7 +52,7 @@ function loadImageFromImageLoader (imageId, options) {
  * @param {String} imageId A Cornerstone Image Object's imageId
  * @param {Object} [options] Options to be passed to the Image Loader
  *
- * @returns {Deferred} A jQuery Deferred which can be used to act after an image is loaded or loading fails
+ * @returns {Promise} A Promise object which can be used to act after an image is loaded or loading fails
  */
 export function loadImage (imageId, options) {
   if (imageId === undefined) {
@@ -79,7 +79,7 @@ export function loadImage (imageId, options) {
  * @param {String} imageId A Cornerstone Image Object's imageId
  * @param {Object} [options] Options to be passed to the Image Loader
  *
- * @returns {Deferred} A jQuery Deferred which can be used to act after an image is loaded or loading fails
+ * @returns {Promise} A Promise object which can be used to act after an image is loaded or loading fails
  */
 export function loadAndCacheImage (imageId, options) {
   if (imageId === undefined) {

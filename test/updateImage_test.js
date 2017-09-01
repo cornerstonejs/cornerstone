@@ -4,6 +4,7 @@ import enable from '../src/enable.js';
 import displayImage from '../src/displayImage.js';
 import updateImage from '../src/updateImage.js';
 import disable from '../src/disable.js';
+import pubSub from '../src/pubSub.js';
 
 describe('Update a displayed image', function () {
   beforeEach(function () {
@@ -46,7 +47,7 @@ describe('Update a displayed image', function () {
     updateImage(element);
 
     // Assert
-    $(element).on('CornerstoneImageRendered', function (event, eventData) {
+    pubSub(element).subscribe('CornerstoneImageRendered', function (event, eventData) {
       assert.equal(eventData.element, element);
       done();
     });

@@ -3,6 +3,7 @@
  */
 
 import { getEnabledElement } from './enabledElements.js';
+import pubSub from './pubSub.js';
 
 /**
  * Sets the invalid flag on the enabled element and fire an event
@@ -18,5 +19,5 @@ export default function (element) {
     element
   };
 
-  $(element).trigger('CornerstoneInvalidated', eventData);
+  pubSub(element).publish('CornerstoneInvalidated', eventData);
 }

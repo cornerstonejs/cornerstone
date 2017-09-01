@@ -4,6 +4,7 @@ import enable from '../../src/enable.js';
 import draw from '../../src/draw.js';
 import disable from '../../src/disable.js';
 import metaData from '../../src/metaData.js';
+import pubSub from '../../src/pubSub.js';
 
 import {
   addLayer
@@ -79,7 +80,7 @@ describe('layers', function () {
     addLayer(this.element, this.image1);
     addLayer(this.element, this.image2);
 
-    $(this.element).on('CornerstoneImageRendered', (event, eventData) => {
+    pubSub(this.element).subscribe('CornerstoneImageRendered', (event, eventData) => {
       // Assert
       assert.equal(eventData.element, this.element);
       done();
@@ -96,7 +97,7 @@ describe('layers', function () {
       opacity: 0.7
     });
 
-    $(this.element).on('CornerstoneImageRendered', (event, eventData) => {
+    pubSub(this.element).subscribe('CornerstoneImageRendered', (event, eventData) => {
       // Assert
       assert.equal(eventData.element, this.element);
       done();
@@ -113,7 +114,7 @@ describe('layers', function () {
       colormap: 'Blues'
     });
 
-    $(this.element).on('CornerstoneImageRendered', (event, eventData) => {
+    pubSub(this.element).subscribe('CornerstoneImageRendered', (event, eventData) => {
       // Assert
       assert.equal(eventData.element, this.element);
       done();

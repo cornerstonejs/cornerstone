@@ -5,6 +5,7 @@ import updateImage from '../src/updateImage.js';
 import disable from '../src/disable.js';
 import { getEnabledElement } from '../src/enabledElements.js';
 import metaData from '../src/metaData.js';
+import pubSub from '../src/pubSub.js';
 
 import {
   addLayer,
@@ -96,7 +97,7 @@ describe('layers', function () {
 
   it('addLayers: should fire CornerstoneLayerAdded', function (done) {
     // Arrange
-    $(this.element).on('CornerstoneLayerAdded', (event, eventData) => {
+    pubSub(this.element).subscribe('CornerstoneLayerAdded', (event, eventData) => {
       // Assert
       expect(eventData).to.be.an('object');
       expect(eventData);
@@ -221,7 +222,7 @@ describe('layers', function () {
 
     const layerId2 = addLayer(this.element, this.image2);
 
-    $(this.element).on('CornerstoneActiveLayerChanged', (event, eventData) => {
+    pubSub(this.element).subscribe('CornerstoneActiveLayerChanged', (event, eventData) => {
       // Assert
       expect(eventData.layerId).to.equal(layerId2);
       done();

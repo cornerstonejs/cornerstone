@@ -10,5 +10,4 @@ export default function (enabledElement, invalidated) {
   if (invalidated) {
     enabledElement.invalid = true;
   }
-
 }

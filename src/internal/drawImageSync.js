@@ -2,6 +2,7 @@ import now from './now.js';
 import drawCompositeImage from './drawCompositeImage.js';
 import { renderColorImage } from '../rendering/renderColorImage.js';
 import { renderGrayscaleImage } from '../rendering/renderGrayscaleImage.js';
+import pubSub from '../pubSub.js';
 
 /**
  * Draw an image to a given enabled element synchronously
@@ -60,5 +61,5 @@ export default function (enabledElement, invalidated) {
   enabledElement.invalid = false;
   enabledElement.needsRedraw = false;
 
-  $(element).trigger('CornerstoneImageRendered', eventData);
+  pubSub(element).publish('CornerstoneImageRendered', eventData);
 }

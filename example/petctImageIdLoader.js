@@ -87,9 +87,7 @@
             sizeInBytes: width * height * 2
         };
 
-        var deferred = $.Deferred();
-        deferred.resolve(image);
-        return deferred;
+        return Promise.resolve(image);
     }
 
     function getPETImage(imageId) {
@@ -125,9 +123,7 @@
             sizeInBytes: width * height * 2
         };
 
-        var deferred = $.Deferred();
-        deferred.resolve(image);
-        return deferred;
+        return Promise.resolve(image);
     }
 
 

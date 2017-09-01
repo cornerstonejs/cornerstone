@@ -57,7 +57,7 @@
 </div>
 </body>
 
-<!-- cornerstone depends on jQuery so it must be loaded first-->
+<!-- example depends on jQuery -->
 <script src="../jquery.min.js"></script>
 
 <!-- include the cornerstone library -->
@@ -103,9 +103,9 @@
             $('#bottomright').text("Zoom:" + eventData.viewport.scale.toFixed(2));
 
         }
-        $(element).on("CornerstoneImageRendered", onImageRendered);
+        cornerstone.pubSub(element).subscribe("CornerstoneImageRendered", onImageRendered);
 
-        $(cornerstone).bind('CornerstoneImageLoaded', function(event, eventData)
+        cornerstone.pubSub(cornerstone.events).subscribe('CornerstoneImageLoaded', function(event, eventData)
         {
             // Note - we would
             $('#imageLoaded').text('Last ImageId Loaded:' + eventData.image.imageId);
@@ -113,7 +113,7 @@
 
         // load the image and display it
         var imageId = 'example://1';
-        cornerstone.loadImage(imageId).done(function (image) {
+        cornerstone.loadImage(imageId).then(function (image) {
 
             // Now set the image which will fire the events we are interested in
             cornerstone.displayImage(element, image);

@@ -237,4 +237,3 @@ export function addGrayscaleLayer (layer, invalidated) {
   layer.renderingTools.lastRenderedImageId = image.imageId;
   layer.renderingTools.lastRenderedViewport = lastRenderedViewport;
 }
-

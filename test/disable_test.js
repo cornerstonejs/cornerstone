@@ -3,6 +3,7 @@ import { assert } from 'chai';
 import enable from '../src/enable.js';
 import disable from '../src/disable.js';
 import { getEnabledElement, getEnabledElements } from '../src/enabledElements.js';
+import pubSub from '../src/pubSub.js';
 
 describe('Disable an Element', function () {
   beforeEach(function () {
@@ -23,13 +24,16 @@ describe('Disable an Element', function () {
     disable(this.element);
   });
 
-  it('should fire CornerstoneElementDisabled', function () {
-    const element = this.element;
+  it('should fire CornerstoneElementDisabled', function (done) {
+    const element2 = this.element2;
 
     // Assert
-    $(element).on('CornerstoneElementDisabled', function (event, eventData) {
-      assert.equal(eventData.element, element);
+    pubSub(element2).subscribe('CornerstoneElementDisabled', function (event, eventData) {
+      assert.equal(eventData.element, element2);
+      done();
     });
+
+    disable(this.element2);
   });
 
   it('should no longer be available in the enabledElement array', function () {

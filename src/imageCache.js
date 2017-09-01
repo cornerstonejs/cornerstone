@@ -10,7 +10,7 @@ const imageCacheDict = {};
 // Array of cachedImage objects
 export const cachedImages = [];
 
-import events from './events.js';
+import pubSub from './pubSub.js';
 
 export function setMaximumSizeBytes (numBytes) {
   if (numBytes === undefined) {
@@ -29,6 +29,8 @@ function purgeCacheIfNecessary () {
   if (cacheSizeInBytes <= maximumSizeInBytes) {
     return;
   }
+
+  pubSub().publish('CornerstoneImageCacheFull', getCacheInfo());
 
   // Cache size has been exceeded, create list of images sorted by timeStamp
   // So we can purge the least recently used image
@@ -51,12 +53,10 @@ function purgeCacheIfNecessary () {
 
     removeImagePromise(imageId);
 
-    $(events).trigger('CornerstoneImageCachePromiseRemoved', { imageId });
+    pubSub().publish('CornerstoneImageCachePromiseRemoved', imageId);
   }
 
-  const cacheInfo = getCacheInfo();
-
-  $(events).trigger('CornerstoneImageCacheFull', cacheInfo);
+  pubSub().publish('CornerstoneImageCacheCleaned', getCacheInfo());
 }
 
 export function putImagePromise (imageId, imagePromise) {
@@ -72,6 +72,7 @@ export function putImagePromise (imageId, imagePromise) {
 
   const cachedImage = {
     loaded: false,
+    image: undefined,
     imageId,
     sharedCacheKey: undefined, // The sharedCacheKey for this imageId.  undefined by default
     imagePromise,
@@ -132,10 +133,14 @@ export function removeImagePromise (imageId) {
     throw new Error('removeImagePromise: imageId was not present in imageCache');
   }
 
-  cachedImage.imagePromise.reject();
   cachedImages.splice(cachedImages.indexOf(cachedImage), 1);
   cacheSizeInBytes -= cachedImage.sizeInBytes;
-  decache(cachedImage.imagePromise);
+
+  cachedImage.imagePromise.then(function (image) {
+    if (image.decache) {
+      image.decache();
+    }
+  });
 
   delete imageCacheDict[imageId];
 }
@@ -146,16 +151,6 @@ export function getCacheInfo () {
     cacheSizeInBytes,
     numberOfImagesCached: cachedImages.length
   };
-}
-
-// This method should only be called by `removeImagePromise` because it's
-// The one that knows how to deal with shared cache keys and cache size.
-function decache (imagePromise) {
-  imagePromise.then(function (image) {
-    if (image.decache) {
-      image.decache();
-    }
-  });
 }
 
 export function purgeCache () {

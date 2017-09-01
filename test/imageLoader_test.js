@@ -6,21 +6,17 @@ import { registerImageLoader,
        loadImage,
        loadAndCacheImage } from '../src/index';
 
+import pubSub from '../src/pubSub.js';
+
 describe('imageLoader registration module', function () {
   beforeEach(function () {
-    this.exampleImageLoader1 = (imageId, options) => {
-      console.log('loading via exampleImageLoader1');
-      console.log(options);
-
-      return $.Deferred();
+    const exampleImage = {
+      imageId: 'anImageId',
+      sizeInBytes: 100
     };
 
-    this.exampleImageLoader2 = (imageId, options) => {
-      console.log('loading via exampleImageLoader2');
-      console.log(options);
-
-      return $.Deferred();
-    };
+    this.exampleImageLoader1 = () => Promise.resolve(exampleImage);
+    this.exampleImageLoader2 = () => new Promise(function () {});
 
     this.exampleScheme1 = 'example1';
     this.exampleScheme2 = 'example2';
@@ -29,6 +25,28 @@ describe('imageLoader registration module', function () {
     this.exampleScheme2ImageId = `${this.exampleScheme2}://image2`;
 
     this.options = {};
+  });
+
+  it('should fire CornerstoneImageLoaded without cache', function (done) {
+    registerImageLoader(this.exampleScheme1, this.exampleImageLoader1);
+
+    const token = pubSub().subscribe('CornerstoneImageLoaded', function () {
+      pubSub().unsubscribe(token);
+      done();
+    });
+
+    loadImage(this.exampleScheme1ImageId, this.options);
+  });
+
+  it('should fire CornerstoneImageLoaded with cache', function (done) {
+    registerImageLoader(this.exampleScheme1, this.exampleImageLoader1);
+
+    const token = pubSub().subscribe('CornerstoneImageLoaded', function () {
+      pubSub().unsubscribe(token);
+      done();
+    });
+
+    loadAndCacheImage(this.exampleScheme1ImageId, this.options);
   });
 
   it('allows registration of new image loader', function () {
@@ -57,19 +75,9 @@ describe('imageLoader registration module', function () {
 
 describe('imageLoader loading module', function () {
   beforeEach(function () {
-    this.exampleImageLoader1 = (imageId, options) => {
-      console.log('loading via exampleImageLoader1');
-      console.log(options);
+    this.exampleImageLoader1 = () => Promise.resolve();
 
-      return $.Deferred();
-    };
-
-    this.exampleImageLoader2 = (imageId, options) => {
-      console.log('loading via exampleImageLoader2');
-      console.log(options);
-
-      return $.Deferred();
-    };
+    this.exampleImageLoader2 = () => Promise.resolve();
 
     this.exampleScheme1 = 'example1';
     this.exampleScheme2 = 'example2';
@@ -96,10 +104,9 @@ describe('imageLoader loading module', function () {
 
   it('falls back to the unknownImageLoader if no appropriate scheme is present', function () {
     registerImageLoader(this.exampleScheme1, this.exampleImageLoader1);
-    registerUnknownImageLoader(this.exampleScheme2, this.exampleImageLoader2);
+    registerUnknownImageLoader(this.exampleImageLoader2);
     const imagePromise1 = loadAndCacheImage(this.exampleScheme2ImageId, this.options);
 
     assert.isDefined(imagePromise1);
   });
 });
-
