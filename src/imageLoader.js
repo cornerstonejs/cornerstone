@@ -2,7 +2,7 @@
  * This module deals with ImageLoaders, loading images and caching images
  */
 
-import $ from 'jquery';
+import $ from './jquery.js';
 import { getImagePromise, putImagePromise } from './imageCache.js';
 import events from './events.js';
 

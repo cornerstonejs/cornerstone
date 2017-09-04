@@ -2,7 +2,7 @@
  * This module is responsible for enabling an element to display images with cornerstone
  */
 
-import $ from 'jquery';
+import $ from './jquery.js';
 import { addEnabledElement } from './enabledElements.js';
 import resize from './resize.js';
 import drawImageSync from './internal/drawImageSync.js';
