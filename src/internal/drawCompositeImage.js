@@ -75,12 +75,11 @@ function renderLayers (context, activeLayer, layers, invalidated) {
       pixelDataUpdated = restoreImage(layer.image);
     }
 
-    // Use the windowing of the updated image
-    if (pixelDataUpdated === true) {
+	if (pixelDataUpdated === true) {
       layer.viewport.voi.windowWidth = layer.image.windowWidth;
       layer.viewport.voi.windowCenter = layer.image.windowCenter;
     }
-
+	
     // If the image got updated it needs to be re-rendered
     invalidated = invalidated || pixelDataUpdated;
 
