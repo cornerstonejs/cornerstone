@@ -1,7 +1,6 @@
 import $ from './jquery.js';
 import guid from './internal/guid.js';
 import { getEnabledElement } from './enabledElements.js';
-import metaData from './metaData.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import updateImage from './updateImage.js';
 
@@ -47,19 +46,10 @@ function rescaleImage (baseLayer, targetLayer) {
     return;
   }
 
-  // TODO: Use row and column pixel spacing from image object
-  const baseImagePlane = metaData.get('imagePlane', baseImage.imageId);
-  const targetImagePlane = metaData.get('imagePlane', targetImage.imageId);
-
-  if (!baseImagePlane || !baseImagePlane.columnPixelSpacing ||
-      !targetImagePlane || !targetImagePlane.columnPixelSpacing) {
-    return;
-  }
-
   // Column pixel spacing need to be considered when calculating the
   // ratio between the layer added and base layer images
-  const colRelative = (targetImagePlane.columnPixelSpacing * targetImage.width) /
-                      (baseImagePlane.columnPixelSpacing * baseImage.width);
+  const colRelative = (targetImage.columnPixelSpacing * targetImage.width) /
+                      (baseImage.columnPixelSpacing * baseImage.width);
   const viewportRatio = targetLayer.viewport.scale / baseLayer.viewport.scale * colRelative;
 
   targetLayer.viewport.scale = baseLayer.viewport.scale * viewportRatio;
