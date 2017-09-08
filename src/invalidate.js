@@ -2,6 +2,7 @@
  * This module contains a function to make an image is invalid
  */
 
+import $ from './jquery.js';
 import { getEnabledElement } from './enabledElements.js';
 
 /**
