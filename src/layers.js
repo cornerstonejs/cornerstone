@@ -214,3 +214,18 @@ export function getActiveLayer (element) {
 
   return enabledElement.layers.find((layer) => layer.layerId === enabledElement.activeLayerId);
 }
+
+/**
+ * Purge the layers
+ *
+ * @param {HTMLElement} element The DOM element enabled for Cornerstone
+ *
+ * @returns {void}
+ */
+export function purgeLayers (element) {
+  const enabledElement = getEnabledElement(element);
+
+  enabledElement.layers = [];
+  delete enabledElement.activeLayerId;
+  delete enabledElement.lastSyncViewportsState;
+}

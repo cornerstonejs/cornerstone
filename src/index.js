@@ -35,7 +35,8 @@ export {
   getLayers,
   getVisibleLayers,
   setActiveLayer,
-  getActiveLayer
+  getActiveLayer,
+  purgeLayers
 } from './layers.js';
 
 export { default as fitToWindow } from './fitToWindow.js';
