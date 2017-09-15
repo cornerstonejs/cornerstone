@@ -66,7 +66,7 @@
     "opn-cli": "^3.1.0",
     "phantomjs-polyfill-find": "github:ptim/phantomjs-polyfill-find",
     "phantomjs-polyfill-find-index": "^1.0.1",
-    "phantomjs-prebuilt": "2.1.7",
+    "phantomjs-prebuilt": "^2.1.8",
     "shx": "^0.2.2",
     "webpack": "^3.1.0"
   },
