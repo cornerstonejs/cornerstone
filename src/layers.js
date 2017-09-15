@@ -1,6 +1,3 @@
-require('phantomjs-polyfill-find');
-require('phantomjs-polyfill-find-index');
-
 import $ from './jquery.js';
 import guid from './internal/guid.js';
 import { getEnabledElement } from './enabledElements.js';
