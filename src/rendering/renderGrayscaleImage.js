@@ -208,7 +208,7 @@ export function addGrayscaleLayer (layer, invalidated) {
 
   const image = layer.image;
 
-  if (image === undefined) {
+  if (image === undefined || image.getPixelData === undefined) {
     throw new Error('addGrayscaleLayer: image must be loaded before it can be drawn');
   }
 
