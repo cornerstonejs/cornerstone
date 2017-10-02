@@ -1,4 +1,4 @@
-import now from './now';
+import now from './now.js';
 
 /**
  * Converts stored color pixel values to display pixel values using a LUT.

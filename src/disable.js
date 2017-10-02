@@ -1,4 +1,4 @@
-import $ from './jquery.js';
+import { $ } from './externalImports.js';
 import { getEnabledElements } from './enabledElements.js';
 
 /**
