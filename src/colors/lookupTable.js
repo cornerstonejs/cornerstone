@@ -261,7 +261,7 @@ export default function LookupTable () {
       dIndex = (v + p.Shift) * p.Scale;
     }
 
-    return Math.round(dIndex);
+    return Math.floor(dIndex);
   };
 
   this.getIndex = function (v) {
