@@ -1,4 +1,4 @@
-import $ from './jquery.js';
+import { $ } from './externalImports.js';
 import { getEnabledElement } from './enabledElements.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import updateImage from './updateImage.js';

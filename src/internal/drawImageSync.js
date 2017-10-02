@@ -1,4 +1,4 @@
-import $ from '../jquery.js';
+import { $ } from '../externalImports.js';
 import now from './now.js';
 import drawCompositeImage from './drawCompositeImage.js';
 import { renderColorImage } from '../rendering/renderColorImage.js';

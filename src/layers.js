@@ -1,4 +1,4 @@
-import $ from './jquery.js';
+import { $ } from './externalImports.js';
 import guid from './internal/guid.js';
 import { getEnabledElement } from './enabledElements.js';
 import metaData from './metaData.js';
