@@ -1,3 +1,3 @@
-const $=window.$;
+const $ = window.$;
 
 export { $ };
