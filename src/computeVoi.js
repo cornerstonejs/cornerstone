@@ -29,7 +29,7 @@ function computeAutoVoi (viewport, image) {
  * @returns {void}
  */
 export default function computeVoi (viewport, image) {
-  if (viewport.computeVoi === undefined) {
+  if (viewport.computeVoi === undefined || image.computeVoi === undefined) {
     return;
   }
 
