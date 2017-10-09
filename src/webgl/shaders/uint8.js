@@ -14,7 +14,7 @@ function storedPixelDataToImageData (image) {
   const data = new Uint8Array(pixelData.length);
 
   for (let i = 0; i < pixelData.length; i++) {
-    data[i] = parseInt(pixelData[i], 10);
+    data[i] = pixelData[i];
   }
 
   return data;
