@@ -9,15 +9,7 @@ const uint8Shader = {};
  */
 function storedPixelDataToImageData (image) {
     // Transfer image data to alpha channel of WebGL texture
-    // Store data in Uint8Array
-  const pixelData = image.getPixelData();
-  const data = new Uint8Array(pixelData.length);
-
-  for (let i = 0; i < pixelData.length; i++) {
-    data[i] = parseInt(pixelData[i], 10);
-  }
-
-  return data;
+  return image.getPixelData();
 }
 
 export const uint8DataUtilities = {
