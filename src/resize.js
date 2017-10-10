@@ -49,9 +49,10 @@ function setCanvasSize (element, canvas) {
  *
  * @param {HTMLElement} element The DOM element enabled for Cornerstone
  * @param {Boolean} fitViewportToWindow true to refit, false to leave viewport parameters as they are
+ * @param {Object} layerId The layer to fit to window
  * @returns {void}
  */
-export default function (element, fitViewportToWindow) {
+export default function (element, fitViewportToWindow, layerId) {
 
   const enabledElement = getEnabledElement(element);
 
@@ -68,7 +69,7 @@ export default function (element, fitViewportToWindow) {
   }
 
   if (fitViewportToWindow === true) {
-    fitToWindow(element);
+    fitToWindow(element, layerId);
   } else {
     updateImage(element);
   }
