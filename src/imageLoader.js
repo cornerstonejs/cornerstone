@@ -1,10 +1,11 @@
+import { $ } from './externalModules.js';
+import { getImagePromise, putImagePromise } from './imageCache.js';
+import events from './events.js';
+
 /**
  * This module deals with ImageLoaders, loading images and caching images
  */
 
-import $ from './jquery.js';
-import { getImagePromise, putImagePromise } from './imageCache.js';
-import events from './events.js';
 
 const imageLoaders = {};
 

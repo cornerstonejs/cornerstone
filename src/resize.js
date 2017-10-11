@@ -1,4 +1,4 @@
-import $ from './jquery.js';
+import { $ } from './externalModules.js';
 import { getEnabledElement } from './enabledElements.js';
 import fitToWindow from './fitToWindow.js';
 import updateImage from './updateImage.js';
@@ -32,10 +32,16 @@ function setCanvasSize (element, canvas) {
     }
     */
 
-  canvas.width = element.clientWidth;
-  canvas.height = element.clientHeight;
-  canvas.style.width = `${element.clientWidth}px`;
-  canvas.style.height = `${element.clientHeight}px`;
+  // Avoid setting the same value because it flashes the canvas with IE and Edge
+  if (canvas.width !== element.clientWidth) {
+    canvas.width = element.clientWidth;
+    canvas.style.width = `${element.clientWidth}px`;
+  }
+  // Avoid setting the same value because it flashes the canvas with IE and Edge
+  if (canvas.height !== element.clientHeight) {
+    canvas.height = element.clientHeight;
+    canvas.style.height = `${element.clientHeight}px`;
+  }
 }
 
 /**

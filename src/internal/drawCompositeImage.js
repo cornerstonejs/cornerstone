@@ -15,7 +15,9 @@ function cloneViewport (viewport) {
     translation: {
       x: viewport.translation.x,
       y: viewport.translation.y
-    }
+    },
+    hflip: viewport.hflip,
+    vflip: viewport.vflip
   };
 }
 
@@ -42,6 +44,8 @@ function syncViewports (layers, activeLayer) {
       x: (activeLayer.viewport.translation.x / viewportRatio),
       y: (activeLayer.viewport.translation.y / viewportRatio)
     };
+    layer.viewport.hflip = activeLayer.viewport.hflip;
+    layer.viewport.vflip = activeLayer.viewport.vflip;
   });
 }
 

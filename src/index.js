@@ -1,7 +1,6 @@
 // Internal (some of these are from old internal/legacy expose)
 export { default as drawImage } from './internal/drawImage.js';
 export { default as generateLut } from './internal/generateLut.js';
-export { default as generateLutNew } from './internal/generateLutNew.js';
 export { default as getDefaultViewport } from './internal/getDefaultViewport.js';
 export { default as requestAnimationFrame } from './internal/requestAnimationFrame.js';
 export { default as storedPixelDataToCanvasImageData } from './internal/storedPixelDataToCanvasImageData.js';

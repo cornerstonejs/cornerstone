@@ -17,7 +17,7 @@ function storedPixelDataToImageData (image) {
   let offset = 0;
 
   for (let i = 0; i < pixelData.length; i++) {
-    data[offset++] = parseInt(pixelData[i], 10);
+    data[offset++] = pixelData[i];
     data[offset++] = pixelData[i] < 0 ? 0 : 1; // 0 For negative, 1 for positive
   }
 

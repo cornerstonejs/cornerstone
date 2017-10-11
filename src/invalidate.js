@@ -1,9 +1,9 @@
+import { $ } from './externalModules.js';
+import { getEnabledElement } from './enabledElements.js';
+
 /**
  * This module contains a function to make an image is invalid
  */
-
-import $ from './jquery.js';
-import { getEnabledElement } from './enabledElements.js';
 
 /**
  * Sets the invalid flag on the enabled element and fire an event

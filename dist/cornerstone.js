@@ -1,4 +1,4 @@
-/*! cornerstone-core - 0.12.2 - 2017-09-21 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone-core - 0.12.2 - 2017-10-11 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory(require("jquery"));
@@ -279,6 +279,7 @@ function getEnabledElements() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.$ = undefined;
 
 var _jquery = __webpack_require__(46);
 
@@ -286,10 +287,7 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = _jquery2.default; /*
-                                     * When loading sources directly with <script type="module"> remove the line below
-                                     * (keep only the export line)
-                                     */
+exports.$ = _jquery2.default;
 
 /***/ }),
 /* 2 */
@@ -1349,9 +1347,7 @@ exports.getVisibleLayers = getVisibleLayers;
 exports.setActiveLayer = setActiveLayer;
 exports.getActiveLayer = getActiveLayer;
 
-var _jquery = __webpack_require__(1);
-
-var _jquery2 = _interopRequireDefault(_jquery);
+var _externalModules = __webpack_require__(1);
 
 var _guid = __webpack_require__(50);
 
@@ -1392,7 +1388,7 @@ function triggerEvent(eventName, enabledElement, layerId) {
     layerId: layerId
   };
 
-  (0, _jquery2.default)(element).trigger(eventName, eventData);
+  (0, _externalModules.$)(element).trigger(eventName, eventData);
 }
 
 /**
@@ -1799,9 +1795,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _jquery = __webpack_require__(1);
-
-var _jquery2 = _interopRequireDefault(_jquery);
+var _externalModules = __webpack_require__(1);
 
 var _events = __webpack_require__(11);
 
@@ -1856,12 +1850,12 @@ function purgeCacheIfNecessary() {
     delete imageCache[lastCachedImage.imageId];
     cachedImages.pop();
 
-    (0, _jquery2.default)(_events2.default).trigger('CornerstoneWebGLTextureRemoved', { imageId: lastCachedImage.imageId });
+    (0, _externalModules.$)(_events2.default).trigger('CornerstoneWebGLTextureRemoved', { imageId: lastCachedImage.imageId });
   }
 
   var cacheInfo = getCacheInfo();
 
-  (0, _jquery2.default)(_events2.default).trigger('CornerstoneWebGLTextureCacheFull', cacheInfo);
+  (0, _externalModules.$)(_events2.default).trigger('CornerstoneWebGLTextureCacheFull', cacheInfo);
 }
 
 function setMaximumSizeBytes(numBytes) {
@@ -2234,7 +2228,7 @@ exports.default = function (element, fitViewportToWindow) {
     element: element
   };
 
-  (0, _jquery2.default)(element).trigger('CornerstoneElementResized', eventData);
+  (0, _externalModules.$)(element).trigger('CornerstoneElementResized', eventData);
 
   if (enabledElement.image === undefined) {
     return;
@@ -2247,9 +2241,7 @@ exports.default = function (element, fitViewportToWindow) {
   }
 };
 
-var _jquery = __webpack_require__(1);
-
-var _jquery2 = _interopRequireDefault(_jquery);
+var _externalModules = __webpack_require__(1);
 
 var _enabledElements = __webpack_require__(0);
 
@@ -2290,10 +2282,16 @@ function setCanvasSize(element, canvas) {
   }
   */
 
-  canvas.width = element.clientWidth;
-  canvas.height = element.clientHeight;
-  canvas.style.width = element.clientWidth + 'px';
-  canvas.style.height = element.clientHeight + 'px';
+  // Avoid setting the same value because it flashes the canvas with IE and Edge
+  if (canvas.width !== element.clientWidth) {
+    canvas.width = element.clientWidth;
+    canvas.style.width = element.clientWidth + 'px';
+  }
+  // Avoid setting the same value because it flashes the canvas with IE and Edge
+  if (canvas.height !== element.clientHeight) {
+    canvas.height = element.clientHeight;
+    canvas.style.height = element.clientHeight + 'px';
+  }
 }
 
 /**
@@ -3422,7 +3420,7 @@ function LookupTable() {
       dIndex = (v + p.Shift) * p.Scale;
     }
 
-    return Math.round(dIndex);
+    return Math.floor(dIndex);
   };
 
   this.getIndex = function (v) {
@@ -3546,9 +3544,7 @@ exports.getCacheInfo = getCacheInfo;
 exports.purgeCache = purgeCache;
 exports.changeImageIdCacheSize = changeImageIdCacheSize;
 
-var _jquery = __webpack_require__(1);
-
-var _jquery2 = _interopRequireDefault(_jquery);
+var _externalModules = __webpack_require__(1);
 
 var _events = __webpack_require__(11);
 
@@ -3607,12 +3603,12 @@ function purgeCacheIfNecessary() {
 
     removeImagePromise(imageId);
 
-    (0, _jquery2.default)(_events2.default).trigger('CornerstoneImageCachePromiseRemoved', { imageId: imageId });
+    (0, _externalModules.$)(_events2.default).trigger('CornerstoneImageCachePromiseRemoved', { imageId: imageId });
   }
 
   var cacheInfo = getCacheInfo();
 
-  (0, _jquery2.default)(_events2.default).trigger('CornerstoneImageCacheFull', cacheInfo);
+  (0, _externalModules.$)(_events2.default).trigger('CornerstoneImageCacheFull', cacheInfo);
 }
 
 function putImagePromise(imageId, imagePromise) {
@@ -4846,8 +4842,8 @@ function storedPixelDataToImageData(image) {
     for (var i = 0; i < pixelData.length; i++) {
         var val = Math.abs(pixelData[i]);
 
-        data[offset++] = parseInt(val & 0xFF, 10);
-        data[offset++] = parseInt(val >> 8, 10);
+        data[offset++] = val & 0xFF;
+        data[offset++] = val >> 8;
         data[offset++] = pixelData[i] < 0 ? 0 : 1; // 0 For negative, 1 for positive
     }
 
@@ -4908,7 +4904,7 @@ function storedPixelDataToImageData(image) {
     var offset = 0;
 
     for (var i = 0; i < pixelData.length; i++) {
-        data[offset++] = parseInt(pixelData[i], 10);
+        data[offset++] = pixelData[i];
         data[offset++] = pixelData[i] < 0 ? 0 : 1; // 0 For negative, 1 for positive
     }
 
@@ -5050,8 +5046,8 @@ function storedPixelDataToImageData(image) {
     for (var i = 0; i < pixelData.length; i++) {
         var val = pixelData[i];
 
-        data[offset++] = parseInt(val & 0xFF, 10);
-        data[offset++] = parseInt(val >> 8, 10);
+        data[offset++] = val & 0xFF;
+        data[offset++] = val >> 8;
     }
 
     return data;
@@ -5103,15 +5099,7 @@ var uint8Shader = {};
  */
 function storedPixelDataToImageData(image) {
     // Transfer image data to alpha channel of WebGL texture
-    // Store data in Uint8Array
-    var pixelData = image.getPixelData();
-    var data = new Uint8Array(pixelData.length);
-
-    for (var i = 0; i < pixelData.length; i++) {
-        data[i] = parseInt(pixelData[i], 10);
-    }
-
-    return data;
+    return image.getPixelData();
 }
 
 var uint8DataUtilities = exports.uint8DataUtilities = {
@@ -5213,7 +5201,7 @@ exports.default = function (element) {
         element: element
       };
 
-      (0, _jquery2.default)(element).trigger('CornerstoneElementDisabled', eventData);
+      (0, _externalModules.$)(element).trigger('CornerstoneElementDisabled', eventData);
 
       // Remove the child DOM elements that we created (e.g.canvas)
       enabledElements[i].element.removeChild(enabledElements[i].canvas);
@@ -5227,13 +5215,9 @@ exports.default = function (element) {
   }
 };
 
-var _jquery = __webpack_require__(1);
-
-var _jquery2 = _interopRequireDefault(_jquery);
+var _externalModules = __webpack_require__(1);
 
 var _enabledElements = __webpack_require__(0);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
 /* 49 */
@@ -5297,14 +5281,12 @@ exports.default = function (element, image, viewport) {
     frameRate: frameRate
   };
 
-  (0, _jquery2.default)(enabledElement.element).trigger('CornerstoneNewImage', newImageEventData);
+  (0, _externalModules.$)(enabledElement.element).trigger('CornerstoneNewImage', newImageEventData);
 
   (0, _updateImage2.default)(element);
 };
 
-var _jquery = __webpack_require__(1);
-
-var _jquery2 = _interopRequireDefault(_jquery);
+var _externalModules = __webpack_require__(1);
 
 var _enabledElements = __webpack_require__(0);
 
@@ -5466,7 +5448,7 @@ exports.default = function (element, options) {
       return;
     }
 
-    (0, _jquery2.default)(enabledElement.element).trigger('CornerstonePreRender', {
+    (0, _externalModules.$)(enabledElement.element).trigger('CornerstonePreRender', {
       enabledElement: enabledElement,
       timestamp: timestamp
     });
@@ -5481,9 +5463,7 @@ exports.default = function (element, options) {
   draw();
 };
 
-var _jquery = __webpack_require__(1);
-
-var _jquery2 = _interopRequireDefault(_jquery);
+var _externalModules = __webpack_require__(1);
 
 var _enabledElements = __webpack_require__(0);
 
@@ -5583,12 +5563,10 @@ exports.default = function (enabledElement, invalidated) {
   enabledElement.invalid = false;
   enabledElement.needsRedraw = false;
 
-  (0, _jquery2.default)(element).trigger('CornerstoneImageRendered', eventData);
+  (0, _externalModules.$)(element).trigger('CornerstoneImageRendered', eventData);
 };
 
-var _jquery = __webpack_require__(1);
-
-var _jquery2 = _interopRequireDefault(_jquery);
+var _externalModules = __webpack_require__(1);
 
 var _now = __webpack_require__(5);
 
@@ -5981,9 +5959,7 @@ exports.loadAndCacheImage = loadAndCacheImage;
 exports.registerImageLoader = registerImageLoader;
 exports.registerUnknownImageLoader = registerUnknownImageLoader;
 
-var _jquery = __webpack_require__(1);
-
-var _jquery2 = _interopRequireDefault(_jquery);
+var _externalModules = __webpack_require__(1);
 
 var _imageCache = __webpack_require__(33);
 
@@ -5993,9 +5969,11 @@ var _events2 = _interopRequireDefault(_events);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var imageLoaders = {}; /**
-                        * This module deals with ImageLoaders, loading images and caching images
-                        */
+/**
+ * This module deals with ImageLoaders, loading images and caching images
+ */
+
+var imageLoaders = {};
 
 var unknownImageLoader = void 0;
 
@@ -6030,7 +6008,7 @@ function loadImageFromImageLoader(imageId, options) {
 
   // Broadcast an image loaded event once the image is loaded
   imagePromise.then(function (image) {
-    (0, _jquery2.default)(_events2.default).trigger('CornerstoneImageLoaded', { image: image });
+    (0, _externalModules.$)(_events2.default).trigger('CornerstoneImageLoaded', { image: image });
   });
 
   return imagePromise;
@@ -6136,16 +6114,12 @@ exports.default = function (element) {
     element: element
   };
 
-  (0, _jquery2.default)(element).trigger('CornerstoneInvalidated', eventData);
+  (0, _externalModules.$)(element).trigger('CornerstoneInvalidated', eventData);
 };
 
-var _jquery = __webpack_require__(1);
-
-var _jquery2 = _interopRequireDefault(_jquery);
+var _externalModules = __webpack_require__(1);
 
 var _enabledElements = __webpack_require__(0);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
 /* 63 */
