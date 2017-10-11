@@ -44,7 +44,7 @@ function getScaleRatio (baseImage, targetImage) {
 
 /**
  * Adjusts an image's scale and translation so the image is centered and all pixels
- * in the image are viewable.
+ * in the image (or in the layer baseLayerId if defined) are viewable.
  *
  * @param {HTMLElement} element The Cornerstone element to update
  * @param {Object} baseLayerId The layer to fit to window
