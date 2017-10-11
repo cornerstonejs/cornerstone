@@ -1,4 +1,4 @@
-import $ from '../jquery.js';
+import { $ } from '../externalModules.js';
 import events from '../events.js';
 
 /**
