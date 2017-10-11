@@ -39,6 +39,9 @@ function getDisplayedWidth (viewport, image) {
  * @returns {Number} The scale ratio
  */
 function getScaleRatio (baseImage, targetImage) {
+  if (!targetImage.columnPixelSpacing || !baseImage.columnPixelSpacing) {
+    return 1;
+  }
   return targetImage.columnPixelSpacing / baseImage.columnPixelSpacing;
 }
 
