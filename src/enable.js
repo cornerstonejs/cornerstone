@@ -1,13 +1,13 @@
-/**
- * This module is responsible for enabling an element to display images with cornerstone
- */
 
-import $ from './jquery.js';
+import { $ } from './externalModules.js';
 import { addEnabledElement } from './enabledElements.js';
 import resize from './resize.js';
 import drawImageSync from './internal/drawImageSync.js';
 import requestAnimationFrame from './internal/requestAnimationFrame.js';
 import webGL from './webgl/index.js';
+/**
+ * This module is responsible for enabling an element to display images with cornerstone
+ */
 
 function hasImageOrLayers (enabledElement) {
   return enabledElement.image !== undefined || enabledElement.layers.length;

@@ -1,3 +1,6 @@
+import { $ } from './externalModules.js';
+import events from './events.js';
+
 /**
  * This module deals with caching images
  */
@@ -9,9 +12,6 @@ const imageCacheDict = {};
 
 // Array of cachedImage objects
 export const cachedImages = [];
-
-import $ from './jquery.js';
-import events from './events.js';
 
 export function setMaximumSizeBytes (numBytes) {
   if (numBytes === undefined) {
