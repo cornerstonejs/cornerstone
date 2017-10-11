@@ -32,15 +32,14 @@ function getDisplayedWidth (viewport, image) {
 }
 
 /**
- * Retrieves the scale ratio to use, to obtain the same displayed dimensions
+ * Retrieves the scale ratio to display targetImage with same dimensions as baseImage
  *
  * @param {Object} baseImage An Image loaded by a Cornerstone Image Loader
  * @param {Object} targetImage An Image loaded by a Cornerstone Image Loader
  * @returns {Number} The scale ratio
  */
-function getColRelative (baseImage, targetImage) {
-  return (targetImage.columnPixelSpacing * targetImage.width) /
-         (baseImage.columnPixelSpacing * baseImage.width);
+function getScaleRatio (baseImage, targetImage) {
+  return targetImage.columnPixelSpacing / baseImage.columnPixelSpacing;
 }
 
 /**
@@ -69,16 +68,16 @@ export default function (element, baseLayerId) {
   // The new scale is the minimum of the horizontal and vertical scale values
   const verticalRatio = enabledElement.canvas.height / getDisplayedHeight(enabledElement.viewport, baseImage);
   const horizontalRatio = enabledElement.canvas.width / getDisplayedWidth(enabledElement.viewport, baseImage);
-  const canvasToBaseLayer = Math.min(horizontalRatio, verticalRatio);
+  const baseImageScale = Math.min(horizontalRatio, verticalRatio);
 
   // Rescale the viewport
-  enabledElement.viewport.scale = canvasToBaseLayer * getColRelative(enabledElement.image, baseImage);
+  enabledElement.viewport.scale = baseImageScale * getScaleRatio(baseImage, enabledElement.image);
   enabledElement.viewport.translation.x = 0;
   enabledElement.viewport.translation.y = 0;
 
   // Rescale the layers
   layers.forEach((layer) => {
-    layer.viewport.scale = enabledElement.viewport.scale * getColRelative(layer.image, enabledElement.image);
+    layer.viewport.scale = enabledElement.viewport.scale * getScaleRatio(enabledElement.image, layer.image);
     layer.viewport.translation.x = 0;
     layer.viewport.translation.y = 0;
   });
