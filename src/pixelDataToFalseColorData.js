@@ -58,6 +58,7 @@ export default function (image, lookupTable) {
   image.rgba = true;
   image.lut = undefined;
   image.slope = 1;
+  image.intercept = 0;
   image.minPixelValue = 0;
   image.maxPixelValue = 255;
   image.windowWidth = 255;

@@ -24,8 +24,8 @@ function storedPixelDataToImageData (image) {
   for (let i = 0; i < pixelData.length; i++) {
     const val = pixelData[i];
 
-    data[offset++] = parseInt(val & 0xFF, 10);
-    data[offset++] = parseInt(val >> 8, 10);
+    data[offset++] = val & 0xFF;
+    data[offset++] = val >> 8;
   }
 
   return data;
