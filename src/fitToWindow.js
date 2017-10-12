@@ -46,20 +46,55 @@ function getScaleRatio (baseImage, targetImage) {
   return targetImage.columnPixelSpacing / baseImage.columnPixelSpacing;
 }
 
+function selectSmallestLayer (enabledElement, layers) {
+  if (!layers || !layers.length) {
+    return;
+  }
+
+  let verticalRatio, horizontalRatio, layerScale, viewportScale, largestViewportScale, smallestLayer;
+
+  layers.forEach((layer) => {
+    verticalRatio = enabledElement.canvas.height / getDisplayedHeight(enabledElement.viewport, layer.image);
+    horizontalRatio = enabledElement.canvas.width / getDisplayedWidth(enabledElement.viewport, layer.image);
+    layerScale = Math.min(horizontalRatio, verticalRatio);
+    viewportScale = layerScale * getScaleRatio(layer.image, enabledElement.image);
+
+    if (largestViewportScale === undefined || largestViewportScale < viewportScale) {
+      largestViewportScale = viewportScale;
+      smallestLayer = layer;
+    }
+  });
+
+  return smallestLayer.layerId;
+}
+
 /**
  * Adjusts an image's scale and translation so the image is centered and all pixels
  * in the image (or in the layer baseLayerId if defined) are viewable.
  *
  * @param {HTMLElement} element The Cornerstone element to update
- * @param {Object} baseLayerId The layer to fit to window
+ * @param {String} [baseLayerFilter] Filter to select the layer to fit to window
  * @returns {void}
  */
-export default function (element, baseLayerId) {
+export default function (element, baseLayerFilter) {
   const enabledElement = getEnabledElement(element);
   const layers = enabledElement.layers || [];
 
-  let baseLayer;
+  let baseLayer, baseLayerId;
   let baseImage = enabledElement.image;
+
+  if (baseLayerFilter !== undefined) {
+    switch (baseLayerFilter) {
+    case 'smallest':
+      // Select the smallest layer
+      baseLayerId = selectSmallestLayer(enabledElement, layers);
+      break;
+
+      // Filter is a layerId
+    default:
+      baseLayerId = baseLayerFilter;
+    }
+  }
 
   if (baseLayerId !== undefined) {
     baseLayer = layers.find((layer) => layer.layerId === baseLayerId);
