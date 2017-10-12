@@ -150,10 +150,6 @@ This library would be responsible for displaying the rendered image to the user.
 OHIF/Cornerstone is working with the 3DSlicer project to integrate the two.  I also expect to implement
 client side MPR at some point as the browsers seem to be handling large memory much better.
 
-_Why did you add jQuery as a dependency?_
-
-Primarily for its custom event handling. This is being transitioned out and will be gone for 2.0.0.
-
 _I would like to contribute code - how do I do this?_
 
 Fork the repository, make your change and submit a pull request.

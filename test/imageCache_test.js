@@ -2,9 +2,9 @@ import { assert } from 'chai';
 
 import { default as imageCache,
   setMaximumSizeBytes,
-  putImagePromise,
-  getImagePromise,
-  removeImagePromise,
+  putImageLoadObject,
+  getImageLoadObject,
+  removeImageLoadObject,
   getCacheInfo,
   // changeImageIdCacheSize,
   purgeCache } from '../src/imageCache.js';
@@ -42,13 +42,16 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
 
   beforeEach(function () {
     // Arrange
-
-    // Note: we are currently using Deferred because it allows us to reject
-    // the Promises.
-    this.imagePromise = $.Deferred();
     this.image = {
       imageId: 'anImageId',
       sizeInBytes: 100
+    };
+
+    this.imageLoadObject = {
+      promise: new Promise((resolve) => {
+        resolve(this.image);
+      }),
+      cancelFn: undefined
     };
   });
 
@@ -56,13 +59,13 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
     purgeCache();
   });
 
-  it('should allow image promises to be added to the cache (putImagePromise)', function (done) {
+  it('should allow image promises to be added to the cache (putImageLoadObject)', function (done) {
     const image = this.image;
-    const imagePromise = this.imagePromise;
+    const imageLoadObject = this.imageLoadObject;
 
     // Act
-    putImagePromise(image.imageId, imagePromise);
-    imagePromise.resolve(image).then(() => {
+    putImageLoadObject(image.imageId, imageLoadObject);
+    imageLoadObject.promise.then(() => {
       // Assert
       const cacheInfo = getCacheInfo();
 
@@ -75,10 +78,10 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
   it('should not change cache size if sizeInBytes is undefined (putImagePromise)', function (done) {
     // Arrange
     this.image.sizeInBytes = undefined;
-    putImagePromise(this.image.imageId, this.imagePromise);
+    putImageLoadObject(this.image.imageId, this.imageLoadObject);
 
     // Act
-    this.imagePromise.resolve(this.image).then(() => {
+    this.imageLoadObject.promise.then(() => {
       const cacheInfo = getCacheInfo();
 
       // Assert
@@ -92,10 +95,10 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
   it('should not change cache size if sizeInBytes is not a number (putImagePromise)', function (done) {
     // Arrange
     this.image.sizeInBytes = '10000';
-    putImagePromise(this.image.imageId, this.imagePromise);
+    putImageLoadObject(this.image.imageId, this.imageLoadObject);
 
     // Act
-    this.imagePromise.resolve(this.image).then(() => {
+    this.imageLoadObject.promise.then(() => {
       const cacheInfo = getCacheInfo();
 
       // Assert
@@ -106,62 +109,62 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
     });
   });
 
-  it('should throw an error if imageId is not defined (putImagePromise)', function () {
+  it('should throw an error if imageId is not defined (putImageLoadObject)', function () {
     // Assert
-    assert.throws(() => putImagePromise(undefined, this.imagePromise));
+    assert.throws(() => putImageLoadObject(undefined, this.imageLoadObject));
   });
 
-  it('should throw an error if imagePromise is not defined (putImagePromise)', function () {
+  it('should throw an error if imagePromise is not defined (putImageLoadObject)', function () {
     // Assert
-    assert.throws(() => putImagePromise(this.image.imageId, undefined));
+    assert.throws(() => putImageLoadObject(this.image.imageId, undefined));
   });
 
-  it('should throw an error if imageId is already in the cache (putImagePromise)', function () {
+  it('should throw an error if imageId is already in the cache (putImageLoadObject)', function () {
     // Arrange
-    putImagePromise(this.image.imageId, this.imagePromise);
+    putImageLoadObject(this.image.imageId, this.imageLoadObject);
 
     // Assert
-    assert.throws(() => putImagePromise(this.image.imageId, this.imagePromise));
+    assert.throws(() => putImageLoadObject(this.image.imageId, this.imageLoadObject));
   });
 
-  it('should allow image promises to be retrieved from the cache (getImagePromise)', function () {
+  it('should allow image promises to be retrieved from the cache (getImageLoadObject()', function () {
     const image = this.image;
-    const imagePromise = this.imagePromise;
+    const imageLoadObject = this.imageLoadObject;
 
     // Act
-    putImagePromise(image.imageId, imagePromise);
+    putImageLoadObject(image.imageId, imageLoadObject);
 
     // Assert
-    const retrievedPromise = getImagePromise(image.imageId);
+    const retrievedImageLoadObject = getImageLoadObject(image.imageId);
 
-    assert.equal(imagePromise, retrievedPromise);
+    assert.equal(imageLoadObject, retrievedImageLoadObject);
   });
 
-  it('should throw an error if imageId is not defined (getImagePromise)', function () {
+  it('should throw an error if imageId is not defined (getImageLoadObject()', function () {
     // Assert
-    assert.throws(() => getImagePromise(undefined));
+    assert.throws(() => getImageLoadObject(undefined));
   });
 
   it('should fail silently to retrieve a promise for an imageId not in the cache', function () {
     // Act
-    const retrievedPromise = getImagePromise('AnImageIdNotInCache');
+    const retrievedImageLoadObject = getImageLoadObject('AnImageIdNotInCache');
 
     // Assert
-    assert.isUndefined(retrievedPromise, undefined);
+    assert.isUndefined(retrievedImageLoadObject, undefined);
   });
 
   it('should allow image promises to be removed from the cache (removeImagePromise)', function () {
     const image = this.image;
-    const imagePromise = this.imagePromise;
+    const imageLoadObject = this.imageLoadObject;
 
     // Arrange
-    putImagePromise(image.imageId, imagePromise);
+    putImageLoadObject(image.imageId, imageLoadObject);
 
     // Act
-    removeImagePromise(image.imageId);
+    removeImageLoadObject(image.imageId);
 
     // Assert
-    imagePromise.then(() => {
+    imageLoadObject.promise.then(() => {
       // Fail if the Promise is resolved.
       assert.equal(true, false);
     });
@@ -174,22 +177,22 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
   });
 
   it('should fail if imageId is not defined (removeImagePromise)', function () {
-    assert.throws(() => removeImagePromise(undefined));
+    assert.throws(() => removeImageLoadObject(undefined));
   });
 
   it('should fail if imageId is not in cache (removeImagePromise)', function () {
-    assert.throws(() => removeImagePromise('RandomImageId'));
+    assert.throws(() => removeImageLoadObject('RandomImageId'));
   });
 
   /* it('should allow image promises to have their cache size changed', function () {
     const image = this.image;
-    const imagePromise = this.imagePromise;
+    const imageLoadObject = this.imageLoadObject;
     const newCacheSize = 500;
 
     // Arrange
-    putImagePromise(image.imageId, imagePromise);
+    putImageLoadObject(image.imageId, imageLoadObject);
 
-    imagePromise.resolve(image);
+    // Act
     changeImageIdCacheSize(image.imageId, newCacheSize);
 
     const cacheInfo = getCacheInfo();
@@ -197,15 +200,15 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
     assert.equal(cacheInfo.numberOfImagesCached, 1);
     assert.equal(image.sizeInBytes, newCacheSize);
     assert.equal(cacheInfo.cacheSizeInBytes, newCacheSize);
-  });*/
+  }); */
 
   it('should be able to purge the entire cache', function (done) {
     const image = this.image;
-    const imagePromise = this.imagePromise;
+    const imageLoadObject = this.imageLoadObject;
 
     // Arrange
-    putImagePromise(image.imageId, imagePromise);
-    imagePromise.resolve(image).then(() => {
+    putImageLoadObject(image.imageId, imageLoadObject);
+    imageLoadObject.promise.then(() => {
       // Act
       purgeCache();
 
@@ -221,13 +224,13 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
 
   it('should be able to kick the oldest image out of the cache', function (done) {
     // Arrange
-    setMaximumSizeBytes(1000);
-
+    const maxCacheSize = 1000;
     const promises = [];
+
+    setMaximumSizeBytes(maxCacheSize);
 
     for (let i = 0; i < 10; i++) {
       // Create the image
-      const imagePromise = $.Deferred();
       const image = {
         imageId: `imageId-${i}`,
         sizeInBytes: 100
@@ -235,19 +238,27 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
 
       image.decache = () => console.log('decaching image');
 
-      // Add it to the cache
-      putImagePromise(image.imageId, imagePromise);
-      imagePromise.resolve(image);
-      promises.push(imagePromise.promise());
+      const imageLoadObject = {
+        promise: new Promise((resolve) => {
+          resolve(image);
+        }),
+        cancelFn: undefined
+      };
+
+        // Add it to the cache
+      putImageLoadObject(image.imageId, imageLoadObject);
+      promises.push(imageLoadObject.promise);
     }
 
     // Retrieve a few of the imagePromises in order to bump their timestamps
-    getImagePromise('imageId-5');
-    getImagePromise('imageId-4');
-    getImagePromise('imageId-6');
+    getImageLoadObject('imageId-5');
+    getImageLoadObject('imageId-4');
+    getImageLoadObject('imageId-6');
 
     // Setup event listeners to check that the promise removed and cache full events have fired properly
-    $(events).one('CornerstoneImageCachePromiseRemoved', (event, imageId) => {
+    events.addEventListener('cornerstoneimagecachepromiseremoved', (event) => {
+      const imageId = event.detail.imageId;
+
       // Detect that the earliest image added has been removed
 
       // TODO: Figure out how to change the test setup to ensure the same
@@ -259,26 +270,29 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
       done();
     });
 
-    $(events).one('CornerstoneImageCacheFull', (event, cacheInfo) => {
-      const currentInfo = getCacheInfo();
-
-      assert.equal(cacheInfo, currentInfo);
-      console.log('CornerstoneImageCacheFull');
+    events.addEventListener('cornerstoneimagecachefull', (event) => {
+      assert.equal(event.detail.numberOfImagesCached, 10);
+      assert.equal(event.detail.cacheSizeInBytes, maxCacheSize);
       done();
     });
 
     // Act
     // Create another image which will push us over the cache limit
-    const extraImagePromise = $.Deferred();
     const extraImage = {
       imageId: 'imageId-11',
       sizeInBytes: 100
     };
 
+    const extraImageLoadObject = {
+      promise: new Promise((resolve) => {
+        resolve(extraImage);
+      }),
+      cancelFn: undefined
+    };
+
     Promise.all(promises).then(() => {
       // Add it to the cache
-      putImagePromise(extraImage.imageId, extraImagePromise);
-      extraImagePromise.resolve(extraImage);
+      putImageLoadObject(extraImage.imageId, extraImageLoadObject);
 
       // Make sure that the cache has pushed out the first image
       const cacheInfo = getCacheInfo();

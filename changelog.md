@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- *Breaking Change!!!* Removed jQuery events from triggerEvent, lower-cased all the event names.
+
+### Removed
+- Removed 'commonjs2' parameter from webpack output.library options because it was complaining.
+- Removed 'externals' since we no longer use jQuery
+
 ## [1.1.4] - 2017-12-08
 ### Added
 - Added the ESLint plugin 'eslint-plugin-import' to keep us from forgetting .js on our imports. The file extension is required when using native ES6 modules in the browser.

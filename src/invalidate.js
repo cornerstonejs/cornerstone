@@ -19,5 +19,5 @@ export default function (element) {
     element
   };
 
-  triggerEvent(element, 'CornerstoneInvalidated', eventData);
+  triggerEvent(element, 'cornerstoneinvalidated', eventData);
 }

@@ -79,7 +79,7 @@ export default function (element, options) {
       timestamp
     };
 
-    triggerEvent(enabledElement.element, 'CornerstonePreRender', eventDetails);
+    triggerEvent(enabledElement.element, 'cornerstoneprerender', eventDetails);
 
     if (enabledElement.needsRedraw && hasImageOrLayers(enabledElement)) {
       drawImageSync(enabledElement, enabledElement.invalid);
