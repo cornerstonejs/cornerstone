@@ -3923,9 +3923,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.cachedImages = undefined;
 exports.setMaximumSizeBytes = setMaximumSizeBytes;
-exports.putImagePromise = putImagePromise;
-exports.getImagePromise = getImagePromise;
-exports.removeImagePromise = removeImagePromise;
+exports.putImageLoadObject = putImageLoadObject;
+exports.getImageLoadObject = getImageLoadObject;
+exports.removeImageLoadObject = removeImageLoadObject;
 exports.getCacheInfo = getCacheInfo;
 exports.purgeCache = purgeCache;
 exports.changeImageIdCacheSize = changeImageIdCacheSize;
@@ -3992,7 +3992,7 @@ function purgeCacheIfNecessary() {
     var lastCachedImage = cachedImages[cachedImages.length - 1];
     var imageId = lastCachedImage.imageId;
 
-    removeImagePromise(imageId);
+    removeImageLoadObject(imageId);
 
     (0, _triggerEvent2.default)(_events2.default, 'CornerstoneImageCachePromiseRemoved', { imageId: imageId });
   }
@@ -4002,22 +4002,25 @@ function purgeCacheIfNecessary() {
   (0, _triggerEvent2.default)(_events2.default, 'CornerstoneImageCacheFull', cacheInfo);
 }
 
-function putImagePromise(imageId, imagePromise) {
+function putImageLoadObject(imageId, imageLoadObject) {
   if (imageId === undefined) {
-    throw new Error('putImagePromise: imageId must not be undefined');
+    throw new Error('putImageLoadObject: imageId must not be undefined');
   }
-  if (imagePromise === undefined) {
-    throw new Error('putImagePromise: imagePromise must not be undefined');
+  if (imageLoadObject.promise === undefined) {
+    throw new Error('putImageLoadObject: imageLoadObject.promise must not be undefined');
   }
   if (imageCacheDict.hasOwnProperty(imageId) === true) {
-    throw new Error('putImagePromise: imageId already in cache');
+    throw new Error('putImageLoadObject: imageId already in cache');
+  }
+  if (imageLoadObject.cancelFn && typeof imageLoadObject.cancelFn !== 'function') {
+    throw new Error('putImageLoadObject: imageLoadObject.cancelFn must be a function');
   }
 
   var cachedImage = {
     loaded: false,
     imageId: imageId,
     sharedCacheKey: undefined, // The sharedCacheKey for this imageId.  undefined by default
-    imagePromise: imagePromise,
+    imageLoadObject: imageLoadObject,
     timeStamp: Date.now(),
     sizeInBytes: 0
   };
@@ -4025,7 +4028,7 @@ function putImagePromise(imageId, imagePromise) {
   imageCacheDict[imageId] = cachedImage;
   cachedImages.push(cachedImage);
 
-  imagePromise.then(function (image) {
+  imageLoadObject.promise.then(function (image) {
     if (cachedImages.indexOf(cachedImage) === -1) {
       // If the image has been purged before being loaded, we stop here.
       return;
@@ -4035,10 +4038,10 @@ function putImagePromise(imageId, imagePromise) {
     cachedImage.image = image;
 
     if (image.sizeInBytes === undefined) {
-      throw new Error('putImagePromise: sizeInBytes must not be undefined');
+      throw new Error('putImageLoadObject: image.sizeInBytes must not be undefined');
     }
     if (image.sizeInBytes.toFixed === undefined) {
-      throw new Error('putImagePromise: image.sizeInBytes is not a number');
+      throw new Error('putImageLoadObject: image.sizeInBytes is not a number');
     }
 
     cachedImage.sizeInBytes = image.sizeInBytes;
@@ -4054,12 +4057,17 @@ function putImagePromise(imageId, imagePromise) {
     cachedImage.sharedCacheKey = image.sharedCacheKey;
 
     purgeCacheIfNecessary();
+  }, function () {
+    var cachedImage = imageCacheDict[imageId];
+
+    cachedImages.splice(cachedImages.indexOf(cachedImage), 1);
+    delete imageCacheDict[imageId];
   });
 }
 
-function getImagePromise(imageId) {
+function getImageLoadObject(imageId) {
   if (imageId === undefined) {
-    throw new Error('getImagePromise: imageId must not be undefined');
+    throw new Error('getImageLoadObject: imageId must not be undefined');
   }
   var cachedImage = imageCacheDict[imageId];
 
@@ -4070,20 +4078,19 @@ function getImagePromise(imageId) {
   // Bump time stamp for cached image
   cachedImage.timeStamp = Date.now();
 
-  return cachedImage.imagePromise;
+  return cachedImage.imageLoadObject;
 }
 
-function removeImagePromise(imageId) {
+function removeImageLoadObject(imageId) {
   if (imageId === undefined) {
-    throw new Error('removeImagePromise: imageId must not be undefined');
+    throw new Error('removeImageLoadObject: imageId must not be undefined');
   }
   var cachedImage = imageCacheDict[imageId];
 
   if (cachedImage === undefined) {
-    throw new Error('removeImagePromise: imageId was not present in imageCache');
+    throw new Error('removeImageLoadObject: imageId was not present in imageCache');
   }
 
-  cachedImage.imagePromise.reject();
   cachedImages.splice(cachedImages.indexOf(cachedImage), 1);
   cacheSizeInBytes -= cachedImage.sizeInBytes;
 
@@ -4093,7 +4100,7 @@ function removeImagePromise(imageId) {
   };
 
   (0, _triggerEvent2.default)(_events2.default, 'CornerstoneImageCacheChanged', eventDetails);
-  decache(cachedImage.imagePromise);
+  decache(cachedImage.imageLoadObject.promise);
 
   delete imageCacheDict[imageId];
 }
@@ -4106,7 +4113,7 @@ function getCacheInfo() {
   };
 }
 
-// This method should only be called by `removeImagePromise` because it's
+// This method should only be called by `removeImageLoadObject` because it's
 // The one that knows how to deal with shared cache keys and cache size.
 function decache(imagePromise) {
   imagePromise.then(function (image) {
@@ -4120,7 +4127,7 @@ function purgeCache() {
   while (cachedImages.length > 0) {
     var removedCachedImage = cachedImages[0];
 
-    removeImagePromise(removedCachedImage.imageId);
+    removeImageLoadObject(removedCachedImage.imageId);
   }
 }
 
@@ -4128,7 +4135,7 @@ function changeImageIdCacheSize(imageId, newCacheSize) {
   var cacheEntry = imageCacheDict[imageId];
 
   if (cacheEntry) {
-    cacheEntry.imagePromise.then(function (image) {
+    cacheEntry.imageLoadObject.promise.then(function (image) {
       var cacheSizeDifference = newCacheSize - image.sizeInBytes;
 
       image.sizeInBytes = newCacheSize;
@@ -4149,9 +4156,9 @@ exports.default = {
   imageCache: imageCacheDict,
   cachedImages: cachedImages,
   setMaximumSizeBytes: setMaximumSizeBytes,
-  putImagePromise: putImagePromise,
-  getImagePromise: getImagePromise,
-  removeImagePromise: removeImagePromise,
+  putImageLoadObject: putImageLoadObject,
+  getImageLoadObject: getImageLoadObject,
+  removeImageLoadObject: removeImageLoadObject,
   getCacheInfo: getCacheInfo,
   purgeCache: purgeCache,
   changeImageIdCacheSize: changeImageIdCacheSize
@@ -6557,26 +6564,30 @@ function loadImageFromImageLoader(imageId, options) {
   var colonIndex = imageId.indexOf(':');
   var scheme = imageId.substring(0, colonIndex);
   var loader = imageLoaders[scheme];
-  var imagePromise = void 0;
 
   if (loader === undefined || loader === null) {
     if (unknownImageLoader !== undefined) {
-      imagePromise = unknownImageLoader(imageId);
-
-      return imagePromise;
+      return unknownImageLoader(imageId);
     }
 
     throw new Error('loadImageFromImageLoader: no image loader for imageId');
   }
 
-  imagePromise = loader(imageId, options);
+  var imageLoadObject = loader(imageId, options);
 
   // Broadcast an image loaded event once the image is loaded
-  imagePromise.then(function (image) {
+  imageLoadObject.promise.then(function (image) {
     (0, _triggerEvent2.default)(_events2.default, 'CornerstoneImageLoaded', { image: image });
+  }, function (error) {
+    var errorObject = {
+      imageId: imageId,
+      error: error
+    };
+
+    (0, _triggerEvent2.default)(_events2.default, 'CornerstoneImageLoadFailed', errorObject);
   });
 
-  return imagePromise;
+  return imageLoadObject;
 }
 
 /**
@@ -6593,15 +6604,13 @@ function loadImage(imageId, options) {
     throw new Error('loadImage: parameter imageId must not be undefined');
   }
 
-  var imagePromise = (0, _imageCache.getImagePromise)(imageId);
+  var imageLoadObject = (0, _imageCache.getImageLoadObject)(imageId);
 
-  if (imagePromise !== undefined) {
-    return imagePromise;
+  if (imageLoadObject !== undefined) {
+    return imageLoadObject.promise;
   }
 
-  imagePromise = loadImageFromImageLoader(imageId, options);
-
-  return imagePromise;
+  return loadImageFromImageLoader(imageId, options).promise;
 }
 
 //
@@ -6613,24 +6622,24 @@ function loadImage(imageId, options) {
  * @param {String} imageId A Cornerstone Image Object's imageId
  * @param {Object} [options] Options to be passed to the Image Loader
  *
- * @returns {Deferred} A jQuery Deferred which can be used to act after an image is loaded or loading fails
+ * @returns {Object} Image Loader Object (TODO: define a JSDoc type for this)
  */
 function loadAndCacheImage(imageId, options) {
   if (imageId === undefined) {
     throw new Error('loadAndCacheImage: parameter imageId must not be undefined');
   }
 
-  var imagePromise = (0, _imageCache.getImagePromise)(imageId);
+  var imageLoadObject = (0, _imageCache.getImageLoadObject)(imageId);
 
-  if (imagePromise !== undefined) {
-    return imagePromise;
+  if (imageLoadObject !== undefined) {
+    return imageLoadObject.promise;
   }
 
-  imagePromise = loadImageFromImageLoader(imageId, options);
+  imageLoadObject = loadImageFromImageLoader(imageId, options);
 
-  (0, _imageCache.putImagePromise)(imageId, imagePromise);
+  (0, _imageCache.putImageLoadObject)(imageId, imageLoadObject);
 
-  return imagePromise;
+  return imageLoadObject.promise;
 }
 
 /**

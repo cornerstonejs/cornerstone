@@ -110,12 +110,15 @@
                 sizeInBytes: width * height * 2
             };
 
-            // Create a deferred object, resolve it with the image object we just created and return the
-            // deferred to cornerstone.  Cornerstone will get the image object by calling then() on the
-            // deferred
-            var deferred = $.Deferred();
-            deferred.resolve(image);
-            return deferred;
+            // Create a Promise, resolve it with the image object we just created and return the
+            // Promise to cornerstone.  Cornerstone will get the image object by calling then() on the
+            // Promise. An optional function can be provided to allow the image loader to cancel a request.
+            return {
+              promise: new Promise((resolve) => {
+                resolve(image);
+              }),
+              cancelFn: undefined
+            };
         }
 
         cornerstone.registerImageLoader('myImageLoader', loadImage);
