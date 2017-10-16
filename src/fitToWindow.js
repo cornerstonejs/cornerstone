@@ -39,7 +39,7 @@ function getDisplayedWidth (viewport, image) {
  * @returns {Number} The scale ratio
  */
 function getScaleRatio (baseImage, targetImage) {
-  if (!targetImage.columnPixelSpacing || !baseImage.columnPixelSpacing) {
+  if (targetImage === undefined || !targetImage.columnPixelSpacing || baseImage === undefined || !baseImage.columnPixelSpacing) {
     return 1;
   }
 
@@ -54,6 +54,9 @@ function selectSmallestLayer (enabledElement, layers) {
   let verticalRatio, horizontalRatio, layerScale, viewportScale, largestViewportScale, smallestLayer;
 
   layers.forEach((layer) => {
+    if (layer.image === undefined) {
+      return;
+    }
     verticalRatio = enabledElement.canvas.height / getDisplayedHeight(enabledElement.viewport, layer.image);
     horizontalRatio = enabledElement.canvas.width / getDisplayedWidth(enabledElement.viewport, layer.image);
     layerScale = Math.min(horizontalRatio, verticalRatio);
