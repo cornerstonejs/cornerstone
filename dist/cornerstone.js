@@ -5751,7 +5751,7 @@ function getShaderProgram(image) {
 }
 
 function generateTexture(image) {
-  console.log('Testing GL', gl);
+  console.log('TESTING GL', gl);
   var TEXTURE_FORMAT = {
     uint8: gl.LUMINANCE,
     int8: gl.LUMINANCE_ALPHA,
@@ -5759,6 +5759,8 @@ function generateTexture(image) {
     int16: gl.RGB,
     rgb: gl.RGB
   };
+
+  console.log('TEXTURE_FORMAT', TEXTURE_FORMAT);
 
   var TEXTURE_BYTES = {
     int8: 1, // Luminance
@@ -5796,11 +5798,14 @@ function generateTexture(image) {
 }
 
 function getImageTexture(image) {
+  console.log('GETTING TEXTURE');
   var imageTexture = _textureCache2.default.getImageTexture(image.imageId);
 
   if (!imageTexture) {
+    console.log('GENERATING TEXTURE');
     // Console.log("Generating texture for imageid: ", image.imageId);
     imageTexture = generateTexture(image);
+    console.log('TEXTURE GENERATED');
     _textureCache2.default.putImageTexture(image, imageTexture);
   }
 
@@ -5863,17 +5868,22 @@ function renderQuad(shader, parameters, texture, width, height) {
 }
 
 function render(enabledElement) {
+  console.log('RENDERING WITH WEBGL');
   // Resize the canvas
   var image = enabledElement.image;
 
   renderCanvas.width = image.width;
   renderCanvas.height = image.height;
 
+  console.log('GOT WIDTH AND HEIGHT');
+
   var viewport = enabledElement.viewport;
 
   // Render the current image
   var shader = getShaderProgram(image);
+  console.log('GOT SHADERS');
   var texture = getImageTexture(image);
+  console.log('GOT TEXTURE');
   var parameters = {
     u_resolution: { type: '2f',
       value: [image.width, image.height] },
