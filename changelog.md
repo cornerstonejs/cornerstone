@@ -1,3 +1,21 @@
+# Version 0.13.0
+
+- Removed the all `always` from imageCache's method decache to better stability
+- Stop putImagePromise() if the image has been purged before being loaded
+- Changed Webpack building file to output files as `cornerstone-core` for commonjs, commonjs2 and amd
+- Add jquery names for commonjs, commonjs2 and amd
+- Updated to Webpack 3
+- Bug fixes for drawing composite images
+- Bug fix for missing intercept value after false color mapping
+- Math.floor instead of Math.round, to have correct values when v < Range[0] or v > Range[1] for linearIndexLookupMain
+- Avoid setting canva's size with the same value, because it flashes the canvas with IE and Edge
+- Remove parseInt to convert the values of pixelData
+- Updated generateLut to generateLutNew
+- drawCompositeImage synchronizes viewport.hflip
+- Also synchronize vflip
+- Trigger CornerstoneImageCacheMaximumSizeChanged and CornerstoneImageCacheChanged events when changing conerstone image cache
+- Force cornerstone to generate a new LUT and use the color renderer after applying false color mapping
+
 # Version 0.12.2
 
 - Fix VOILUT rendering for Agfa images (issue #106)
