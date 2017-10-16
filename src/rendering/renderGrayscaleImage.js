@@ -170,6 +170,7 @@ export function renderGrayscaleImage (enabledElement, invalidated) {
         enabledElement.options.renderer.toLowerCase() === 'webgl') {
         // If this enabled element has the option set for WebGL, we should
         // User it as our renderer.
+    webGL.renderer.initRenderer();
     renderCanvas = webGL.renderer.render(enabledElement);
   } else {
         // If no options are set we will retrieve the renderCanvas through the
