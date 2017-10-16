@@ -29,8 +29,11 @@ export default function (element, options) {
 
   // If this enabled element has the option set for WebGL, we should
   // Check if this device actually supports it
+  console.log('HERE WE HAVE THE OPTIONS', options);
   if (options && options.renderer && options.renderer.toLowerCase() === 'webgl') {
+    console.log('OPTIONS OK');
     if (webGL.renderer.isWebGLAvailable()) {
+      console.log('WEBGL IS AVAILABLE, INITIALIZING');
       // If WebGL is available on the device, initialize the renderer
       // And return the renderCanvas from the WebGL rendering path
       webGL.renderer.initRenderer();

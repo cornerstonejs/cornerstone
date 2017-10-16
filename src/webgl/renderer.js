@@ -45,10 +45,12 @@ export function initRenderer () {
   }
 
   if (initWebGL(renderCanvas)) {
+    console.log('GL HAVE SOMETHING', gl);
     initBuffers();
     initShaders();
         // Console.log("WEBGL Renderer initialized!");
     isWebGLInitialized = true;
+    console.log('WEBGL IS INITIALIZED', isWebGLInitialized);
   }
 }
 
@@ -75,6 +77,7 @@ function handleRestoredContext (event) {
 
 function initWebGL (canvas) {
 
+  console.log('INITIALIZING GL');
   gl = null;
   try {
         // Try to grab the standard context. If it fails, fallback to experimental.
@@ -90,12 +93,18 @@ function initWebGL (canvas) {
 
     gl = canvas.getContext('webgl', options) || canvas.getContext('experimental-webgl', options);
 
+    console.log('GOT GL!!', gl);
+
         // Set up event listeners for context lost / context restored
     canvas.removeEventListener('webglcontextlost', handleLostContext, false);
     canvas.addEventListener('webglcontextlost', handleLostContext, false);
 
+    console.log('added events 1');
+
     canvas.removeEventListener('webglcontextrestored', handleRestoredContext, false);
     canvas.addEventListener('webglcontextrestored', handleRestoredContext, false);
+
+    console.log('added events 2');
 
   } catch (error) {
     throw new Error('Error creating WebGL context');
@@ -103,8 +112,10 @@ function initWebGL (canvas) {
 
     // If we don't have a GL context, give up now
   if (!gl) {
+    console.log('got an error here, no gl');
     console.error('Unable to initialize WebGL. Your browser may not support it.');
     gl = null;
+    console.log('got gl null');
   }
 
   return gl;
@@ -145,6 +156,7 @@ function getShaderProgram (image) {
 }
 
 function generateTexture (image) {
+  console.log('Testing GL', gl);
   const TEXTURE_FORMAT = {
     uint8: gl.LUMINANCE,
     int8: gl.LUMINANCE_ALPHA,
