@@ -56,7 +56,8 @@ export default function (image, lookupTable) {
   }
 
   image.rgba = true;
-  image.lut = undefined;
+  image.cachedLut = undefined;
+  image.render = undefined;
   image.slope = 1;
   image.intercept = 0;
   image.minPixelValue = 0;
