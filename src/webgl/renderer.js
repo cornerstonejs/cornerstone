@@ -157,6 +157,10 @@ function getShaderProgram (image) {
 
 function generateTexture (image) {
   console.log('TESTING GL', gl);
+  if (!gl) {
+    initRenderer();
+  }
+
   const TEXTURE_FORMAT = {
     uint8: gl.LUMINANCE,
     int8: gl.LUMINANCE_ALPHA,
