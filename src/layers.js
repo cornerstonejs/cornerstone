@@ -4,6 +4,7 @@ import { getEnabledElement } from './enabledElements.js';
 import metaData from './metaData.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import updateImage from './updateImage.js';
+import triggerCustomEvent from './triggerEvent.js';
 
 /**
  * Helper function to trigger an event on a Cornerstone element with
@@ -25,6 +26,7 @@ function triggerEvent (eventName, enabledElement, layerId) {
   };
 
   external.$(element).trigger(eventName, eventData);
+  triggerCustomEvent(element, eventName, eventData);
 }
 
 /**

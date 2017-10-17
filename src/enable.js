@@ -4,6 +4,7 @@ import resize from './resize.js';
 import drawImageSync from './internal/drawImageSync.js';
 import requestAnimationFrame from './internal/requestAnimationFrame.js';
 import webGL from './webgl/index.js';
+import triggerEvent from './triggerEvent.js';
 
 /**
  * This module is responsible for enabling an element to display images with cornerstone
@@ -74,10 +75,13 @@ export default function (element, options) {
       return;
     }
 
-    external.$(enabledElement.element).trigger('CornerstonePreRender', {
+    const eventDetails = {
       enabledElement,
       timestamp
-    });
+    };
+
+    external.$(enabledElement.element).trigger('CornerstonePreRender', eventDetails);
+    triggerEvent(enabledElement.element, 'CornerstonePreRender', eventDetails);
 
     if (enabledElement.needsRedraw && hasImageOrLayers(enabledElement)) {
       drawImageSync(enabledElement, enabledElement.invalid);
