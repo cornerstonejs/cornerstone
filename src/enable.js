@@ -1,4 +1,4 @@
-import { $ } from './externalModules.js';
+import { external } from './externalModules.js';
 import { addEnabledElement } from './enabledElements.js';
 import resize from './resize.js';
 import drawImageSync from './internal/drawImageSync.js';
@@ -74,7 +74,7 @@ export default function (element, options) {
       return;
     }
 
-    $(enabledElement.element).trigger('CornerstonePreRender', {
+    external.$(enabledElement.element).trigger('CornerstonePreRender', {
       enabledElement,
       timestamp
     });

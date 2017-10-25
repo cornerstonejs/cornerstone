@@ -1,4 +1,4 @@
-import { $ } from './externalModules.js';
+import { external } from './externalModules.js';
 import events from './events.js';
 
 /**
@@ -22,7 +22,7 @@ export function setMaximumSizeBytes (numBytes) {
   }
 
   maximumSizeInBytes = numBytes;
-  $(events).trigger('CornerstoneImageCacheMaximumSizeChanged');
+  external.$(events).trigger('CornerstoneImageCacheMaximumSizeChanged');
   purgeCacheIfNecessary();
 }
 
@@ -53,20 +53,20 @@ function purgeCacheIfNecessary () {
 
     removeImagePromise(imageId);
 
-    $(events).trigger('CornerstoneImageCachePromiseRemoved', { imageId });
+    external.$(events).trigger('CornerstoneImageCachePromiseRemoved', { imageId });
   }
 
   const cacheInfo = getCacheInfo();
 
-  $(events).trigger('CornerstoneImageCacheFull', cacheInfo);
+  external.$(events).trigger('CornerstoneImageCacheFull', cacheInfo);
 }
 
 export function putImagePromise (imageId, imagePromise) {
   if (imageId === undefined) {
-    throw new Error('getImagePromise: imageId must not be undefined');
+    throw new Error('putImagePromise: imageId must not be undefined');
   }
   if (imagePromise === undefined) {
-    throw new Error('getImagePromise: imagePromise must not be undefined');
+    throw new Error('putImagePromise: imagePromise must not be undefined');
   }
   if (imageCacheDict.hasOwnProperty(imageId) === true) {
     throw new Error('putImagePromise: imageId already in cache');
@@ -77,7 +77,7 @@ export function putImagePromise (imageId, imagePromise) {
     imageId,
     sharedCacheKey: undefined, // The sharedCacheKey for this imageId.  undefined by default
     imagePromise,
-    timeStamp: new Date(),
+    timeStamp: Date.now(),
     sizeInBytes: 0
   };
 
@@ -102,7 +102,7 @@ export function putImagePromise (imageId, imagePromise) {
 
     cachedImage.sizeInBytes = image.sizeInBytes;
     cacheSizeInBytes += cachedImage.sizeInBytes;
-    $(events).trigger('CornerstoneImageCacheChanged', {
+    external.$(events).trigger('CornerstoneImageCacheChanged', {
       action: 'addImage',
       image: cachedImage
     });
@@ -122,8 +122,8 @@ export function getImagePromise (imageId) {
     return;
   }
 
-    // Bump time stamp for cached image
-  cachedImage.timeStamp = new Date();
+  // Bump time stamp for cached image
+  cachedImage.timeStamp = Date.now();
 
   return cachedImage.imagePromise;
 }
@@ -141,7 +141,7 @@ export function removeImagePromise (imageId) {
   cachedImage.imagePromise.reject();
   cachedImages.splice(cachedImages.indexOf(cachedImage), 1);
   cacheSizeInBytes -= cachedImage.sizeInBytes;
-  $(events).trigger('CornerstoneImageCacheChanged', {
+  external.$(events).trigger('CornerstoneImageCacheChanged', {
     action: 'deleteImage',
     image: cachedImage
   });
@@ -186,7 +186,7 @@ export function changeImageIdCacheSize (imageId, newCacheSize) {
       image.sizeInBytes = newCacheSize;
       cacheEntry.sizeInBytes = newCacheSize;
       cacheSizeInBytes += cacheSizeDifference;
-      $(events).trigger('CornerstoneImageCacheChanged', {
+      external.$(events).trigger('CornerstoneImageCacheChanged', {
         action: 'changeImageSize',
         image
       });

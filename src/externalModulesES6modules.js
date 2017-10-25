@@ -1,3 +1,0 @@
-const $ = window.$;
-
-export { $ };

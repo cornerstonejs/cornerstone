@@ -1,14 +1,14 @@
-/*! cornerstone-core - 0.13.0 - 2017-10-16 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone-core - 0.13.0 - 2017-10-25 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("jquery"));
+		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define("cornerstone-core", ["jquery"], factory);
+		define("cornerstone-core", [], factory);
 	else if(typeof exports === 'object')
-		exports["cornerstone-core"] = factory(require("jquery"));
+		exports["cornerstone-core"] = factory();
 	else
-		root["cornerstone"] = factory(root["$"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_45__) {
+		root["cornerstone"] = factory();
+})(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -279,15 +279,18 @@ function getEnabledElements() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.$ = undefined;
+var $ = window.$;
 
-var _jquery = __webpack_require__(45);
+var external = {
+  set $(module) {
+    $ = module;
+  },
+  get $() {
+    return $;
+  }
+};
 
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.$ = _jquery2.default;
+exports.external = external;
 
 /***/ }),
 /* 2 */
@@ -733,13 +736,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 exports.default = function (enabledElement) {
-    // For now we will calculate it every time it is requested.  In the future, we may want to cache
-    // It in the enabled element to speed things up
-    return (0, _calculateTransform2.default)(enabledElement);
+  // For now we will calculate it every time it is requested.  In the future, we may want to cache
+  // It in the enabled element to speed things up
+  return (0, _calculateTransform2.default)(enabledElement);
 };
 
 var _calculateTransform = __webpack_require__(16);
@@ -1284,7 +1287,7 @@ exports.getActiveLayer = getActiveLayer;
 
 var _externalModules = __webpack_require__(1);
 
-var _guid = __webpack_require__(49);
+var _guid = __webpack_require__(48);
 
 var _guid2 = _interopRequireDefault(_guid);
 
@@ -1323,7 +1326,7 @@ function triggerEvent(eventName, enabledElement, layerId) {
     layerId: layerId
   };
 
-  (0, _externalModules.$)(element).trigger(eventName, eventData);
+  _externalModules.external.$(element).trigger(eventName, eventData);
 }
 
 /**
@@ -1785,12 +1788,12 @@ function purgeCacheIfNecessary() {
     delete imageCache[lastCachedImage.imageId];
     cachedImages.pop();
 
-    (0, _externalModules.$)(_events2.default).trigger('CornerstoneWebGLTextureRemoved', { imageId: lastCachedImage.imageId });
+    _externalModules.external.$(_events2.default).trigger('CornerstoneWebGLTextureRemoved', { imageId: lastCachedImage.imageId });
   }
 
   var cacheInfo = getCacheInfo();
 
-  (0, _externalModules.$)(_events2.default).trigger('CornerstoneWebGLTextureCacheFull', cacheInfo);
+  _externalModules.external.$(_events2.default).trigger('CornerstoneWebGLTextureCacheFull', cacheInfo);
 }
 
 function setMaximumSizeBytes(numBytes) {
@@ -2163,7 +2166,7 @@ exports.default = function (element, fitViewportToWindow) {
     element: element
   };
 
-  (0, _externalModules.$)(element).trigger('CornerstoneElementResized', eventData);
+  _externalModules.external.$(element).trigger('CornerstoneElementResized', eventData);
 
   if (enabledElement.image === undefined) {
     return;
@@ -2201,21 +2204,21 @@ function setCanvasSize(element, canvas) {
   // The device pixel ratio is 1.0 for normal displays and > 1.0
   // For high DPI displays like Retina
   /*
-    This functionality is disabled due to buggy behavior on systems with mixed DPI's.  If the canvas
-  is created on a display with high DPI (e.g. 2.0) and then the browser window is dragged to
-  a different display with a different DPI (e.g. 1.0), the canvas is not recreated so the pageToPixel
-  produces incorrect results.  I couldn't find any way to determine when the DPI changed other than
-  by polling which is not very clean.  If anyone has any ideas here, please let me know, but for now
-  we will disable this functionality.  We may want
-  to add a mechanism to optionally enable this functionality if we can determine it is safe to do
-  so (e.g. iPad or iPhone or perhaps enumerate the displays on the system.  I am choosing
-  to be cautious here since I would rather not have bug reports or safety issues related to this
-  scenario.
-    var devicePixelRatio = window.devicePixelRatio;
-  if(devicePixelRatio === undefined) {
-      devicePixelRatio = 1.0;
-  }
-  */
+      This functionality is disabled due to buggy behavior on systems with mixed DPI's.  If the canvas
+    is created on a display with high DPI (e.g. 2.0) and then the browser window is dragged to
+    a different display with a different DPI (e.g. 1.0), the canvas is not recreated so the pageToPixel
+    produces incorrect results.  I couldn't find any way to determine when the DPI changed other than
+    by polling which is not very clean.  If anyone has any ideas here, please let me know, but for now
+    we will disable this functionality.  We may want
+    to add a mechanism to optionally enable this functionality if we can determine it is safe to do
+    so (e.g. iPad or iPhone or perhaps enumerate the displays on the system.  I am choosing
+    to be cautious here since I would rather not have bug reports or safety issues related to this
+    scenario.
+      var devicePixelRatio = window.devicePixelRatio;
+    if(devicePixelRatio === undefined) {
+        devicePixelRatio = 1.0;
+    }
+    */
 
   // Avoid setting the same value because it flashes the canvas with IE and Edge
   if (canvas.width !== element.clientWidth) {
@@ -3509,7 +3512,7 @@ function setMaximumSizeBytes(numBytes) {
   }
 
   maximumSizeInBytes = numBytes;
-  (0, _externalModules.$)(_events2.default).trigger('CornerstoneImageCacheMaximumSizeChanged');
+  _externalModules.external.$(_events2.default).trigger('CornerstoneImageCacheMaximumSizeChanged');
   purgeCacheIfNecessary();
 }
 
@@ -3540,20 +3543,20 @@ function purgeCacheIfNecessary() {
 
     removeImagePromise(imageId);
 
-    (0, _externalModules.$)(_events2.default).trigger('CornerstoneImageCachePromiseRemoved', { imageId: imageId });
+    _externalModules.external.$(_events2.default).trigger('CornerstoneImageCachePromiseRemoved', { imageId: imageId });
   }
 
   var cacheInfo = getCacheInfo();
 
-  (0, _externalModules.$)(_events2.default).trigger('CornerstoneImageCacheFull', cacheInfo);
+  _externalModules.external.$(_events2.default).trigger('CornerstoneImageCacheFull', cacheInfo);
 }
 
 function putImagePromise(imageId, imagePromise) {
   if (imageId === undefined) {
-    throw new Error('getImagePromise: imageId must not be undefined');
+    throw new Error('putImagePromise: imageId must not be undefined');
   }
   if (imagePromise === undefined) {
-    throw new Error('getImagePromise: imagePromise must not be undefined');
+    throw new Error('putImagePromise: imagePromise must not be undefined');
   }
   if (imageCacheDict.hasOwnProperty(imageId) === true) {
     throw new Error('putImagePromise: imageId already in cache');
@@ -3564,7 +3567,7 @@ function putImagePromise(imageId, imagePromise) {
     imageId: imageId,
     sharedCacheKey: undefined, // The sharedCacheKey for this imageId.  undefined by default
     imagePromise: imagePromise,
-    timeStamp: new Date(),
+    timeStamp: Date.now(),
     sizeInBytes: 0
   };
 
@@ -3574,6 +3577,7 @@ function putImagePromise(imageId, imagePromise) {
   imagePromise.then(function (image) {
     if (cachedImages.indexOf(cachedImage) === -1) {
       // If the image has been purged before being loaded, we stop here.
+      console.warn('Image purged before being loaded.');
       return;
     }
 
@@ -3589,7 +3593,7 @@ function putImagePromise(imageId, imagePromise) {
 
     cachedImage.sizeInBytes = image.sizeInBytes;
     cacheSizeInBytes += cachedImage.sizeInBytes;
-    (0, _externalModules.$)(_events2.default).trigger('CornerstoneImageCacheChanged', {
+    _externalModules.external.$(_events2.default).trigger('CornerstoneImageCacheChanged', {
       action: 'addImage',
       image: cachedImage
     });
@@ -3610,7 +3614,7 @@ function getImagePromise(imageId) {
   }
 
   // Bump time stamp for cached image
-  cachedImage.timeStamp = new Date();
+  cachedImage.timeStamp = Date.now();
 
   return cachedImage.imagePromise;
 }
@@ -3628,7 +3632,7 @@ function removeImagePromise(imageId) {
   cachedImage.imagePromise.reject();
   cachedImages.splice(cachedImages.indexOf(cachedImage), 1);
   cacheSizeInBytes -= cachedImage.sizeInBytes;
-  (0, _externalModules.$)(_events2.default).trigger('CornerstoneImageCacheChanged', {
+  _externalModules.external.$(_events2.default).trigger('CornerstoneImageCacheChanged', {
     action: 'deleteImage',
     image: cachedImage
   });
@@ -3673,7 +3677,7 @@ function changeImageIdCacheSize(imageId, newCacheSize) {
       image.sizeInBytes = newCacheSize;
       cacheEntry.sizeInBytes = newCacheSize;
       cacheSizeInBytes += cacheSizeDifference;
-      (0, _externalModules.$)(_events2.default).trigger('CornerstoneImageCacheChanged', {
+      _externalModules.external.$(_events2.default).trigger('CornerstoneImageCacheChanged', {
         action: 'changeImageSize',
         image: image
       });
@@ -3794,7 +3798,7 @@ Object.defineProperty(exports, 'renderWebImage', {
   }
 });
 
-var _canvasToPixel = __webpack_require__(46);
+var _canvasToPixel = __webpack_require__(45);
 
 Object.defineProperty(exports, 'canvasToPixel', {
   enumerable: true,
@@ -3803,7 +3807,7 @@ Object.defineProperty(exports, 'canvasToPixel', {
   }
 });
 
-var _disable = __webpack_require__(47);
+var _disable = __webpack_require__(46);
 
 Object.defineProperty(exports, 'disable', {
   enumerable: true,
@@ -3812,7 +3816,7 @@ Object.defineProperty(exports, 'disable', {
   }
 });
 
-var _displayImage = __webpack_require__(48);
+var _displayImage = __webpack_require__(47);
 
 Object.defineProperty(exports, 'displayImage', {
   enumerable: true,
@@ -3821,7 +3825,7 @@ Object.defineProperty(exports, 'displayImage', {
   }
 });
 
-var _draw = __webpack_require__(50);
+var _draw = __webpack_require__(49);
 
 Object.defineProperty(exports, 'draw', {
   enumerable: true,
@@ -3830,7 +3834,7 @@ Object.defineProperty(exports, 'draw', {
   }
 });
 
-var _drawInvalidated = __webpack_require__(51);
+var _drawInvalidated = __webpack_require__(50);
 
 Object.defineProperty(exports, 'drawInvalidated', {
   enumerable: true,
@@ -3839,7 +3843,7 @@ Object.defineProperty(exports, 'drawInvalidated', {
   }
 });
 
-var _enable = __webpack_require__(52);
+var _enable = __webpack_require__(51);
 
 Object.defineProperty(exports, 'enable', {
   enumerable: true,
@@ -3848,7 +3852,7 @@ Object.defineProperty(exports, 'enable', {
   }
 });
 
-var _enabledElementData = __webpack_require__(55);
+var _enabledElementData = __webpack_require__(54);
 
 Object.defineProperty(exports, 'getElementData', {
   enumerable: true,
@@ -3944,7 +3948,7 @@ Object.defineProperty(exports, 'fitToWindow', {
   }
 });
 
-var _getDefaultViewportForImage = __webpack_require__(56);
+var _getDefaultViewportForImage = __webpack_require__(55);
 
 Object.defineProperty(exports, 'getDefaultViewportForImage', {
   enumerable: true,
@@ -3953,7 +3957,7 @@ Object.defineProperty(exports, 'getDefaultViewportForImage', {
   }
 });
 
-var _getImage = __webpack_require__(57);
+var _getImage = __webpack_require__(56);
 
 Object.defineProperty(exports, 'getImage', {
   enumerable: true,
@@ -3962,7 +3966,7 @@ Object.defineProperty(exports, 'getImage', {
   }
 });
 
-var _getPixels = __webpack_require__(58);
+var _getPixels = __webpack_require__(57);
 
 Object.defineProperty(exports, 'getPixels', {
   enumerable: true,
@@ -3980,7 +3984,7 @@ Object.defineProperty(exports, 'getStoredPixels', {
   }
 });
 
-var _getViewport = __webpack_require__(59);
+var _getViewport = __webpack_require__(58);
 
 Object.defineProperty(exports, 'getViewport', {
   enumerable: true,
@@ -3989,7 +3993,7 @@ Object.defineProperty(exports, 'getViewport', {
   }
 });
 
-var _imageLoader = __webpack_require__(60);
+var _imageLoader = __webpack_require__(59);
 
 Object.defineProperty(exports, 'loadImage', {
   enumerable: true,
@@ -4016,7 +4020,7 @@ Object.defineProperty(exports, 'registerUnknownImageLoader', {
   }
 });
 
-var _invalidate = __webpack_require__(61);
+var _invalidate = __webpack_require__(60);
 
 Object.defineProperty(exports, 'invalidate', {
   enumerable: true,
@@ -4025,7 +4029,7 @@ Object.defineProperty(exports, 'invalidate', {
   }
 });
 
-var _invalidateImageId = __webpack_require__(62);
+var _invalidateImageId = __webpack_require__(61);
 
 Object.defineProperty(exports, 'invalidateImageId', {
   enumerable: true,
@@ -4034,7 +4038,7 @@ Object.defineProperty(exports, 'invalidateImageId', {
   }
 });
 
-var _pageToPixel = __webpack_require__(63);
+var _pageToPixel = __webpack_require__(62);
 
 Object.defineProperty(exports, 'pageToPixel', {
   enumerable: true,
@@ -4043,7 +4047,7 @@ Object.defineProperty(exports, 'pageToPixel', {
   }
 });
 
-var _pixelToCanvas = __webpack_require__(64);
+var _pixelToCanvas = __webpack_require__(63);
 
 Object.defineProperty(exports, 'pixelToCanvas', {
   enumerable: true,
@@ -4052,7 +4056,7 @@ Object.defineProperty(exports, 'pixelToCanvas', {
   }
 });
 
-var _reset = __webpack_require__(65);
+var _reset = __webpack_require__(64);
 
 Object.defineProperty(exports, 'reset', {
   enumerable: true,
@@ -4079,7 +4083,7 @@ Object.defineProperty(exports, 'setToPixelCoordinateSystem', {
   }
 });
 
-var _setViewport = __webpack_require__(66);
+var _setViewport = __webpack_require__(65);
 
 Object.defineProperty(exports, 'setViewport', {
   enumerable: true,
@@ -4106,7 +4110,7 @@ Object.defineProperty(exports, 'pixelDataToFalseColorData', {
   }
 });
 
-var _index2 = __webpack_require__(67);
+var _index2 = __webpack_require__(66);
 
 Object.defineProperty(exports, 'rendering', {
   enumerable: true,
@@ -4953,7 +4957,7 @@ exports.rgbShader = rgbShader;
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 /* eslint no-bitwise: 0 */
 
@@ -4969,27 +4973,27 @@ var uint16Shader = {};
  */
 function storedPixelDataToImageData(image) {
 
-    // Transfer image data to alpha and luminance channels of WebGL texture
-    // Credit to @jpambrun and @fernandojsg
+  // Transfer image data to alpha and luminance channels of WebGL texture
+  // Credit to @jpambrun and @fernandojsg
 
-    // Pack uint16 into two uint8 channels (r and a)
-    var pixelData = image.getPixelData();
-    var numberOfChannels = 2;
-    var data = new Uint8Array(image.width * image.height * numberOfChannels);
-    var offset = 0;
+  // Pack uint16 into two uint8 channels (r and a)
+  var pixelData = image.getPixelData();
+  var numberOfChannels = 2;
+  var data = new Uint8Array(image.width * image.height * numberOfChannels);
+  var offset = 0;
 
-    for (var i = 0; i < pixelData.length; i++) {
-        var val = pixelData[i];
+  for (var i = 0; i < pixelData.length; i++) {
+    var val = pixelData[i];
 
-        data[offset++] = val & 0xFF;
-        data[offset++] = val >> 8;
-    }
+    data[offset++] = val & 0xFF;
+    data[offset++] = val >> 8;
+  }
 
-    return data;
+  return data;
 }
 
 var uint16DataUtilities = exports.uint16DataUtilities = {
-    storedPixelDataToImageData: storedPixelDataToImageData
+  storedPixelDataToImageData: storedPixelDataToImageData
 };
 
 uint16Shader.frag = 'precision mediump float;' + 'uniform sampler2D u_image;' + 'uniform float ww;' + 'uniform float wc;' + 'uniform float slope;' + 'uniform float intercept;' + 'uniform int invert;' + 'varying vec2 v_texCoord;' + 'void main() {' +
@@ -5076,12 +5080,6 @@ var vertexShader = exports.vertexShader = 'attribute vec2 a_position;' + 'attrib
 
 /***/ }),
 /* 45 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_45__;
-
-/***/ }),
-/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5109,7 +5107,7 @@ var _getTransform2 = _interopRequireDefault(_getTransform);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 47 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5136,7 +5134,7 @@ exports.default = function (element) {
         element: element
       };
 
-      (0, _externalModules.$)(element).trigger('CornerstoneElementDisabled', eventData);
+      _externalModules.external.$(element).trigger('CornerstoneElementDisabled', eventData);
 
       // Remove the child DOM elements that we created (e.g.canvas)
       enabledElements[i].element.removeChild(enabledElements[i].canvas);
@@ -5155,7 +5153,7 @@ var _externalModules = __webpack_require__(1);
 var _enabledElements = __webpack_require__(0);
 
 /***/ }),
-/* 48 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5216,7 +5214,7 @@ exports.default = function (element, image, viewport) {
     frameRate: frameRate
   };
 
-  (0, _externalModules.$)(enabledElement.element).trigger('CornerstoneNewImage', newImageEventData);
+  _externalModules.external.$(enabledElement.element).trigger('CornerstoneNewImage', newImageEventData);
 
   (0, _updateImage2.default)(element);
 };
@@ -5242,7 +5240,7 @@ var _layers = __webpack_require__(17);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 49 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5261,7 +5259,7 @@ exports.default = function () {
 };
 
 /***/ }),
-/* 50 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5290,7 +5288,7 @@ var _drawImage2 = _interopRequireDefault(_drawImage);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 51 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5321,7 +5319,7 @@ var _drawImage2 = _interopRequireDefault(_drawImage);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 52 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5383,7 +5381,7 @@ exports.default = function (element, options) {
       return;
     }
 
-    (0, _externalModules.$)(enabledElement.element).trigger('CornerstonePreRender', {
+    _externalModules.external.$(enabledElement.element).trigger('CornerstonePreRender', {
       enabledElement: enabledElement,
       timestamp: timestamp
     });
@@ -5406,7 +5404,7 @@ var _resize = __webpack_require__(24);
 
 var _resize2 = _interopRequireDefault(_resize);
 
-var _drawImageSync = __webpack_require__(53);
+var _drawImageSync = __webpack_require__(52);
 
 var _drawImageSync2 = _interopRequireDefault(_drawImageSync);
 
@@ -5438,7 +5436,7 @@ function hasImageOrLayers(enabledElement) {
  */
 
 /***/ }),
-/* 53 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5498,7 +5496,7 @@ exports.default = function (enabledElement, invalidated) {
   enabledElement.invalid = false;
   enabledElement.needsRedraw = false;
 
-  (0, _externalModules.$)(element).trigger('CornerstoneImageRendered', eventData);
+  _externalModules.external.$(element).trigger('CornerstoneImageRendered', eventData);
 };
 
 var _externalModules = __webpack_require__(1);
@@ -5507,7 +5505,7 @@ var _now = __webpack_require__(5);
 
 var _now2 = _interopRequireDefault(_now);
 
-var _drawCompositeImage = __webpack_require__(54);
+var _drawCompositeImage = __webpack_require__(53);
 
 var _drawCompositeImage2 = _interopRequireDefault(_drawCompositeImage);
 
@@ -5518,7 +5516,7 @@ var _renderGrayscaleImage = __webpack_require__(12);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 54 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5719,7 +5717,7 @@ function renderLayers(context, activeLayer, layers, invalidated) {
  */
 
 /***/ }),
-/* 55 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5767,7 +5765,7 @@ function removeElementData(element, dataType) {
 }
 
 /***/ }),
-/* 56 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5792,7 +5790,7 @@ var _getDefaultViewport2 = _interopRequireDefault(_getDefaultViewport);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 57 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5811,7 +5809,7 @@ exports.default = function (element) {
 var _enabledElements = __webpack_require__(0);
 
 /***/ }),
-/* 58 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5842,7 +5840,7 @@ var _getModalityLUT2 = _interopRequireDefault(_getModalityLUT);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 59 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5884,7 +5882,7 @@ exports.default = function (element) {
 var _enabledElements = __webpack_require__(0);
 
 /***/ }),
-/* 60 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5947,7 +5945,7 @@ function loadImageFromImageLoader(imageId, options) {
 
   // Broadcast an image loaded event once the image is loaded
   imagePromise.then(function (image) {
-    (0, _externalModules.$)(_events2.default).trigger('CornerstoneImageLoaded', { image: image });
+    _externalModules.external.$(_events2.default).trigger('CornerstoneImageLoaded', { image: image });
   });
 
   return imagePromise;
@@ -6034,7 +6032,7 @@ function registerUnknownImageLoader(imageLoader) {
 }
 
 /***/ }),
-/* 61 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6053,7 +6051,7 @@ exports.default = function (element) {
     element: element
   };
 
-  (0, _externalModules.$)(element).trigger('CornerstoneInvalidated', eventData);
+  _externalModules.external.$(element).trigger('CornerstoneInvalidated', eventData);
 };
 
 var _externalModules = __webpack_require__(1);
@@ -6061,7 +6059,7 @@ var _externalModules = __webpack_require__(1);
 var _enabledElements = __webpack_require__(0);
 
 /***/ }),
-/* 62 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6089,7 +6087,7 @@ var _drawImage2 = _interopRequireDefault(_drawImage);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 63 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6129,7 +6127,7 @@ var _getTransform2 = _interopRequireDefault(_getTransform);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 64 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6155,7 +6153,7 @@ var _getTransform2 = _interopRequireDefault(_getTransform);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 65 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6185,7 +6183,7 @@ var _updateImage2 = _interopRequireDefault(_updateImage);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 66 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6253,7 +6251,7 @@ var MIN_VIEWPORT_SCALE = 0.0001;
  */
 
 /***/ }),
-/* 67 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

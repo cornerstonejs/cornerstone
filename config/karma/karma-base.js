@@ -22,6 +22,7 @@ module.exports = {
   files: [
     'node_modules/phantomjs-polyfill-find-index/findIndex-polyfill.js',
     'node_modules/phantomjs-polyfill-find/find-polyfill.js',
+    'node_modules/promise-polyfill/promise.js',
     'node_modules/jquery/dist/jquery.js',
     'test/*_test.js',
     'test/**/*_test.js'

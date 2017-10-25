@@ -1,4 +1,4 @@
-import { $ } from './externalModules.js';
+import { external } from './externalModules.js';
 import guid from './internal/guid.js';
 import { getEnabledElement } from './enabledElements.js';
 import metaData from './metaData.js';
@@ -24,7 +24,7 @@ function triggerEvent (eventName, enabledElement, layerId) {
     layerId
   };
 
-  $(element).trigger(eventName, eventData);
+  external.$(element).trigger(eventName, eventData);
 }
 
 /**

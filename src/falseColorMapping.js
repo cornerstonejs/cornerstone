@@ -74,8 +74,8 @@ function getRestoreImageMethod (image) {
   };
 }
 
-  //
-  // Then we need to make sure it will be converted into a colormap object if it's as string.
+//
+// Then we need to make sure it will be converted into a colormap object if it's as string.
 
 /**
  * User can pass a colormap or its id as string to some of these public functions.
@@ -184,5 +184,5 @@ function convertToFalseColorImage (element, colormap) {
 }
 
 export { convertImageToFalseColorImage,
-         convertToFalseColorImage,
-         restoreImage };
+  convertToFalseColorImage,
+  restoreImage };

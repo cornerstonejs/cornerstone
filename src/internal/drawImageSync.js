@@ -1,4 +1,4 @@
-import { $ } from '../externalModules.js';
+import { external } from '../externalModules.js';
 import now from './now.js';
 import drawCompositeImage from './drawCompositeImage.js';
 import { renderColorImage } from '../rendering/renderColorImage.js';
@@ -16,12 +16,12 @@ export default function (enabledElement, invalidated) {
   const element = enabledElement.element;
   const layers = enabledElement.layers || [];
 
-    // Check if enabledElement can be redrawn
+  // Check if enabledElement can be redrawn
   if (!enabledElement.canvas || !(enabledElement.image || layers.length)) {
     return;
   }
 
-    // Start measuring the time needed to draw the image/layers
+  // Start measuring the time needed to draw the image/layers
   const start = now();
 
   image.stats = {
@@ -44,7 +44,7 @@ export default function (enabledElement, invalidated) {
     render(enabledElement, invalidated);
   }
 
-    // Calculate how long it took to draw the image/layers
+  // Calculate how long it took to draw the image/layers
   const renderTimeInMs = now() - start;
 
   const eventData = {
@@ -61,5 +61,5 @@ export default function (enabledElement, invalidated) {
   enabledElement.invalid = false;
   enabledElement.needsRedraw = false;
 
-  $(element).trigger('CornerstoneImageRendered', eventData);
+  external.$(element).trigger('CornerstoneImageRendered', eventData);
 }

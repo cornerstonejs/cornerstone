@@ -9,12 +9,12 @@ import webGL from '../webgl/index.js';
 
 function initializeColorRenderCanvas (enabledElement, image) {
   const colorRenderCanvas = enabledElement.renderingTools.colorRenderCanvas;
-    // Resize the canvas
+  // Resize the canvas
 
   colorRenderCanvas.width = image.width;
   colorRenderCanvas.height = image.height;
 
-    // Get the canvas data so we can write to it directly
+  // Get the canvas data so we can write to it directly
   const colorRenderCanvasContext = colorRenderCanvas.getContext('2d');
 
   colorRenderCanvasContext.fillStyle = 'white';
@@ -27,7 +27,7 @@ function initializeColorRenderCanvas (enabledElement, image) {
 
 
 function getLut (image, viewport) {
-    // If we have a cached lut and it has the right values, return it immediately
+  // If we have a cached lut and it has the right values, return it immediately
   if (image.cachedLut !== undefined &&
         image.cachedLut.windowCenter === viewport.voi.windowCenter &&
         image.cachedLut.windowWidth === viewport.voi.windowWidth &&
@@ -35,7 +35,7 @@ function getLut (image, viewport) {
     return image.cachedLut.lutArray;
   }
 
-    // Lut is invalid or not present, regenerate it and cache it
+  // Lut is invalid or not present, regenerate it and cache it
   generateLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert);
   image.cachedLut.windowWidth = viewport.voi.windowWidth;
   image.cachedLut.windowCenter = viewport.voi.windowCenter;
@@ -67,30 +67,30 @@ function getRenderCanvas (enabledElement, image, invalidated) {
 
   const colorRenderCanvas = enabledElement.renderingTools.colorRenderCanvas;
 
-    // The ww/wc is identity and not inverted - get a canvas with the image rendered into it for
-    // Fast drawing
+  // The ww/wc is identity and not inverted - get a canvas with the image rendered into it for
+  // Fast drawing
   if (enabledElement.viewport.voi.windowWidth === 255 &&
         enabledElement.viewport.voi.windowCenter === 128 &&
         enabledElement.viewport.invert === false &&
         image.getCanvas &&
         image.getCanvas()
-    ) {
+  ) {
     return image.getCanvas();
   }
 
-    // Apply the lut to the stored pixel data onto the render canvas
+  // Apply the lut to the stored pixel data onto the render canvas
   if (doesImageNeedToBeRendered(enabledElement, image) === false && invalidated !== true) {
     return colorRenderCanvas;
   }
 
-    // If our render canvas does not match the size of this image reset it
-    // NOTE: This might be inefficient if we are updating multiple images of different
-    // Sizes frequently.
+  // If our render canvas does not match the size of this image reset it
+  // NOTE: This might be inefficient if we are updating multiple images of different
+  // Sizes frequently.
   if (colorRenderCanvas.width !== image.width || colorRenderCanvas.height !== image.height) {
     initializeColorRenderCanvas(enabledElement, image);
   }
 
-    // Get the lut to use
+  // Get the lut to use
   let start = (window.performance ? performance.now() : Date.now());
   const colorLut = getLut(image, enabledElement.viewport);
 
@@ -133,16 +133,16 @@ export function renderColorImage (enabledElement, invalidated) {
     throw new Error('drawImage: image must be loaded before it can be drawn');
   }
 
-    // Get the canvas context and reset the transform
+  // Get the canvas context and reset the transform
   const context = enabledElement.canvas.getContext('2d');
 
   context.setTransform(1, 0, 0, 1, 0, 0);
 
-    // Clear the canvas
+  // Clear the canvas
   context.fillStyle = 'black';
   context.fillRect(0, 0, enabledElement.canvas.width, enabledElement.canvas.height);
 
-    // Turn off image smooth/interpolation if pixelReplication is set in the viewport
+  // Turn off image smooth/interpolation if pixelReplication is set in the viewport
   if (enabledElement.viewport.pixelReplication === true) {
     context.imageSmoothingEnabled = false;
     context.mozImageSmoothingEnabled = false; // Firefox doesn't support imageSmoothingEnabled yet

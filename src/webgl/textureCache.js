@@ -1,4 +1,4 @@
-import { $ } from '../externalModules.js';
+import { external } from '../externalModules.js';
 import events from '../events.js';
 
 /**
@@ -21,13 +21,13 @@ function getCacheInfo () {
 }
 
 function purgeCacheIfNecessary () {
-    // If max cache size has not been exceeded, do nothing
+  // If max cache size has not been exceeded, do nothing
   if (cacheSizeInBytes <= maximumSizeInBytes) {
     return;
   }
 
-    // Cache size has been exceeded, create list of images sorted by timeStamp
-    // So we can purge the least recently used image
+  // Cache size has been exceeded, create list of images sorted by timeStamp
+  // So we can purge the least recently used image
   function compare (a, b) {
     if (a.timeStamp > b.timeStamp) {
       return -1;
@@ -40,7 +40,7 @@ function purgeCacheIfNecessary () {
   }
   cachedImages.sort(compare);
 
-    // Remove images as necessary
+  // Remove images as necessary
   while (cacheSizeInBytes > maximumSizeInBytes) {
     const lastCachedImage = cachedImages[cachedImages.length - 1];
 
@@ -48,12 +48,12 @@ function purgeCacheIfNecessary () {
     delete imageCache[lastCachedImage.imageId];
     cachedImages.pop();
 
-    $(events).trigger('CornerstoneWebGLTextureRemoved', { imageId: lastCachedImage.imageId });
+    external.$(events).trigger('CornerstoneWebGLTextureRemoved', { imageId: lastCachedImage.imageId });
   }
 
   const cacheInfo = getCacheInfo();
 
-  $(events).trigger('CornerstoneWebGLTextureCacheFull', cacheInfo);
+  external.$(events).trigger('CornerstoneWebGLTextureCacheFull', cacheInfo);
 }
 
 function setMaximumSizeBytes (numBytes) {
@@ -117,7 +117,7 @@ function getImageTexture (imageId) {
     return;
   }
 
-    // Bump time stamp for cached image
+  // Bump time stamp for cached image
   cachedImage.timeStamp = new Date();
 
   return cachedImage.imageTexture;

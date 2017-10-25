@@ -1,4 +1,4 @@
-import { $ } from './externalModules.js';
+import { external } from './externalModules.js';
 import { getEnabledElement } from './enabledElements.js';
 
 /**
@@ -19,5 +19,5 @@ export default function (element) {
     element
   };
 
-  $(element).trigger('CornerstoneInvalidated', eventData);
+  external.$(element).trigger('CornerstoneInvalidated', eventData);
 }

@@ -9,13 +9,13 @@ import webGL from '../webgl/index.js';
 
 function initializeGrayscaleRenderCanvas (enabledElement, image) {
   const grayscaleRenderCanvas = enabledElement.renderingTools.grayscaleRenderCanvas;
-    // Resize the canvas
+  // Resize the canvas
 
   grayscaleRenderCanvas.width = image.width;
   grayscaleRenderCanvas.height = image.height;
 
-    // NOTE - we need to fill the render canvas with white pixels since we control the luminance
-    // Using the alpha channel to improve rendering performance.
+  // NOTE - we need to fill the render canvas with white pixels since we control the luminance
+  // Using the alpha channel to improve rendering performance.
   const grayscaleRenderCanvasContext = grayscaleRenderCanvas.getContext('2d');
 
   grayscaleRenderCanvasContext.fillStyle = 'white';
@@ -41,7 +41,7 @@ function lutMatches (a, b) {
 }
 
 function getLut (image, viewport, invalidated) {
-    // If we have a cached lut and it has the right values, return it immediately
+  // If we have a cached lut and it has the right values, return it immediately
   if (image.cachedLut !== undefined &&
         image.cachedLut.windowCenter === viewport.voi.windowCenter &&
         image.cachedLut.windowWidth === viewport.voi.windowWidth &&
@@ -52,7 +52,7 @@ function getLut (image, viewport, invalidated) {
     return image.cachedLut.lutArray;
   }
 
-    // Lut is invalid or not present, regenerate it and cache it
+  // Lut is invalid or not present, regenerate it and cache it
   generateLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert, viewport.modalityLUT, viewport.voiLUT);
   image.cachedLut.windowWidth = viewport.voi.windowWidth;
   image.cachedLut.windowCenter = viewport.voi.windowCenter;
@@ -88,20 +88,20 @@ function getRenderCanvas (enabledElement, image, invalidated) {
 
   const grayscaleRenderCanvas = enabledElement.renderingTools.grayscaleRenderCanvas;
 
-    // Apply the lut to the stored pixel data onto the render canvas
+  // Apply the lut to the stored pixel data onto the render canvas
 
   if (doesImageNeedToBeRendered(enabledElement, image) === false && invalidated !== true) {
     return grayscaleRenderCanvas;
   }
 
-    // If our render canvas does not match the size of this image reset it
-    // NOTE: This might be inefficient if we are updating multiple images of different
-    // Sizes frequently.
+  // If our render canvas does not match the size of this image reset it
+  // NOTE: This might be inefficient if we are updating multiple images of different
+  // Sizes frequently.
   if (grayscaleRenderCanvas.width !== image.width || grayscaleRenderCanvas.height !== image.height) {
     initializeGrayscaleRenderCanvas(enabledElement, image);
   }
 
-    // Get the lut to use
+  // Get the lut to use
   let start = now();
   const lut = getLut(image, enabledElement.viewport, invalidated);
 
@@ -110,7 +110,7 @@ function getRenderCanvas (enabledElement, image, invalidated) {
 
   const grayscaleRenderCanvasData = enabledElement.renderingTools.grayscaleRenderCanvasData;
   const grayscaleRenderCanvasContext = enabledElement.renderingTools.grayscaleRenderCanvasContext;
-    // Gray scale image - apply the lut and put the resulting image onto the render canvas
+  // Gray scale image - apply the lut and put the resulting image onto the render canvas
 
   storedPixelDataToCanvasImageData(image, lut, grayscaleRenderCanvasData.data);
 
@@ -139,16 +139,16 @@ export function renderGrayscaleImage (enabledElement, invalidated) {
     throw new Error('drawImage: image must be loaded before it can be drawn');
   }
 
-    // Get the canvas context and reset the transform
+  // Get the canvas context and reset the transform
   const context = enabledElement.canvas.getContext('2d');
 
   context.setTransform(1, 0, 0, 1, 0, 0);
 
-    // Clear the canvas
+  // Clear the canvas
   context.fillStyle = 'black';
   context.fillRect(0, 0, enabledElement.canvas.width, enabledElement.canvas.height);
 
-    // Turn off image smooth/interpolation if pixelReplication is set in the viewport
+  // Turn off image smooth/interpolation if pixelReplication is set in the viewport
   if (enabledElement.viewport.pixelReplication === true) {
     context.imageSmoothingEnabled = false;
     context.mozImageSmoothingEnabled = false; // Firefox doesn't support imageSmoothingEnabled yet
@@ -168,16 +168,16 @@ export function renderGrayscaleImage (enabledElement, invalidated) {
 
   if (enabledElement.options && enabledElement.options.renderer &&
         enabledElement.options.renderer.toLowerCase() === 'webgl') {
-        // If this enabled element has the option set for WebGL, we should
-        // User it as our renderer.
+    // If this enabled element has the option set for WebGL, we should
+    // User it as our renderer.
     renderCanvas = webGL.renderer.render(enabledElement);
   } else {
-        // If no options are set we will retrieve the renderCanvas through the
-        // Normal Canvas rendering path
+    // If no options are set we will retrieve the renderCanvas through the
+    // Normal Canvas rendering path
     renderCanvas = getRenderCanvas(enabledElement, image, invalidated);
   }
 
-    // Draw the render canvas half the image size (because we set origin to the middle of the canvas above)
+  // Draw the render canvas half the image size (because we set origin to the middle of the canvas above)
   context.drawImage(renderCanvas, 0, 0, image.width, image.height, 0, 0, image.width, image.height);
 
   enabledElement.renderingTools.lastRenderedImageId = image.imageId;

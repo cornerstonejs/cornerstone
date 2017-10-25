@@ -1,4 +1,4 @@
-import { $ } from './externalModules.js';
+import { external } from './externalModules.js';
 import { getEnabledElement } from './enabledElements.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import updateImage from './updateImage.js';
@@ -38,7 +38,7 @@ export default function (element, image, viewport) {
     enabledElement.viewport = getDefaultViewport(enabledElement.canvas, image);
   }
 
-    // Merge viewport
+  // Merge viewport
   if (viewport) {
     for (const attrname in viewport) {
       if (viewport[attrname] !== null) {
@@ -66,7 +66,7 @@ export default function (element, image, viewport) {
     frameRate
   };
 
-  $(enabledElement.element).trigger('CornerstoneNewImage', newImageEventData);
+  external.$(enabledElement.element).trigger('CornerstoneNewImage', newImageEventData);
 
   updateImage(element);
 }
