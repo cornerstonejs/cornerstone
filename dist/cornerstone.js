@@ -1,4 +1,4 @@
-/*! cornerstone-core - 0.13.0 - 2017-10-25 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone-core - 0.13.1 - 2017-10-25 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -774,7 +774,7 @@ var _textureCache2 = _interopRequireDefault(_textureCache);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = {
+var mod = {
   createProgramFromString: _createProgramFromString2.default,
   renderer: {
     render: _renderer.render,
@@ -782,9 +782,18 @@ exports.default = {
     getRenderCanvas: _renderer.getRenderCanvas,
     isWebGLAvailable: _renderer.isWebGLAvailable
   },
-  textureCache: _textureCache2.default,
-  isWebGLInitialized: _renderer.isWebGLInitialized
+  textureCache: _textureCache2.default
 };
+
+Object.defineProperty(mod, 'isWebGLInitialized', {
+  enumerable: true,
+  configurable: false,
+  get: function get() {
+    return _renderer.isWebGLInitialized;
+  }
+});
+
+exports.default = mod;
 
 /***/ }),
 /* 11 */

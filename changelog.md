@@ -1,3 +1,9 @@
+# Version 0.13.1
+
+- Updated dependencies
+- Added JQuery as an injection dependency
+- Properly reexport reference to isWebGLInitialized from WebGL module
+
 # Version 0.13.0
 
 - Removed the all `always` from imageCache's method decache to better stability
