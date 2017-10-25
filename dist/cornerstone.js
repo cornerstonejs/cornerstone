@@ -3577,7 +3577,6 @@ function putImagePromise(imageId, imagePromise) {
   imagePromise.then(function (image) {
     if (cachedImages.indexOf(cachedImage) === -1) {
       // If the image has been purged before being loaded, we stop here.
-      console.warn('Image purged before being loaded.');
       return;
     }
 
@@ -4182,6 +4181,15 @@ Object.defineProperty(exports, 'events', {
   enumerable: true,
   get: function get() {
     return _interopRequireDefault(_events).default;
+  }
+});
+
+var _externalModules = __webpack_require__(1);
+
+Object.defineProperty(exports, 'external', {
+  enumerable: true,
+  get: function get() {
+    return _externalModules.external;
   }
 });
 
