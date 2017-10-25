@@ -113,7 +113,7 @@
 
         // load the image and display it
         var imageId = 'example://1';
-        cornerstone.loadImage(imageId).done(function (image) {
+        cornerstone.loadImage(imageId).then(function (image) {
 
             // Now set the image which will fire the events we are interested in
             cornerstone.displayImage(element, image);

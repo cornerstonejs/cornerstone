@@ -62,7 +62,7 @@
         var imageId = 'example://1';
         var element = $('#dicomImage').get(0);
         cornerstone.enable(element);
-        cornerstone.loadImage(imageId).done(function(image) {
+        cornerstone.loadImage(imageId).then(function(image) {
             cornerstone.displayImage(element, image);
         });
 
