@@ -1,21 +1,15 @@
-export default function triggerEvent (el, type, detail) {
-  let event;
-
+/**
+ * Trigger a CustomEvent
+ *
+ * @param {EventTarget} el The element or EventTarget to trigger the event upon
+ * @param {String} type The event type name
+ * @param {Object|null} detail=null The event data to be sent
+ * @returns {void}
+ */
+export default function triggerEvent (el, type, detail = null) {
   type = type.toLocaleLowerCase();
 
-  detail = detail || {};
+  const event = new CustomEvent(type, { detail });
 
-  if (window.CustomEvent) {
-    event = new CustomEvent(type, { detail });
-  } else {
-    event = document.createEvent('CustomEvent');
-    event.initCustomEvent(type, true, true, detail);
-  }
-
-  if (el.dispatchEvent) {
-    el.dispatchEvent(event);
-  } else {
-    document.dispatchEvent(event);
-  }
+  el.dispatchEvent(event);
 }
-
