@@ -1,3 +1,10 @@
+# Version 0.13.2
+
+- Added native CustomEvents that are triggered parallel to the jQuery events. This is part of a transition to drop the jQuery dependency entirely.
+- Added the EventTarget interface to cornerstone.events. You can now use cornerstone.events.addEventListener to listen to events. The parallel events have the same names as the current events, but are all lower case.
+
+e.g. CornerstoneImageRendered has a native CustomEvent name 'cornerstoneimagerendered'
+
 # Version 0.13.1
 
 - Updated dependencies

@@ -98,7 +98,7 @@ const enabledElements = [];
  * @property {HTMLCanvasElement} [canvas] - The current canvas for this enabledElement
  * @property {Boolean} invalid - Whether or not the image pixel data underlying the enabledElement has been changed, necessitating a redraw
  * @property {Boolean} needsRedraw - A flag for triggering a redraw of the canvas without re-retrieving the pixel data, since it remains valid
- * @property {[EnabledElementLayer]} [layers] - The layers that have been added to the enabledElement
+ * @property {EnabledElementLayer[]} [layers] - The layers that have been added to the enabledElement
  * @property {Boolean} [syncViewports] - Whether or not to synchronize the viewport parameters
  * for each of the enabled element's layers
  * @property {Boolean} [lastSyncViewportsState] - The previous state for the sync viewport boolean
