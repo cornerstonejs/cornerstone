@@ -90,7 +90,9 @@ This is an example of WebGL use in cornerstone
         var elementWebGL = document.getElementById('dicomImageWebGL');
 
         // setup handlers before we display the image
-        function onImageRendered(e, eventData) {
+        function onImageRendered(e) {
+            var eventData = e.detail;
+
             // set the canvas context to the image coordinate system
             cornerstone.setToPixelCoordinateSystem(eventData.enabledElement, eventData.canvasContext);
 
@@ -99,8 +101,8 @@ This is an example of WebGL use in cornerstone
             $(eventData.element).siblings('.bottomright').text("Zoom:" + eventData.viewport.scale.toFixed(2));
 
         }
-        $(element).on("CornerstoneImageRendered", onImageRendered);
-        $(elementWebGL).on("CornerstoneImageRendered", onImageRendered);
+        element.addEventListener('cornerstoneimagerendered', onImageRendered);
+        elementWebGL.addEventListener('cornerstoneimagerendered', onImageRendered);
 
         var imageId = 'example://1';
 

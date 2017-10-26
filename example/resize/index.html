@@ -69,15 +69,13 @@
         // Add event handler to the ww/wc apply button
         $('#x256').click(function (e) {
             $('#dicomImage').width(256).height(256);
-            var fitToWindowVal = $('#fitToWindow').is(":checked");
-            var fitToWindow = fitToWindowVal;
+            var fitToWindow = $('#fitToWindow').is(":checked");
             cornerstone.resize(element, fitToWindow);
         });
 
         $('#x512').click(function (e) {
             $('#dicomImage').width(512).height(512);
-            var fitToWindowVal = $('#fitToWindow').is(":checked");
-            var fitToWindow = fitToWindowVal;
+            var fitToWindow = $('#fitToWindow').is(":checked");
             cornerstone.resize(element, fitToWindow);
         });
     });
