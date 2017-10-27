@@ -1,11 +1,25 @@
-# Version 0.13.2
+# Version 1.0.0
+
+- Updated to 1.0.0 because 0.13.1 introduced a breaking change with jQuery injection. This doesn't break usage if you are using HTML script tags, but if you are using Cornerstone in a module system, Cornerstone may not properly find jQuery.
+
+The solution for this is to inject your jQuery instance into Cornerstone as follows:
+
+````javascript
+cornerstone.external.$ = $;
+````
+
+An example commit doing this in the OHIF Viewer Meteor application is here: https://github.com/OHIF/Viewers/commit/012bba44806d0fb9bb60af329c4875e7f6b751e0#diff-d9ccd906dfc48b4589d720766fe14715R25
+
+We apologize for any headaches that the breaking change 0.13.1 may have caused for those using module systems.
+
+# Version 0.13.2 (deprecated due to breaking change)
 
 - Added native CustomEvents that are triggered parallel to the jQuery events. This is part of a transition to drop the jQuery dependency entirely.
 - Added the EventTarget interface to cornerstone.events. You can now use cornerstone.events.addEventListener to listen to events. The parallel events have the same names as the current events, but are all lower case.
 
 e.g. CornerstoneImageRendered has a native CustomEvent name 'cornerstoneimagerendered'
 
-# Version 0.13.1
+# Version 0.13.1 (deprecated due to breaking change)
 
 - Updated dependencies
 - Added JQuery as an injection dependency
