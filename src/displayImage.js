@@ -1,4 +1,3 @@
-import { external } from './externalModules.js';
 import { getEnabledElement } from './enabledElements.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import updateImage from './updateImage.js';
@@ -67,7 +66,6 @@ export default function (element, image, viewport) {
     frameRate
   };
 
-  external.$(enabledElement.element).trigger('CornerstoneNewImage', newImageEventData);
   triggerEvent(enabledElement.element, 'CornerstoneNewImage', newImageEventData);
 
   updateImage(element);

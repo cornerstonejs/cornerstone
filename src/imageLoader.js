@@ -1,4 +1,3 @@
-import { external } from './externalModules.js';
 import { getImagePromise, putImagePromise } from './imageCache.js';
 import events from './events.js';
 import triggerEvent from './triggerEvent.js';
@@ -43,7 +42,6 @@ function loadImageFromImageLoader (imageId, options) {
 
   // Broadcast an image loaded event once the image is loaded
   imagePromise.then(function (image) {
-    external.$(events).trigger('CornerstoneImageLoaded', { image });
     triggerEvent(events, 'CornerstoneImageLoaded', { image });
   });
 

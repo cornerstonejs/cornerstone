@@ -1,4 +1,3 @@
-import { external } from './externalModules.js';
 import { addEnabledElement } from './enabledElements.js';
 import resize from './resize.js';
 import drawImageSync from './internal/drawImageSync.js';
@@ -80,7 +79,6 @@ export default function (element, options) {
       timestamp
     };
 
-    external.$(enabledElement.element).trigger('CornerstonePreRender', eventDetails);
     triggerEvent(enabledElement.element, 'CornerstonePreRender', eventDetails);
 
     if (enabledElement.needsRedraw && hasImageOrLayers(enabledElement)) {
