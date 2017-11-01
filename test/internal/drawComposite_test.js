@@ -79,9 +79,9 @@ describe('layers', function () {
     addLayer(this.element, this.image1);
     addLayer(this.element, this.image2);
 
-    $(this.element).on('CornerstoneImageRendered', (event, eventData) => {
+    this.element.addEventListener('cornerstoneimagerendered', (event) => {
       // Assert
-      assert.equal(eventData.element, this.element);
+      assert.equal(event.target, this.element);
       done();
     });
 
@@ -96,9 +96,9 @@ describe('layers', function () {
       opacity: 0.7
     });
 
-    $(this.element).on('CornerstoneImageRendered', (event, eventData) => {
+    this.element.addEventListener('cornerstoneimagerendered', (event) => {
       // Assert
-      assert.equal(eventData.element, this.element);
+      assert.equal(event.target, this.element);
       done();
     });
 
@@ -113,9 +113,9 @@ describe('layers', function () {
       colormap: 'Blues'
     });
 
-    $(this.element).on('CornerstoneImageRendered', (event, eventData) => {
+    this.element.addEventListener('cornerstoneimagerendered', (event) => {
       // Assert
-      assert.equal(eventData.element, this.element);
+      assert.equal(event.target, this.element);
       done();
     });
 
