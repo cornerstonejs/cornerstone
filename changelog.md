@@ -1,3 +1,8 @@
+# Version 1.0.1
+
+- Switch package.json 'main' to minified version to reduce bundle sizes
+- jQuery removed from tests (thanks @maistho)
+
 # Version 1.0.0
 
 - Updated to 1.0.0 because 0.13.1 introduced a breaking change with jQuery injection. This doesn't break usage if you are using HTML script tags, but if you are using Cornerstone in a module system, Cornerstone may not properly find jQuery.

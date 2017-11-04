@@ -1,8 +1,8 @@
 {
   "name": "cornerstone-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "HTML5 Medical Image Viewer Component",
-  "main": "./dist/cornerstone.js",
+  "main": "./dist/cornerstone.min.js",
   "keywords": [
     "DICOM",
     "medical",
