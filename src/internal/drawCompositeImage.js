@@ -81,7 +81,7 @@ function renderLayers (context, activeLayer, layers, invalidated) {
       // If the options for this layer specify a colormap, but the image
       // in the layer does not yet have this colormap set, convert
       // the pixel data to this colormap and update the viewport.
-      pixelDataUpdated = convertImageToFalseColorImage(layer.image, layer.options.colormap);
+      pixelDataUpdated = convertImageToFalseColorImage(layer.image, layer.options.colormap, layer.options.tableRange);
       layer.viewport.voi = {
         windowWidth: layer.image.windowWidth,
         windowCenter: layer.image.windowCenter
