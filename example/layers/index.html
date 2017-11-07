@@ -233,10 +233,10 @@
             var addOption = function(id, name) {
                 var $option = $('<option></option>')
                     .val(id)
-                    .text(name)
+                    .text(name);
 
                 $dropdown.append($option);
-            }
+            };
 
             colormapsList.forEach(function(colormapItem) {
                 addOption(colormapItem.id, colormapItem.name);
