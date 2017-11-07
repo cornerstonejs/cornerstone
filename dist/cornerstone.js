@@ -694,31 +694,27 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 exports.default = function (image, windowWidth, windowCenter, invert, modalityLUT, voiLUT) {
+  var maxPixelValue = image.maxPixelValue;
+  var minPixelValue = image.minPixelValue;
+  var offset = Math.min(minPixelValue, 0);
+
   if (image.cachedLut === undefined) {
-    var length = image.maxPixelValue - Math.min(image.minPixelValue, 0) + 1;
+    var length = maxPixelValue - offset + 1;
 
     image.cachedLut = {};
     image.cachedLut.lutArray = new Uint8ClampedArray(length);
   }
-  var lut = image.cachedLut.lutArray;
-  var maxPixelValue = image.maxPixelValue;
-  var minPixelValue = image.minPixelValue;
 
+  var lut = image.cachedLut.lutArray;
   var mlutfn = (0, _getModalityLUT2.default)(image.slope, image.intercept, modalityLUT);
   var vlutfn = (0, _getVOILut2.default)(windowWidth, windowCenter, voiLUT);
 
-  var offset = 0;
-
-  if (minPixelValue < 0) {
-    offset = minPixelValue;
-  }
-
   if (invert === true) {
-    for (var storedValue = image.minPixelValue; storedValue <= maxPixelValue; storedValue++) {
+    for (var storedValue = minPixelValue; storedValue <= maxPixelValue; storedValue++) {
       lut[storedValue + -offset] = 255 - vlutfn(mlutfn(storedValue));
     }
   } else {
-    for (var _storedValue = image.minPixelValue; _storedValue <= maxPixelValue; _storedValue++) {
+    for (var _storedValue = minPixelValue; _storedValue <= maxPixelValue; _storedValue++) {
       lut[_storedValue + -offset] = vlutfn(mlutfn(_storedValue));
     }
   }
@@ -1350,6 +1346,7 @@ var _transform = __webpack_require__(19);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.rescaleImage = rescaleImage;
 exports.addLayer = addLayer;
 exports.removeLayer = removeLayer;
 exports.getLayer = getLayer;
@@ -1470,7 +1467,8 @@ function addLayer(element, image, options) {
     image: image,
     layerId: layerId,
     viewport: viewport,
-    options: options || {}
+    options: options || {},
+    renderingTools: {}
   };
 
   // Rescale the new layer based on the base layer to make sure
@@ -2135,10 +2133,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * This module is responsible for drawing an image to an enabled elements canvas element
  */
 function renderWebImage(enabledElement, invalidated) {
-
   if (enabledElement === undefined) {
     throw new Error('renderWebImage: enabledElement parameter must not be undefined');
   }
+
   var image = enabledElement.image;
 
   if (image === undefined) {
@@ -5740,7 +5738,7 @@ exports.default = function (enabledElement, invalidated) {
   context.fillRect(0, 0, enabledElement.canvas.width, enabledElement.canvas.height);
 
   // Render all visible layers
-  renderLayers(context, activeLayer, visibleLayers, invalidated);
+  renderLayers(context, visibleLayers, invalidated);
 };
 
 var _layers = __webpack_require__(17);
@@ -5805,14 +5803,11 @@ function syncViewports(layers, activeLayer) {
  * Internal function to render all layers for a Cornerstone enabled element
  *
  * @param {CanvasRenderingContext2D} context Canvas context to draw upon
- * @param {EnabledElementLayer} activeLayer The active layer
  * @param {EnabledElementLayer[]} layers The array of all layers for this enabled element
  * @param {Boolean} invalidated A boolean whether or not this image has been invalidated and must be redrawn
  * @returns {void}
  */
-function renderLayers(context, activeLayer, layers, invalidated) {
-  var canvas = context.canvas;
-
+function renderLayers(context, layers, invalidated) {
   // Loop through each layer and draw it to the canvas
   layers.forEach(function (layer) {
     context.save();
@@ -5822,7 +5817,7 @@ function renderLayers(context, activeLayer, layers, invalidated) {
     }
 
     // Set the layer's canvas to the pixel coordinate system
-    layer.canvas = canvas;
+    layer.canvas = context.canvas;
     (0, _setToPixelCoordinateSystem2.default)(layer, context);
 
     // Convert the image to false color image if layer.options.colormap
@@ -5873,16 +5868,15 @@ function renderLayers(context, activeLayer, layers, invalidated) {
 
     // Set the pixelReplication property before drawing from the layer into the
     // composite canvas
-    if (layer.viewport.pixelReplication === true) {
-      context.imageSmoothingEnabled = false;
-      context.mozImageSmoothingEnabled = false;
-    } else {
-      context.imageSmoothingEnabled = true;
-      context.mozImageSmoothingEnabled = true;
-    }
+    context.imageSmoothingEnabled = !layer.viewport.pixelReplication;
+    context.mozImageSmoothingEnabled = context.imageSmoothingEnabled;
 
     // Draw from the current layer's canvas onto the enabled element's canvas
-    context.drawImage(layer.canvas, 0, 0, layer.image.width, layer.image.height, 0, 0, layer.image.width, layer.image.height);
+    var _layer$image = layer.image,
+        width = _layer$image.width,
+        height = _layer$image.height;
+
+    context.drawImage(layer.canvas, 0, 0, width, height, 0, 0, width, height);
 
     context.restore();
   });

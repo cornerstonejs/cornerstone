@@ -38,7 +38,7 @@ function triggerEvent (eventName, enabledElement, layerId) {
  * @param {EnabledElementLayer} targetLayer The target layer to rescale
  * @returns {void}
  */
-function rescaleImage (baseLayer, targetLayer) {
+export function rescaleImage (baseLayer, targetLayer) {
   const baseImage = baseLayer.image;
   const targetImage = targetLayer.image;
 
@@ -95,7 +95,8 @@ export function addLayer (element, image, options) {
     image,
     layerId,
     viewport,
-    options: options || {}
+    options: options || {},
+    renderingTools: {}
   };
 
   // Rescale the new layer based on the base layer to make sure

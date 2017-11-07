@@ -53,14 +53,11 @@ function syncViewports (layers, activeLayer) {
  * Internal function to render all layers for a Cornerstone enabled element
  *
  * @param {CanvasRenderingContext2D} context Canvas context to draw upon
- * @param {EnabledElementLayer} activeLayer The active layer
  * @param {EnabledElementLayer[]} layers The array of all layers for this enabled element
  * @param {Boolean} invalidated A boolean whether or not this image has been invalidated and must be redrawn
  * @returns {void}
  */
-function renderLayers (context, activeLayer, layers, invalidated) {
-  const canvas = context.canvas;
-
+function renderLayers (context, layers, invalidated) {
   // Loop through each layer and draw it to the canvas
   layers.forEach((layer) => {
     context.save();
@@ -70,7 +67,7 @@ function renderLayers (context, activeLayer, layers, invalidated) {
     }
 
     // Set the layer's canvas to the pixel coordinate system
-    layer.canvas = canvas;
+    layer.canvas = context.canvas;
     setToPixelCoordinateSystem(layer, context);
 
     // Convert the image to false color image if layer.options.colormap
@@ -121,16 +118,13 @@ function renderLayers (context, activeLayer, layers, invalidated) {
 
     // Set the pixelReplication property before drawing from the layer into the
     // composite canvas
-    if (layer.viewport.pixelReplication === true) {
-      context.imageSmoothingEnabled = false;
-      context.mozImageSmoothingEnabled = false;
-    } else {
-      context.imageSmoothingEnabled = true;
-      context.mozImageSmoothingEnabled = true;
-    }
+    context.imageSmoothingEnabled = !layer.viewport.pixelReplication;
+    context.mozImageSmoothingEnabled = context.imageSmoothingEnabled;
 
     // Draw from the current layer's canvas onto the enabled element's canvas
-    context.drawImage(layer.canvas, 0, 0, layer.image.width, layer.image.height, 0, 0, layer.image.width, layer.image.height);
+    const { width, height } = layer.image;
+
+    context.drawImage(layer.canvas, 0, 0, width, height, 0, 0, width, height);
 
     context.restore();
   });
@@ -177,5 +171,5 @@ export default function (enabledElement, invalidated) {
   context.fillRect(0, 0, enabledElement.canvas.width, enabledElement.canvas.height);
 
   // Render all visible layers
-  renderLayers(context, activeLayer, visibleLayers, invalidated);
+  renderLayers(context, visibleLayers, invalidated);
 }

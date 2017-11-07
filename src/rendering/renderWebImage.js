@@ -12,10 +12,10 @@ import { renderColorImage } from './renderColorImage.js';
  * @returns {void}
  */
 export function renderWebImage (enabledElement, invalidated) {
-
   if (enabledElement === undefined) {
     throw new Error('renderWebImage: enabledElement parameter must not be undefined');
   }
+
   const image = enabledElement.image;
 
   if (image === undefined) {
@@ -48,5 +48,4 @@ export function renderWebImage (enabledElement, invalidated) {
   } else {
     renderColorImage(enabledElement, invalidated);
   }
-
 }
