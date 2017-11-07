@@ -1,4 +1,3 @@
-
 // This code was created based on vtkLookupTable
 // http://www.vtk.org/doc/release/5.0/html/a01697.html
 // https://github.com/Kitware/VTK/blob/master/Common/Core/vtkLookupTable.cxx
@@ -6,147 +5,162 @@ const BELOW_RANGE_COLOR_INDEX = 0;
 const ABOVE_RANGE_COLOR_INDEX = 1;
 const NAN_COLOR_INDEX = 2;
 
-export default function LookupTable () {
-  this.NumberOfColors = 256;
-  this.Ramp = 'linear';
-  this.TableRange = [0, 255];
-  this.HueRange = [0, 0.66667];
-  this.SaturationRange = [1, 1];
-  this.ValueRange = [1, 1];
-  this.AlphaRange = [1, 1];
-  this.NaNColor = [128, 0, 0, 255];
-  this.BelowRangeColor = [0, 0, 0, 255];
-  this.UseBelowRangeColor = true;
-  this.AboveRangeColor = [255, 255, 255, 255];
-  this.UseAboveRangeColor = true;
-  this.InputRange = [0, 255];
-  this.Table = [];
+function HSVToRGB (hue, sat, val) {
+  if (hue > 1) {
+    throw new Error('HSVToRGB expects hue < 1');
+  }
 
+  const rgb = [];
 
-  this.setNumberOfTableValues = function (number) {
+  if (sat === 0) {
+    rgb[0] = val;
+    rgb[1] = val;
+    rgb[2] = val;
+
+    return rgb;
+  }
+
+  const hueCase = Math.floor(hue * 6);
+  const frac = 6 * hue - hueCase;
+  const lx = val * (1 - sat);
+  const ly = val * (1 - sat * frac);
+  const lz = val * (1 - sat * (1 - frac));
+
+  switch (hueCase) {
+
+  /* 0<hue<1/6 */
+  case 0:
+  case 6:
+    rgb[0] = val;
+    rgb[1] = lz;
+    rgb[2] = lx;
+    break;
+
+    /* 1/6<hue<2/6 */
+  case 1:
+    rgb[0] = ly;
+    rgb[1] = val;
+    rgb[2] = lx;
+    break;
+
+    /* 2/6<hue<3/6 */
+  case 2:
+    rgb[0] = lx;
+    rgb[1] = val;
+    rgb[2] = lz;
+    break;
+
+    /* 3/6<hue/4/6 */
+  case 3:
+    rgb[0] = lx;
+    rgb[1] = ly;
+    rgb[2] = val;
+    break;
+
+    /* 4/6<hue<5/6 */
+  case 4:
+    rgb[0] = lz;
+    rgb[1] = lx;
+    rgb[2] = val;
+    break;
+
+    /* 5/6<hue<1 */
+  case 5:
+    rgb[0] = val;
+    rgb[1] = lx;
+    rgb[2] = ly;
+    break;
+  }
+
+  return rgb;
+}
+
+function linearIndexLookupMain (v, p) {
+  let dIndex;
+
+  // NOTE: Added Math.floor since values were not integers? Check VTK source
+  if (v < p.Range[0]) {
+    dIndex = p.MaxIndex + BELOW_RANGE_COLOR_INDEX + 1.5;
+  } else if (v > p.Range[1]) {
+    dIndex = p.MaxIndex + ABOVE_RANGE_COLOR_INDEX + 1.5;
+  } else {
+    dIndex = (v + p.Shift) * p.Scale;
+  }
+
+  return Math.floor(dIndex);
+}
+
+class LookupTable {
+  constructor () {
+    this.NumberOfColors = 256;
+    this.Ramp = 'linear';
+    this.TableRange = [0, 255];
+    this.HueRange = [0, 0.66667];
+    this.SaturationRange = [1, 1];
+    this.ValueRange = [1, 1];
+    this.AlphaRange = [1, 1];
+    this.NaNColor = [128, 0, 0, 255];
+    this.BelowRangeColor = [0, 0, 0, 255];
+    this.UseBelowRangeColor = true;
+    this.AboveRangeColor = [255, 255, 255, 255];
+    this.UseAboveRangeColor = true;
+    this.InputRange = [0, 255];
+    this.Table = [];
+  }
+
+  setNumberOfTableValues (number) {
     this.NumberOfColors = number;
-  };
+  }
 
-  this.setRamp = function (ramp) {
+  setRamp (ramp) {
     this.Ramp = ramp;
-  };
+  }
 
-  this.setTableRange = function (start, end) {
+  setTableRange (start, end) {
     // Set/Get the minimum/maximum scalar values for scalar mapping.
     // Scalar values less than minimum range value are clamped to minimum range value.
     // Scalar values greater than maximum range value are clamped to maximum range value.
     this.TableRange[0] = start;
     this.TableRange[1] = end;
-  };
+  }
 
-  this.setHueRange = function (start, end) {
+  setHueRange (start, end) {
     // Set the range in hue (using automatic generation). Hue ranges between [0,1].
     this.HueRange[0] = start;
     this.HueRange[1] = end;
-  };
+  }
 
-  this.setSaturationRange = function (start, end) {
+  setSaturationRange (start, end) {
     // Set the range in saturation (using automatic generation). Saturation ranges between [0,1].
     this.SaturationRange[0] = start;
     this.SaturationRange[1] = end;
-  };
+  }
 
-  this.setValueRange = function (start, end) {
+  setValueRange (start, end) {
     // Set the range in value (using automatic generation). Value ranges between [0,1].
     this.ValueRange[0] = start;
     this.ValueRange[1] = end;
-  };
+  }
 
-  this.setRange = function (start, end) {
+  setRange (start, end) {
     this.InputRange[0] = start;
     this.InputRange[1] = end;
-  };
+  }
 
-  this.setAlphaRange = function (start, end) {
+  setAlphaRange (start, end) {
     // Set the range in alpha (using automatic generation). Alpha ranges from [0,1].
     this.AlphaRange[0] = start;
     this.AlphaRange[1] = end;
-  };
+  }
 
-  this.getColor = function (scalar) {
+  getColor (scalar) {
     // Map one value through the lookup table and return the color as an
     // RGB array of doubles between 0 and 1.
-
     return this.mapValue(scalar);
-  };
+  }
 
-  this.HSVToRGB = function (hue, sat, val) {
-    if (hue > 1) {
-      throw new Error('HSVToRGB expects hue < 1');
-    }
-
-    const rgb = [];
-
-    if (sat === 0) {
-      rgb[0] = val;
-      rgb[1] = val;
-      rgb[2] = val;
-
-      return rgb;
-    }
-
-    const hueCase = Math.floor(hue * 6);
-    const frac = 6 * hue - hueCase;
-    const lx = val * (1 - sat);
-    const ly = val * (1 - sat * frac);
-    const lz = val * (1 - sat * (1 - frac));
-
-    switch (hueCase) {
-
-    /* 0<hue<1/6 */
-    case 0:
-    case 6:
-      rgb[0] = val;
-      rgb[1] = lz;
-      rgb[2] = lx;
-      break;
-
-      /* 1/6<hue<2/6 */
-    case 1:
-      rgb[0] = ly;
-      rgb[1] = val;
-      rgb[2] = lx;
-      break;
-
-      /* 2/6<hue<3/6 */
-    case 2:
-      rgb[0] = lx;
-      rgb[1] = val;
-      rgb[2] = lz;
-      break;
-
-      /* 3/6<hue/4/6 */
-    case 3:
-      rgb[0] = lx;
-      rgb[1] = ly;
-      rgb[2] = val;
-      break;
-
-      /* 4/6<hue<5/6 */
-    case 4:
-      rgb[0] = lz;
-      rgb[1] = lx;
-      rgb[2] = val;
-      break;
-
-      /* 5/6<hue<1 */
-    case 5:
-      rgb[0] = val;
-      rgb[1] = lx;
-      rgb[2] = ly;
-      break;
-    }
-
-    return rgb;
-  };
-
-  this.build = function (force) {
-    if ((this.Table.length > 1) && !force) {
+  build (force) {
+    if (this.Table.length > 1 && !force) {
       return;
     }
 
@@ -172,7 +186,7 @@ export default function LookupTable () {
       const val = this.ValueRange[0] + i * vinc;
       const alpha = this.AlphaRange[0] + i * ainc;
 
-      const rgb = this.HSVToRGB(hue, sat, val);
+      const rgb = HSVToRGB(hue, sat, val);
       const c_rgba = [];
 
       switch (this.Ramp) {
@@ -202,9 +216,9 @@ export default function LookupTable () {
     }
 
     this.buildSpecialColors();
-  };
+  }
 
-  this.buildSpecialColors = function () {
+  buildSpecialColors () {
     const numberOfColors = this.NumberOfColors;
     const belowRangeColorIndex = numberOfColors + BELOW_RANGE_COLOR_INDEX;
     const aboveRangeColorIndex = numberOfColors + ABOVE_RANGE_COLOR_INDEX;
@@ -228,10 +242,10 @@ export default function LookupTable () {
 
     // Always use NanColor
     this.Table[nanColorIndex] = this.NaNColor;
-  };
+  }
 
   // Given a scalar value v, return an rgba color value from lookup table.
-  this.mapValue = function (v) {
+  mapValue (v) {
     const index = this.getIndex(v);
 
     if (index < 0) {
@@ -247,24 +261,9 @@ export default function LookupTable () {
     }
 
     return this.Table[index];
-  };
+  }
 
-  this.linearIndexLookupMain = function (v, p) {
-    let dIndex;
-
-    // NOTE: Added Math.floor since values were not integers? Check VTK source
-    if (v < p.Range[0]) {
-      dIndex = p.MaxIndex + BELOW_RANGE_COLOR_INDEX + 1.5;
-    } else if (v > p.Range[1]) {
-      dIndex = p.MaxIndex + ABOVE_RANGE_COLOR_INDEX + 1.5;
-    } else {
-      dIndex = (v + p.Shift) * p.Scale;
-    }
-
-    return Math.floor(dIndex);
-  };
-
-  this.getIndex = function (v) {
+  getIndex (v) {
     const p = {};
 
     p.Range = [];
@@ -288,7 +287,7 @@ export default function LookupTable () {
     }
 
     // Map to an index:
-    let index = this.linearIndexLookupMain(v, p);
+    let index = linearIndexLookupMain(v, p);
 
     // For backwards compatibility, if the index indicates an
     // Out-of-range value, truncate to index range for in-range colors.
@@ -299,9 +298,9 @@ export default function LookupTable () {
     }
 
     return index;
-  };
+  }
 
-  this.setTableValue = function (index, rgba) {
+  setTableValue (index, rgba) {
     // Check if it index, red, green, blue and alpha were passed as parameter
     if (arguments.length === 5) {
       rgba = Array.prototype.slice.call(arguments, 1);
@@ -327,5 +326,7 @@ export default function LookupTable () {
       // Are set correctly.
       this.buildSpecialColors();
     }
-  };
+  }
 }
+
+export default LookupTable;
