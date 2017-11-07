@@ -1,4 +1,3 @@
-import { external } from '../externalModules.js';
 import events from '../events.js';
 import triggerEvent from '../triggerEvent.js';
 
@@ -49,13 +48,11 @@ function purgeCacheIfNecessary () {
     delete imageCache[lastCachedImage.imageId];
     cachedImages.pop();
 
-    external.$(events).trigger('CornerstoneWebGLTextureRemoved', { imageId: lastCachedImage.imageId });
     triggerEvent(events, 'CornerstoneWebGLTextureRemoved', { imageId: lastCachedImage.imageId });
   }
 
   const cacheInfo = getCacheInfo();
 
-  external.$(events).trigger('CornerstoneWebGLTextureCacheFull', cacheInfo);
   triggerEvent(events, 'CornerstoneWebGLTextureCacheFull', cacheInfo);
 }
 

@@ -1,4 +1,3 @@
-import { external } from './externalModules.js';
 import events from './events.js';
 import triggerEvent from './triggerEvent.js';
 
@@ -24,7 +23,6 @@ export function setMaximumSizeBytes (numBytes) {
 
   maximumSizeInBytes = numBytes;
 
-  external.$(events).trigger('CornerstoneImageCacheMaximumSizeChanged');
   triggerEvent(events, 'CornerstoneImageCacheMaximumSizeChanged');
 
   purgeCacheIfNecessary();
@@ -57,13 +55,11 @@ function purgeCacheIfNecessary () {
 
     removeImagePromise(imageId);
 
-    external.$(events).trigger('CornerstoneImageCachePromiseRemoved', { imageId });
     triggerEvent(events, 'CornerstoneImageCachePromiseRemoved', { imageId });
   }
 
   const cacheInfo = getCacheInfo();
 
-  external.$(events).trigger('CornerstoneImageCacheFull', cacheInfo);
   triggerEvent(events, 'CornerstoneImageCacheFull', cacheInfo);
 }
 
@@ -114,7 +110,6 @@ export function putImagePromise (imageId, imagePromise) {
       image: cachedImage
     };
 
-    external.$(events).trigger('CornerstoneImageCacheChanged', eventDetails);
     triggerEvent(events, 'CornerstoneImageCacheChanged', eventDetails);
 
     cachedImage.sharedCacheKey = image.sharedCacheKey;
@@ -158,7 +153,6 @@ export function removeImagePromise (imageId) {
     image: cachedImage
   };
 
-  external.$(events).trigger('CornerstoneImageCacheChanged', eventDetails);
   triggerEvent(events, 'CornerstoneImageCacheChanged', eventDetails);
   decache(cachedImage.imagePromise);
 
@@ -207,7 +201,6 @@ export function changeImageIdCacheSize (imageId, newCacheSize) {
         image
       };
 
-      external.$(events).trigger('CornerstoneImageCacheChanged', eventDetails);
       triggerEvent(events, 'CornerstoneImageCacheChanged', eventDetails);
     });
   }

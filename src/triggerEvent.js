@@ -1,3 +1,5 @@
+import { external } from './externalModules.js';
+
 /**
  * Trigger a CustomEvent
  *
@@ -7,9 +9,9 @@
  * @returns {void}
  */
 export default function triggerEvent (el, type, detail = null) {
-  type = type.toLocaleLowerCase();
+  const event = new CustomEvent(type.toLocaleLowerCase(), { detail });
 
-  const event = new CustomEvent(type, { detail });
-
+  // TODO: remove jQuery event triggers
+  external.$(el).trigger(type, detail);
   el.dispatchEvent(event);
 }

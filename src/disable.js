@@ -1,4 +1,3 @@
-import { external } from './externalModules.js';
 import { getEnabledElements } from './enabledElements.js';
 import triggerEvent from './triggerEvent.js';
 
@@ -26,8 +25,6 @@ export default function (element) {
         element
       };
 
-      external.$(element).trigger('CornerstoneElementDisabled', eventData);
-      $(element).trigger('CornerstoneElementDisabled', eventData);
       triggerEvent(element, 'CornerstoneElementDisabled', eventData);
 
       // Remove the child DOM elements that we created (e.g.canvas)

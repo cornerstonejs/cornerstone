@@ -1,4 +1,3 @@
-import { external } from './externalModules.js';
 import { getEnabledElement } from './enabledElements.js';
 import fitToWindow from './fitToWindow.js';
 import updateImage from './updateImage.js';
@@ -62,7 +61,6 @@ export default function (element, fitViewportToWindow) {
     element
   };
 
-  external.$(element).trigger('CornerstoneElementResized', eventData);
   triggerEvent(element, 'CornerstoneElementResized', eventData);
 
   if (enabledElement.image === undefined) {
