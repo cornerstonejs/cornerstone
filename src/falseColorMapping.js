@@ -62,9 +62,7 @@ function getRestoreImageMethod (image) {
     if (image.origPixelData) {
       const pixelData = image.origPixelData;
 
-      image.getPixelData = function () {
-        return pixelData;
-      };
+      image.getPixelData = () => pixelData;
     }
 
     // Remove some attributes added by false color mapping
@@ -110,6 +108,7 @@ function restoreImage (image) {
 
 /**
  * Convert an image to a false color image
+ *
  * @param {Image} image A Cornerstone Image Object
  * @param {String|Object} colormap - it can be a colormap object or a colormap id (string)
  *
