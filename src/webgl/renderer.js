@@ -180,14 +180,11 @@ function generateTexture (image) {
 
   // Calculate the size in bytes of this image in memory
   const sizeInBytes = image.width * image.height * TEXTURE_BYTES[imageDataType];
-  const imageTexture = {
+
+  return {
     texture,
     sizeInBytes
   };
-
-
-  return imageTexture;
-
 }
 
 function getImageTexture (image) {

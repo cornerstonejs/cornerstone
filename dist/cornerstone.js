@@ -343,7 +343,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-exports.default = function (enabledElement, invalidated) {
+exports.default = function (enabledElement) {
+  var invalidated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
   enabledElement.needsRedraw = true;
   if (invalidated) {
     enabledElement.invalid = true;
@@ -370,8 +372,13 @@ exports.default = function (canvas, image) {
     throw new Error('getDefaultViewport: parameter image must not be undefined');
   }
 
-  var viewport = {
-    scale: 1.0,
+  // Fit image to window
+  var verticalScale = canvas.height / image.rows;
+  var horizontalScale = canvas.width / image.columns;
+  var scale = Math.min(horizontalScale, verticalScale);
+
+  return {
+    scale: scale,
     translation: {
       x: 0,
       y: 0
@@ -388,14 +395,6 @@ exports.default = function (canvas, image) {
     modalityLUT: image.modalityLUT,
     voiLUT: image.voiLUT
   };
-
-  // Fit image to window
-  var verticalScale = canvas.height / image.rows;
-  var horizontalScale = canvas.width / image.columns;
-
-  viewport.scale = Math.min(horizontalScale, verticalScale);
-
-  return viewport;
 };
 
 /***/ }),
@@ -749,8 +748,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 exports.default = function (enabledElement) {
-  // For now we will calculate it every time it is requested.  In the future, we may want to cache
-  // It in the enabled element to speed things up
+  // For now we will calculate it every time it is requested.
+  // In the future, we may want to cache it in the enabled element to speed things up.
   return (0, _calculateTransform2.default)(enabledElement);
 };
 
@@ -1622,15 +1621,21 @@ exports.default = function (slope, intercept, modalityLUT) {
 };
 
 /**
- * This module generates a Modality LUT
+ * Generates a linear modality transformation function
+ *
+ * See DICOM PS3.3 C.11.1 Modality LUT Module
+ *
+ * http://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.11.html
+ *
+ * @param {Number} slope m in the equation specified by Rescale Intercept (0028,1052).
+ * @param {Number} intercept The value b in relationship between stored values (SV) and the output units specified in Rescale Type (0028,1054).
+
+ Output units = m*SV + b.
+ * @return {function(*): *} A linear modality LUT function. Given a stored pixel it returns the modality pixel value
  */
-
 function generateLinearModalityLUT(slope, intercept) {
-  var localSlope = slope;
-  var localIntercept = intercept;
-
-  return function (sp) {
-    return sp * localSlope + localIntercept;
+  return function (storedPixelValue) {
+    return storedPixelValue * slope + intercept;
   };
 }
 
@@ -1639,16 +1644,26 @@ function generateNonLinearModalityLUT(modalityLUT) {
   var maxValue = modalityLUT.lut[modalityLUT.lut.length - 1];
   var maxValueMapped = modalityLUT.firstValueMapped + modalityLUT.lut.length;
 
-  return function (sp) {
-    if (sp < modalityLUT.firstValueMapped) {
+  return function (storedPixelValue) {
+    if (storedPixelValue < modalityLUT.firstValueMapped) {
       return minValue;
-    } else if (sp >= maxValueMapped) {
+    } else if (storedPixelValue >= maxValueMapped) {
       return maxValue;
     }
 
-    return modalityLUT.lut[sp];
+    return modalityLUT.lut[storedPixelValue];
   };
 }
+
+/**
+ * Get the appropriate Modality LUT for the current situation.
+ *
+ * @param {Number} [slope] m in the equation specified by Rescale Intercept (0028,1052).
+ * @param {Number} [intercept] The value b in relationship between stored values (SV) and the output units specified in Rescale Type (0028,1054).
+ * @param {Function} [modalityLUT] A modality LUT function. Given a stored pixel it returns the modality pixel value.
+ *
+ * @return {function(*): *} A modality LUT function. Given a stored pixel it returns the modality pixel value.
+ */
 
 /***/ }),
 /* 19 */
@@ -2629,9 +2644,8 @@ exports.default = function (image, lookupTable) {
   var numPixels = image.width * image.height;
   var origPixelData = image.origPixelData || image.getPixelData();
   var storedColorPixelData = new Uint8Array(numPixels * 4);
-  var localLookupTable = lookupTable;
-  var sp = void 0,
-      mapped = void 0;
+  var sp = void 0;
+  var mapped = void 0;
 
   image.color = true;
   image.falseColor = true;
@@ -2651,18 +2665,18 @@ exports.default = function (image, lookupTable) {
   } else if (minPixelValue < 0) {
     while (storedPixelDataIndex < numPixels) {
       sp = origPixelData[storedPixelDataIndex++];
-      storedColorPixelData[canvasImageDataIndex++] = localLookupTable[sp + -minPixelValue][0]; // Red
-      storedColorPixelData[canvasImageDataIndex++] = localLookupTable[sp + -minPixelValue][1]; // Green
-      storedColorPixelData[canvasImageDataIndex++] = localLookupTable[sp + -minPixelValue][2]; // Blue
-      storedColorPixelData[canvasImageDataIndex++] = localLookupTable[sp + -minPixelValue][3]; // Alpha
+      storedColorPixelData[canvasImageDataIndex++] = lookupTable[sp + -minPixelValue][0]; // Red
+      storedColorPixelData[canvasImageDataIndex++] = lookupTable[sp + -minPixelValue][1]; // Green
+      storedColorPixelData[canvasImageDataIndex++] = lookupTable[sp + -minPixelValue][2]; // Blue
+      storedColorPixelData[canvasImageDataIndex++] = lookupTable[sp + -minPixelValue][3]; // Alpha
     }
   } else {
     while (storedPixelDataIndex < numPixels) {
       sp = origPixelData[storedPixelDataIndex++];
-      storedColorPixelData[canvasImageDataIndex++] = localLookupTable[sp][0]; // Red
-      storedColorPixelData[canvasImageDataIndex++] = localLookupTable[sp][1]; // Green
-      storedColorPixelData[canvasImageDataIndex++] = localLookupTable[sp][2]; // Blue
-      storedColorPixelData[canvasImageDataIndex++] = localLookupTable[sp][3]; // Alpha
+      storedColorPixelData[canvasImageDataIndex++] = lookupTable[sp][0]; // Red
+      storedColorPixelData[canvasImageDataIndex++] = lookupTable[sp][1]; // Green
+      storedColorPixelData[canvasImageDataIndex++] = lookupTable[sp][2]; // Blue
+      storedColorPixelData[canvasImageDataIndex++] = lookupTable[sp][3]; // Alpha
     }
   }
 
@@ -4384,7 +4398,7 @@ function generateNonLinearVOILUT(voiLUT) {
  *
  * @param {Number} windowWidth Window Width
  * @param {Number} windowCenter Window Center
- * @param {LUT} voiLUT Volume of Interest Lookup Table Object
+ * @param {LUT} [voiLUT] Volume of Interest Lookup Table Object
  *
  * @return {VOILUTFunction} VOI LUT mapping function
  */
@@ -4699,12 +4713,11 @@ function generateTexture(image) {
 
   // Calculate the size in bytes of this image in memory
   var sizeInBytes = image.width * image.height * TEXTURE_BYTES[imageDataType];
-  var imageTexture = {
+
+  return {
     texture: texture,
     sizeInBytes: sizeInBytes
   };
-
-  return imageTexture;
 }
 
 function getImageTexture(image) {
@@ -5378,12 +5391,18 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 exports.default = function () {
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-  }
-
   return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
 };
+
+function s4() {
+  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+}
+
+/**
+ * Generate a unique identifier
+ *
+ * @return {string} A unique identifier
+ */
 
 /***/ }),
 /* 50 */
@@ -6333,13 +6352,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 exports.default = function (element, viewport) {
-
   var enabledElement = (0, _enabledElements.getEnabledElement)(element);
 
-  enabledElement.viewport.scale = viewport.scale;
   enabledElement.viewport.translation.x = viewport.translation.x;
   enabledElement.viewport.translation.y = viewport.translation.y;
-  enabledElement.viewport.voi.windowWidth = viewport.voi.windowWidth;
   enabledElement.viewport.voi.windowCenter = viewport.voi.windowCenter;
   enabledElement.viewport.invert = viewport.invert;
   enabledElement.viewport.pixelReplication = viewport.pixelReplication;
@@ -6351,10 +6367,10 @@ exports.default = function (element, viewport) {
 
   // Prevent window width from being too small (note that values close to zero are valid and can occur with
   // PET images in particular)
-  enabledElement.viewport.voi.windowWidth = Math.max(enabledElement.viewport.voi.windowWidth, MIN_WINDOW_WIDTH);
+  enabledElement.viewport.voi.windowWidth = Math.max(viewport.voi.windowWidth, MIN_WINDOW_WIDTH);
 
   // Prevent scale from getting too small
-  enabledElement.viewport.scale = Math.max(enabledElement.viewport.scale, MIN_VIEWPORT_SCALE);
+  enabledElement.viewport.scale = Math.max(viewport.scale, MIN_VIEWPORT_SCALE);
 
   // Normalize the rotation value to a positive rotation in degrees
   enabledElement.viewport.rotation %= 360;
@@ -6373,10 +6389,6 @@ var _updateImage = __webpack_require__(2);
 var _updateImage2 = _interopRequireDefault(_updateImage);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * This module contains functions to deal with getting and setting the viewport for an enabled element
- */
 
 var MIN_WINDOW_WIDTH = 0.000001;
 var MIN_VIEWPORT_SCALE = 0.0001;

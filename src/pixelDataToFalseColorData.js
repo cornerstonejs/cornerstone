@@ -19,8 +19,8 @@ export default function (image, lookupTable) {
   const numPixels = image.width * image.height;
   const origPixelData = image.origPixelData || image.getPixelData();
   const storedColorPixelData = new Uint8Array(numPixels * 4);
-  const localLookupTable = lookupTable;
-  let sp, mapped;
+  let sp;
+  let mapped;
 
   image.color = true;
   image.falseColor = true;
@@ -40,18 +40,18 @@ export default function (image, lookupTable) {
   } else if (minPixelValue < 0) {
     while (storedPixelDataIndex < numPixels) {
       sp = origPixelData[storedPixelDataIndex++];
-      storedColorPixelData[canvasImageDataIndex++] = localLookupTable[sp + (-minPixelValue)][0]; // Red
-      storedColorPixelData[canvasImageDataIndex++] = localLookupTable[sp + (-minPixelValue)][1]; // Green
-      storedColorPixelData[canvasImageDataIndex++] = localLookupTable[sp + (-minPixelValue)][2]; // Blue
-      storedColorPixelData[canvasImageDataIndex++] = localLookupTable[sp + (-minPixelValue)][3]; // Alpha
+      storedColorPixelData[canvasImageDataIndex++] = lookupTable[sp + (-minPixelValue)][0]; // Red
+      storedColorPixelData[canvasImageDataIndex++] = lookupTable[sp + (-minPixelValue)][1]; // Green
+      storedColorPixelData[canvasImageDataIndex++] = lookupTable[sp + (-minPixelValue)][2]; // Blue
+      storedColorPixelData[canvasImageDataIndex++] = lookupTable[sp + (-minPixelValue)][3]; // Alpha
     }
   } else {
     while (storedPixelDataIndex < numPixels) {
       sp = origPixelData[storedPixelDataIndex++];
-      storedColorPixelData[canvasImageDataIndex++] = localLookupTable[sp][0]; // Red
-      storedColorPixelData[canvasImageDataIndex++] = localLookupTable[sp][1]; // Green
-      storedColorPixelData[canvasImageDataIndex++] = localLookupTable[sp][2]; // Blue
-      storedColorPixelData[canvasImageDataIndex++] = localLookupTable[sp][3]; // Alpha
+      storedColorPixelData[canvasImageDataIndex++] = lookupTable[sp][0]; // Red
+      storedColorPixelData[canvasImageDataIndex++] = lookupTable[sp][1]; // Green
+      storedColorPixelData[canvasImageDataIndex++] = lookupTable[sp][2]; // Blue
+      storedColorPixelData[canvasImageDataIndex++] = lookupTable[sp][3]; // Alpha
     }
   }
 
@@ -64,7 +64,5 @@ export default function (image, lookupTable) {
   image.maxPixelValue = 255;
   image.windowWidth = 255;
   image.windowCenter = 128;
-  image.getPixelData = function () {
-    return storedColorPixelData;
-  };
+  image.getPixelData = () => storedColorPixelData;
 }

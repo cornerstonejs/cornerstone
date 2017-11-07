@@ -1,7 +1,3 @@
-/**
- * This module contains functions to deal with getting and setting the viewport for an enabled element
- */
-
 import { getEnabledElement } from './enabledElements.js';
 import updateImage from './updateImage.js';
 
@@ -16,13 +12,10 @@ const MIN_VIEWPORT_SCALE = 0.0001;
  * @returns {void}
  */
 export default function (element, viewport) {
-
   const enabledElement = getEnabledElement(element);
 
-  enabledElement.viewport.scale = viewport.scale;
   enabledElement.viewport.translation.x = viewport.translation.x;
   enabledElement.viewport.translation.y = viewport.translation.y;
-  enabledElement.viewport.voi.windowWidth = viewport.voi.windowWidth;
   enabledElement.viewport.voi.windowCenter = viewport.voi.windowCenter;
   enabledElement.viewport.invert = viewport.invert;
   enabledElement.viewport.pixelReplication = viewport.pixelReplication;
@@ -34,10 +27,10 @@ export default function (element, viewport) {
 
   // Prevent window width from being too small (note that values close to zero are valid and can occur with
   // PET images in particular)
-  enabledElement.viewport.voi.windowWidth = Math.max(enabledElement.viewport.voi.windowWidth, MIN_WINDOW_WIDTH);
+  enabledElement.viewport.voi.windowWidth = Math.max(viewport.voi.windowWidth, MIN_WINDOW_WIDTH);
 
   // Prevent scale from getting too small
-  enabledElement.viewport.scale = Math.max(enabledElement.viewport.scale, MIN_VIEWPORT_SCALE);
+  enabledElement.viewport.scale = Math.max(viewport.scale, MIN_VIEWPORT_SCALE);
 
   // Normalize the rotation value to a positive rotation in degrees
   enabledElement.viewport.rotation %= 360;
