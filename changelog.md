@@ -1,3 +1,20 @@
+# Version 1.1.0
+
+- Major changes:
+
+In 1.1.0 we have added several rendering functions to support the use of layers for composite images.
+
+- *renderPseudoColorImage*: This renders a grayscale image as a color image using a color lookup table after first applying the modality and VOI LUT transformations. This is the described approach for pseudo-color image display in the DICOM standard (http://dicom.nema.org/medical/dicom/current/output/chtml/part04/sect_N.2.html).
+
+Previously, users had to use convertToFalseColorImage which converted the entire grayscale image to a color image, and then rendered the RGB pixels. Now, you can set the 'colormap' property on the viewport and the image will be displayed in false color. The False Color Mapping and Composite Images examples have been updated accordingly.
+
+- *renderLabelMapImage*: In medical imaging it is very common to have results stored as label maps. Pixel values are set to arbitrary numbers which represent something specific in an image (e.g. 1 for heart, 2 for lung). These label maps do not require any modality LUT or VOI LUT transformations and can just be mapped to RGBA pixels through color lookup tables. Support for label maps has now (finally!) been added to Cornerstone. Just set the viewport property 'labelmap' to true and add a colormap and you can display a label map.
+
+- *renderGrayscaleImage*: Now has support for rendering using either just the alpha channel or RGBA channels. This is required for proper layer support.
+- Removed redundant code in renderWebImage which was being run before renderColorImage was being called. This should hopefully fix performance issues for Web images that have been reported (#164).
+- More work towards dropping jQuery from @maistho: Trigger all jQuery events inside triggerEvent function (#185)
+- Minor code cleanup, converted LookupTable to use ES6 Class syntax
+
 # Version 1.0.1
 
 - Switch package.json 'main' to minified version to reduce bundle sizes
