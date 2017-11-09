@@ -48,6 +48,8 @@ In this example,the image can be flipped (Horizontal/Vertical) or rotated (Clock
 
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
+<script src="../cornerstoneMath.js"></script>
+<script src="../cornerstoneTools.js"></script>
 
 <!-- include special code for these examples which provides images -->
 <script src="../exampleImageIdLoader.js"></script>
@@ -63,6 +65,8 @@ In this example,the image can be flipped (Horizontal/Vertical) or rotated (Clock
         var imageId = 'example://1';
         cornerstone.loadImage(imageId).then(function(image) {
             cornerstone.displayImage(element, image);
+            cornerstoneTools.mouseInput.enable(element);
+            cornerstoneTools.zoom.activate(element, 1);
         });
 
         // Add event handlers to flip or rotate the image
