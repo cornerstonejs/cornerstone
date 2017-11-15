@@ -1,3 +1,8 @@
+# Version 1.1.1
+
+- Added the CustomEvent polyfill for browsers which doesn't support it.
+- Fixed lint issues that were being displayed during tests.
+
 # Version 1.1.0
 
 - Major changes:
@@ -72,7 +77,7 @@ e.g. CornerstoneImageRendered has a native CustomEvent name 'cornerstoneimageren
 # Version 0.12.1
 
 - Fix NPM dependencies, added this changelog
-- Fix viewport sync in composite image example 
+- Fix viewport sync in composite image example
 
 # Version 0.12.0
 

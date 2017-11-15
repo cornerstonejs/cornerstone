@@ -1,4 +1,4 @@
-/*! cornerstone-core - 1.1.0 - 2017-11-09 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone-core - 1.1.1 - 2017-11-15 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -317,7 +317,15 @@ var _externalModules = __webpack_require__(33);
 function triggerEvent(el, type) {
   var detail = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
-  var event = new CustomEvent(type.toLocaleLowerCase(), { detail: detail });
+  var event = void 0;
+
+  // This check is needed to polyfill CustomEvent on IE11-
+  if (window.CustomEvent) {
+    event = new CustomEvent(type.toLocaleLowerCase(), { detail: detail });
+  } else {
+    event = document.createEvent('CustomEvent');
+    event.initCustomEvent(type.toLocaleLowerCase(), true, true, detail);
+  }
 
   // TODO: remove jQuery event triggers
   _externalModules.external.$(el).trigger(type, detail);
@@ -1110,7 +1118,7 @@ function renderGrayscaleImage(enabledElement, invalidated) {
  *
  * @param {EnabledElementLayer} layer The layer that the image will be added to
  * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
- * @param {Boolean} [useAlphaChannel] - Whether or not to render the grayscale image using only the alpha channel. 
+ * @param {Boolean} [useAlphaChannel] - Whether or not to render the grayscale image using only the alpha channel.
                                         This does not work if this layer is not the first layer in the enabledElement.
  * @returns {void}
  */
