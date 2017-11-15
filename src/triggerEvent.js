@@ -9,7 +9,15 @@ import { external } from './externalModules.js';
  * @returns {void}
  */
 export default function triggerEvent (el, type, detail = null) {
-  const event = new CustomEvent(type.toLocaleLowerCase(), { detail });
+  let event;
+
+  // This check is needed to polyfill CustomEvent on IE11-
+  if (window.CustomEvent) {
+    event = new CustomEvent(type.toLocaleLowerCase(), { detail });
+  } else {
+    event = document.createEvent('CustomEvent');
+    event.initCustomEvent(type.toLocaleLowerCase(), true, true, detail);
+  }
 
   // TODO: remove jQuery event triggers
   external.$(el).trigger(type, detail);
