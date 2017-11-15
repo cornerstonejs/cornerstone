@@ -1,3 +1,7 @@
+# Version 1.1.2
+
+- Changed the CustomEvent polyfill check to use typeof. It was not working on IE.
+
 # Version 1.1.1
 
 - Added the CustomEvent polyfill for browsers which doesn't support it.

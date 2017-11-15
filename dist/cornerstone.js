@@ -1,4 +1,4 @@
-/*! cornerstone-core - 1.1.1 - 2017-11-15 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone-core - 1.1.2 - 2017-11-15 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -320,7 +320,7 @@ function triggerEvent(el, type) {
   var event = void 0;
 
   // This check is needed to polyfill CustomEvent on IE11-
-  if (window.CustomEvent) {
+  if (typeof window.CustomEvent === 'function') {
     event = new CustomEvent(type.toLocaleLowerCase(), { detail: detail });
   } else {
     event = document.createEvent('CustomEvent');

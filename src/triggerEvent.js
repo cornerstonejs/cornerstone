@@ -12,7 +12,7 @@ export default function triggerEvent (el, type, detail = null) {
   let event;
 
   // This check is needed to polyfill CustomEvent on IE11-
-  if (window.CustomEvent) {
+  if (typeof window.CustomEvent === 'function') {
     event = new CustomEvent(type.toLocaleLowerCase(), { detail });
   } else {
     event = document.createEvent('CustomEvent');
