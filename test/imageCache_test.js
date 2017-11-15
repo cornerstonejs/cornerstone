@@ -6,8 +6,8 @@ import { default as imageCache,
   getImagePromise,
   removeImagePromise,
   getCacheInfo,
-  purgeCache,
-  changeImageIdCacheSize } from '../src/imageCache.js';
+  // changeImageIdCacheSize,
+  purgeCache } from '../src/imageCache.js';
 
 import events from '../src/events.js';
 
@@ -181,7 +181,7 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
     assert.throws(() => removeImagePromise('RandomImageId'));
   });
 
-  /*it('should allow image promises to have their cache size changed', function () {
+  /* it('should allow image promises to have their cache size changed', function () {
     const image = this.image;
     const imagePromise = this.imagePromise;
     const newCacheSize = 500;
@@ -224,6 +224,7 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
     setMaximumSizeBytes(1000);
 
     const promises = [];
+
     for (let i = 0; i < 10; i++) {
       // Create the image
       const imagePromise = $.Deferred();
