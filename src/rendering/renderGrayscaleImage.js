@@ -107,7 +107,7 @@ export function renderGrayscaleImage (enabledElement, invalidated) {
  *
  * @param {EnabledElementLayer} layer The layer that the image will be added to
  * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
- * @param {Boolean} [useAlphaChannel] - Whether or not to render the grayscale image using only the alpha channel. 
+ * @param {Boolean} [useAlphaChannel] - Whether or not to render the grayscale image using only the alpha channel.
                                         This does not work if this layer is not the first layer in the enabledElement.
  * @returns {void}
  */
@@ -132,4 +132,3 @@ export function addGrayscaleLayer (layer, invalidated, useAlphaChannel = false) 
 
   layer.renderingTools = saveLastRendered(layer);
 }
-

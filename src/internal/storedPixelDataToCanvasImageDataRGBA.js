@@ -2,7 +2,7 @@ import now from './now.js';
 
 /**
  * This function transforms stored pixel values into a canvas image data buffer
- * by using a LUT. 
+ * by using a LUT.
  *
  * @param {Image} image A Cornerstone Image Object
  * @param {Array} lut Lookup table array
