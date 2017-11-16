@@ -2,7 +2,7 @@
  * This module is responsible for drawing an image to an enabled elements canvas element
  */
 import now from '../internal/now.js';
-import generateLut from '../internal/generateLut.js';
+import generateColorLut from '../internal/generateColorLut.js';
 import storedColorPixelDataToCanvasImageData from '../internal/storedColorPixelDataToCanvasImageData.js';
 import storedRGBAPixelDataToCanvasImageData from '../internal/storedRGBAPixelDataToCanvasImageData.js';
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
@@ -21,7 +21,7 @@ function getLut (image, viewport) {
   }
 
   // Lut is invalid or not present, regenerate it and cache it
-  generateLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert);
+  generateColorLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert);
   image.cachedLut.windowWidth = viewport.voi.windowWidth;
   image.cachedLut.windowCenter = viewport.voi.windowCenter;
   image.cachedLut.invert = viewport.invert;
