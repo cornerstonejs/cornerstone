@@ -4765,6 +4765,15 @@ Object.defineProperty(exports, 'events', {
   }
 });
 
+var _triggerEvent = __webpack_require__(2);
+
+Object.defineProperty(exports, 'triggerEvent', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_triggerEvent).default;
+  }
+});
+
 var _externalModules = __webpack_require__(33);
 
 Object.defineProperty(exports, 'external', {
