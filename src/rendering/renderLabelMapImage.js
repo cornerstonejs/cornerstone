@@ -3,7 +3,7 @@ import now from '../internal/now.js';
 import initializeRenderCanvas from './initializeRenderCanvas.js';
 import saveLastRendered from './saveLastRendered.js';
 import doesImageNeedToBeRendered from './doesImageNeedToBeRendered.js';
-import storedPixelDataToCanvasImageDataColorLUT from '../internal/storedPixelDataToCanvasImageDataColorLUT';
+import storedPixelDataToCanvasImageDataColorLUT from '../internal/storedPixelDataToCanvasImageDataColorLUT.js';
 import colors from '../colors/index.js';
 
 function getRenderCanvas (enabledElement, image, invalidated) {

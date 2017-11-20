@@ -4,7 +4,7 @@ import initializeRenderCanvas from './initializeRenderCanvas.js';
 import getLut from './getLut.js';
 import saveLastRendered from './saveLastRendered.js';
 import doesImageNeedToBeRendered from './doesImageNeedToBeRendered.js';
-import storedPixelDataToCanvasImageDataPseudocolorLUT from '../internal/storedPixelDataToCanvasImageDataPseudocolorLUT';
+import storedPixelDataToCanvasImageDataPseudocolorLUT from '../internal/storedPixelDataToCanvasImageDataPseudocolorLUT.js';
 import colors from '../colors/index.js';
 
 function getRenderCanvas (enabledElement, image, invalidated) {

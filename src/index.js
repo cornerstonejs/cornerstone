@@ -77,4 +77,4 @@ export { convertImageToFalseColorImage,
   restoreImage } from './falseColorMapping.js';
 
 export { default as events } from './events.js';
-export { external } from './externalModules.js';
+export { default as external } from './externalModules.js';
