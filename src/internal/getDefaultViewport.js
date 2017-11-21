@@ -33,9 +33,20 @@ export default function (canvas, image) {
     };
   }
 
+  const verticalRatio = 1;
+  const horizontalRatio = 1;
+
+  if (image.rowPixelSpacing < image.columnPixelSpacing) {
+   //we believe that the row pixel is the same as css pixel 
+   horizontalRatio = image.columnPixelSpacing / image.rowPixelSpacing;
+  } else {
+   //we believe that the column pixel is the same as css pixel
+   verticalRatio = image.rowPixelSpacing / image.columnPixelSpacing;
+  }
+
   // Fit image to window
-  const verticalScale = canvas.height / image.rows;
-  const horizontalScale = canvas.width / image.columns;
+  const verticalScale = canvas.height / image.rows / verticalRatio;
+  const horizontalScale = canvas.width / image.columns / horizontalRatio;
   const scale = Math.min(horizontalScale, verticalScale);
 
   return {
