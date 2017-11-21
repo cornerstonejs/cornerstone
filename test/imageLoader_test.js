@@ -2,9 +2,9 @@
 import { assert } from 'chai';
 
 import { registerImageLoader,
-       registerUnknownImageLoader,
-       loadImage,
-       loadAndCacheImage } from '../src/index';
+  registerUnknownImageLoader,
+  loadImage,
+  loadAndCacheImage } from '../src/index';
 
 describe('imageLoader registration module', function () {
   beforeEach(function () {
@@ -68,7 +68,7 @@ describe('imageLoader loading module', function () {
       console.log('loading via exampleImageLoader2');
       console.log(options);
 
-      return $.Deferred();
+      return external.$.Deferred();
     };
 
     this.exampleScheme1 = 'example1';

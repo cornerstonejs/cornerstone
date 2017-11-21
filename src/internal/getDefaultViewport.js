@@ -1,11 +1,6 @@
 /**
- * This module contains a function to get a default viewport for an image given
- * a canvas element to display it in
- *
- */
-
-/**
  * Creates a new viewport object containing default values for the image and canvas
+ *
  * @param {HTMLElement} canvas A Canvas DOM element
  * @param {Image} image A Cornerstone Image Object
  * @returns {Viewport} viewport object
@@ -16,11 +11,35 @@ let defaultViewportFunction = function (canvas, image) {
   }
 
   if (image === undefined) {
-    throw new Error('getDefaultViewport: parameter image must not be undefined');
+    return {
+      scale: 1,
+      translation: {
+        x: 0,
+        y: 0
+      },
+      voi: {
+        windowWidth: undefined,
+        windowCenter: undefined
+      },
+      invert: false,
+      pixelReplication: false,
+      rotation: 0,
+      hflip: false,
+      vflip: false,
+      modalityLUT: undefined,
+      voiLUT: undefined,
+      colormap: undefined,
+      labelmap: false
+    };
   }
 
-  const viewport = {
-    scale: 1.0,
+  // Fit image to window
+  const verticalScale = canvas.height / image.rows;
+  const horizontalScale = canvas.width / image.columns;
+  const scale = Math.min(horizontalScale, verticalScale);
+
+  return {
+    scale,
     translation: {
       x: 0,
       y: 0
@@ -35,16 +54,10 @@ let defaultViewportFunction = function (canvas, image) {
     hflip: false,
     vflip: false,
     modalityLUT: image.modalityLUT,
-    voiLUT: image.voiLUT
+    voiLUT: image.voiLUT,
+    colormap: image.colormap,
+    labelmap: Boolean(image.labelmap)
   };
-
-  // Fit image to window
-  const verticalScale = canvas.height / image.rows;
-  const horizontalScale = canvas.width / image.columns;
-
-  viewport.scale = Math.min(horizontalScale, verticalScale);
-
-  return viewport;
 };
 
 export default function (canvas, image) {

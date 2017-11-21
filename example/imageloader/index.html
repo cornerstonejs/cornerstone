@@ -101,7 +101,7 @@
 
         // load the image and display it
         var imageId = 'myImageLoader://1';
-        cornerstone.loadImage(imageId).done(function(image) {
+        cornerstone.loadImage(imageId).then(function(image) {
             cornerstone.displayImage(element, image);
         });
 

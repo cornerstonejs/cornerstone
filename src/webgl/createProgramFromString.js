@@ -9,20 +9,20 @@
  */
 function compileShader (gl, shaderSource, shaderType) {
 
-    // Create the shader object
+  // Create the shader object
   const shader = gl.createShader(shaderType);
 
-    // Set the shader source code.
+  // Set the shader source code.
   gl.shaderSource(shader, shaderSource);
 
-    // Compile the shader
+  // Compile the shader
   gl.compileShader(shader);
 
-    // Check if it compiled
+  // Check if it compiled
   const success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
 
   if (!success && !gl.isContextLost()) {
-        // Something went wrong during compilation; get the error
+    // Something went wrong during compilation; get the error
     const infoLog = gl.getShaderInfoLog(shader);
 
     console.error(`Could not compile shader:\n${infoLog}`);
@@ -41,21 +41,21 @@ function compileShader (gl, shaderSource, shaderType) {
  */
 function createProgram (gl, vertexShader, fragmentShader) {
 
-    // Create a program.
+  // Create a program.
   const program = gl.createProgram();
 
-    // Attach the shaders.
+  // Attach the shaders.
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
 
-    // Link the program.
+  // Link the program.
   gl.linkProgram(program);
 
-    // Check if it linked.
+  // Check if it linked.
   const success = gl.getProgramParameter(program, gl.LINK_STATUS);
 
   if (!success && !gl.isContextLost()) {
-        // Something went wrong with the link
+    // Something went wrong with the link
     const infoLog = gl.getProgramInfoLog(program);
 
     console.error(`WebGL program filed to link:\n${infoLog}`);

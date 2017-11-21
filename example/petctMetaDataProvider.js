@@ -4,7 +4,7 @@
 
     function metaDataProvider(type, imageId)
     {
-        if(type === 'imagePlane') {
+        if(type === 'imagePlaneModule') {
 
             if (imageId === 'ct://1') {
                 return {
