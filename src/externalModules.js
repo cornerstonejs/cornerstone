@@ -1,3 +1,12 @@
-import $ from 'jquery';
+let $ = window.$;
 
-export { $ };
+const external = {
+  set $ (module) {
+    $ = module;
+  },
+  get $ () {
+    return $;
+  }
+};
+
+export { external };

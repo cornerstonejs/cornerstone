@@ -62,9 +62,7 @@ function getRestoreImageMethod (image) {
     if (image.origPixelData) {
       const pixelData = image.origPixelData;
 
-      image.getPixelData = function () {
-        return pixelData;
-      };
+      image.getPixelData = () => pixelData;
     }
 
     // Remove some attributes added by false color mapping
@@ -74,8 +72,8 @@ function getRestoreImageMethod (image) {
   };
 }
 
-  //
-  // Then we need to make sure it will be converted into a colormap object if it's as string.
+//
+// Then we need to make sure it will be converted into a colormap object if it's as string.
 
 /**
  * User can pass a colormap or its id as string to some of these public functions.
@@ -110,6 +108,7 @@ function restoreImage (image) {
 
 /**
  * Convert an image to a false color image
+ *
  * @param {Image} image A Cornerstone Image Object
  * @param {String|Object} colormap - it can be a colormap object or a colormap id (string)
  *
@@ -184,5 +183,5 @@ function convertToFalseColorImage (element, colormap) {
 }
 
 export { convertImageToFalseColorImage,
-         convertToFalseColorImage,
-         restoreImage };
+  convertToFalseColorImage,
+  restoreImage };

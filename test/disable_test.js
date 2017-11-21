@@ -23,13 +23,15 @@ describe('Disable an Element', function () {
     disable(this.element);
   });
 
-  it('should fire CornerstoneElementDisabled', function () {
-    const element = this.element;
+  it('should fire CornerstoneElementDisabled', function (done) {
+    const element = this.element2;
 
     // Assert
-    $(element).on('CornerstoneElementDisabled', function (event, eventData) {
-      assert.equal(eventData.element, element);
+    element.addEventListener('cornerstoneelementdisabled', function (event) {
+      assert.equal(event.target, element);
+      done();
     });
+    disable(element);
   });
 
   it('should no longer be available in the enabledElement array', function () {

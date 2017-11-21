@@ -1,13 +1,15 @@
-import { default as drawImage } from './drawImage.js';
-import { default as generateLut } from './generateLut.js';
-import { default as getDefaultViewport } from './getDefaultViewport.js';
-import { default as requestAnimationFrame } from './requestAnimationFrame.js';
-import { default as storedPixelDataToCanvasImageData } from './storedPixelDataToCanvasImageData.js';
-import { default as storedColorPixelDataToCanvasImageData } from './storedColorPixelDataToCanvasImageData.js';
-import { default as getTransform } from './getTransform.js';
-import { default as calculateTransform } from './calculateTransform.js';
+import drawImage from './drawImage.js';
+import generateLut from './generateLut.js';
+import getDefaultViewport from './getDefaultViewport.js';
+import requestAnimationFrame from './requestAnimationFrame.js';
+import storedPixelDataToCanvasImageData from './storedPixelDataToCanvasImageData.js';
+import storedPixelDataToCanvasImageDataRGBA from './storedPixelDataToCanvasImageDataRGBA.js';
+import storedColorPixelDataToCanvasImageData from './storedColorPixelDataToCanvasImageData.js';
+import storedPixelDataToCanvasImageDataColorLUT from './storedPixelDataToCanvasImageDataColorLUT.js';
+import storedPixelDataToCanvasImageDataPseudocolorLUT from './storedPixelDataToCanvasImageDataPseudocolorLUT.js';
+import getTransform from './getTransform.js';
+import calculateTransform from './calculateTransform.js';
 import { Transform } from './transform.js';
-
 
 export default {
   drawImage,
@@ -15,6 +17,9 @@ export default {
   getDefaultViewport,
   requestAnimationFrame,
   storedPixelDataToCanvasImageData,
+  storedPixelDataToCanvasImageDataRGBA,
+  storedPixelDataToCanvasImageDataColorLUT,
+  storedPixelDataToCanvasImageDataPseudocolorLUT,
   storedColorPixelDataToCanvasImageData,
   getTransform,
   calculateTransform,
