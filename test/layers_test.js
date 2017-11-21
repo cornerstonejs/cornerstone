@@ -4,7 +4,6 @@ import enable from '../src/enable.js';
 import updateImage from '../src/updateImage.js';
 import disable from '../src/disable.js';
 import { getEnabledElement } from '../src/enabledElements.js';
-import metaData from '../src/metaData.js';
 
 import {
   addLayer,
@@ -39,7 +38,9 @@ describe('layers', function () {
       height,
       width,
       color: false,
-      sizeInBytes: width * height * 2
+      sizeInBytes: width * height * 2,
+      columnPixelSpacing: 1,
+      rowPixelSpacing: 1
     };
 
     const getPixelData2 = () => new Uint8Array([5, 6, 7, 8]);
@@ -58,25 +59,10 @@ describe('layers', function () {
       height,
       width,
       color: false,
-      sizeInBytes: width * height * 2
+      sizeInBytes: width * height * 2,
+      columnPixelSpacing: 2,
+      rowPixelSpacing: 2
     };
-
-    const imagePlaneMetadata = {
-      exampleImageId1: {
-        columnPixelSpacing: 1,
-        rowPixelSpacing: 1
-      },
-      exampleImageId2: {
-        columnPixelSpacing: 2,
-        rowPixelSpacing: 2
-      }
-    };
-
-    metaData.addProvider((type, imageId) => {
-      if (type === 'imagePlane') {
-        return imagePlaneMetadata[imageId];
-      }
-    });
 
     enable(this.element);
   });
@@ -96,10 +82,10 @@ describe('layers', function () {
 
   it('addLayers: should fire CornerstoneLayerAdded', function (done) {
     // Arrange
-    $(this.element).on('CornerstoneLayerAdded', (event, eventData) => {
+    this.element.addEventListener('cornerstonelayeradded', (event) => {
       // Assert
-      expect(eventData).to.be.an('object');
-      expect(eventData);
+      expect(event.detail).to.be.an('object');
+      expect(event.detail);
       done();
     });
 
@@ -221,9 +207,9 @@ describe('layers', function () {
 
     const layerId2 = addLayer(this.element, this.image2);
 
-    $(this.element).on('CornerstoneActiveLayerChanged', (event, eventData) => {
+    this.element.addEventListener('cornerstoneactivelayerchanged', (event) => {
       // Assert
-      expect(eventData.layerId).to.equal(layerId2);
+      expect(event.detail.layerId).to.equal(layerId2);
       done();
     });
 

@@ -14,14 +14,22 @@ describe('Enable a DOM Element for Canvas Renderer', function () {
     enable(this.element, options);
   });
 
-  it('should fire CornerstoneImageRendered', function () {
-    const element = this.element;
+  it('should fire CornerstonePreRender', function (done) {
+    // Arrange
+    const element = document.createElement('div');
 
-    // Assert
-    $(element).on('CornerstoneImageRendered', function (event, eventData) {
-      assert.equal(eventData.element, element);
+    element.addEventListener('cornerstoneprerender', function (event) {
+      assert.equal(event.target, element);
+
+      // Cleanup
+      disable(element);
+      done();
     });
 
+    // Act
+    enable(element, {});
+
+    // Assert
     const enabledElement = getEnabledElement(element);
 
     assert.equal(enabledElement.element, element);

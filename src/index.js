@@ -1,15 +1,18 @@
 // Internal (some of these are from old internal/legacy expose)
 export { default as drawImage } from './internal/drawImage.js';
 export { default as generateLut } from './internal/generateLut.js';
-export { default as generateLutNew } from './internal/generateLutNew.js';
 export { default as getDefaultViewport } from './internal/getDefaultViewport.js';
 export { default as requestAnimationFrame } from './internal/requestAnimationFrame.js';
 export { default as storedPixelDataToCanvasImageData } from './internal/storedPixelDataToCanvasImageData.js';
 export { default as storedColorPixelDataToCanvasImageData } from './internal/storedColorPixelDataToCanvasImageData.js';
+export { default as storedPixelDataToCanvasImageDataColorLUT } from './internal/storedPixelDataToCanvasImageDataColorLUT.js';
+export { default as storedPixelDataToCanvasImageDataPseudocolorLUT } from './internal/storedPixelDataToCanvasImageDataPseudocolorLUT.js';
 
 export { default as internal } from './internal/index.js';
 
 // Rendering
+export { renderLabelMapImage } from './rendering/renderLabelMapImage.js';
+export { renderPseudoColorImage } from './rendering/renderPseudoColorImage.js';
 export { renderColorImage } from './rendering/renderColorImage.js';
 export { renderGrayscaleImage } from './rendering/renderGrayscaleImage.js';
 export { renderWebImage } from './rendering/renderWebImage.js';
@@ -35,7 +38,8 @@ export {
   getLayers,
   getVisibleLayers,
   setActiveLayer,
-  getActiveLayer
+  getActiveLayer,
+  setLayerImage
 } from './layers.js';
 
 export { default as fitToWindow } from './fitToWindow.js';
@@ -73,3 +77,5 @@ export { convertImageToFalseColorImage,
   restoreImage } from './falseColorMapping.js';
 
 export { default as events } from './events.js';
+export { default as triggerEvent } from './triggerEvent.js';
+export { external } from './externalModules.js';

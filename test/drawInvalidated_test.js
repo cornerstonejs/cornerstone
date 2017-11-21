@@ -74,16 +74,16 @@ describe('drawInvalidated', function () {
     const image2 = this.image2;
 
     // Assert
-    $(element1).on('CornerstoneImageRendered', function () {
+    element1.addEventListener('cornerstoneimagerendered', function () {
       // If element1 is redrawn, then this test has failed.
       // Only element2 should be redrawn.
       done();
     });
 
-    $(element2).on('CornerstoneImageRendered', function (event, eventData) {
+    element2.addEventListener('cornerstoneimagerendered', function (event) {
       // Make sure element2 is redrawn since it has been invalidated
-      assert.equal(eventData.element, element2);
-      assert.equal(eventData.image, image2);
+      assert.equal(event.target, element2);
+      assert.equal(event.detail.image, image2);
       done();
     });
 
@@ -103,18 +103,18 @@ describe('drawInvalidated', function () {
     const image2 = this.image2;
 
     // Assert
-    $(element1).on('CornerstoneImageRendered', function (event, eventData) {
+    element1.addEventListener('cornerstoneimagerendered', function (event) {
       // If element1 is redrawn, then this test has failed.
       // Only element2 should be redrawn.
-      assert.equal(eventData.element, element1);
-      assert.equal(eventData.image, image1);
+      assert.equal(event.target, element1);
+      assert.equal(event.detail.image, image1);
       done();
     });
 
-    $(element2).on('CornerstoneImageRendered', function (event, eventData) {
+    element2.addEventListener('cornerstoneimagerendered', function (event) {
       // Make sure element2 is redrawn since it has been invalidated
-      assert.equal(eventData.element, element2);
-      assert.equal(eventData.image, image2);
+      assert.equal(event.target, element2);
+      assert.equal(event.detail.image, image2);
       done();
     });
 

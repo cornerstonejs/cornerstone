@@ -2,7 +2,8 @@ import { getEnabledElement } from './enabledElements.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import updateImage from './updateImage.js';
 import now from './internal/now.js';
-import { getActiveLayer } from './layers.js';
+import { setLayerImage } from './layers.js';
+import triggerEvent from './triggerEvent.js';
 
 /**
  * Sets a new image object for a given element.
@@ -28,16 +29,14 @@ export default function (element, image, viewport) {
   enabledElement.image = image;
 
   if (enabledElement.layers && enabledElement.layers.length) {
-    const activeLayer = getActiveLayer(element);
-
-    activeLayer.image = image;
+    setLayerImage(element, image);
   }
 
   if (enabledElement.viewport === undefined) {
     enabledElement.viewport = getDefaultViewport(enabledElement.canvas, image);
   }
 
-    // Merge viewport
+  // Merge viewport
   if (viewport) {
     for (const attrname in viewport) {
       if (viewport[attrname] !== null) {
@@ -65,7 +64,7 @@ export default function (element, image, viewport) {
     frameRate
   };
 
-  $(enabledElement.element).trigger('CornerstoneNewImage', newImageEventData);
+  triggerEvent(enabledElement.element, 'CornerstoneNewImage', newImageEventData);
 
   updateImage(element);
 }

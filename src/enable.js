@@ -1,12 +1,13 @@
-/**
- * This module is responsible for enabling an element to display images with cornerstone
- */
-
 import { addEnabledElement } from './enabledElements.js';
 import resize from './resize.js';
 import drawImageSync from './internal/drawImageSync.js';
 import requestAnimationFrame from './internal/requestAnimationFrame.js';
 import webGL from './webgl/index.js';
+import triggerEvent from './triggerEvent.js';
+
+/**
+ * This module is responsible for enabling an element to display images with cornerstone
+ */
 
 function hasImageOrLayers (enabledElement) {
   return enabledElement.image !== undefined || enabledElement.layers.length;
@@ -73,10 +74,12 @@ export default function (element, options) {
       return;
     }
 
-    $(enabledElement.element).trigger('CornerstonePreRender', {
+    const eventDetails = {
       enabledElement,
       timestamp
-    });
+    };
+
+    triggerEvent(enabledElement.element, 'CornerstonePreRender', eventDetails);
 
     if (enabledElement.needsRedraw && hasImageOrLayers(enabledElement)) {
       drawImageSync(enabledElement, enabledElement.invalid);

@@ -98,14 +98,10 @@
         var element = $('#dicomImage').get(0);
         cornerstone.enable(element);
 
-        // set event handlers
-        function onImageRendered(e, eventData) {
-            $('#topright').text("Render Time:" + eventData.renderTimeInMs + " ms");
-        }
-        $(element).on("CornerstoneImageRendered", onImageRendered);
-
         // setup handlers before we display the image
-        function onImageRendered(e, eventData) {
+        function onImageRendered(e) {
+            var eventData = e.detail;
+
             // set the canvas context to the image coordinate system
             cornerstone.setToPixelCoordinateSystem(eventData.enabledElement, eventData.canvasContext);
 
@@ -127,7 +123,7 @@
             $('#bottomright').text("Zoom:" + eventData.viewport.scale.toFixed(2));
 
         }
-        $(element).on("CornerstoneImageRendered", onImageRendered);
+        element.addEventListener('cornerstoneimagerendered', onImageRendered);
 
         // load and display the image
         var imagePromise = updateTheImage(0);
