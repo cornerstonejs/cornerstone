@@ -8,7 +8,7 @@ const uint8Shader = {};
  * @returns {Uint8Array} The image data for use by the WebGL shader
  */
 function storedPixelDataToImageData (image) {
-    // Transfer image data to alpha channel of WebGL texture
+  // Transfer image data to alpha channel of WebGL texture
   return image.getPixelData();
 }
 

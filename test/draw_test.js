@@ -46,10 +46,10 @@ describe('draw', function () {
 
     displayImage(this.element, this.image);
 
-    $(element).on('CornerstoneImageRendered', function (event, eventData) {
+    element.addEventListener('cornerstoneimagerendered', function (event) {
       // Assert
-      assert.equal(eventData.element, element);
-      assert.equal(eventData.image, image);
+      assert.equal(event.target, element);
+      assert.equal(event.detail.image, image);
       done();
     });
 

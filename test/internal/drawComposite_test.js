@@ -3,7 +3,6 @@ import { assert } from 'chai';
 import enable from '../../src/enable.js';
 import draw from '../../src/draw.js';
 import disable from '../../src/disable.js';
-import metaData from '../../src/metaData.js';
 
 import {
   addLayer
@@ -32,7 +31,9 @@ describe('layers', function () {
       height,
       width,
       color: false,
-      sizeInBytes: width * height * 2
+      sizeInBytes: width * height * 2,
+      columnPixelSpacing: 1,
+      rowPixelSpacing: 1
     };
 
     const getPixelData2 = () => new Uint8Array([5, 6, 7, 8]);
@@ -51,25 +52,10 @@ describe('layers', function () {
       height,
       width,
       color: false,
-      sizeInBytes: width * height * 2
+      sizeInBytes: width * height * 2,
+      columnPixelSpacing: 2,
+      rowPixelSpacing: 2
     };
-
-    const imagePlaneMetadata = {
-      exampleImageId1: {
-        columnPixelSpacing: 1,
-        rowPixelSpacing: 1
-      },
-      exampleImageId2: {
-        columnPixelSpacing: 2,
-        rowPixelSpacing: 2
-      }
-    };
-
-    metaData.addProvider((type, imageId) => {
-      if (type === 'imagePlane') {
-        return imagePlaneMetadata[imageId];
-      }
-    });
 
     enable(this.element);
   });
@@ -79,9 +65,9 @@ describe('layers', function () {
     addLayer(this.element, this.image1);
     addLayer(this.element, this.image2);
 
-    $(this.element).on('CornerstoneImageRendered', (event, eventData) => {
+    this.element.addEventListener('cornerstoneimagerendered', (event) => {
       // Assert
-      assert.equal(eventData.element, this.element);
+      assert.equal(event.target, this.element);
       done();
     });
 
@@ -96,9 +82,9 @@ describe('layers', function () {
       opacity: 0.7
     });
 
-    $(this.element).on('CornerstoneImageRendered', (event, eventData) => {
+    this.element.addEventListener('cornerstoneimagerendered', (event) => {
       // Assert
-      assert.equal(eventData.element, this.element);
+      assert.equal(event.target, this.element);
       done();
     });
 
@@ -113,9 +99,9 @@ describe('layers', function () {
       colormap: 'Blues'
     });
 
-    $(this.element).on('CornerstoneImageRendered', (event, eventData) => {
+    this.element.addEventListener('cornerstoneimagerendered', (event) => {
       // Assert
-      assert.equal(eventData.element, this.element);
+      assert.equal(event.target, this.element);
       done();
     });
 

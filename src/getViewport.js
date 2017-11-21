@@ -8,39 +8,12 @@ import { getEnabledElement } from './enabledElements.js';
  */
 export default function (element) {
   const enabledElement = getEnabledElement(element);
-
   const viewport = enabledElement.viewport;
 
   if (viewport === undefined) {
     return;
   }
 
-  const result = {
-    scale: viewport.scale,
-    translation: {
-      x: viewport.translation.x,
-      y: viewport.translation.y
-    },
-    voi: {
-      windowWidth: viewport.voi.windowWidth,
-      windowCenter: viewport.voi.windowCenter
-    },
-    invert: viewport.invert,
-    pixelReplication: viewport.pixelReplication,
-    rotation: viewport.rotation,
-    hflip: viewport.hflip,
-    vflip: viewport.vflip,
-    modalityLUT: viewport.modalityLUT,
-    voiLUT: viewport.voiLUT
-  };
-
-  if (viewport.computeVoi !== undefined) {
-    result.computeVoi = {
-      forceAutoVoi: viewport.computeVoi.forceAutoVoi,
-      type: viewport.computeVoi.type,
-      voiPresetIndex: viewport.computeVoi.voiPresetIndex
-    };
-  }
-
-  return result;
+  // Return a copy of the viewport
+  return Object.assign({}, viewport);
 }
