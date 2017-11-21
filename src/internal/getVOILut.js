@@ -29,11 +29,12 @@ function generateLinearVOILUT (windowWidth, windowCenter) {
  * @returns {VOILUTFunction} VOI LUT mapping function
  */
 function generateNonLinearVOILUT (voiLUT) {
-  const shift = voiLUT.numBitsPerEntry - 8;
+  // We don't trust the voiLUT.numBitsPerEntry, mainly thanks to Agfa!
+  const bitsPerEntry = Math.max(...voiLUT.lut).toString(2).length;
+  const shift = bitsPerEntry - 8;
   const minValue = voiLUT.lut[0] >> shift;
   const maxValue = voiLUT.lut[voiLUT.lut.length - 1] >> shift;
   const maxValueMapped = voiLUT.firstValueMapped + voiLUT.lut.length - 1;
-
 
   return function (modalityLutValue) {
     if (modalityLutValue < voiLUT.firstValueMapped) {
@@ -52,7 +53,7 @@ function generateNonLinearVOILUT (voiLUT) {
  *
  * @param {Number} windowWidth Window Width
  * @param {Number} windowCenter Window Center
- * @param {LUT} voiLUT Volume of Interest Lookup Table Object
+ * @param {LUT} [voiLUT] Volume of Interest Lookup Table Object
  *
  * @return {VOILUTFunction} VOI LUT mapping function
  */

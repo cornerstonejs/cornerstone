@@ -4,33 +4,17 @@
 Cornerstone Core
 ================
 
-Cornerstone is an open source project with a goal to deliver a complete web based medical imaging platform.  This
-repository contains the Cornerstone Core component which is a lightweight JavaScript library for displaying
-medical images in modern web browsers that support the HTML5 canvas element.
-Cornerstone Core is not meant to be a complete application itself, but instead a component
-that can be used as part of larger more complex applications.  See the
+Cornerstone is an open source project with a goal to deliver a complete web based medical imaging platform. This repository contains the Cornerstone Core component which is a lightweight JavaScript library for displaying medical images in modern web browsers that support the HTML5 canvas element. Cornerstone Core is not meant to be a complete application itself, but instead a component that can be used as part of larger more complex applications.  See the
 [OHIF Viewer](http://viewer.ohif.org/) for an example of using the various Cornerstone
 libraries to build a simple study viewer.
 
-Cornerstone Core is agnostic to the actual container used to store image pixels as well as the transport mechanism
-used to get the image data.  In fact, Cornerstone Core itself has no ability to read/parse or load images and instead
-depends on one or more [ImageLoaders](https://github.com/chafey/cornerstone/wiki/ImageLoader) to function.
-The goal here is to avoid constraining developers to work within a single container and transport (e.g. DICOM) since
-images are stored in a variety of formats (including proprietary).  By providing flexibility with respect to the
-container and transport, the highest performance image display may be obtained as no conversion to an alternate
-container or transport is required.  It is hoped that developers feel empowered to load images from any type of image
-container using any kind of transport.  See the
-[CornerstoneWADOImageLoader](https://github.com/chafey/cornerstoneWADOImageLoader) project for an example
+Cornerstone Core is agnostic to the actual container used to store image pixels as well as the transport mechanism used to get the image data.  In fact, Cornerstone Core itself has no ability to read/parse or load images and instead depends on one or more [ImageLoaders](https://github.com/chafey/cornerstone/wiki/ImageLoader) to function.
+
+The goal here is to avoid constraining developers to work within a single container and transport (e.g. DICOM) since images are stored in a variety of formats (including proprietary).  By providing flexibility with respect to the container and transport, the highest performance image display may be obtained as no conversion to an alternate container or transport is required.  It is hoped that developers feel empowered to load images from any type of image container using any kind of transport.  See the [CornerstoneWADOImageLoader](https://github.com/chafey/cornerstoneWADOImageLoader) project for an example
 of a DICOM WADO based Image Loader.
 
-Cornerstone Core is agnostic to the exact interaction paradigm being used.  It does not include any mouse, touch or
-keyboard bindings to manipulate the various image properties such as scale, translation or ww/wc.  The goal here
-is to avoid constraining developers using this library to fit into a given ui paradigm.  It is hoped that developers
-are empowered to create new paradigms possibly using new input mechanisms to interact with medical images (e.g.
-[Kinect](http://en.wikipedia.org/wiki/Kinect) or [Accelerometer](http://en.wikipedia.org/wiki/Accelerometer).
-Cornerstone does provide a set of API's allowing manipulation of the image properties via javascript.
-See the [CornerstoneTools](https://github.com/chafey/cornerstoneTools) library for an example of common tools built on top of
-Cornerstone.
+Cornerstone Core is agnostic to the exact interaction paradigm being used.  It does not include any mouse, touch or keyboard bindings to manipulate the various image properties such as scale, translation or ww/wc.  The goal here is to avoid constraining developers using this library to fit into a given ui paradigm.  It is hoped that developers are empowered to create new paradigms possibly using new input mechanisms to interact with medical images (e.g. [Kinect](http://en.wikipedia.org/wiki/Kinect) or [Accelerometer](http://en.wikipedia.org/wiki/Accelerometer).
+Cornerstone does provide a set of API's allowing manipulation of the image properties via javascript. See the [CornerstoneTools](https://github.com/chafey/cornerstoneTools) library for an example of common tools built on top of Cornerstone.
 
 Community
 ---------
@@ -86,6 +70,8 @@ Links
 [CornerstoneTools](https://github.com/chafey/cornerstoneTools) - A library of common tools that can be used with Cornerstone
 
 [CornerstoneWADOImageLoader](https://github.com/chafey/cornerstoneWADOImageLoader) - A Cornerstone Image Loader that works with WADO-URI, WADO-RS and DICOM P10 files
+
+[CornerstoneWebImageLoader](https://github.com/chafey/cornerstoneWebImageLoader) - A Cornerstone Image Loader that works with PNG and JPEG files
 
 [dicomParser](https://github.com/chafey/dicomParser) - A JavaScript library designed to parse DICOM for web browsers
 
@@ -159,15 +145,14 @@ what stack functionality is desired, all stacks ultimately need to be able to di
 
 _How do you envision this library supporting 3D functionality such as MPR, MIP and VR?_
 
-This library would be responsible for displaying the rendered image to the user.  The rendering of the
-3D image would be done by some other library - perhaps on the server side.  This library is purely 2D and has no knowledge of 3D image space.  It will probably make sense to have several layers on top of this library to provide 3D functionality.  For example, one layer that has a 3D viewport with properties such as transformation matrix, slice thickness, transfer function/LUT, segmentation masks, etc.  And another 3D tools layer that provides various tools on top of the 3d viewport (rotate, zoom, segment, scroll, etc).
+This library would be responsible for displaying the rendered image to the user.  The rendering of the 3D image would be done by some other library - perhaps on the server side.  This library is purely 2D and has no knowledge of 3D image space.  It will probably make sense to have several layers on top of this library to provide 3D functionality.  For example, one layer that has a 3D viewport with properties such as transformation matrix, slice thickness, transfer function/LUT, segmentation masks, etc.  And another 3D tools layer that provides various tools on top of the 3d viewport (rotate, zoom, segment, scroll, etc).
 
 OHIF/Cornerstone is working with the 3DSlicer project to integrate the two.  I also expect to implement
 client side MPR at some point as the browsers seem to be handling large memory much better.
 
 _Why did you add jQuery as a dependency?_
 
-Primarily for its custom event handling.
+Primarily for its custom event handling. This is being transitioned out and will be gone for 2.0.0.
 
 _I would like to contribute code - how do I do this?_
 
@@ -193,7 +178,7 @@ If it is in the roadmap, I intend to implement it some day - probably when I act
 Copyright
 =========
 
-Copyright 2016 Chris Hafey [chafey@gmail.com](mailto:chafey@gmail.com)
+Copyright 2017 Chris Hafey [chafey@gmail.com](mailto:chafey@gmail.com)
 
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
 [license-url]: LICENSE

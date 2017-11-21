@@ -14,6 +14,7 @@ module.exports = function(config) {
     frameworks: ['mocha'],
     reporters: ['progress', 'coverage'],
     files: [
+      'node_modules/promise-polyfill/promise.js',
       'test/*_test.js',
       'test/**/*_test.js'
     ],

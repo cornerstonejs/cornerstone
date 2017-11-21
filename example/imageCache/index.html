@@ -176,10 +176,11 @@
         var element = document.getElementById('dicomImage');
         cornerstone.enable(element);
 
-        function onImageRendered(e, eventData) {
+        function onImageRendered(e) {
+            var eventData = e.detail;
             $('#topright').text("Render Time:" + eventData.renderTimeInMs + " ms");
         }
-        $(element).on("CornerstoneImageRendered", onImageRendered);
+        element.addEventListener('cornerstoneimagerendered', onImageRendered);
 
         // load image and display it
         var imageId = "colorImageLoader://1";

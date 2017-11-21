@@ -64,7 +64,7 @@
 
         // load the image and display it
         var imageId = 'example://1';
-        cornerstone.loadImage(imageId).done(function(image) {
+        cornerstone.loadImage(imageId).then(function(image) {
             cornerstone.displayImage(element, image);
             var viewport = cornerstone.getViewport(element);
             $('#bottomright').text("Zoom: " + viewport.scale + "x");

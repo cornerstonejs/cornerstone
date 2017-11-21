@@ -1,6 +1,7 @@
 import { getEnabledElement } from './enabledElements.js';
 import fitToWindow from './fitToWindow.js';
 import updateImage from './updateImage.js';
+import triggerEvent from './triggerEvent.js';
 
 /**
  * This module is responsible for enabling an element to display images with cornerstone
@@ -10,9 +11,9 @@ import updateImage from './updateImage.js';
  * @returns {void}
  */
 function setCanvasSize (element, canvas) {
-    // The device pixel ratio is 1.0 for normal displays and > 1.0
-    // For high DPI displays like Retina
-    /*
+  // The device pixel ratio is 1.0 for normal displays and > 1.0
+  // For high DPI displays like Retina
+  /*
 
     This functionality is disabled due to buggy behavior on systems with mixed DPI's.  If the canvas
     is created on a display with high DPI (e.g. 2.0) and then the browser window is dragged to
@@ -31,10 +32,16 @@ function setCanvasSize (element, canvas) {
     }
     */
 
-  canvas.width = element.clientWidth;
-  canvas.height = element.clientHeight;
-  canvas.style.width = `${element.clientWidth}px`;
-  canvas.style.height = `${element.clientHeight}px`;
+  // Avoid setting the same value because it flashes the canvas with IE and Edge
+  if (canvas.width !== element.clientWidth) {
+    canvas.width = element.clientWidth;
+    canvas.style.width = `${element.clientWidth}px`;
+  }
+  // Avoid setting the same value because it flashes the canvas with IE and Edge
+  if (canvas.height !== element.clientHeight) {
+    canvas.height = element.clientHeight;
+    canvas.style.height = `${element.clientHeight}px`;
+  }
 }
 
 /**
@@ -54,7 +61,7 @@ export default function (element, fitViewportToWindow) {
     element
   };
 
-  $(element).trigger('CornerstoneElementResized', eventData);
+  triggerEvent(element, 'CornerstoneElementResized', eventData);
 
   if (enabledElement.image === undefined) {
     return;

@@ -12,10 +12,10 @@ const uint16Shader = {};
  */
 function storedPixelDataToImageData (image) {
 
-    // Transfer image data to alpha and luminance channels of WebGL texture
-    // Credit to @jpambrun and @fernandojsg
+  // Transfer image data to alpha and luminance channels of WebGL texture
+  // Credit to @jpambrun and @fernandojsg
 
-    // Pack uint16 into two uint8 channels (r and a)
+  // Pack uint16 into two uint8 channels (r and a)
   const pixelData = image.getPixelData();
   const numberOfChannels = 2;
   const data = new Uint8Array(image.width * image.height * numberOfChannels);
@@ -24,8 +24,8 @@ function storedPixelDataToImageData (image) {
   for (let i = 0; i < pixelData.length; i++) {
     const val = pixelData[i];
 
-    data[offset++] = parseInt(val & 0xFF, 10);
-    data[offset++] = parseInt(val >> 8, 10);
+    data[offset++] = val & 0xFF;
+    data[offset++] = val >> 8;
   }
 
   return data;
