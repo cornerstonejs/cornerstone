@@ -34,8 +34,8 @@ export default function (element) {
   const imageSize = getImageSize(enabledElement);
 
   const { image } = enabledElement;
-  const verticalRatio = 1;
-  const horizontalRatio = 1;
+  let verticalRatio = 1;
+  let horizontalRatio = 1;
 
   if (image.rowPixelSpacing < image.columnPixelSpacing) {
     //we believe that the row pixel is the same as css pixel 
