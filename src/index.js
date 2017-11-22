@@ -78,4 +78,4 @@ export { convertImageToFalseColorImage,
 
 export { default as events } from './events.js';
 export { default as triggerEvent } from './triggerEvent.js';
-export { external } from './externalModules.js';
+export { default as external } from './externalModules.js';

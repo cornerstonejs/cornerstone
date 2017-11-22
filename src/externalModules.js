@@ -1,6 +1,6 @@
 let $ = window.$;
 
-const external = {
+export default {
   set $ (module) {
     $ = module;
   },
@@ -8,5 +8,3 @@ const external = {
     return $;
   }
 };
-
-export { external };
