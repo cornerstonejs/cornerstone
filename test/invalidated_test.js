@@ -42,9 +42,9 @@ describe('invalidate', function () {
     const element = this.element;
     const enabledElement = getEnabledElement(this.element);
 
-    $(element).on('CornerstoneInvalidated', function (event, eventData) {
+    element.addEventListener('cornerstoneinvalidated', function (event) {
       // Assert
-      assert.equal(eventData.element, element);
+      assert.equal(event.target, element);
       done();
     });
 

@@ -4,7 +4,7 @@ import storedPixelDataToCanvasImageData from '../../src/internal/storedPixelData
 
 describe('storedPixelDataToCanvasImageData', function () {
   it('storedPixelDataToCanvasImageData minPixel = 0', function () {
-        // Arrange
+    // Arrange
     const lut = [0, 255];
     const canvasImageDataData = [255, 255, 255, 128, 255, 255, 255, 128];
     const image = {
@@ -18,10 +18,10 @@ describe('storedPixelDataToCanvasImageData', function () {
       stats: {}
     };
 
-        // Act
+    // Act
     storedPixelDataToCanvasImageData(image, lut, canvasImageDataData);
 
-        // Assert
+    // Assert
     assert.equal(canvasImageDataData[0], 255, 'R1');
     assert.equal(canvasImageDataData[1], 255, 'G1');
     assert.equal(canvasImageDataData[2], 255, 'B1');
@@ -33,7 +33,7 @@ describe('storedPixelDataToCanvasImageData', function () {
   });
 
   it('storedPixelDataToCanvasImageData minPixel < 0', function () {
-        // Arrange
+    // Arrange
     const lut = [0, 255];
     const canvasImageDataData = [255, 255, 255, 128, 255, 255, 255, 128];
     const image = {
@@ -47,10 +47,10 @@ describe('storedPixelDataToCanvasImageData', function () {
       stats: {}
     };
 
-        // Act
+    // Act
     storedPixelDataToCanvasImageData(image, lut, canvasImageDataData);
 
-        // Assert
+    // Assert
     assert.equal(canvasImageDataData[0], 255, 'R1');
     assert.equal(canvasImageDataData[1], 255, 'G1');
     assert.equal(canvasImageDataData[2], 255, 'B1');
@@ -62,7 +62,7 @@ describe('storedPixelDataToCanvasImageData', function () {
   });
 
   it('storedPixelDataToCanvasImageData minPixel > 0', function () {
-        // Arrange
+    // Arrange
     const lut = [];
 
     lut[1] = 0;
@@ -79,10 +79,10 @@ describe('storedPixelDataToCanvasImageData', function () {
       stats: {}
     };
 
-        // Act
+    // Act
     storedPixelDataToCanvasImageData(image, lut, canvasImageDataData);
 
-        // Assert
+    // Assert
     assert.equal(canvasImageDataData[0], 255, 'R1');
     assert.equal(canvasImageDataData[1], 255, 'G1');
     assert.equal(canvasImageDataData[2], 255, 'B1');
