@@ -1,5 +1,6 @@
-import $ from './jquery.js';
 import { getEnabledElements } from './enabledElements.js';
+import triggerEvent from './triggerEvent.js';
+
 
 /**
  *  Disable an HTML element for further use in Cornerstone
@@ -24,7 +25,7 @@ export default function (element) {
         element
       };
 
-      $(element).trigger('CornerstoneElementDisabled', eventData);
+      triggerEvent(element, 'CornerstoneElementDisabled', eventData);
 
       // Remove the child DOM elements that we created (e.g.canvas)
       enabledElements[i].element.removeChild(enabledElements[i].canvas);

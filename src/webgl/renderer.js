@@ -19,7 +19,7 @@ export function getRenderCanvas () {
 
 function initShaders () {
   for (const id in shaders) {
-        // Console.log("WEBGL: Loading shader", id);
+    // Console.log("WEBGL: Loading shader", id);
     const shader = shaders[id];
 
     shader.attributes = {};
@@ -40,14 +40,14 @@ function initShaders () {
 
 export function initRenderer () {
   if (isWebGLInitialized === true) {
-        // Console.log("WEBGL Renderer already initialized");
+    // Console.log("WEBGL Renderer already initialized");
     return;
   }
 
   if (initWebGL(renderCanvas)) {
     initBuffers();
     initShaders();
-        // Console.log("WEBGL Renderer initialized!");
+    // Console.log("WEBGL Renderer initialized!");
     isWebGLInitialized = true;
   }
 }
@@ -70,27 +70,27 @@ function handleRestoredContext (event) {
   isWebGLInitialized = false;
   textureCache.purgeCache();
   initRenderer();
-    // Console.log('WebGL Context Restored.');
+  // Console.log('WebGL Context Restored.');
 }
 
 function initWebGL (canvas) {
 
   gl = null;
   try {
-        // Try to grab the standard context. If it fails, fallback to experimental.
+    // Try to grab the standard context. If it fails, fallback to experimental.
     const options = {
       preserveDrawingBuffer: true // Preserve buffer so we can copy to display canvas element
     };
 
-        // ---------------- Testing purposes -------------
-        // If (debug === true && WebGLDebugUtils) {
-        //    RenderCanvas = WebGLDebugUtils.makeLostContextSimulatingCanvas(renderCanvas);
-        // }
-        // ---------------- Testing purposes -------------
+    // ---------------- Testing purposes -------------
+    // If (debug === true && WebGLDebugUtils) {
+    //    RenderCanvas = WebGLDebugUtils.makeLostContextSimulatingCanvas(renderCanvas);
+    // }
+    // ---------------- Testing purposes -------------
 
     gl = canvas.getContext('webgl', options) || canvas.getContext('experimental-webgl', options);
 
-        // Set up event listeners for context lost / context restored
+    // Set up event listeners for context lost / context restored
     canvas.removeEventListener('webglcontextlost', handleLostContext, false);
     canvas.addEventListener('webglcontextlost', handleLostContext, false);
 
@@ -101,7 +101,7 @@ function initWebGL (canvas) {
     throw new Error('Error creating WebGL context');
   }
 
-    // If we don't have a GL context, give up now
+  // If we don't have a GL context, give up now
   if (!gl) {
     console.error('Unable to initialize WebGL. Your browser may not support it.');
     gl = null;
@@ -133,9 +133,9 @@ function getImageDataType (image) {
 function getShaderProgram (image) {
 
   const datatype = getImageDataType(image);
-    // We need a mechanism for
-    // Choosing the shader based on the image datatype
-    // Console.log("Datatype: " + datatype);
+  // We need a mechanism for
+  // Choosing the shader based on the image datatype
+  // Console.log("Datatype: " + datatype);
 
   if (shaders.hasOwnProperty(datatype)) {
     return shaders[datatype];
@@ -163,7 +163,7 @@ function generateTexture (image) {
   const imageDataType = getImageDataType(image);
   const format = TEXTURE_FORMAT[imageDataType];
 
-    // GL texture configuration
+  // GL texture configuration
   const texture = gl.createTexture();
 
   gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -178,23 +178,20 @@ function generateTexture (image) {
 
   gl.texImage2D(gl.TEXTURE_2D, 0, format, image.width, image.height, 0, format, gl.UNSIGNED_BYTE, imageData);
 
-    // Calculate the size in bytes of this image in memory
+  // Calculate the size in bytes of this image in memory
   const sizeInBytes = image.width * image.height * TEXTURE_BYTES[imageDataType];
-  const imageTexture = {
+
+  return {
     texture,
     sizeInBytes
   };
-
-
-  return imageTexture;
-
 }
 
 function getImageTexture (image) {
   let imageTexture = textureCache.getImageTexture(image.imageId);
 
   if (!imageTexture) {
-        // Console.log("Generating texture for imageid: ", image.imageId);
+    // Console.log("Generating texture for imageid: ", image.imageId);
     imageTexture = generateTexture(image);
     textureCache.putImageTexture(image, imageTexture);
   }
@@ -270,7 +267,7 @@ function renderQuad (shader, parameters, texture, width, height) {
 }
 
 export function render (enabledElement) {
-    // Resize the canvas
+  // Resize the canvas
   const image = enabledElement.image;
 
   renderCanvas.width = image.width;
@@ -278,7 +275,7 @@ export function render (enabledElement) {
 
   const viewport = enabledElement.viewport;
 
-    // Render the current image
+  // Render the current image
   const shader = getShaderProgram(image);
   const texture = getImageTexture(image);
   const parameters = {
@@ -304,8 +301,8 @@ export function render (enabledElement) {
 }
 
 export function isWebGLAvailable () {
-    // Adapted from
-    // http://stackoverflow.com/questions/9899807/three-js-detect-webgl-support-and-fallback-to-regular-canvas
+  // Adapted from
+  // http://stackoverflow.com/questions/9899807/three-js-detect-webgl-support-and-fallback-to-regular-canvas
 
   const options = {
     failIfMajorPerformanceCaveat: true

@@ -4,7 +4,7 @@ import generateLut from '../../src/internal/generateLut.js';
 
 describe('generateLut', function () {
   it('min pixel < 0', function () {
-        // Arrange
+    // Arrange
     const image = {
       minPixelValue: -1,
       maxPixelValue: 1,
@@ -14,10 +14,10 @@ describe('generateLut', function () {
       windowWidth: 2
     };
 
-        // Act
+    // Act
     const lut = generateLut(image, 2, 0, false);
 
-        // Assert
+    // Assert
     assert.equal(lut.length, 3, 'lut length is 3');
     assert.equal(lut[0], 0, 'lut entry -1 is 0');
     assert.equal(lut[1], 128, 'lut entry 0 is 128');
@@ -25,7 +25,7 @@ describe('generateLut', function () {
   });
 
   it('min pixel = 0', function () {
-        // Arrange
+    // Arrange
     const image = {
       minPixelValue: 0,
       maxPixelValue: 2,
@@ -35,10 +35,10 @@ describe('generateLut', function () {
       windowWidth: 2
     };
 
-        // Act
+    // Act
     const lut = generateLut(image, 2, 1, false);
 
-        // Assert
+    // Assert
     assert.equal(lut.length, 3, 'lut length is 3');
     assert.equal(lut[0], 0, 'lut entry 0 is 0');
     assert.equal(lut[1], 128, 'lut entry 1 is 128');
@@ -46,7 +46,7 @@ describe('generateLut', function () {
   });
 
   it('min pixel > 0', function () {
-        // Arrange
+    // Arrange
     const image = {
       minPixelValue: 1,
       maxPixelValue: 3,
@@ -56,10 +56,10 @@ describe('generateLut', function () {
       windowWidth: 2
     };
 
-        // Act
+    // Act
     const lut = generateLut(image, 2, 2, false);
 
-        // Assert
+    // Assert
     assert.equal(lut.length, 4, 'lut length is 4');
     assert.equal(lut[0], 0, 'lut entry 0 is 0');
     assert.equal(lut[1], 0, 'lut entry 1 is 0');
@@ -68,7 +68,7 @@ describe('generateLut', function () {
   });
 
   it('slope and intercept', function () {
-        // Arrange
+    // Arrange
     const image = {
       minPixelValue: 0,
       maxPixelValue: 2,
@@ -78,10 +78,10 @@ describe('generateLut', function () {
       windowWidth: 4
     };
 
-        // Act
+    // Act
     const lut = generateLut(image, 4, 3, false);
 
-        // Assert
+    // Assert
     assert.equal(lut.length, 3, 'lut length is 3');
     assert.equal(lut[0], 0, 'lut entry 0 is 0');
     assert.equal(lut[1], 128, 'lut entry 1 is 128');
@@ -89,7 +89,7 @@ describe('generateLut', function () {
   });
 
   it('should handle inverted images correctly', function () {
-        // Arrange
+    // Arrange
     const image = {
       minPixelValue: 0,
       maxPixelValue: 2,
@@ -99,10 +99,10 @@ describe('generateLut', function () {
       windowWidth: 4
     };
 
-        // Act
+    // Act
     const lut = generateLut(image, 4, 3, true);
 
-        // Assert
+    // Assert
     assert.equal(lut.length, 3, 'lut length is 3');
     assert.equal(lut[0], 255, 'lut entry 0 is 255');
     assert.equal(lut[1], 128, 'lut entry 1 is 128');

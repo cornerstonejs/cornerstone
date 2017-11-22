@@ -2,7 +2,7 @@ import { render, initRenderer, getRenderCanvas, isWebGLAvailable, isWebGLInitial
 import createProgramFromString from './createProgramFromString.js';
 import textureCache from './textureCache.js';
 
-export default {
+const mod = {
   createProgramFromString,
   renderer: {
     render,
@@ -10,6 +10,13 @@ export default {
     getRenderCanvas,
     isWebGLAvailable
   },
-  textureCache,
-  isWebGLInitialized
+  textureCache
 };
+
+Object.defineProperty(mod, 'isWebGLInitialized', {
+  enumerable: true,
+  configurable: false,
+  get: () => isWebGLInitialized
+});
+
+export default mod;

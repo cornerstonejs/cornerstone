@@ -24,14 +24,7 @@ module.exports = {
     umdNamedDefine: true
   },
   devtool: 'source-map',
-  externals: {
-    jquery: {
-      commonjs: "jquery",
-      commonjs2: "jquery",
-      amd: "jquery",
-      root: '$'
-    }
-  },
+  externals: {},
   module: {
     rules: [{
       enforce: 'pre',
