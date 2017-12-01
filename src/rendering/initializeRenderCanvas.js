@@ -1,4 +1,5 @@
 export default function (enabledElement, image) {
+  console.log('initializeRenderCanvas');
   const renderCanvas = enabledElement.renderingTools.renderCanvas;
 
   // Resize the canvas

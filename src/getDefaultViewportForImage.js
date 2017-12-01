@@ -13,5 +13,5 @@ import getDefaultViewport from './internal/getDefaultViewport.js';
 export default function (element, image) {
   const enabledElement = getEnabledElement(element);
 
-  return getDefaultViewport(enabledElement.canvas, image);
+  return getDefaultViewport(enabledElement);
 }

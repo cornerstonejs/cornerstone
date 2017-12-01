@@ -265,7 +265,7 @@ export function setLayerImage (element, image, layerId) {
   }
 
   if (!layer.viewport) {
-    const defaultViewport = getDefaultViewport(enabledElement.canvas, image);
+    const defaultViewport = getDefaultViewport(enabledElement);
 
     // Override the defaults if any optional viewport settings
     // have been specified

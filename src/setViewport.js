@@ -1,6 +1,7 @@
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import { getEnabledElement } from './enabledElements.js';
 import updateImage from './updateImage.js';
+import applyTransform from "./applyTransform.js";
 
 const MIN_WINDOW_WIDTH = 0.000001;
 const MIN_VIEWPORT_SCALE = 0.0001;
@@ -48,6 +49,10 @@ export default function (element, viewport) {
   if (enabledElement.viewport.rotation < 0) {
     enabledElement.viewport.rotation += 360;
   }
+
+  element.style.background = enabledElement.viewport.invert ? '#fff' : '#000';
+
+  applyTransform(enabledElement);
 
   if (enabledElement.image) {
     // Force the image to be updated since the viewport has been modified

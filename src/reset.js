@@ -11,6 +11,6 @@ import updateImage from './updateImage.js';
 export default function (element) {
   const enabledElement = getEnabledElement(element);
 
-  enabledElement.viewport = getDefaultViewport(enabledElement.canvas, enabledElement.image);
+  enabledElement.viewport = getDefaultViewport(enabledElement);
   updateImage(element);
 }

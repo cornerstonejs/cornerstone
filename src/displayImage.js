@@ -5,6 +5,7 @@ import now from './internal/now.js';
 import { setLayerImage } from './layers.js';
 import triggerEvent from './triggerEvent.js';
 import EVENTS from './events.js';
+import applyTransform from './applyTransform.js';
 
 /**
  * Sets a new image object for a given element.
@@ -26,6 +27,7 @@ export default function (element, image, viewport) {
   }
 
   const enabledElement = getEnabledElement(element);
+  const canvas = enabledElement.canvas;
   const oldImage = enabledElement.image;
 
   enabledElement.image = image;
@@ -35,7 +37,7 @@ export default function (element, image, viewport) {
   }
 
   if (enabledElement.viewport === undefined) {
-    enabledElement.viewport = getDefaultViewport(enabledElement.canvas, image);
+    enabledElement.viewport = getDefaultViewport(enabledElement);
   }
 
   // Merge viewport
@@ -65,6 +67,19 @@ export default function (element, image, viewport) {
     enabledElement,
     frameRate
   };
+
+  // Avoid setting the same value because it flashes the canvas with IE and Edge
+  if (canvas.width !== image.columns) {
+    canvas.width = image.columns;
+    canvas.style.width = `${image.columns}px`;
+  }
+  // Avoid setting the same value because it flashes the canvas with IE and Edge
+  if (canvas.height !== image.rows) {
+    canvas.height = image.rows;
+    canvas.style.height = `${image.rows}px`;
+  }
+
+  applyTransform(enabledElement);
 
   triggerEvent(enabledElement.element, EVENTS.NEW_IMAGE, newImageEventData);
 

@@ -8,12 +8,11 @@ import { Transform } from './transform.js';
  * @return {Transform} The current transform
  * @memberof Internal
  */
-export default function (enabledElement, scale) {
+export default function (enabledElement, scale = 1) {
 
   const transform = new Transform();
 
-  // Move to center of canvas
-  transform.translate(enabledElement.canvas.width / 2, enabledElement.canvas.height / 2);
+  transform.translate(-enabledElement.canvas.width / 2, -enabledElement.canvas.height / 2);
 
   // Apply the rotation before scaling for non square pixels
   const angle = enabledElement.viewport.rotation;
@@ -71,22 +70,10 @@ export default function (enabledElement, scale) {
     transform.rotate(angle * Math.PI / 180);
   }
 
-  if (scale !== undefined) {
-    // Apply the font scale
-    transform.scale(scale, scale);
-  }
+  const xScale = (enabledElement.viewport.hflip ? -1 : 1) * scale;
+  const yScale = (enabledElement.viewport.vflip ? -1 : 1) * scale;
 
-  // Apply Flip if required
-  if (enabledElement.viewport.hflip) {
-    transform.scale(-1, 1);
-  }
-
-  if (enabledElement.viewport.vflip) {
-    transform.scale(1, -1);
-  }
-
-  // Move back from center of image
-  transform.translate(-width / 2, -height / 2);
+  transform.scale(xScale, yScale);
 
   return transform;
 }

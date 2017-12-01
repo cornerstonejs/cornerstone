@@ -4,8 +4,10 @@ import { renderColorImage } from '../rendering/renderColorImage.js';
 import { renderGrayscaleImage } from '../rendering/renderGrayscaleImage.js';
 import { renderPseudoColorImage } from '../rendering/renderPseudoColorImage.js';
 import { renderLabelMapImage } from '../rendering/renderLabelMapImage.js';
+import doesImageNeedToBeRendered from '../rendering/doesImageNeedToBeRendered.js';
 import triggerEvent from '../triggerEvent.js';
 import EVENTS from '../events.js';
+
 
 /**
  * Draw an image to a given enabled element synchronously
@@ -36,8 +38,10 @@ export default function (enabledElement, invalidated) {
     lastLutGenerateTime: -1.0
   };
 
+  let imageWasRendered = false;
+
   if (layers && layers.length) {
-    drawCompositeImage(enabledElement, invalidated);
+    imageWasRendered = drawCompositeImage(enabledElement, invalidated);
   } else if (image) {
     let render = image.render;
 
@@ -55,7 +59,15 @@ export default function (enabledElement, invalidated) {
       }
     }
 
-    render(enabledElement, invalidated);
+    if (doesImageNeedToBeRendered(enabledElement, image) === true || invalidated === true) {
+      console.log('calling Render');
+      render(enabledElement, invalidated);
+      imageWasRendered = true;
+    }
+  }
+
+  if (!imageWasRendered) {
+    return;
   }
 
   // Calculate how long it took to draw the image/layers

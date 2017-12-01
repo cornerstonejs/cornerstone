@@ -11,6 +11,11 @@ function createCanvas (element) {
 
   canvas.style.display = 'block';
   canvas.classList.add(CANVAS_CSS_CLASS);
+
+  canvas.style.position = 'absolute';
+  canvas.style.top = '50%';
+  canvas.style.left = '50%';
+
   element.appendChild(canvas);
 
   return canvas;
