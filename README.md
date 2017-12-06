@@ -8,13 +8,13 @@ Cornerstone is an open source project with a goal to deliver a complete web base
 [OHIF Viewer](http://viewer.ohif.org/) for an example of using the various Cornerstone
 libraries to build a simple study viewer.
 
-Cornerstone Core is agnostic to the actual container used to store image pixels as well as the transport mechanism used to get the image data.  In fact, Cornerstone Core itself has no ability to read/parse or load images and instead depends on one or more [ImageLoaders](https://github.com/chafey/cornerstone/wiki/ImageLoader) to function.
+Cornerstone Core is agnostic to the actual container used to store image pixels as well as the transport mechanism used to get the image data.  In fact, Cornerstone Core itself has no ability to read/parse or load images and instead depends on one or more [ImageLoaders](https://github.com/cornerstonejs/cornerstone/wiki/ImageLoader) to function.
 
-The goal here is to avoid constraining developers to work within a single container and transport (e.g. DICOM) since images are stored in a variety of formats (including proprietary).  By providing flexibility with respect to the container and transport, the highest performance image display may be obtained as no conversion to an alternate container or transport is required.  It is hoped that developers feel empowered to load images from any type of image container using any kind of transport.  See the [CornerstoneWADOImageLoader](https://github.com/chafey/cornerstoneWADOImageLoader) project for an example
+The goal here is to avoid constraining developers to work within a single container and transport (e.g. DICOM) since images are stored in a variety of formats (including proprietary).  By providing flexibility with respect to the container and transport, the highest performance image display may be obtained as no conversion to an alternate container or transport is required.  It is hoped that developers feel empowered to load images from any type of image container using any kind of transport.  See the [CornerstoneWADOImageLoader](https://github.com/cornerstonejs/cornerstoneWADOImageLoader) project for an example
 of a DICOM WADO based Image Loader.
 
 Cornerstone Core is agnostic to the exact interaction paradigm being used.  It does not include any mouse, touch or keyboard bindings to manipulate the various image properties such as scale, translation or ww/wc.  The goal here is to avoid constraining developers using this library to fit into a given ui paradigm.  It is hoped that developers are empowered to create new paradigms possibly using new input mechanisms to interact with medical images (e.g. [Kinect](http://en.wikipedia.org/wiki/Kinect) or [Accelerometer](http://en.wikipedia.org/wiki/Accelerometer).
-Cornerstone does provide a set of API's allowing manipulation of the image properties via javascript. See the [CornerstoneTools](https://github.com/chafey/cornerstoneTools) library for an example of common tools built on top of Cornerstone.
+Cornerstone does provide a set of API's allowing manipulation of the image properties via javascript. See the [CornerstoneTools](https://github.com/cornerstonejs/cornerstoneTools) library for an example of common tools built on top of Cornerstone.
 
 Community
 ---------
@@ -25,15 +25,15 @@ Live Examples
 ---------------
 The best way to see the power of this library is to actually see it in use.
 
-[Click here for a list of examples of using the Cornerstone library.](https://rawgit.com/chafey/cornerstone/master/example/index.html)
+[Click here for a list of examples of using the Cornerstone library.](https://rawgit.com/cornerstonejs/cornerstone/master/example/index.html)
 
 Install
 -------
 
 Get a packaged source file:
 
-* [cornerstone.js](https://raw.githubusercontent.com/chafey/cornerstone/master/dist/cornerstone.js)
-* [cornerstone.min.js](https://raw.githubusercontent.com/chafey/cornerstone/master/dist/cornerstone.min.js)
+* [cornerstone.js](https://raw.githubusercontent.com/cornerstonejs/cornerstone/master/dist/cornerstone.js)
+* [cornerstone.min.js](https://raw.githubusercontent.com/cornerstonejs/cornerstone/master/dist/cornerstone.min.js)
 
 Or install via [NPM](https://www.npmjs.com/):
 
@@ -59,7 +59,7 @@ Links
 
 [Build System](docs/building.md)
 
-[View the wiki for documentation on the concepts and APIs](https://github.com/chafey/cornerstone/wiki)
+[View the wiki for documentation on the concepts and APIs](https://github.com/cornerstonejs/cornerstone/wiki)
 
 [View Roadmap](docs/roadmap.md)
 
@@ -67,13 +67,13 @@ Links
 
 [2014 comp.protocols.dicom thread that started this project](https://groups.google.com/forum/#!topic/comp.protocols.dicom/_2fMh69GdAM)
 
-[CornerstoneTools](https://github.com/chafey/cornerstoneTools) - A library of common tools that can be used with Cornerstone
+[CornerstoneTools](https://github.com/cornerstonejs/cornerstoneTools) - A library of common tools that can be used with Cornerstone
 
-[CornerstoneWADOImageLoader](https://github.com/chafey/cornerstoneWADOImageLoader) - A Cornerstone Image Loader that works with WADO-URI, WADO-RS and DICOM P10 files
+[CornerstoneWADOImageLoader](https://github.com/cornerstonejs/cornerstoneWADOImageLoader) - A Cornerstone Image Loader that works with WADO-URI, WADO-RS and DICOM P10 files
 
-[CornerstoneWebImageLoader](https://github.com/chafey/cornerstoneWebImageLoader) - A Cornerstone Image Loader that works with PNG and JPEG files
+[CornerstoneWebImageLoader](https://github.com/cornerstonejs/cornerstoneWebImageLoader) - A Cornerstone Image Loader that works with PNG and JPEG files
 
-[dicomParser](https://github.com/chafey/dicomParser) - A JavaScript library designed to parse DICOM for web browsers
+[dicomParser](https://github.com/cornerstonejs/dicomParser) - A JavaScript library designed to parse DICOM for web browsers
 
 Code Contributors
 =================
@@ -122,7 +122,7 @@ and that will be accomplished by supporting as many types of image containers an
 Another side effect of this approach is that the code base is smaller and easier to understand since
 it is focused on doing exactly one thing.  That being said, it is is expected that the majority of images
 displayed using this library will have originated as DICOM images.  It is therefore important to make sure
-that there are no limitations with respect to displaying the different types of DICOM images and have robust supporting libraries for DICOM.  Separate libraries to add DICOM specific support already exist, check out the [CornerstoneWADOImageLoader](https://github.com/chafey/cornerstoneWADOImageLoader) library and the [dicomParser](https://github.com/chafey/dicomParser) library.
+that there are no limitations with respect to displaying the different types of DICOM images and have robust supporting libraries for DICOM.  Separate libraries to add DICOM specific support already exist, check out the [CornerstoneWADOImageLoader](https://github.com/cornerstonejs/cornerstoneWADOImageLoader) library and the [dicomParser](https://github.com/cornerstonejs/dicomParser) library.
 
 _Why doesn't Cornerstone include basic tools like ww/wc using the mouse?_
 
@@ -130,7 +130,7 @@ There is no standard for user interaction in medical imaging and a wide variety 
 For example, one medical imaging application may use the left mouse button to adjust ww/wc and another may use the right mouse button.  The main reason this library does not include tools is that it wants to reach the widest possible adoption and that will only be accomplished by making any interaction paradigm possible.  No tools are therefore provided with this library allowing users of the library to choose
 whatever interaction paradigm they like.  It is also hoped that this approach will make it easier for developers to experiment with new user input mechanisms like [Kinect](http://en.wikipedia.org/wiki/Kinect) or [Accelerometer](http://en.wikipedia.org/wiki/Accelerometer).  Another side effect of this
 approach is that the code base is smaller and easier to understand since it is focused on doing exactly one
-thing.  Tools are provided using the separate [CornerstoneTools](https://github.com/chafey/cornerstoneTools) if desired.
+thing.  Tools are provided using the separate [CornerstoneTools](https://github.com/cornerstonejs/cornerstoneTools) if desired.
 
 _Why doesn't this library support older browsers like IE8?_
 
@@ -141,7 +141,7 @@ polyfills available.  Sorry, upgrade your browser.
 _Why doesn't this library support stacks of images?_
 
 Images stack functionality such as a CT series or MRI series can actually be quite complex.  Regardless of
-what stack functionality is desired, all stacks ultimately need to be able to display a single image and that is what this library is focused on doing.  Stack functionality is therefore pushed up to a higher layer.  The [CornerstoneTools](https://github.com/chafey/cornerstoneTools) contains stack functionality and is a good place to look to see how various stack related functionality is implemented.
+what stack functionality is desired, all stacks ultimately need to be able to display a single image and that is what this library is focused on doing.  Stack functionality is therefore pushed up to a higher layer.  The [CornerstoneTools](https://github.com/cornerstonejs/cornerstoneTools) contains stack functionality and is a good place to look to see how various stack related functionality is implemented.
 
 _How do you envision this library supporting 3D functionality such as MPR, MIP and VR?_
 
@@ -187,8 +187,8 @@ Copyright 2017 Chris Hafey [chafey@gmail.com](mailto:chafey@gmail.com)
 [npm-version-image]: http://img.shields.io/npm/v/cornerstone-core.svg?style=flat
 [npm-downloads-image]: http://img.shields.io/npm/dm/cornerstone-core.svg?style=flat
 
-[travis-url]: http://travis-ci.org/chafey/cornerstone
-[travis-image]: https://travis-ci.org/chafey/cornerstone.svg?branch=master
+[travis-url]: http://travis-ci.org/cornerstonejs/cornerstone
+[travis-image]: https://travis-ci.org/cornerstonejs/cornerstone.svg?branch=master
 
-[coverage-url]: https://coveralls.io/github/chafey/cornerstone?branch=master
-[coverage-image]: https://coveralls.io/repos/github/chafey/cornerstone/badge.svg?branch=master
+[coverage-url]: https://coveralls.io/github/cornerstonejs/cornerstone?branch=master
+[coverage-image]: https://coveralls.io/repos/github/cornerstonejs/cornerstone/badge.svg?branch=master
