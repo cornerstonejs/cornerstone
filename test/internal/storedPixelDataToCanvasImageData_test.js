@@ -3,93 +3,141 @@ import { assert } from 'chai';
 import storedPixelDataToCanvasImageData from '../../src/internal/storedPixelDataToCanvasImageData.js';
 
 describe('storedPixelDataToCanvasImageData', function () {
-  it('storedPixelDataToCanvasImageData minPixel = 0', function () {
+  before(function () {
+    this.lut = [0, 255];
     // Arrange
-    const lut = [0, 255];
-    const canvasImageDataData = [255, 255, 255, 128, 255, 255, 255, 128];
-    const image = {
-      minPixelValue: 0,
+    this.image = {
       maxPixelValue: 1,
       width: 1,
       height: 2,
-      getPixelData () {
+      stats: {}
+    };
+  });
+
+  beforeEach(function () {
+    this.canvasImageDataData = [255, 255, 255, 128, 255, 255, 255, 128];
+  });
+
+  describe('Uint16Array', function () {
+    before(function () {
+      this.image.getPixelData = function () {
         return new Uint16Array([0, 1]);
-      },
-      stats: {}
-    };
+      };
+    });
 
-    // Act
-    storedPixelDataToCanvasImageData(image, lut, canvasImageDataData);
+    it('storedPixelDataToCanvasImageData minPixel = 0', function () {
+      this.image.minPixelValue = 0;
 
-    // Assert
-    assert.equal(canvasImageDataData[0], 255, 'R1');
-    assert.equal(canvasImageDataData[1], 255, 'G1');
-    assert.equal(canvasImageDataData[2], 255, 'B1');
-    assert.equal(canvasImageDataData[3], 0, 'A1');
-    assert.equal(canvasImageDataData[4], 255, 'R2');
-    assert.equal(canvasImageDataData[5], 255, 'G2');
-    assert.equal(canvasImageDataData[6], 255, 'B2');
-    assert.equal(canvasImageDataData[7], 255, 'A2');
+      // Act
+      storedPixelDataToCanvasImageData(this.image, this.lut, this.canvasImageDataData);
+  
+      // Assert
+      assert.equal(this.canvasImageDataData[0], 255, 'R1');
+      assert.equal(this.canvasImageDataData[1], 255, 'G1');
+      assert.equal(this.canvasImageDataData[2], 255, 'B1');
+      assert.equal(this.canvasImageDataData[3], 0, 'A1');
+      assert.equal(this.canvasImageDataData[4], 255, 'R2');
+      assert.equal(this.canvasImageDataData[5], 255, 'G2');
+      assert.equal(this.canvasImageDataData[6], 255, 'B2');
+      assert.equal(this.canvasImageDataData[7], 255, 'A2');
+    });
+
+    it('storedPixelDataToCanvasImageData minPixel > 0', function () {
+      this.image.minPixelValue = 1;
+      this.image.getPixelData = function () {
+        return new Uint16Array([1, 1]);
+      };
+
+      // Act
+      storedPixelDataToCanvasImageData(this.image, this.lut, this.canvasImageDataData);
+
+      // Assert
+      assert.equal(this.canvasImageDataData[0], 255, 'R1');
+      assert.equal(this.canvasImageDataData[1], 255, 'G1');
+      assert.equal(this.canvasImageDataData[2], 255, 'B1');
+      assert.equal(this.canvasImageDataData[3], 255, 'A1');
+      assert.equal(this.canvasImageDataData[4], 255, 'R2');
+      assert.equal(this.canvasImageDataData[5], 255, 'G2');
+      assert.equal(this.canvasImageDataData[6], 255, 'B2');
+      assert.equal(this.canvasImageDataData[7], 255, 'A2');
+    });
   });
 
-  it('storedPixelDataToCanvasImageData minPixel < 0', function () {
-    // Arrange
-    const lut = [0, 255];
-    const canvasImageDataData = [255, 255, 255, 128, 255, 255, 255, 128];
-    const image = {
-      minPixelValue: -1,
-      maxPixelValue: 0,
-      width: 1,
-      height: 2,
-      getPixelData () {
-        return new Int16Array([-1, 0]);
-      },
-      stats: {}
-    };
+  describe('int16Array', function () {
+    before(function () {
+      // Arrange
+      this.lut = [0, 255];
+      this.image = {
+        minPixelValue: -1,
+        maxPixelValue: 0,
+        width: 1,
+        height: 2,
+        getPixelData () {
+          return new Int16Array([-1, 0]);
+        },
+        stats: {}
+      };
+    });
 
-    // Act
-    storedPixelDataToCanvasImageData(image, lut, canvasImageDataData);
+    beforeEach(function () {
+      this.canvasImageDataData = [255, 255, 255, 128, 255, 255, 255, 128];
+    });
 
-    // Assert
-    assert.equal(canvasImageDataData[0], 255, 'R1');
-    assert.equal(canvasImageDataData[1], 255, 'G1');
-    assert.equal(canvasImageDataData[2], 255, 'B1');
-    assert.equal(canvasImageDataData[3], 0, 'A1');
-    assert.equal(canvasImageDataData[4], 255, 'R2');
-    assert.equal(canvasImageDataData[5], 255, 'G2');
-    assert.equal(canvasImageDataData[6], 255, 'B2');
-    assert.equal(canvasImageDataData[7], 255, 'A2');
+    it('storedPixelDataToCanvasImageData minPixel < 0', function () {
+      // Act
+      storedPixelDataToCanvasImageData(this.image, this.lut, this.canvasImageDataData);
+
+      // Assert
+      assert.equal(this.canvasImageDataData[0], 255, 'R1');
+      assert.equal(this.canvasImageDataData[1], 255, 'G1');
+      assert.equal(this.canvasImageDataData[2], 255, 'B1');
+      assert.equal(this.canvasImageDataData[3], 0, 'A1');
+      assert.equal(this.canvasImageDataData[4], 255, 'R2');
+      assert.equal(this.canvasImageDataData[5], 255, 'G2');
+      assert.equal(this.canvasImageDataData[6], 255, 'B2');
+      assert.equal(this.canvasImageDataData[7], 255, 'A2');
+    });
+
+    it('storedPixelDataToCanvasImageData minPixel > 0', function () {
+      this.image.minPixelValue = 1;
+      this.image.getPixelData = function () {
+        return new Int16Array([1, 0]);
+      };
+
+      // Act
+      storedPixelDataToCanvasImageData(this.image, this.lut, this.canvasImageDataData);
+
+      // Assert
+      assert.equal(this.canvasImageDataData[0], 255, 'R1');
+      assert.equal(this.canvasImageDataData[1], 255, 'G1');
+      assert.equal(this.canvasImageDataData[2], 255, 'B1');
+      assert.equal(this.canvasImageDataData[3], 255, 'A1');
+      assert.equal(this.canvasImageDataData[4], 255, 'R2');
+      assert.equal(this.canvasImageDataData[5], 255, 'G2');
+      assert.equal(this.canvasImageDataData[6], 255, 'B2');
+      assert.equal(this.canvasImageDataData[7], 0, 'A2');
+    });
   });
 
-  it('storedPixelDataToCanvasImageData minPixel > 0', function () {
-    // Arrange
-    const lut = [];
+  describe('regular Array', function () {
+    it('aha', function () {
+      this.image.minPixelValue = -1;
+      this.image.maxPixelValue = 0;
+      this.image.getPixelData = function () {
+        return [-1, 0];
+      };
 
-    lut[1] = 0;
-    lut[2] = 255;
-    const canvasImageDataData = [255, 255, 255, 128, 255, 255, 255, 128];
-    const image = {
-      minPixelValue: 1,
-      maxPixelValue: 2,
-      width: 1,
-      height: 2,
-      getPixelData () {
-        return new Uint16Array([1, 2]);
-      },
-      stats: {}
-    };
+      storedPixelDataToCanvasImageData(this.image, this.lut, this.canvasImageDataData);
 
-    // Act
-    storedPixelDataToCanvasImageData(image, lut, canvasImageDataData);
-
-    // Assert
-    assert.equal(canvasImageDataData[0], 255, 'R1');
-    assert.equal(canvasImageDataData[1], 255, 'G1');
-    assert.equal(canvasImageDataData[2], 255, 'B1');
-    assert.equal(canvasImageDataData[3], 0, 'A1');
-    assert.equal(canvasImageDataData[4], 255, 'R2');
-    assert.equal(canvasImageDataData[5], 255, 'G2');
-    assert.equal(canvasImageDataData[6], 255, 'B2');
-    assert.equal(canvasImageDataData[7], 255, 'A2');
+      // Assert
+      assert.equal(this.canvasImageDataData[0], 255, 'R1');
+      assert.equal(this.canvasImageDataData[1], 255, 'G1');
+      assert.equal(this.canvasImageDataData[2], 255, 'B1');
+      assert.equal(this.canvasImageDataData[3], 0, 'A1');
+      assert.equal(this.canvasImageDataData[4], 255, 'R2');
+      assert.equal(this.canvasImageDataData[5], 255, 'G2');
+      assert.equal(this.canvasImageDataData[6], 255, 'B2');
+      assert.equal(this.canvasImageDataData[7], 255, 'A2');
+    });
   });
 });
