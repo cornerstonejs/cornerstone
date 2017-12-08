@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.1.4] - 2017-12-08
+### Added
+- Added the ESLint plugin 'eslint-plugin-import' to keep us from forgetting .js on our imports. The file extension is required when using native ES6 modules in the browser.
+- Added generateColorLut, which is basically the same as generateLut, but only applies VOI LUT transformation, and not the Modality LUT. This is intended to address the display issues reported in https://github.com/cornerstonejs/cornerstoneWADOImageLoader/issues/143
+
+### Changed
+- Moved the repository from Chris Hafey's (@chafey) personal page to a new Organization (@cornerstonejs). Renamed all the relevant links. Join us at @cornerstonejs to start contributing!
+- Switched renderColorImage to use the newly created generateColorLUT, so that modality LUT transformations are no longer (incorrectly) applied to color images.
+
 ## [1.1.3] - 2017-11-17
 ### Added
 - Exporting of triggerEvent function, mainly for use by image loader libraries
