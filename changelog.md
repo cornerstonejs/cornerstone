@@ -4,14 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
+## [2.0.0] - 2017-12-08
 ### Changed
-- *Breaking Change!!!* Removed jQuery events from triggerEvent, lower-cased all the event names.
+- *Breaking Change!!!* Removed jQuery events from triggerEvent, lower-cased all the event names. e.g. "CornerstoneWebGLTextureRemoved" is now "cornerstonewebgltextureremoved". Only native CustomEvents are now triggered by Cornerstone Core.
+- *Breaking Change!!!* Image Loaders should now return an Object containing a promise and a function which can cancel the request. The format is { promise, cancelFn }. Migration guide to come...
+- *Breaking Change!!!* Image cache now stores ImageLoadObjects as described above.
 
 ### Removed
 - Removed 'commonjs2' parameter from webpack output.library options because it was complaining.
 - Removed 'externals' since we no longer use jQuery
+- *Breaking Change!!!* putImagePromise, getImagePromise have been removed and replaced with putImageLoadObject, getImageLoadObject
+
 
 ## [1.1.4] - 2017-12-08
 ### Added
