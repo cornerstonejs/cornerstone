@@ -1,6 +1,8 @@
-import { assert } from 'chai';
-
+// import { assert } from 'chai';
+import { should } from 'chai';
 import storedPixelDataToCanvasImageData from '../../src/internal/storedPixelDataToCanvasImageData.js';
+
+should();
 
 describe('storedPixelDataToCanvasImageData', function () {
   before(function () {
@@ -30,16 +32,8 @@ describe('storedPixelDataToCanvasImageData', function () {
 
       // Act
       storedPixelDataToCanvasImageData(this.image, this.lut, this.canvasImageDataData);
-  
-      // Assert
-      assert.equal(this.canvasImageDataData[0], 255, 'R1');
-      assert.equal(this.canvasImageDataData[1], 255, 'G1');
-      assert.equal(this.canvasImageDataData[2], 255, 'B1');
-      assert.equal(this.canvasImageDataData[3], 0, 'A1');
-      assert.equal(this.canvasImageDataData[4], 255, 'R2');
-      assert.equal(this.canvasImageDataData[5], 255, 'G2');
-      assert.equal(this.canvasImageDataData[6], 255, 'B2');
-      assert.equal(this.canvasImageDataData[7], 255, 'A2');
+
+      this.canvasImageDataData.should.be.deep.equal([255, 255, 255, 0, 255, 255, 255, 255]);
     });
 
     it('storedPixelDataToCanvasImageData minPixel > 0', function () {
@@ -51,15 +45,7 @@ describe('storedPixelDataToCanvasImageData', function () {
       // Act
       storedPixelDataToCanvasImageData(this.image, this.lut, this.canvasImageDataData);
 
-      // Assert
-      assert.equal(this.canvasImageDataData[0], 255, 'R1');
-      assert.equal(this.canvasImageDataData[1], 255, 'G1');
-      assert.equal(this.canvasImageDataData[2], 255, 'B1');
-      assert.equal(this.canvasImageDataData[3], 255, 'A1');
-      assert.equal(this.canvasImageDataData[4], 255, 'R2');
-      assert.equal(this.canvasImageDataData[5], 255, 'G2');
-      assert.equal(this.canvasImageDataData[6], 255, 'B2');
-      assert.equal(this.canvasImageDataData[7], 255, 'A2');
+      this.canvasImageDataData.should.be.deep.equal([255, 255, 255, 255, 255, 255, 255, 255]);
     });
   });
 
@@ -87,15 +73,7 @@ describe('storedPixelDataToCanvasImageData', function () {
       // Act
       storedPixelDataToCanvasImageData(this.image, this.lut, this.canvasImageDataData);
 
-      // Assert
-      assert.equal(this.canvasImageDataData[0], 255, 'R1');
-      assert.equal(this.canvasImageDataData[1], 255, 'G1');
-      assert.equal(this.canvasImageDataData[2], 255, 'B1');
-      assert.equal(this.canvasImageDataData[3], 0, 'A1');
-      assert.equal(this.canvasImageDataData[4], 255, 'R2');
-      assert.equal(this.canvasImageDataData[5], 255, 'G2');
-      assert.equal(this.canvasImageDataData[6], 255, 'B2');
-      assert.equal(this.canvasImageDataData[7], 255, 'A2');
+      this.canvasImageDataData.should.be.deep.equal([255, 255, 255, 0, 255, 255, 255, 255]);
     });
 
     it('storedPixelDataToCanvasImageData minPixel > 0', function () {
@@ -107,20 +85,12 @@ describe('storedPixelDataToCanvasImageData', function () {
       // Act
       storedPixelDataToCanvasImageData(this.image, this.lut, this.canvasImageDataData);
 
-      // Assert
-      assert.equal(this.canvasImageDataData[0], 255, 'R1');
-      assert.equal(this.canvasImageDataData[1], 255, 'G1');
-      assert.equal(this.canvasImageDataData[2], 255, 'B1');
-      assert.equal(this.canvasImageDataData[3], 255, 'A1');
-      assert.equal(this.canvasImageDataData[4], 255, 'R2');
-      assert.equal(this.canvasImageDataData[5], 255, 'G2');
-      assert.equal(this.canvasImageDataData[6], 255, 'B2');
-      assert.equal(this.canvasImageDataData[7], 0, 'A2');
+      this.canvasImageDataData.should.be.deep.equal([255, 255, 255, 255, 255, 255, 255, 0]);
     });
   });
 
   describe('regular Array', function () {
-    it('aha', function () {
+    it('storedPixelDataToCanvasImageData minPixel < 0', function () {
       this.image.minPixelValue = -1;
       this.image.maxPixelValue = 0;
       this.image.getPixelData = function () {
@@ -129,15 +99,7 @@ describe('storedPixelDataToCanvasImageData', function () {
 
       storedPixelDataToCanvasImageData(this.image, this.lut, this.canvasImageDataData);
 
-      // Assert
-      assert.equal(this.canvasImageDataData[0], 255, 'R1');
-      assert.equal(this.canvasImageDataData[1], 255, 'G1');
-      assert.equal(this.canvasImageDataData[2], 255, 'B1');
-      assert.equal(this.canvasImageDataData[3], 0, 'A1');
-      assert.equal(this.canvasImageDataData[4], 255, 'R2');
-      assert.equal(this.canvasImageDataData[5], 255, 'G2');
-      assert.equal(this.canvasImageDataData[6], 255, 'B2');
-      assert.equal(this.canvasImageDataData[7], 255, 'A2');
+      this.canvasImageDataData.should.be.deep.equal([255, 255, 255, 0, 255, 255, 255, 255]);
     });
   });
 });

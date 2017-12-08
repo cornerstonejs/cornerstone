@@ -1,6 +1,7 @@
-import { assert } from 'chai';
-
+import { should } from 'chai';
 import storedColorPixelDataToCanvasImageData from '../../src/internal/storedColorPixelDataToCanvasImageData';
+
+should();
 
 describe('storedColorPixelDataToCanvasImageData', function () {
   before(function () {
@@ -23,7 +24,7 @@ describe('storedColorPixelDataToCanvasImageData', function () {
 
       storedColorPixelDataToCanvasImageData(this.image, this.lut, canvasImageDataData);
 
-      assert.deepEqual(canvasImageDataData, [5, 6, 7, 0, 6, 4, 5, 0]);
+      canvasImageDataData.should.be.deep.equal([5, 6, 7, 0, 6, 4, 5, 0]);
     });
   });
 
@@ -37,7 +38,7 @@ describe('storedColorPixelDataToCanvasImageData', function () {
 
       storedColorPixelDataToCanvasImageData(this.image, this.lut, canvasImageDataData);
 
-      assert.deepEqual(canvasImageDataData, [2, 3, 4, 0, 3, 1, 2, 0]);
+      canvasImageDataData.should.be.deep.equal([2, 3, 4, 0, 3, 1, 2, 0]);
     });
   });
 });

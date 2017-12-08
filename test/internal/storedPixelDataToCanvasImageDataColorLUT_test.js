@@ -1,6 +1,7 @@
-import { assert } from 'chai';
-
+import { should } from 'chai';
 import storedPixelDataToCanvasImageDataColorLUT from '../../src/internal/storedPixelDataToCanvasImageDataColorLUT';
+
+should();
 
 describe('storedPixelDataToCanvasImageDataColorLUT', function () {
   before(function () {
@@ -22,7 +23,7 @@ describe('storedPixelDataToCanvasImageDataColorLUT', function () {
 
     storedPixelDataToCanvasImageDataColorLUT(this.image, this.colorLut, this.canvasImageData);
 
-    assert.deepEqual(this.canvasImageData, [3, 2, 1, 1, 7, 6, 5, 4]);
+    this.canvasImageData.should.be.deep.equal([3, 2, 1, 1, 7, 6, 5, 4]);
   });
 
   it('should get LUT values equal to its pixels minus its minimun pixel value when minPixelValue < 0', function () {
@@ -33,6 +34,6 @@ describe('storedPixelDataToCanvasImageDataColorLUT', function () {
 
     storedPixelDataToCanvasImageDataColorLUT(this.image, this.colorLut, this.canvasImageData);
 
-    assert.deepEqual(this.canvasImageData, [3, 2, 1, 1, 6, 1, 2, 8]);
+    this.canvasImageData.should.be.deep.equal([3, 2, 1, 1, 6, 1, 2, 8]);
   });
 });
