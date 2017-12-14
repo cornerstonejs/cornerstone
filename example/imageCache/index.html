@@ -58,158 +58,146 @@
 </div>
 </body>
 
-<!-- cornerstone depends on jQuery so it must be loaded first-->
-<script src="../jquery.min.js"></script>
-
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
 
-
 <script>
-    $(document).ready(function() {
+    const cacheInfo = cornerstone.imageCache.getCacheInfo();
+    document.getElementById('maxCacheSize').value = cacheInfo.maximumSizeInBytes;
+    // Add event handler to the ww/wc apply button
+    document.getElementById('apply').addEventListener('click', function () {
+        const maxSizeInBytes = parseFloat(document.getElementById('maxCacheSize').value);
+        cornerstone.imageCache.setMaximumSizeBytes(maxSizeInBytes);
+    });
+    document.getElementById('purge').addEventListener('click', function () {
+        cornerstone.imageCache.purgeCache();
+        document.getElementById('currentCacheSize').value = cacheInfo.cacheSizeInBytes;
+        document.getElementById('numImagesCached').value = cacheInfo.numberOfImagesCached;
+    });
 
-        var cacheInfo = cornerstone.imageCache.getCacheInfo();
-        $('#maxCacheSize').val("" + cacheInfo.maximumSizeInBytes)
-        // Add event handler to the ww/wc apply button
-        $('#apply').click(function (e) {
-            var maxSizeInBytes = parseFloat($('#maxCacheSize').val());
-            cornerstone.imageCache.setMaximumSizeBytes(maxSizeInBytes);
-        });
-        $('#purge').click(function (e) {
-            cornerstone.imageCache.purgeCache();
-        });
-
-        var imageNum = 2;
-
-        $('#addImage').click(function() {
-            var imageId = "colorImageLoader://" + imageNum++;
-            cornerstone.loadAndCacheImage(imageId);
-        });
-
-        $('#changeImageSize').click(function() {
-            var imageId = "colorImageLoader://1";
-            cornerstone.imageCache.changeImageIdCacheSize(imageId, 512 * 1024);
-        });
-
-        setInterval(function() {
-            var cacheInfo = cornerstone.imageCache.getCacheInfo();
-            //$('#maxCacheSize').val("" + cacheInfo.maximumSizeInBytes);
-            $('#currentCacheSize').val("" + cacheInfo.cacheSizeInBytes);
-            $('#numImagesCached').val("" + cacheInfo.numberOfImagesCached);
-        }, 100);
-
-        var canvas = document.createElement('canvas');
-
-        // Loads an image given an imageId
-        function loadImage  (imageId) {
-
-            var width = 256;
-            var height = 256;
-
-            canvas.width = width;
-            canvas.height = height;
-            var canvasContext = canvas.getContext('2d');
-            var imageData = canvasContext.createImageData(width, height);
-            var pixelData = imageData.data;
-            var index = 0;
-            var rnd = Math.round(Math.random() * 255);
-            for (var y = 0; y < height; y++) {
-                for (var x = 0; x < width; x++) {
-                    pixelData[index++] = (x + rnd) % 256; // RED
-                    pixelData[index++] = 0; // GREEN
-                    pixelData[index++] = 0; // BLUE
-                    pixelData[index++] = 255; // ALPHA
-                }
-            }
-            canvasContext.putImageData(imageData, 0, 0);
-
-            function getPixelData()
-            {
-                return pixelData;
-            }
-
-            function getImageData()
-            {
-                return imageData;
-            }
-
-            function getCanvas()
-            {
-                return canvas;
-            }
-
-            var image = {
-                imageId: imageId,
-                minPixelValue: 0,
-                maxPixelValue: 255,
-                slope: 1.0,
-                intercept: 0,
-                windowCenter: 127,
-                windowWidth: 256,
-                getPixelData: getPixelData,
-                getImageData: getImageData,
-                getCanvas: getCanvas,
-                render : cornerstone.renderColorImage,
-                rows: height,
-                columns: width,
-                height: height,
-                width: width,
-                color: true,
-                columnPixelSpacing: 1.0,
-                rowPixelSpacing: 1.0,
-                invert: false,
-                sizeInBytes : width * height * 4
-            };
-
-            return {
-                promise: new Promise((resolve) => resolve(image)),
-                cancelFn: undefined
-            }
-        }
-
-        cornerstone.registerImageLoader('colorImageLoader', loadImage);
-
-        // image enable the element
-        var element = document.getElementById('dicomImage');
-        cornerstone.enable(element);
-
-        function onImageRendered(e) {
-            var eventData = e.detail;
-            $('#topright').text("Render Time:" + eventData.renderTimeInMs + " ms");
-        }
-        element.addEventListener('cornerstoneimagerendered', onImageRendered);
-
-        // load image and display it
-        var imageId = "colorImageLoader://1";
+    let imageNum = 2;
+    document.getElementById('addImage').addEventListener('click', function() {
+        const imageId = "colorImageLoader://" + imageNum++;
         cornerstone.loadAndCacheImage(imageId).then(function(image) {
-            cornerstone.displayImage(element, image);
-
-            // add event handlers to mouse move to adjust window/center
-            $('#dicomImage').mousedown(function (e) {
-                var lastX = e.pageX;
-                var lastY = e.pageY;
-
-                $(document).mousemove(function (e) {
-                    var deltaX = e.pageX - lastX,
-                            deltaY = e.pageY - lastY;
-                    lastX = e.pageX;
-                    lastY = e.pageY;
-
-                    var viewport = cornerstone.getViewport(element);
-                    viewport.voi.windowWidth += (deltaX / viewport.scale);
-                    viewport.voi.windowCenter += (deltaY / viewport.scale);
-                    cornerstone.setViewport(element, viewport);
-                });
-
-                $(document).mouseup(function (e) {
-                    $(document).unbind('mousemove');
-                    $(document).unbind('mouseup');
-                });
-            });
-
+          const cacheInfo = cornerstone.imageCache.getCacheInfo();
+          cornerstone.displayImage(element, image);
+          document.getElementById('currentCacheSize').value = cacheInfo.cacheSizeInBytes;
+          document.getElementById('numImagesCached').value = cacheInfo.numberOfImagesCached;
         });
     });
 
+    document.getElementById('changeImageSize').addEventListener('click', function() {
+        const imageId = "colorImageLoader://1";
+        cornerstone.imageCache.changeImageIdCacheSize(imageId, 512 * 1024);
+    });
 
+    var canvas = document.createElement('canvas');
+
+    // Loads an image given an imageId
+    function loadImage  (imageId) {
+        var width = 256;
+        var height = 256;
+
+        canvas.width = width;
+        canvas.height = height;
+        var canvasContext = canvas.getContext('2d');
+        var imageData = canvasContext.createImageData(width, height);
+        var pixelData = imageData.data;
+        var index = 0;
+        var rnd = Math.round(Math.random() * 255);
+        for (var y = 0; y < height; y++) {
+            for (var x = 0; x < width; x++) {
+                pixelData[index++] = (x + rnd) % 256; // RED
+                pixelData[index++] = 0; // GREEN
+                pixelData[index++] = 0; // BLUE
+                pixelData[index++] = 255; // ALPHA
+            }
+        }
+        canvasContext.putImageData(imageData, 0, 0);
+
+        function getPixelData() {
+            return pixelData;
+        }
+
+        function getImageData() {
+            return imageData;
+        }
+
+        function getCanvas() {
+            return canvas;
+        }
+
+        var image = {
+            imageId: imageId,
+            minPixelValue: 0,
+            maxPixelValue: 255,
+            slope: 1.0,
+            intercept: 0,
+            windowCenter: 127,
+            windowWidth: 256,
+            getPixelData: getPixelData,
+            getImageData: getImageData,
+            getCanvas: getCanvas,
+            render : cornerstone.renderColorImage,
+            rows: height,
+            columns: width,
+            height: height,
+            width: width,
+            color: true,
+            columnPixelSpacing: 1.0,
+            rowPixelSpacing: 1.0,
+            invert: false,
+            sizeInBytes : width * height * 4
+        };
+
+        return {
+            promise: new Promise((resolve) => resolve(image)),
+            cancelFn: undefined
+        }
+    }
+
+    cornerstone.registerImageLoader('colorImageLoader', loadImage);
+
+    // image enable the element
+    const element = document.getElementById('dicomImage');
+    cornerstone.enable(element);
+
+    function onImageRendered(e) {
+        const eventData = e.detail;
+        document.getElementById('topright').textContent = "Render Time:" + eventData.renderTimeInMs + " ms";
+    }
+    element.addEventListener('cornerstoneimagerendered', onImageRendered);
+
+    // load image and display it
+    const imageId = "colorImageLoader://1";
+    cornerstone.loadAndCacheImage(imageId).then(function(image) {
+        cornerstone.displayImage(element, image);
+
+        // add event handlers to mouse move to adjust window/center
+        element.addEventListener('mousedown', function (e) {
+            let lastX = e.pageX;
+            let lastY = e.pageY;
+
+            function mouseMoveHandler(e) {
+                const deltaX = e.pageX - lastX;
+                const deltaY = e.pageY - lastY;
+                lastX = e.pageX;
+                lastY = e.pageY;
+
+                let viewport = cornerstone.getViewport(element);
+                viewport.voi.windowWidth += (deltaX / viewport.scale);
+                viewport.voi.windowCenter += (deltaY / viewport.scale);
+                cornerstone.setViewport(element, viewport);
+            }
+
+            function mouseUpHandler() {
+                document.removeEventListener('mousemove', mouseMoveHandler);
+                document.removeEventListener('mouseup', mouseUpHandler);
+            }
+
+            document.addEventListener('mousemove', mouseMoveHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
+        });
+    });
 </script>
 </html>

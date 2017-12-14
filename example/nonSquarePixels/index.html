@@ -39,196 +39,192 @@
 </div>
 </body>
 
-<!-- cornerstone depends on jQuery so it must be loaded first-->
-<script src="../jquery.min.js"></script>
-
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
 
 <script>
+    // Loads an image given an imageId
+    function loadImage(imageId) {
 
-    $(document).ready(function() {
+        var width = 128;
+        var height = 256;
 
-
-        // Loads an image given an imageId
-        function loadImage(imageId) {
-
-            var width = 128;
-            var height = 256;
-
-            var numPixels = width * height;
-            var pixelData = new Uint16Array(numPixels);
-            var index = 0;
-            // clear image to black
-            for (var y = 0; y < height; y++) {
-                for (var x = 0; x < width; x++) {
-                    pixelData[index] = 128;
-                    index++;
-                }
+        var numPixels = width * height;
+        var pixelData = new Uint16Array(numPixels);
+        var index = 0;
+        // clear image to black
+        for (var y = 0; y < height; y++) {
+            for (var x = 0; x < width; x++) {
+                pixelData[index] = 128;
+                index++;
             }
-
-            var left = 10;
-            var top = 20;
-            var squareWidth = 50;
-            var squareHeight = 100;
-
-            for (var row = top; row < top + squareHeight; row++) {
-                var rowOffset = row * width;
-                pixelData[rowOffset + left] = 255;
-                pixelData[rowOffset + left + squareWidth] = 255;
-            }
-            var topRowOffset = top * width;
-            var bottomRowOffset = (top + squareHeight) * width;
-            for (var column = left; column < left + squareWidth; column++) {
-                pixelData[topRowOffset + column] = 255;
-                pixelData[bottomRowOffset + column] = 255;
-            }
-
-            function getPixelData()
-            {
-                return pixelData;
-            }
-
-            var image = {
-                imageId: imageId,
-                minPixelValue: 0,
-                maxPixelValue: 255,
-                slope: 1.0,
-                intercept: 0,
-                windowCenter: 127,
-                windowWidth: 256,
-                render: cornerstone.renderGrayscaleImage,
-                getPixelData: getPixelData,
-                rows: height,
-                columns: width,
-                height: height,
-                width: width,
-                color: false,
-                columnPixelSpacing: 1.0,
-                rowPixelSpacing: 0.5,
-                invert: false,
-                sizeInBytes: width * height * 2
-            };
-
-            // Create a Promise, resolve it with the image object we just created and return the
-            // Promise to cornerstone.  Cornerstone will get the image object by calling then() on the
-            // Promise. An optional function can be provided to allow the image loader to cancel a request.
-            return {
-              promise: new Promise((resolve) => {
-                resolve(image);
-              }),
-              cancelFn: undefined
-            };
         }
 
-        cornerstone.registerImageLoader('myImageLoader', loadImage);
+        var left = 10;
+        var top = 20;
+        var squareWidth = 50;
+        var squareHeight = 100;
 
-        // image enable the element
-        var element = document.getElementById('dicomImage');
-        cornerstone.enable(element);
+        for (var row = top; row < top + squareHeight; row++) {
+            var rowOffset = row * width;
+            pixelData[rowOffset + left] = 255;
+            pixelData[rowOffset + left + squareWidth] = 255;
+        }
+        var topRowOffset = top * width;
+        var bottomRowOffset = (top + squareHeight) * width;
+        for (var column = left; column < left + squareWidth; column++) {
+            pixelData[topRowOffset + column] = 255;
+            pixelData[bottomRowOffset + column] = 255;
+        }
 
-        // load and display the image
-        var imageId = "myImageLoader://1";
-        cornerstone.loadImage(imageId).then(function(image) {
-
-            element.addEventListener("cornerstoneimagerendered", function(e) {
-                var eventData = e.detail;
-
-                // reset to identity matrix
-                eventData.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
-
-                var context = eventData.canvasContext;
-                context.beginPath();
-                context.strokeStyle = 'white';
-                context.lineWidth = 0;
-                var topLeft = cornerstone.pixelToCanvas(element, {x:30, y:30});
-                var bottomRight = cornerstone.pixelToCanvas(element, {x:40, y:40});
-
-                context.rect(topLeft.x, topLeft.y, bottomRight.x-topLeft.x, bottomRight.y - topLeft.y);
-                context.stroke();
-
-                context.fillStyle = "white";
-                context.font = "14px Arial";
-                context.fillText("Tumor Here", topLeft.x, topLeft.y);
-            });
-            cornerstone.displayImage(element, image);
-        });
-
-        // Add event handlers to flip or rotate the image
-        $('#hFlip').click(function (e) {
-            var viewport = cornerstone.getViewport(element);
-            viewport.hflip = !viewport.hflip;
-            cornerstone.setViewport(element, viewport);
-        });
-
-        $('#vFlip').click(function (e) {
-            var viewport = cornerstone.getViewport(element);
-            viewport.vflip = !viewport.vflip;
-            cornerstone.setViewport(element, viewport);
-        });
-
-        $('#lRotate').click(function (e) {
-            var viewport = cornerstone.getViewport(element);
-            viewport.rotation-=90;
-            cornerstone.setViewport(element, viewport);
-        });
-
-        $('#rRotate').click(function (e) {
-            var viewport = cornerstone.getViewport(element);
-            viewport.rotation+=90;
-            cornerstone.setViewport(element, viewport);
-        });
-
-        $('#reset').click(function (e) {
-            cornerstone.reset(element);
-        });
-        $(element).mousemove(function(event)
+        function getPixelData()
         {
-            var pixelCoords = cornerstone.pageToPixel(element, event.pageX, event.pageY);
-            var pt = cornerstone.pixelToCanvas(element, pixelCoords);
-            $('#coords').text("page=(" + event.pageX + ", " + event.pageY + "); pixel=(" + pixelCoords.x.toFixed(1) + ", " + pixelCoords.y.toFixed(1) + '); canvas=(' + pt.x.toFixed(1) + ', ' + pt.y.toFixed(1) + ')');
+            return pixelData;
+        }
 
+        var image = {
+            imageId: imageId,
+            minPixelValue: 0,
+            maxPixelValue: 255,
+            slope: 1.0,
+            intercept: 0,
+            windowCenter: 127,
+            windowWidth: 256,
+            render: cornerstone.renderGrayscaleImage,
+            getPixelData: getPixelData,
+            rows: height,
+            columns: width,
+            height: height,
+            width: width,
+            color: false,
+            columnPixelSpacing: 1.0,
+            rowPixelSpacing: 0.5,
+            invert: false,
+            sizeInBytes: width * height * 2
+        };
+
+        // Create a Promise, resolve it with the image object we just created and return the
+        // Promise to cornerstone.  Cornerstone will get the image object by calling then() on the
+        // Promise. An optional function can be provided to allow the image loader to cancel a request.
+        return {
+          promise: new Promise((resolve) => {
+            resolve(image);
+          }),
+          cancelFn: undefined
+        };
+    }
+
+    cornerstone.registerImageLoader('myImageLoader', loadImage);
+
+    // image enable the element
+    const element = document.getElementById('dicomImage');
+    cornerstone.enable(element);
+
+    // load and display the image
+    const imageId = "myImageLoader://1";
+    cornerstone.loadImage(imageId).then(function(image) {
+
+        element.addEventListener("cornerstoneimagerendered", function(e) {
+            const eventData = e.detail;
+
+            // reset to identity matrix
+            eventData.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
+
+            var context = eventData.canvasContext;
+            context.beginPath();
+            context.strokeStyle = 'white';
+            context.lineWidth = 0;
+            var topLeft = cornerstone.pixelToCanvas(element, {x:30, y:30});
+            var bottomRight = cornerstone.pixelToCanvas(element, {x:40, y:40});
+
+            context.rect(topLeft.x, topLeft.y, bottomRight.x-topLeft.x, bottomRight.y - topLeft.y);
+            context.stroke();
+
+            context.fillStyle = "white";
+            context.font = "14px Arial";
+            context.fillText("Tumor Here", topLeft.x, topLeft.y);
         });
-        // add event handlers to pan image on mouse move
-        $('#dicomImage').mousedown(function (e) {
-            var lastX = e.pageX;
-            var lastY = e.pageY;
-
-
-            $(document).mousemove(function (e) {
-                var deltaX = e.pageX - lastX,
-                        deltaY = e.pageY - lastY;
-                lastX = e.pageX;
-                lastY = e.pageY;
-
-                var viewport = cornerstone.getViewport(element);
-                viewport.translation.x += (deltaX / viewport.scale);
-                viewport.translation.y += (deltaY / viewport.scale);
-                cornerstone.setViewport(element, viewport);
-            });
-
-            $(document).mouseup(function (e) {
-                $(document).unbind('mousemove');
-                $(document).unbind('mouseup');
-            });
-        });
-        $('#dicomImage').on('mousewheel DOMMouseScroll', function (e) {
-            // Firefox e.originalEvent.detail > 0 scroll back, < 0 scroll forward
-            // chrome/safari e.originalEvent.wheelDelta < 0 scroll back, > 0 scroll forward
-            if (e.originalEvent.wheelDelta < 0 || e.originalEvent.detail > 0) {
-                var viewport = cornerstone.getViewport(element);
-                viewport.scale -= 0.25;
-                cornerstone.setViewport(element, viewport);
-            } else {
-                var viewport = cornerstone.getViewport(element);
-                viewport.scale += 0.25;
-                cornerstone.setViewport(element, viewport);
-            }
-            //prevent page fom scrolling
-            return false;
-        });
-
+        cornerstone.displayImage(element, image);
     });
 
+    // Add event handlers to flip or rotate the image
+    document.getElementById('hFlip').addEventListener('click', function (e) {
+        var viewport = cornerstone.getViewport(element);
+        viewport.hflip = !viewport.hflip;
+        cornerstone.setViewport(element, viewport);
+    });
+
+    document.getElementById('vFlip').addEventListener('click', function (e) {
+        var viewport = cornerstone.getViewport(element);
+        viewport.vflip = !viewport.vflip;
+        cornerstone.setViewport(element, viewport);
+    });
+
+    document.getElementById('lRotate').addEventListener('click', function (e) {
+        var viewport = cornerstone.getViewport(element);
+        viewport.rotation-=90;
+        cornerstone.setViewport(element, viewport);
+    });
+
+    document.getElementById('rRotate').addEventListener('click', function (e) {
+        var viewport = cornerstone.getViewport(element);
+        viewport.rotation+=90;
+        cornerstone.setViewport(element, viewport);
+    });
+
+    document.getElementById('reset').addEventListener('click', function (e) {
+        cornerstone.reset(element);
+    });
+
+    element.addEventListener('mousemove', function(event) {
+        const pixelCoords = cornerstone.pageToPixel(element, event.pageX, event.pageY);
+        const pt = cornerstone.pixelToCanvas(element, pixelCoords);
+        document.getElementById('coords').textContent = "page=(" + event.pageX + ", " + event.pageY + "); pixel=(" + pixelCoords.x.toFixed(1) + ", " + pixelCoords.y.toFixed(1) + '); canvas=(' + pt.x.toFixed(1) + ', ' + pt.y.toFixed(1) + ')';
+    });
+
+    // add event handlers to pan image on mouse move
+    element.addEventListener('mousedown', function (e) {
+      let lastX = e.pageX;
+      let lastY = e.pageY;
+
+      function mouseMoveHandler(e) {
+        const deltaX = e.pageX - lastX;
+        const deltaY = e.pageY - lastY;
+        lastX = e.pageX;
+        lastY = e.pageY;
+
+        const viewport = cornerstone.getViewport(element);
+        viewport.translation.x += (deltaX / viewport.scale);
+        viewport.translation.y += (deltaY / viewport.scale);
+        cornerstone.setViewport(element, viewport);
+      }
+
+      function mouseUpHandler() {
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        document.removeEventListener('mouseup', mouseUpHandler);
+      }
+
+      document.addEventListener('mousemove', mouseMoveHandler);
+      document.addEventListener('mouseup', mouseUpHandler);
+    });
+
+    const mouseWheelEvents = ['mousewheel', 'DOMMouseScroll'];
+    mouseWheelEvents.forEach(function(eventType) {
+      element.addEventListener(eventType, function (e) {
+        // Firefox e.detail > 0 scroll back, < 0 scroll forward
+        // chrome/safari e.wheelDelta < 0 scroll back, > 0 scroll forward
+        let viewport = cornerstone.getViewport(element);
+        if (e.wheelDelta < 0 || e.detail > 0) {
+          viewport.scale -= 0.25;
+        } else {
+          viewport.scale += 0.25;
+        }
+
+        cornerstone.setViewport(element, viewport);
+
+        // Prevent page from scrolling
+        return false;
+      });
+    });
 </script>
 </html>

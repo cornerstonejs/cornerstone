@@ -33,9 +33,6 @@ to change between images or press the buttons below.
 </div>
 </body>
 
-<!-- cornerstone depends on jQuery so it must be loaded first-->
-<script src="../jquery.min.js"></script>
-
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
 
@@ -43,52 +40,54 @@ to change between images or press the buttons below.
 <script src="../exampleImageIdLoader.js"></script>
 
 <script>
+    const element = document.getElementById('dicomImage');
+    cornerstone.enable(element);
 
-    $(document).ready(function() {
-        var element = $('#dicomImage').get(0);
-        cornerstone.enable(element);
+    const imageIds = [
+        'example://1',
+        'example://2'
+    ];
 
-        var imageIds = [
-            'example://1',
-            'example://2'];
+    let currentImageIndex = 0;
 
-        var currentImageIndex = 0;
+    // show image #1 initially
+    function updateTheImage(imageIndex) {
+        currentImageIndex = imageIndex;
+        cornerstone.loadImage(imageIds[currentImageIndex]).then(function(image) {
+            cornerstone.displayImage(element, image);
+        });
+    }
 
-        // show image #1 initially
-        function updateTheImage(imageIndex) {
-            currentImageIndex = imageIndex;
-            cornerstone.loadImage(imageIds[currentImageIndex]).then(function(image) {
-                cornerstone.displayImage(element, image);
-            });
-        };
+    updateTheImage(0);
 
+    // Add event handlers to change images
+    document.getElementById('imageButton1').addEventListener('click', function (e) {
         updateTheImage(0);
-
-        // Add event handlers to change images
-        $('#imageButton1').click(function (e) {
-            updateTheImage(0);
-        });
-
-        $('#imageButton2').click(function (e) {
-            updateTheImage(1);
-        });
-
-        $('#dicomImage').on('mousewheel DOMMouseScroll', function (e) {
-            // Firefox e.originalEvent.detail > 0 scroll back, < 0 scroll forward
-            // chrome/safari e.originalEvent.wheelDelta < 0 scroll back, > 0 scroll forward
-            if (e.originalEvent.wheelDelta < 0 || e.originalEvent.detail > 0) {
-                if (currentImageIndex == 0) {
-                    updateTheImage(1);
-                }
-            } else {
-                if (currentImageIndex == 1) {
-                    updateTheImage(0);
-                }
-            }
-            //prevent page fom scrolling
-            return false;
-        });
     });
 
+    document.getElementById('imageButton2').addEventListener('click', function (e) {
+        updateTheImage(1);
+    });
+
+    const wheelEvents = ['mousewheel', 'DOMMouseScroll'];
+
+    wheelEvents.forEach((eventType) => {
+      element.addEventListener(eventType, function (e) {
+        // Firefox e.detail > 0 scroll back, < 0 scroll forward
+        // chrome/safari e.wheelDelta < 0 scroll back, > 0 scroll forward
+        if (e.wheelDelta < 0 || e.detail > 0) {
+          if (currentImageIndex === 0) {
+            updateTheImage(1);
+          }
+        } else {
+          if (currentImageIndex === 1) {
+            updateTheImage(0);
+          }
+        }
+
+        // Prevent page fom scrolling
+        return false;
+      });
+    });
 </script>
 </html>

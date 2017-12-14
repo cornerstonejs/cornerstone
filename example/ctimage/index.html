@@ -45,17 +45,11 @@
         </div>
 
     </div>
-
-
     <button id="softTissue" class="btn">Soft Tissue</button>
     <button id="lung" class="btn">Lung</button>
     <button id="bone" class="btn">Bone</button>
-
 </div>
 </body>
-
-<!-- cornerstone depends on jQuery so it must be loaded first-->
-<script src="../jquery.min.js"></script>
 
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
@@ -64,72 +58,71 @@
 <script src="../exampleImageIdLoaderCt.js"></script>
 
 <script>
+    // image enable the dicomImage element
+    const element = document.getElementById('dicomImage');
+    cornerstone.enable(element);
 
-    $(document).ready(function() {
-        // image enable the dicomImage element
-        var element = $('#dicomImage').get(0);
-        cornerstone.enable(element);
+    // load and display the image
+    const imageId = 'ctexample://1';
+    cornerstone.loadImage(imageId).then(function(image) {
+        cornerstone.displayImage(element, image);
 
-        // load and display the image
-        var imageId = 'ctexample://1';
-        cornerstone.loadImage(imageId).then(function(image) {
-            cornerstone.displayImage(element, image);
+        const viewport = cornerstone.getViewport(element);
+        document.getElementById('bottomright').textContent = "Zoom: " + viewport.scale + "x";
+        document.getElementById('bottomleft').textContent = "WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter);
 
-            var viewport = cornerstone.getViewport(element);
-            $('#bottomright').text("Zoom: " + viewport.scale + "x");
-            $('#bottomleft').text("WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
+        // Add event handler for the ww/wc presets
+        document.getElementById('softTissue').addEventListener('click', function() {
+            let viewport = cornerstone.getViewport(element);
+            viewport.voi.windowWidth = 400;
+            viewport.voi.windowCenter = 20;
+            cornerstone.setViewport(element, viewport);
+            document.getElementById('bottomleft').textContent = "WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter);
+        });
 
-            // Add event handler for the ww/wc presets
-            $('#softTissue').click(function(e) {
-                var viewport = cornerstone.getViewport(element);
-                viewport.voi.windowWidth = 400;
-                viewport.voi.windowCenter = 20;
-                cornerstone.setViewport(element, viewport);
-            });
+        document.getElementById('lung').addEventListener('click', function() {
+            let viewport = cornerstone.getViewport(element);
+            viewport.voi.windowWidth = 1600;
+            viewport.voi.windowCenter = -600;
+            cornerstone.setViewport(element, viewport);
+            document.getElementById('bottomleft').textContent = "WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter);
+        });
 
-            $('#lung').click(function(e) {
-                var viewport = cornerstone.getViewport(element);
-                viewport.voi.windowWidth = 1600;
-                viewport.voi.windowCenter = -600;
-                cornerstone.setViewport(element, viewport);
-            });
-
-            $('#bone').click(function(e) {
-                var viewport = cornerstone.getViewport(element);
-                viewport.voi.windowWidth = 2000;
-                viewport.voi.windowCenter = 300;
-                cornerstone.setViewport(element, viewport);
-            });
-
-
-            // add event handlers to mouse move to adjust window/center
-            $('#dicomImage').mousedown(function(e) {
-                var lastX = e.pageX;
-                var lastY = e.pageY;
-
-                $(document).mousemove(function(e) {
-                    var deltaX = e.pageX - lastX,
-                            deltaY = e.pageY - lastY ;
-                    lastX = e.pageX;
-                    lastY = e.pageY;
-
-                    var viewport = cornerstone.getViewport(element);
-                    viewport.voi.windowWidth += (deltaX / viewport.scale);
-                    viewport.voi.windowCenter += (deltaY / viewport.scale);
-                    cornerstone.setViewport(element, viewport);
-                    $('#bottomleft').text("WW/WL:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
-                });
-
-                $(document).mouseup(function(e) {
-                    $(document).unbind('mousemove');
-                    $(document).unbind('mouseup');
-                });
-            });
-
+        document.getElementById('bone').addEventListener('click', function() {
+            let viewport = cornerstone.getViewport(element);
+            viewport.voi.windowWidth = 2000;
+            viewport.voi.windowCenter = 300;
+            cornerstone.setViewport(element, viewport);
+            document.getElementById('bottomleft').textContent = "WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter);
         });
 
 
-    });
+        // add event handlers to mouse move to adjust window/center
+        element.addEventListener('mousedown', function (e) {
+            let lastX = e.pageX;
+            let lastY = e.pageY;
 
+            function mouseMoveHandler(e) {
+                const deltaX = e.pageX - lastX;
+                const deltaY = e.pageY - lastY;
+                lastX = e.pageX;
+                lastY = e.pageY;
+
+                let viewport = cornerstone.getViewport(element);
+                viewport.voi.windowWidth += (deltaX / viewport.scale);
+                viewport.voi.windowCenter += (deltaY / viewport.scale);
+                cornerstone.setViewport(element, viewport);
+                document.getElementById('bottomleft').textContent = "WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter);
+            }
+
+            function mouseUpHandler() {
+                document.removeEventListener('mousemove', mouseMoveHandler);
+                document.removeEventListener('mouseup', mouseUpHandler);
+            }
+
+            document.addEventListener('mousemove', mouseMoveHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
+        });
+    });
 </script>
 </html>

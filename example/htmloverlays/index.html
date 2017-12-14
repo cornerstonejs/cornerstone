@@ -39,16 +39,9 @@
         <div id="bottomleft" style="position: absolute;bottom:0px; left:0px">
             WW/WC:
         </div>
-
     </div>
-
-
-
 </div>
 </body>
-
-<!-- cornerstone depends on jQuery so it must be loaded first-->
-<script src="../jquery.min.js"></script>
 
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
@@ -57,46 +50,45 @@
 <script src="../exampleImageIdLoader.js"></script>
 
 <script>
-    $(document).ready(function() {
-        // image enable the element
-        var element = document.getElementById('dicomImage');
-        cornerstone.enable(element);
+    // image enable the element
+    const element = document.getElementById('dicomImage');
+    cornerstone.enable(element);
 
-        // load the image and display it
-        var imageId = 'example://1';
-        cornerstone.loadImage(imageId).then(function(image) {
-            cornerstone.displayImage(element, image);
-            var viewport = cornerstone.getViewport(element);
-            $('#bottomright').text("Zoom: " + viewport.scale + "x");
-            $('#bottomleft').text("WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
-        });
-
-
-        // add event handlers to mouse move to adjust window/center
-        $('#dicomImage').mousedown(function(e) {
-            var lastX = e.pageX;
-            var lastY = e.pageY;
-
-            $('#dicomImage').mousemove(function(e) {
-                var deltaX = e.pageX - lastX,
-                        deltaY = e.pageY - lastY ;
-                lastX = e.pageX;
-                lastY = e.pageY;
-
-                var viewport = cornerstone.getViewport(element);
-                viewport.voi.windowWidth += (deltaX / viewport.scale);
-                viewport.voi.windowCenter += (deltaY / viewport.scale);
-                cornerstone.setViewport(element, viewport);
-
-                $('#bottomleft').text("WW/WL:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
-            });
-
-            $('#dicomImage').mouseup(function(e) {
-                $('#dicomImage').unbind('mousemove');
-            });
-        });
+    // load the image and display it
+    const imageId = 'example://1';
+    cornerstone.loadImage(imageId).then(function(image) {
+        cornerstone.displayImage(element, image);
+        const viewport = cornerstone.getViewport(element);
+        document.getElementById('bottomright').textContent = "Zoom: " + viewport.scale + "x";
+        document.getElementById('bottomleft').textContent = "WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter);
     });
 
-</script>
+    // add event handlers to mouse move to adjust window/center
+    element.addEventListener('mousedown', function (e) {
+        let lastX = e.pageX;
+        let lastY = e.pageY;
 
+        function mouseMoveHandler(e) {
+            const deltaX = e.pageX - lastX;
+            const deltaY = e.pageY - lastY;
+            lastX = e.pageX;
+            lastY = e.pageY;
+
+            let viewport = cornerstone.getViewport(element);
+            viewport.voi.windowWidth += (deltaX / viewport.scale);
+            viewport.voi.windowCenter += (deltaY / viewport.scale);
+            cornerstone.setViewport(element, viewport);
+
+            document.getElementById('bottomleft').textContent = "WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter);
+        }
+
+        function mouseUpHandler() {
+            document.removeEventListener('mousemove', mouseMoveHandler);
+            document.removeEventListener('mouseup', mouseUpHandler);
+        }
+
+        document.addEventListener('mousemove', mouseMoveHandler);
+        document.addEventListener('mouseup', mouseUpHandler);
+    });
+</script>
 </html>
