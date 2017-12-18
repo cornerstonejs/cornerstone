@@ -52,7 +52,8 @@ export {
   loadImage,
   loadAndCacheImage,
   registerImageLoader,
-  registerUnknownImageLoader
+  registerUnknownImageLoader,
+  registerContentManager
 } from './imageLoader.js';
 
 export { default as invalidate } from './invalidate.js';
