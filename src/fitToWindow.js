@@ -117,12 +117,5 @@ export default function (element, baseLayerFilter) {
   enabledElement.viewport.translation.x = 0;
   enabledElement.viewport.translation.y = 0;
 
-  // Rescale the layers
-  layers.forEach((layer) => {
-    layer.viewport.scale = enabledElement.viewport.scale * getScaleRatio(enabledElement.image, layer.image);
-    layer.viewport.translation.x = 0;
-    layer.viewport.translation.y = 0;
-  });
-
   updateImage(element);
 }
