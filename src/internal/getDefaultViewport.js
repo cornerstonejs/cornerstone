@@ -12,6 +12,7 @@ export default function (canvas, image) {
 
   if (image === undefined) {
     return {
+      //FIXME: CHANGE THIS TO BE A PART OF DISPLAYED AREA
       scale: 1,
       translation: {
         x: 0,
@@ -29,7 +30,20 @@ export default function (canvas, image) {
       modalityLUT: undefined,
       voiLUT: undefined,
       colormap: undefined,
-      labelmap: false
+      labelmap: false,
+      displayedArea : {
+        tlhc : {
+          x : 0,
+          y : 0
+        },
+        brhc : {
+          x : 0,
+          y : 0
+        },
+        rowPixelSpacing : 1,
+        columnPixelSpacing : 1,
+        presentationSizeMode : 'SCALE TO FIT'
+      }
     };
   }
 
@@ -56,6 +70,19 @@ export default function (canvas, image) {
     modalityLUT: image.modalityLUT,
     voiLUT: image.voiLUT,
     colormap: image.colormap,
-    labelmap: Boolean(image.labelmap)
+    labelmap: Boolean(image.labelmap),
+    displayedArea : {
+      tlhc : {
+        x : 0,
+        y : 0
+      },
+      brhc : {
+        x : image.columns,
+        y : image.rows
+      },
+      rowPixelSpacing : image.rowPixelSpacing !== undefined ? image.rowPixelSpacing : 1,
+      columnPixelSpacing : image.columnPixelSpacing !== undefined ? image.columnPixelSpacing : 1,
+      presentationSizeMode : 'SCALE TO FIT'
+    }
   };
 }
