@@ -4,6 +4,11 @@ import { shaders, dataUtilities } from './shaders/index.js';
 import { vertexShader } from './vertexShader.js';
 import textureCache from './textureCache.js';
 import createProgramFromString from './createProgramFromString.js';
+import autoWindow from '../internal/autoWindow.js';
+import now from '../internal/now.js';
+import getModalityLUT from '../internal/getModalityLUT.js';
+import getVOILUT from '../internal/getVOILut.js';
+import getMinMax from '../internal/getMinMax.js';
 
 const renderCanvas = document.createElement('canvas');
 let gl;
@@ -110,18 +115,19 @@ function initWebGL (canvas) {
   return gl;
 }
 
-function getImageDataType (image) {
+function getImageDataType (image, viewport) {
   if (image.color) {
     return 'rgb';
   }
 
+  const minMax = (viewport && viewport.voi && viewport.voi.minMax) ? viewport.voi.minMax : { min : image.minPixelValue, max : image.maxPixelValue };
   let datatype = 'int';
 
-  if (image.minPixelValue >= 0) {
+  if (minMax.min >= 0) {
     datatype = `u${datatype}`;
   }
 
-  if (image.maxPixelValue > 255) {
+  if (minMax.max > 255) {
     datatype += '16';
   } else {
     datatype += '8';
@@ -130,9 +136,10 @@ function getImageDataType (image) {
   return datatype;
 }
 
-function getShaderProgram (image) {
+function getShaderProgram (image, viewport) {
 
-  const datatype = getImageDataType(image);
+  const datatype = getImageDataType(image, viewport);
+  console.log(datatype);
   // We need a mechanism for
   // Choosing the shader based on the image datatype
   // Console.log("Datatype: " + datatype);
@@ -144,7 +151,7 @@ function getShaderProgram (image) {
   return shaders.rgb;
 }
 
-function generateTexture (image) {
+function generateTexture (image, viewport, mlutfn, vlutfn) {
   const TEXTURE_FORMAT = {
     uint8: gl.LUMINANCE,
     int8: gl.LUMINANCE_ALPHA,
@@ -160,7 +167,7 @@ function generateTexture (image) {
     rgb: 3 // RGB
   };
 
-  const imageDataType = getImageDataType(image);
+  const imageDataType = getImageDataType(image, viewport);
   const format = TEXTURE_FORMAT[imageDataType];
 
   // GL texture configuration
@@ -174,7 +181,7 @@ function generateTexture (image) {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
   gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
 
-  const imageData = dataUtilities[imageDataType].storedPixelDataToImageData(image, image.width, image.height);
+  const imageData = dataUtilities[imageDataType].storedPixelDataToImageData(image, mlutfn, vlutfn);
 
   gl.texImage2D(gl.TEXTURE_2D, 0, format, image.width, image.height, 0, format, gl.UNSIGNED_BYTE, imageData);
 
@@ -187,12 +194,12 @@ function generateTexture (image) {
   };
 }
 
-function getImageTexture (image) {
+function getImageTexture (image, viewport, mlutfn, vlutfn) {
   let imageTexture = textureCache.getImageTexture(image.imageId);
 
   if (!imageTexture) {
     // Console.log("Generating texture for imageid: ", image.imageId);
-    imageTexture = generateTexture(image);
+    imageTexture = generateTexture(image, viewport, mlutfn, vlutfn);
     textureCache.putImageTexture(image, imageTexture);
   }
 
@@ -266,6 +273,40 @@ function renderQuad (shader, parameters, texture, width, height) {
 
 }
 
+function getModalityLUTFunction (modalityLUT) {
+  const minMax = modalityLUT.minMax;
+  const minValue = minMax.min;
+  const maxValue = minMax.max;
+  const maxValueMapped = modalityLUT.firstValueMapped + modalityLUT.lut.length;
+
+  return (storedPixelValue) => {
+    if (storedPixelValue < modalityLUT.firstValueMapped) {
+      return minValue;
+    } else if (storedPixelValue >= maxValueMapped) {
+      return maxValue;
+    }
+
+    return modalityLUT.lut[storedPixelValue];
+  };
+}
+
+function getVoiLUTFunction (voiLUT) {
+  const minMax = voiLUT.minMax;
+  const minValue = minMax.min;
+  const maxValue = minMax.max;
+  const maxValueMapped = voiLUT.firstValueMapped + voiLUT.lut.length - 1;
+
+  return function (modalityLutValue) {
+    if (modalityLutValue < voiLUT.firstValueMapped) {
+      return minValue;
+    } else if (modalityLutValue >= maxValueMapped) {
+      return maxValue;
+    }
+
+    return voiLUT.lut[modalityLutValue];
+  };
+}
+
 export function render (enabledElement) {
   // Resize the canvas
   const image = enabledElement.image;
@@ -274,10 +315,30 @@ export function render (enabledElement) {
   renderCanvas.height = image.height;
 
   const viewport = enabledElement.viewport;
+  autoWindow(image, viewport);
+
+  // Get the lut to use
+  let start = now();
+  let lut;
+
+  console.log(image);
+  console.log(viewport);
+
+  const mlutfn = (viewport.modalityLUT !== undefined && viewport.modalityLUT.lut !== undefined) ? getModalityLUTFunction(viewport.modalityLUT) : undefined;
+  const vlutfn = (viewport.voiLUT !== undefined && viewport.voiLUT.lut !== undefined) ? getVoiLUTFunction(viewport.voiLUT) : undefined;
+
+  image.stats = image.stats || {};
+  image.stats.lastLutGenerateTime = now() - start;
 
   // Render the current image
-  const shader = getShaderProgram(image);
-  const texture = getImageTexture(image);
+  const shader = getShaderProgram(image, viewport);
+
+  console.log(shader);
+
+  const texture = getImageTexture(image, viewport, mlutfn, vlutfn);
+
+  console.log(texture);
+
   const parameters = {
     u_resolution: { type: '2f',
       value: [image.width, image.height] },

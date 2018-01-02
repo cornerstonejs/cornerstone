@@ -8,7 +8,7 @@ const int8Shader = {};
  * @param {Image} image A Cornerstone Image Object
  * @returns {Uint8Array} The image data for use by the WebGL shader
  */
-function storedPixelDataToImageData (image) {
+function storedPixelDataToImageData (image, mlutfn, vlutfn) {
   // Transfer image data to alpha channel of WebGL texture
   // Store data in Uint8Array
   const pixelData = image.getPixelData();
@@ -17,8 +17,25 @@ function storedPixelDataToImageData (image) {
   let offset = 0;
 
   for (let i = 0; i < pixelData.length; i++) {
-    data[offset++] = pixelData[i];
-    data[offset++] = pixelData[i] < 0 ? 0 : 1; // 0 For negative, 1 for positive
+    var sv  = pixelData[i];
+
+    if (image.photometricInterpretation === "MONOCHROME1") {
+      sv = image.maxPixelValue - sv;
+    }
+
+    if (mlutfn) {
+      sv = mlutfn(sv);
+    }
+
+    if (vlutfn) {
+      sv = vlutfn(sv);
+    }
+
+    data[offset++] = sv;
+    data[offset++] = sv < 0 ? 0 : 1; // 0 For negative, 1 for positive
+        // const val  = lut[pixelData[i]];
+    // data[offset++] = pixelData[i];
+    // data[offset++] = pixelData[i] < 0 ? 0 : 1; // 0 For negative, 1 for positive
   }
 
   return data;

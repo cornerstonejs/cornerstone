@@ -1,11 +1,15 @@
 import getModalityLUT from './getModalityLUT.js';
 import getVOILUT from './getVOILut.js';
+import autoWindow from './autoWindow.js';
 
 /**
  * Creates a LUT used while rendering to convert stored pixel values to
  * display pixels
  *
  * @param {Image} image A Cornerstone Image Object
+ * @param {Viewport} image A Cornerstone Viewport Object
+ *
+ * Properties that may be used:
  * @param {Number} windowWidth The Window Width
  * @param {Number} windowCenter The Window Center
  * @param {Boolean} invert A boolean describing whether or not the image has been inverted
@@ -14,7 +18,19 @@ import getVOILUT from './getVOILut.js';
  *
  * @returns {Uint8ClampedArray} A lookup table to apply to the image
  */
-export default function (image, windowWidth, windowCenter, invert, modalityLUT, voiLUT) {
+export default function (image, viewport) {
+  //Auto window
+  autoWindow(image, viewport);
+
+  console.log(image);
+  console.log(viewport);
+
+  const modalityLUT = viewport.modalityLUT;
+  const voiLUT = viewport.voiLUT;
+  const windowWidth = viewport.voi.windowWidth;
+  const windowCenter = viewport.voi.windowCenter;
+  const invert = viewport.invert || image.photometricInterpretation === 'MONOCHROME1';
+
   const maxPixelValue = image.maxPixelValue;
   const minPixelValue = image.minPixelValue;
   const offset = Math.min(minPixelValue, 0);
@@ -23,13 +39,15 @@ export default function (image, windowWidth, windowCenter, invert, modalityLUT, 
     const length = maxPixelValue - offset + 1;
 
     image.cachedLut = {};
-    image.cachedLut.lutArray = new Uint8ClampedArray(length);
+    // image.cachedLut.lutArray = new Uint8ClampedArray(length);
+    image.cachedLut.lutArray = new Int16Array(length);
   }
 
   const lut = image.cachedLut.lutArray;
   const mlutfn = getModalityLUT(image.slope, image.intercept, modalityLUT);
   const vlutfn = getVOILUT(windowWidth, windowCenter, voiLUT);
 
+  //FIXME: should probably be using full range
   if (invert === true) {
     for (let storedValue = minPixelValue; storedValue <= maxPixelValue; storedValue++) {
       lut[storedValue + (-offset)] = 255 - vlutfn(mlutfn(storedValue));
@@ -39,6 +57,8 @@ export default function (image, windowWidth, windowCenter, invert, modalityLUT, 
       lut[storedValue + (-offset)] = vlutfn(mlutfn(storedValue));
     }
   }
+
+  console.log(lut);
 
   return lut;
 }
