@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2017-12-08
+### Changed
+- *Breaking Change!!!* Removed jQuery events from triggerEvent, lower-cased all the event names. e.g. "CornerstoneWebGLTextureRemoved" is now "cornerstonewebgltextureremoved". Only native CustomEvents are now triggered by Cornerstone Core.
+- *Breaking Change!!!* Image Loaders should now return an Object containing a promise and a function which can cancel the request. The format is { promise, cancelFn }. Migration guide to come...
+- *Breaking Change!!!* Image cache now stores ImageLoadObjects as described above.
+
+### Removed
+- Removed 'commonjs2' parameter from webpack output.library options because it was complaining.
+- Removed 'externals' since we no longer use jQuery
+- *Breaking Change!!!* putImagePromise, getImagePromise have been removed and replaced with putImageLoadObject, getImageLoadObject
+
+
+## [1.1.4] - 2017-12-08
+### Added
+- Added the ESLint plugin 'eslint-plugin-import' to keep us from forgetting .js on our imports. The file extension is required when using native ES6 modules in the browser.
+- Added generateColorLut, which is basically the same as generateLut, but only applies VOI LUT transformation, and not the Modality LUT. This is intended to address the display issues reported in https://github.com/cornerstonejs/cornerstoneWADOImageLoader/issues/143
+
+### Changed
+- Moved the repository from Chris Hafey's (@chafey) personal page to a new Organization (@cornerstonejs). Renamed all the relevant links. Join us at @cornerstonejs to start contributing!
+- Switched renderColorImage to use the newly created generateColorLUT, so that modality LUT transformations are no longer (incorrectly) applied to color images.
+
 ## [1.1.3] - 2017-11-17
 ### Added
 - Exporting of triggerEvent function, mainly for use by image loader libraries

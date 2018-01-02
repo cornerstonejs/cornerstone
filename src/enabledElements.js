@@ -122,6 +122,14 @@ const enabledElements = [];
  * @property {Boolean} needsRedraw - A flag for triggering a redraw of the canvas without re-retrieving the pixel data, since it remains valid
  */
 
+/**
+ * An Image Load Object
+ *
+ * @typedef {Object} ImageLoadObject
+ *
+ * @property {Promise} promise - The Promise tracking the loading of this image
+ * @property {Function|undefined} cancelFn - A function to cancel the image load request
+ */
 
 /**
  * Retrieves a Cornerstone Enabled Element object

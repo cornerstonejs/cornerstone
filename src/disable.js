@@ -25,7 +25,7 @@ export default function (element) {
         element
       };
 
-      triggerEvent(element, 'CornerstoneElementDisabled', eventData);
+      triggerEvent(element, 'cornerstoneelementdisabled', eventData);
 
       // Remove the child DOM elements that we created (e.g.canvas)
       enabledElements[i].element.removeChild(enabledElements[i].canvas);

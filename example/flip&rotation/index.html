@@ -29,22 +29,16 @@ In this example,the image can be flipped (Horizontal/Vertical) or rotated (Clock
     <button id="lRotate" type="button" class="btn btn-default">Rotate Left</button>
     <button id="rRotate" type="button" class="btn btn-default">Rotate Right</button>
     <button id="reset" type="button" class="btn btn-default">Reset</button>
-            <div id="dicomImage" style="width:512px;height:512px"
-            class="cornerstone-enabled-image"
-            oncontextmenu="return false"
-            unselectable='on'
-            onselectstart='return false;'
-            onmousedown='return false;'>
-            </div>
-            <div><span id="coords"></span></div>
-
-
-
-            </div>
-            </body>
-
-                <!-- cornerstone depends on jQuery so it must be loaded first-->
-            <script src="../jquery.min.js"></script>
+    <div id="dicomImage" style="width:512px;height:512px"
+    class="cornerstone-enabled-image"
+    oncontextmenu="return false"
+    unselectable='on'
+    onselectstart='return false;'
+    onmousedown='return false;'>
+    </div>
+    <div><span id="coords"></span></div>
+</div>
+</body>
 
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
@@ -53,54 +47,48 @@ In this example,the image can be flipped (Horizontal/Vertical) or rotated (Clock
 <script src="../exampleImageIdLoader.js"></script>
 
 <script>
-    $(document).ready(function() {
+    // image enable the dicomImage element
+    const element = document.getElementById('dicomImage');
+    cornerstone.enable(element);
 
-        // image enable the dicomImage element
-        var element = $('#dicomImage').get(0);
-        cornerstone.enable(element);
-
-        //load the image and display it
-        var imageId = 'example://1';
-        cornerstone.loadImage(imageId).then(function(image) {
-            cornerstone.displayImage(element, image);
-        });
-
-        // Add event handlers to flip or rotate the image
-        $('#hFlip').click(function (e) {
-            var viewport = cornerstone.getViewport(element);
-            viewport.hflip = !viewport.hflip;
-            cornerstone.setViewport(element, viewport);
-        });
-
-        $('#vFlip').click(function (e) {
-            var viewport = cornerstone.getViewport(element);
-            viewport.vflip = !viewport.vflip;
-            cornerstone.setViewport(element, viewport);
-        });
-
-        $('#lRotate').click(function (e) {
-            var viewport = cornerstone.getViewport(element);
-            viewport.rotation-=90;
-            cornerstone.setViewport(element, viewport);
-        });
-
-        $('#rRotate').click(function (e) {
-            var viewport = cornerstone.getViewport(element);
-            viewport.rotation+=90;
-            cornerstone.setViewport(element, viewport);
-        });
-        
-        $('#reset').click(function (e) {
-            cornerstone.reset(element);
-        });
-        $(element).mousemove(function(event)
-        {
-            var pixelCoords = cornerstone.pageToPixel(element, event.pageX, event.pageY);
-            var x = event.pageX;
-            var y = event.pageY;
-            $('#coords').text("pageX=" + event.pageX + ", pageY=" + event.pageY + ", pixelX=" + pixelCoords.x + ", pixelY=" + pixelCoords.y);
-        });
+    //load the image and display it
+    const imageId = 'example://1';
+    cornerstone.loadImage(imageId).then(function(image) {
+        cornerstone.displayImage(element, image);
     });
 
+    // Add event handlers to flip or rotate the image
+    document.getElementById('hFlip').addEventListener('click', function (e) {
+        const viewport = cornerstone.getViewport(element);
+        viewport.hflip = !viewport.hflip;
+        cornerstone.setViewport(element, viewport);
+    });
+
+    document.getElementById('vFlip').addEventListener('click', function (e) {
+        const viewport = cornerstone.getViewport(element);
+        viewport.vflip = !viewport.vflip;
+        cornerstone.setViewport(element, viewport);
+    });
+
+    document.getElementById('lRotate').addEventListener('click', function (e) {
+        const viewport = cornerstone.getViewport(element);
+        viewport.rotation-=90;
+        cornerstone.setViewport(element, viewport);
+    });
+
+    document.getElementById('rRotate').addEventListener('click', function (e) {
+        const viewport = cornerstone.getViewport(element);
+        viewport.rotation+=90;
+        cornerstone.setViewport(element, viewport);
+    });
+
+    document.getElementById('reset').addEventListener('click', function (e) {
+        cornerstone.reset(element);
+    });
+
+    element.addEventListener('mousemove', function(event) {
+        const pixelCoords = cornerstone.pageToPixel(element, event.pageX, event.pageY);
+        document.getElementById('coords').textContent = "pageX=" + event.pageX + ", pageY=" + event.pageY + ", pixelX=" + pixelCoords.x + ", pixelY=" + pixelCoords.y;
+    });
 </script>
 </html>
