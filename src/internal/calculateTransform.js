@@ -25,10 +25,10 @@ export default function (enabledElement, scale) {
   let widthScale = enabledElement.viewport.scale;
   let heightScale = enabledElement.viewport.scale;
 
-  if (enabledElement.image.rowPixelSpacing < enabledElement.image.columnPixelSpacing) {
-    widthScale *= (enabledElement.image.columnPixelSpacing / enabledElement.image.rowPixelSpacing);
-  } else if (enabledElement.image.columnPixelSpacing < enabledElement.image.rowPixelSpacing) {
-    heightScale *= (enabledElement.image.rowPixelSpacing / enabledElement.image.columnPixelSpacing);
+  if (enabledElement.viewport.displayedArea.rowPixelSpacing < enabledElement.viewport.displayedArea.columnPixelSpacing) {
+    widthScale *= (enabledElement.viewport.displayedArea.columnPixelSpacing / enabledElement.viewport.displayedArea.rowPixelSpacing);
+  } else if (enabledElement.viewport.displayedArea.columnPixelSpacing < enabledElement.viewport.displayedArea.rowPixelSpacing) {
+    heightScale *= (enabledElement.viewport.displayedArea.rowPixelSpacing / enabledElement.viewport.displayedArea.columnPixelSpacing);
   }
   transform.scale(widthScale, heightScale);
 
