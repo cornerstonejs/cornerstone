@@ -161,7 +161,7 @@ export function removeImageLoadObject (imageId) {
   };
 
   triggerEvent(events, 'cornerstoneimagecachechanged', eventDetails);
-  decache(cachedImage.imageLoadObject.promise);
+  decache(cachedImage.imageLoadObject);
 
   delete imageCacheDict[imageId];
 }
@@ -176,18 +176,10 @@ export function getCacheInfo () {
 
 // This method should only be called by `removeImageLoadObject` because it's
 // The one that knows how to deal with shared cache keys and cache size.
-function decache (imagePromise) {
-  // imagePromise.decache (cornerstone-wado-image-loader > 0.14.6)
-  imagePromise.always(function () {
-    if (imagePromise.decache) {
-      imagePromise.decache();
-    }
-  });
-
-  // image.decache (cornerstone-wado-image-loader <= 0.14.6)
-  imagePromise.then(function (image) {
-    if (image.decache) {
-      image.decache();
+function decache (imageLoadObject) {
+  imageLoadObject.promise.always(function () {
+    if (imageLoadObject.decache) {
+      imageLoadObject.decache();
     }
   });
 }
