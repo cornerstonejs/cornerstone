@@ -177,11 +177,18 @@ export function getCacheInfo () {
 // This method should only be called by `removeImageLoadObject` because it's
 // The one that knows how to deal with shared cache keys and cache size.
 function decache (imageLoadObject) {
-  imageLoadObject.promise.always(function () {
-    if (imageLoadObject.decache) {
-      imageLoadObject.decache();
+  imageLoadObject.promise.then(
+    function () {
+      if (imageLoadObject.decache) {
+        imageLoadObject.decache();
+      }
+    },
+    function () {
+      if (imageLoadObject.decache) {
+        imageLoadObject.decache();
+      }
     }
-  });
+  );
 }
 
 export function purgeCache () {
