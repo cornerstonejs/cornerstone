@@ -105,7 +105,7 @@ export function addLayer (element, image, options) {
 
   layers.push(newLayer);
 
-  triggerEvent('CornerstoneLayerAdded', enabledElement, layerId);
+  triggerEvent('cornerstonelayeradded', enabledElement, layerId);
 
   // Set the layer as active if it's the first layer added
   if (layers.length === 1 && image) {
@@ -136,7 +136,7 @@ export function removeLayer (element, layerId) {
       setActiveLayer(element, layers[0].layerId);
     }
 
-    triggerEvent('CornerstoneLayerRemoved', enabledElement, layerId);
+    triggerEvent('cornerstonelayerremoved', enabledElement, layerId);
   }
 }
 
@@ -215,7 +215,7 @@ export function setActiveLayer (element, layerId) {
   enabledElement.viewport = layer.viewport;
 
   updateImage(element);
-  triggerEvent('CornerstoneActiveLayerChanged', enabledElement, layerId);
+  triggerEvent('cornerstoneactivelayerchanged', enabledElement, layerId);
 }
 
 /**

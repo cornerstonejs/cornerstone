@@ -73,5 +73,5 @@ export default function (enabledElement, invalidated) {
   enabledElement.invalid = false;
   enabledElement.needsRedraw = false;
 
-  triggerEvent(element, 'CornerstoneImageRendered', eventData);
+  triggerEvent(element, 'cornerstoneimagerendered', eventData);
 }

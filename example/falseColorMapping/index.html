@@ -56,9 +56,6 @@
 </div>
 </body>
 
-<!-- cornerstone depends on jQuery so it must be loaded first-->
-<script src="../jquery.min.js"></script>
-
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
 
@@ -66,24 +63,19 @@
 <script src="../exampleImageIdLoader.js"></script>
 
 <script>
-
     // Populate colormap dropdown with all the default ones available 
     // in cornerstone and also a "Custom" option
     function fillColormapsList() {
-        var $dropdown = $('#colormaps');
-        var colormapsList = cornerstone.colors.getColormapsList();
+        const dropdown = document.getElementById('colormaps');
+        const colormapsList = cornerstone.colors.getColormapsList();
 
-        var addOption = function(id, name, disabled) {
-            var $option = $('<option></option>')
-                .val(id)
-                .text(name)
-
-            if(disabled) {
-                $option.prop('disabled', true);
-            }
-
-            $dropdown.append($option);
-        }
+        const addOption = function(id, name, disabled) {
+            const option = document.createElement("OPTION");
+            option.value = id;
+            option.textContent = name;
+            option.disabled = !!disabled;
+            dropdown.append(option);
+        };
 
         colormapsList.forEach(function(colormapItem) {
             addOption(colormapItem.id, colormapItem.name);
@@ -95,137 +87,127 @@
         addOption('custom', 'Custom');
     }
 
-    $(document).ready(function() {
-        // image enable the dicomImage element
-        var element = $('#dicomImage').get(0);
-        cornerstone.enable(element);
+    // image enable the dicomImage element
+    const element = document.getElementById('dicomImage');
+    cornerstone.enable(element);
 
-        var imageId = 'example://1';
+    const imageId = 'example://1';
 
-        // Load the example image and display it
-        cornerstone.loadImage(imageId).then(function(image) {
-            cornerstone.displayImage(element, image);
+    // Load the example image and display it
+    cornerstone.loadImage(imageId).then(function(image) {
+        cornerstone.displayImage(element, image);
 
-            viewport = cornerstone.getViewport(element);
-            $('#bottomright').text("Zoom: " + viewport.scale.toFixed(2) + "x");
-            $('#bottomleft').text("WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
-  
-            // add event handlers to pan image on mouse move
-            $('#dicomImage').mousedown(function (e) {
-                var lastX = e.pageX;
-                var lastY = e.pageY;
-    
-                var mouseButton = e.which;
-    
-                $(document).mousemove(function (e) {
-                  var deltaX = e.pageX - lastX
-                  var deltaY = e.pageY - lastY;
-                  lastX = e.pageX;
-                  lastY = e.pageY;  
+        // add event handlers to pan image on mouse move
+        element.addEventListener('mousedown', function (e) {
+            let lastX = e.pageX;
+            let lastY = e.pageY;
+            const mouseButton = e.which;
 
-                  var viewport = cornerstone.getViewport(element);
-    
-                  if (mouseButton == 1) {
+            function mouseMoveHandler(e) {
+                const deltaX = e.pageX - lastX;
+                const deltaY = e.pageY - lastY;
+                lastX = e.pageX;
+                lastY = e.pageY;
+
+                if (mouseButton === 1) {
+                    let viewport = cornerstone.getViewport(element);
                     viewport.voi.windowWidth += (deltaX / viewport.scale);
                     viewport.voi.windowCenter += (deltaY / viewport.scale);
                     cornerstone.setViewport(element, viewport);
-                    $('#bottomleft').text("WW/WL:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
-                  } else if (mouseButton == 2) {
+                } else if (mouseButton === 2) {
+                    let viewport = cornerstone.getViewport(element);
                     viewport.translation.x += (deltaX / viewport.scale);
                     viewport.translation.y += (deltaY / viewport.scale);
                     cornerstone.setViewport(element, viewport);
-                  } else if (mouseButton == 3) {
+                } else if (mouseButton === 3) {
+                    let viewport = cornerstone.getViewport(element);
                     viewport.scale += (deltaY / 100);
                     cornerstone.setViewport(element, viewport);
-                    $('#bottomright').text("Zoom: " + viewport.scale.toFixed(2) + "x");
-                  }
-                });
-    
-                $(document).mouseup(function (e) {
-                  $(document).unbind('mousemove');
-                  $(document).unbind('mouseup');
-                });
-            });
-        });
-
-        // Dropdown listener to get the new colormap
-        // selected by the user and update the image
-        function colormapChanged() {
-            var enabledElement = cornerstone.getEnabledElement(element);
-            var viewport = cornerstone.getViewport(element);
-            var image = enabledElement.image;
-            var colormapId = $('#colormaps').val();
-            var colormap;
-
-            // Use selected the first option ("Select...")
-            if (colormapId === '') {
-                return;
-            } else if(colormapId == 'custom') {
-                colormap = getCustomLookupTable();
-            } else {
-                colormap = cornerstone.colors.getColormap(colormapId);
-            }
-
-            viewport.colormap = colormap;
-            cornerstone.setViewport(element, viewport);
-            cornerstone.updateImage(element, true);
-
-            // Update the colorbar at the top of the image
-            updateColorbar(colormap);
-        }
-
-        function getCustomLookupTable(minPixelValue, maxPixelValue) {
-            var colormap = cornerstone.colors.getColormap('myCustomColorMap');
-            colormap.setNumberOfColors(6);
-
-            // You can also use `addColor` but in this case it wouldn't work.
-            // Any colormap returned by `getColormap` lasts forever (global) and
-            // calling `addColor` would result in duplicated colors.
-            colormap.insertColor(0, [188, 252, 201, 255]); // Banana
-            colormap.insertColor(1, [245, 222, 179, 255]); // Wheat
-            colormap.insertColor(2, [255, 125,  64, 255]); // Flesh
-            colormap.insertColor(3, [135,  38,  87, 255]); // Raspberry
-            colormap.insertColor(4, [227, 206,  87, 255]); // Mint
-            colormap.insertColor(5, [ 51, 160, 201, 255]); // Peacock
-
-            return colormap;
-        }
-
-        // Update the colorbar at the top of the image
-        function updateColorbar(colormap) {
-            var lookupTable = colormap.createLookupTable();
-            var canvas = $('#colorbar').get(0);
-            var ctx = canvas.getContext('2d');
-            var height = canvas.height;
-            var width = canvas.width;
-            var colorbar = ctx.createImageData(512, 20);
-
-            // Set the min and max values then the lookup table
-            // will be able to return the right color for this range
-            lookupTable.setTableRange(0, width);
-
-            // Update the colorbar pixel by pixel
-            for(var col = 0; col < width; col++) {
-                var color = lookupTable.mapValue(col);
-
-                for(var row = 0; row < height; row++) {
-                    var pixel = (col + row * width) * 4;
-                    colorbar.data[pixel] = color[0];
-                    colorbar.data[pixel+1] = color[1];
-                    colorbar.data[pixel+2] = color[2];
-                    colorbar.data[pixel+3] = color[3];
                 }
             }
 
-            ctx.putImageData(colorbar, 0, 0);
-        }
+            function mouseUpHandler() {
+                document.removeEventListener('mouseup', mouseUpHandler);
+                document.removeEventListener('mousemove', mouseMoveHandler);
+            }
 
-        $('#colormaps').change(function() {
-            colormapChanged();
+            document.addEventListener('mousemove', mouseMoveHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
         });
-
-        fillColormapsList();
     });
 
+    // Dropdown listener to get the new colormap
+    // selected by the user and update the image
+    function colormapChanged() {
+        const viewport = cornerstone.getViewport(element);
+        const colormapId = document.getElementById('colormaps').value;
+        let colormap;
+
+        // Use selected the first option ("Select...")
+        if (colormapId === '') {
+            return;
+        } else if(colormapId === 'custom') {
+            colormap = getCustomLookupTable();
+        } else {
+            colormap = cornerstone.colors.getColormap(colormapId);
+        }
+
+        viewport.colormap = colormap;
+        cornerstone.setViewport(element, viewport);
+        cornerstone.updateImage(element, true);
+
+        // Update the colorbar at the top of the image
+        updateColorbar(colormap);
+    }
+
+    function getCustomLookupTable(minPixelValue, maxPixelValue) {
+        const colormap = cornerstone.colors.getColormap('myCustomColorMap');
+        colormap.setNumberOfColors(6);
+
+        // You can also use `addColor` but in this case it wouldn't work.
+        // Any colormap returned by `getColormap` lasts forever (global) and
+        // calling `addColor` would result in duplicated colors.
+        colormap.insertColor(0, [188, 252, 201, 255]); // Banana
+        colormap.insertColor(1, [245, 222, 179, 255]); // Wheat
+        colormap.insertColor(2, [255, 125,  64, 255]); // Flesh
+        colormap.insertColor(3, [135,  38,  87, 255]); // Raspberry
+        colormap.insertColor(4, [227, 206,  87, 255]); // Mint
+        colormap.insertColor(5, [ 51, 160, 201, 255]); // Peacock
+
+        return colormap;
+    }
+
+    // Update the colorbar at the top of the image
+    function updateColorbar(colormap) {
+        const lookupTable = colormap.createLookupTable();
+        const canvas = document.getElementById('colorbar');
+        const ctx = canvas.getContext('2d');
+        const height = canvas.height;
+        const width = canvas.width;
+        const colorbar = ctx.createImageData(512, 20);
+
+        // Set the min and max values then the lookup table
+        // will be able to return the right color for this range
+        lookupTable.setTableRange(0, width);
+
+        // Update the colorbar pixel by pixel
+        for(let col = 0; col < width; col++) {
+            const color = lookupTable.mapValue(col);
+
+            for(let row = 0; row < height; row++) {
+                const pixel = (col + row * width) * 4;
+                colorbar.data[pixel] = color[0];
+                colorbar.data[pixel+1] = color[1];
+                colorbar.data[pixel+2] = color[2];
+                colorbar.data[pixel+3] = color[3];
+            }
+        }
+
+        ctx.putImageData(colorbar, 0, 0);
+    }
+
+    document.getElementById('colormaps').addEventListener('change', colormapChanged);
+
+    fillColormapsList();
 </script>
 </html>

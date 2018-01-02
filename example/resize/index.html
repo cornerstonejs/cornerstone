@@ -45,9 +45,6 @@
 </div>
 </body>
 
-<!-- cornerstone depends on jQuery so it must be loaded first-->
-<script src="../jquery.min.js"></script>
-
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
 
@@ -55,30 +52,27 @@
 <script src="../exampleImageIdLoader.js"></script>
 
 <script>
-
-    $(document).ready(function() {
-
-        // image enable the dicomImage element
-        var imageId = 'example://1';
-        var element = $('#dicomImage').get(0);
-        cornerstone.enable(element);
-        cornerstone.loadImage(imageId).then(function(image) {
-            cornerstone.displayImage(element, image);
-        });
-
-        // Add event handler to the ww/wc apply button
-        $('#x256').click(function (e) {
-            $('#dicomImage').width(256).height(256);
-            var fitToWindow = $('#fitToWindow').is(":checked");
-            cornerstone.resize(element, fitToWindow);
-        });
-
-        $('#x512').click(function (e) {
-            $('#dicomImage').width(512).height(512);
-            var fitToWindow = $('#fitToWindow').is(":checked");
-            cornerstone.resize(element, fitToWindow);
-        });
+    // image enable the dicomImage element
+    const imageId = 'example://1';
+    const element = document.getElementById('dicomImage');
+    cornerstone.enable(element);
+    cornerstone.loadImage(imageId).then(function(image) {
+        cornerstone.displayImage(element, image);
     });
 
+    // Add event handler to the ww/wc apply button
+    document.getElementById('x256').addEventListener('click', function (e) {
+        element.style.width = '256px';
+        element.style.height = '256px';
+        const fitToWindow = document.getElementById('fitToWindow').checked;
+        cornerstone.resize(element, fitToWindow);
+    });
+
+    document.getElementById('x512').addEventListener('click', function (e) {
+        element.style.width = '512px';
+        element.style.height = '512px';
+        const fitToWindow = document.getElementById('fitToWindow').checked;
+        cornerstone.resize(element, fitToWindow);
+    });
 </script>
 </html>

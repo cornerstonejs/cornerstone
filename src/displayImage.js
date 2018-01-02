@@ -64,7 +64,7 @@ export default function (element, image, viewport) {
     frameRate
   };
 
-  triggerEvent(enabledElement.element, 'CornerstoneNewImage', newImageEventData);
+  triggerEvent(enabledElement.element, 'cornerstonenewimage', newImageEventData);
 
   updateImage(element);
 }

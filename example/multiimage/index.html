@@ -44,9 +44,6 @@
 </div>
 </body>
 
-<!-- cornerstone depends on jQuery so it must be loaded first-->
-<script src="../jquery.min.js"></script>
-
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
 
@@ -57,30 +54,25 @@
 <script src="../exampleImageIdLoaderCt.js"></script>
 
 <script>
-    $(document).ready(function() {
-        // image enable the elements
-        var mr1 = document.getElementById('mr1');
-        cornerstone.enable(mr1);
+    // image enable the elements
+    const mr1 = document.getElementById('mr1');
+    cornerstone.enable(mr1);
 
-        var mr2 = document.getElementById('mr2');
-        cornerstone.enable(mr2);
-        
-        var ct1 = document.getElementById('ct1');
-        cornerstone.enable(ct1);
+    const mr2 = document.getElementById('mr2');
+    cornerstone.enable(mr2);
 
-        // load and display the images
-        cornerstone.loadAndCacheImage('example://1').then(function(image) {
-            cornerstone.displayImage(mr1, image);
-        });
-        cornerstone.loadAndCacheImage('example://2').then(function(image) {
-            cornerstone.displayImage(mr2, image);
-        });
-        cornerstone.loadAndCacheImage('ctexample://1').then(function(image) {
-            cornerstone.displayImage(ct1, image);
-        });
+    const ct1 = document.getElementById('ct1');
+    cornerstone.enable(ct1);
+
+    // load and display the images
+    cornerstone.loadAndCacheImage('example://1').then(function(image) {
+        cornerstone.displayImage(mr1, image);
     });
-
-
+    cornerstone.loadAndCacheImage('example://2').then(function(image) {
+        cornerstone.displayImage(mr2, image);
+    });
+    cornerstone.loadAndCacheImage('ctexample://1').then(function(image) {
+        cornerstone.displayImage(ct1, image);
+    });
 </script>
-
 </html>

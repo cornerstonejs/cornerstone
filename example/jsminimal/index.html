@@ -28,9 +28,6 @@ In this example, javascript is used to image enable a div.
 </div>
 </body>
 
-<!-- cornerstone depends on jQuery so it must be loaded first-->
-<script src="../jquery.min.js"></script>
-
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
 
@@ -38,15 +35,11 @@ In this example, javascript is used to image enable a div.
 <script src="../exampleImageIdLoader.js"></script>
 
 <script>
-
-    $(document).ready(function() {
-        var imageId = 'example://1';
-        var element = document.getElementById('dicomImage');
-        cornerstone.enable(element);
-        cornerstone.loadImage(imageId).then(function(image) {
-            cornerstone.displayImage(element, image);
-        });
+    const imageId = 'example://1';
+    const element = document.getElementById('dicomImage');
+    cornerstone.enable(element);
+    cornerstone.loadImage(imageId).then(function(image) {
+        cornerstone.displayImage(element, image);
     });
-
 </script>
 </html>

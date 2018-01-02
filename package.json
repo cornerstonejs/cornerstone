@@ -1,6 +1,6 @@
 {
   "name": "cornerstone-core",
-  "version": "1.1.3",
+  "version": "2.0.0",
   "description": "HTML5 Medical Image Viewer Component",
   "main": "./dist/cornerstone.min.js",
   "keywords": [
@@ -9,12 +9,12 @@
     "imaging"
   ],
   "author": "Chris Hafey",
-  "homepage": "https://github.com/chafey/cornerstone",
+  "homepage": "https://github.com/cornerstonejs/cornerstone",
   "license": "MIT",
   "module": "src/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/chafey/cornerstone.git"
+    "url": "https://github.com/cornerstonejs/cornerstone.git"
   },
   "scripts": {
     "eslint": "eslint -c .eslintrc.js src",
@@ -49,28 +49,28 @@
     "chai": "^4.1.2",
     "coveralls": "^3.0.0",
     "docdash": "^0.4.0",
-    "eslint": "^4.9.0",
+    "eslint": "^4.12.1",
     "eslint-loader": "^1.9.0",
+    "eslint-plugin-import": "^2.8.0",
     "istanbul": "^0.4.5",
     "istanbul-instrumenter-loader": "^3.0.0",
-    "jquery": "^3.2.1",
     "jsdoc": "^3.5.5",
     "karma": "^1.7.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.1",
-    "karma-firefox-launcher": "^1.0.1",
+    "karma-firefox-launcher": "^1.1.0",
     "karma-mocha": "^1.3.0",
     "karma-phantomjs-launcher": "^1.0.4",
-    "karma-webpack": "^2.0.5",
+    "karma-webpack": "^2.0.6",
     "lodash": "~4.17.4",
     "mocha": "^4.0.1",
     "opn-cli": "^3.1.0",
     "phantomjs-polyfill-find": "github:ptim/phantomjs-polyfill-find",
     "phantomjs-polyfill-find-index": "^1.0.1",
     "phantomjs-polyfill-object-assign": "0.0.2",
-    "phantomjs-prebuilt": "^2.1.15",
-    "promise-polyfill": "^6.0.2",
+    "phantomjs-prebuilt": "^2.1.16",
+    "promise-polyfill": "^6.1.0",
     "shx": "^0.2.2",
-    "webpack": "^3.8.1"
+    "webpack": "^3.10.0"
   }
 }

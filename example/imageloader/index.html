@@ -33,79 +33,66 @@
 </div>
 </body>
 
-<!-- cornerstone depends on jQuery so it must be loaded first-->
-<script src="../jquery.min.js"></script>
-
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
 
-
 <script>
-    $(document).ready(function() {
-
-        // Loads an image given an imageId
-        function loadImage(imageId) {
-            var width = 256;
-            var height = 256;
-
-            var numPixels = width * height;
-            var pixelData = new Uint16Array(numPixels);
-            var index = 0;
-            var rnd = Math.round(Math.random() * 255);
-            for (var y = 0; y < height; y++) {
-                for (var x = 0; x < width; x++) {
-                    pixelData[index] = (x + rnd) % 256;
-                    index++;
-                }
+    // Loads an image given an imageId
+    function loadImage(imageId) {
+        const width = 256;
+        const height = 256;
+        const numPixels = width * height;
+        const pixelData = new Uint16Array(numPixels);
+        const rnd = Math.round(Math.random() * 255);
+        let index = 0;
+        for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+                pixelData[index] = (x + rnd) % 256;
+                index++;
             }
-
-            function getPixelData()
-            {
-                return pixelData;
-            }
-
-            var image = {
-                imageId: imageId,
-                minPixelValue: 0,
-                maxPixelValue: 255,
-                slope: 1.0,
-                intercept: 0,
-                windowCenter: 127,
-                windowWidth: 256,
-                render: cornerstone.renderGrayscaleImage,
-                getPixelData: getPixelData,
-                rows: height,
-                columns: width,
-                height: height,
-                width: width,
-                color: false,
-                columnPixelSpacing: 1.0,
-                rowPixelSpacing: 1.0,
-                invert: false,
-                sizeInBytes: width * height * 2
-            };
-
-            // Create a deferred object, resolve it with the image object we just created and return the
-            // deferred to cornerstone.  Cornerstone will get the image object by calling then() on the
-            // deferred
-            var deferred = $.Deferred();
-            deferred.resolve(image);
-            return deferred;
         }
 
-        cornerstone.registerImageLoader('myImageLoader', loadImage);
+        function getPixelData() {
+            return pixelData;
+        }
 
-        // image enable the element
-        var element = document.getElementById('dicomImage');
-        cornerstone.enable(element);
+        const image = {
+            imageId: imageId,
+            minPixelValue: 0,
+            maxPixelValue: 255,
+            slope: 1.0,
+            intercept: 0,
+            windowCenter: 127,
+            windowWidth: 256,
+            render: cornerstone.renderGrayscaleImage,
+            getPixelData: getPixelData,
+            rows: height,
+            columns: width,
+            height: height,
+            width: width,
+            color: false,
+            columnPixelSpacing: 1.0,
+            rowPixelSpacing: 1.0,
+            invert: false,
+            sizeInBytes: width * height * 2
+        };
 
-        // load the image and display it
-        var imageId = 'myImageLoader://1';
-        cornerstone.loadImage(imageId).then(function(image) {
-            cornerstone.displayImage(element, image);
-        });
+        return {
+          promise: new Promise((resolve) => resolve(image)),
+          cancelFn: undefined
+        }
+    }
 
+    cornerstone.registerImageLoader('myImageLoader', loadImage);
+
+    // image enable the element
+    const element = document.getElementById('dicomImage');
+    cornerstone.enable(element);
+
+    // load the image and display it
+    const imageId = 'myImageLoader://1';
+    cornerstone.loadImage(imageId).then(function(image) {
+        cornerstone.displayImage(element, image);
     });
-
 </script>
 </html>
