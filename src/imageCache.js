@@ -161,7 +161,7 @@ export function removeImageLoadObject (imageId) {
   };
 
   triggerEvent(events, 'cornerstoneimagecachechanged', eventDetails);
-  decache(cachedImage.imageLoadObject.promise);
+  decache(cachedImage.imageLoadObject);
 
   delete imageCacheDict[imageId];
 }
@@ -176,12 +176,19 @@ export function getCacheInfo () {
 
 // This method should only be called by `removeImageLoadObject` because it's
 // The one that knows how to deal with shared cache keys and cache size.
-function decache (imagePromise) {
-  imagePromise.then(function (image) {
-    if (image.decache) {
-      image.decache();
+function decache (imageLoadObject) {
+  imageLoadObject.promise.then(
+    function () {
+      if (imageLoadObject.decache) {
+        imageLoadObject.decache();
+      }
+    },
+    function () {
+      if (imageLoadObject.decache) {
+        imageLoadObject.decache();
+      }
     }
-  });
+  );
 }
 
 export function purgeCache () {
