@@ -98,7 +98,12 @@ export function renderGrayscaleImage (enabledElement, invalidated) {
     renderCanvas = getRenderCanvas(enabledElement, image, invalidated);
   }
 
-  context.drawImage(renderCanvas, 0, 0, image.width, image.height, 0, 0, image.width, image.height);
+  const sx = enabledElement.viewport.displayedArea.tlhc.x - 1;
+  const sy = enabledElement.viewport.displayedArea.tlhc.y - 1;
+  const width = enabledElement.viewport.displayedArea.brhc.x - enabledElement.viewport.displayedArea.tlhc.x;
+  const height = enabledElement.viewport.displayedArea.brhc.y - enabledElement.viewport.displayedArea.tlhc.y;
+
+  context.drawImage(renderCanvas, sx, sy, width, height, 0, 0, width, height);
 
   enabledElement.renderingTools = saveLastRendered(enabledElement);
 }

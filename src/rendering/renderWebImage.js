@@ -42,7 +42,12 @@ export function renderWebImage (enabledElement, invalidated) {
     // Save the canvas context state and apply the viewport properties
     setToPixelCoordinateSystem(enabledElement, context);
 
-    context.drawImage(image.getImage(), 0, 0, image.width, image.height, 0, 0, image.width, image.height);
+    const sx = enabledElement.viewport.displayedArea.tlhc.x - 1;
+    const sy = enabledElement.viewport.displayedArea.tlhc.y - 1;
+    const width = enabledElement.viewport.displayedArea.brhc.x - enabledElement.viewport.displayedArea.tlhc.x;
+    const height = enabledElement.viewport.displayedArea.brhc.y - enabledElement.viewport.displayedArea.tlhc.y;
+
+    context.drawImage(image.getImage(), sx, sy, width, height, 0, 0, width, height);
   } else {
     renderColorImage(enabledElement, invalidated);
   }

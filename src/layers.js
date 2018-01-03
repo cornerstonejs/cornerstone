@@ -1,8 +1,6 @@
 import guid from './internal/guid.js';
 import { getEnabledElement } from './enabledElements.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
-import getViewportHeight from './internal/getViewportHeight.js';
-import getViewportWidth from './internal/getViewportWidth.js';
 import updateImage from './updateImage.js';
 import triggerCustomEvent from './triggerEvent.js';
 import EVENTS from './events.js';
@@ -61,8 +59,8 @@ export function rescaleImage (baseLayer, targetLayer) {
 
   // Column pixel spacing need to be considered when calculating the
   // ratio between the layer added and base layer images
-  const colRelative = (targetLayer.viewport.displayedArea.columnPixelSpacing * getViewportWidth(targetLayer.viewport)) /
-                      (baseLayer.viewport.displayedArea.columnPixelSpacing * getViewportWidth(baseLayer.viewport));
+  const colRelative = (targetLayer.viewport.displayedArea.columnPixelSpacing * targetImage.width) /
+                      (baseLayer.viewport.displayedArea.columnPixelSpacing * baseImage.width);
   const viewportRatio = targetLayer.viewport.scale / baseLayer.viewport.scale * colRelative;
 
   targetLayer.viewport.scale = baseLayer.viewport.scale * viewportRatio;
