@@ -22,9 +22,6 @@ export default function (image, viewport) {
   //Auto window
   autoWindow(image, viewport);
 
-  console.log(image);
-  console.log(viewport);
-
   const modalityLUT = viewport.modalityLUT;
   const voiLUT = viewport.voiLUT;
   const windowWidth = viewport.voi.windowWidth;
@@ -39,15 +36,13 @@ export default function (image, viewport) {
     const length = maxPixelValue - offset + 1;
 
     image.cachedLut = {};
-    // image.cachedLut.lutArray = new Uint8ClampedArray(length);
-    image.cachedLut.lutArray = new Int16Array(length);
+    image.cachedLut.lutArray = new Uint8ClampedArray(length);
   }
 
   const lut = image.cachedLut.lutArray;
   const mlutfn = getModalityLUT(image.slope, image.intercept, modalityLUT);
   const vlutfn = getVOILUT(windowWidth, windowCenter, voiLUT);
 
-  //FIXME: should probably be using full range
   if (invert === true) {
     for (let storedValue = minPixelValue; storedValue <= maxPixelValue; storedValue++) {
       lut[storedValue + (-offset)] = 255 - vlutfn(mlutfn(storedValue));
@@ -57,8 +52,6 @@ export default function (image, viewport) {
       lut[storedValue + (-offset)] = vlutfn(mlutfn(storedValue));
     }
   }
-
-  console.log(lut);
 
   return lut;
 }

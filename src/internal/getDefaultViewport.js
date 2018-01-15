@@ -12,7 +12,6 @@ export default function (canvas, image) {
 
   if (image === undefined) {
     return {
-      //FIXME: CHANGE THIS TO BE A PART OF DISPLAYED AREA
       scale: 1,
       translation: {
         x: 0,

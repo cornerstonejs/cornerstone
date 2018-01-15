@@ -30,7 +30,7 @@ function storedPixelDataToImageData (image, mlutfn, vlutfn) {
     if (image.photometricInterpretation === "MONOCHROME1") {
       sv = image.maxPixelValue - sv;
     }
-    
+
     if (mlutfn) {
       sv = mlutfn(sv);
     }

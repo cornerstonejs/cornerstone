@@ -14,7 +14,6 @@ export default function (image, viewport, invalidated) {
   }
 
   // Lut is invalid or not present, regenerate it and cache it
-  // generateLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert, viewport.modalityLUT, viewport.voiLUT);
   generateLut(image, viewport);
 
   image.cachedLut.windowWidth = viewport.voi.windowWidth;

@@ -8,7 +8,6 @@ import triggerEvent from './triggerEvent.js';
 
 
 const imageLoaders = {};
-const contentManagers = {};
 
 let unknownImageLoader;
 
@@ -66,14 +65,9 @@ export function loadImage (imageId, options) {
   if (imageId === undefined) {
     throw new Error('loadImage: parameter imageId must not be undefined');
   }
-  
+
   const colonIndex = imageId.indexOf(':');
   const scheme = imageId.substring(0, colonIndex);
-  const contentManager = contentManagers[scheme];
-  
-  if (contentManager) {
-    return contentManager.loadImage(imageId, options);
-  }
 
   const imageLoadObject = getImageLoadObject(imageId);
 
@@ -99,14 +93,9 @@ export function loadAndCacheImage (imageId, options) {
   if (imageId === undefined) {
     throw new Error('loadAndCacheImage: parameter imageId must not be undefined');
   }
-  
+
   const colonIndex = imageId.indexOf(':');
   const scheme = imageId.substring(0, colonIndex);
-  const contentManager = contentManagers[scheme];
-  
-  if (contentManager) {
-    return contentManager.loadAndCacheImage(imageId, options);
-  }
 
   let imageLoadObject = getImageLoadObject(imageId);
 
@@ -145,18 +134,4 @@ export function registerUnknownImageLoader (imageLoader) {
   unknownImageLoader = imageLoader;
 
   return oldImageLoader;
-}
-
-/**
- * Registers a content manager that bypasses the imageCache and is expected to implement 
- * 
- * loadImage(imageId, options)
- * loadAndCacheImage(imageId, options)
- *
- * @param {String} scheme The scheme to use for this image loader (e.g. 'dicomweb', 'wadouri', 'http')
- * @param {Object} contentManager Content manager object that implements the load image functions
- * @returns {void}
- */
-export function registerContentManager (scheme, contentManager) {
-  contentManagers[scheme] = contentManager;
 }

@@ -33,9 +33,6 @@ function storedPixelDataToImageData (image, mlutfn, vlutfn) {
 
     data[offset++] = sv;
     data[offset++] = sv < 0 ? 0 : 1; // 0 For negative, 1 for positive
-        // const val  = lut[pixelData[i]];
-    // data[offset++] = pixelData[i];
-    // data[offset++] = pixelData[i] < 0 ? 0 : 1; // 0 For negative, 1 for positive
   }
 
   return data;

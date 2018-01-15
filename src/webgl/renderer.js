@@ -319,11 +319,6 @@ export function render (enabledElement) {
 
   // Get the lut to use
   let start = now();
-  let lut;
-
-  console.log(image);
-  console.log(viewport);
-
   const mlutfn = (viewport.modalityLUT !== undefined && viewport.modalityLUT.lut !== undefined) ? getModalityLUTFunction(viewport.modalityLUT) : undefined;
   const vlutfn = (viewport.voiLUT !== undefined && viewport.voiLUT.lut !== undefined) ? getVoiLUTFunction(viewport.voiLUT) : undefined;
 
@@ -332,12 +327,7 @@ export function render (enabledElement) {
 
   // Render the current image
   const shader = getShaderProgram(image, viewport);
-
-  console.log(shader);
-
   const texture = getImageTexture(image, viewport, mlutfn, vlutfn);
-
-  console.log(texture);
 
   const parameters = {
     u_resolution: { type: '2f',
