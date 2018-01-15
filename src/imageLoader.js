@@ -66,9 +66,6 @@ export function loadImage (imageId, options) {
     throw new Error('loadImage: parameter imageId must not be undefined');
   }
 
-  const colonIndex = imageId.indexOf(':');
-  const scheme = imageId.substring(0, colonIndex);
-
   const imageLoadObject = getImageLoadObject(imageId);
 
   if (imageLoadObject !== undefined) {
@@ -93,9 +90,6 @@ export function loadAndCacheImage (imageId, options) {
   if (imageId === undefined) {
     throw new Error('loadAndCacheImage: parameter imageId must not be undefined');
   }
-
-  const colonIndex = imageId.indexOf(':');
-  const scheme = imageId.substring(0, colonIndex);
 
   let imageLoadObject = getImageLoadObject(imageId);
 
