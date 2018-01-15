@@ -37,32 +37,27 @@ export default function (image, lut, canvasImageDataData) {
   if (pixelData instanceof Int16Array) {
     if (minPixelValue < 0) {
       while (storedPixelDataIndex < numPixels) {
-        // canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // Alpha
         canvasImageDataData[canvasImageDataIndex] = lut[getStoredValue(storedPixelDataIndex++, pixelData, shift) + (-minPixelValue)]; // Alpha
         canvasImageDataIndex += 4;
       }
     } else {
       while (storedPixelDataIndex < numPixels) {
-        // canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex++]]; // Alpha
         canvasImageDataData[canvasImageDataIndex] = lut[getStoredValue(storedPixelDataIndex++, pixelData, shift)]; // Alpha
         canvasImageDataIndex += 4;
       }
     }
   } else if (pixelData instanceof Uint16Array) {
     while (storedPixelDataIndex < numPixels) {
-      // canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex++]]; // Alpha
       canvasImageDataData[canvasImageDataIndex] = lut[getStoredValue(storedPixelDataIndex++, pixelData, shift)]; // Alpha
       canvasImageDataIndex += 4;
     }
   } else if (minPixelValue < 0) {
     while (storedPixelDataIndex < numPixels) {
-      // canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // Alpha
       canvasImageDataData[canvasImageDataIndex] = lut[getStoredValue(storedPixelDataIndex++, pixelData, shift) + (-minPixelValue)]; // Alpha
       canvasImageDataIndex += 4;
     }
   } else {
     while (storedPixelDataIndex < numPixels) {
-      // canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex++]]; // Alpha
       canvasImageDataData[canvasImageDataIndex] = lut[getStoredValue(storedPixelDataIndex++, pixelData, shift)]; // Alpha
       canvasImageDataIndex += 4;
     }
