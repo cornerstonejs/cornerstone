@@ -6,8 +6,8 @@ import autoWindow from './autoWindow.js';
  * Creates a LUT used while rendering to convert stored pixel values to
  * display pixels
  *
- * @param {Image} image A Cornerstone Image Object
- * @param {Viewport} image A Cornerstone Viewport Object
+ * @param {image} image A Cornerstone Image Object
+ * @param {viewport} image A Cornerstone Viewport Object
  *
  * Properties that may be used:
  * @param {Number} windowWidth The Window Width
