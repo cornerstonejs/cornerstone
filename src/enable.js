@@ -45,6 +45,8 @@ export default function (element, options) {
 
   const canvas = document.createElement('canvas');
 
+  canvas.style.display = 'block';
+
   element.appendChild(canvas);
 
   const enabledElement = {

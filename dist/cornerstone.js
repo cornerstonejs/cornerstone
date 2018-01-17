@@ -1,4 +1,4 @@
-/*! cornerstone-core - 2.0.0 - 2017-12-14 | (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */
+/*! cornerstone-core - 2.0.0 - 2018-01-17 | (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -4165,7 +4165,7 @@ function removeImageLoadObject(imageId) {
   };
 
   (0, _triggerEvent2.default)(_events2.default, 'cornerstoneimagecachechanged', eventDetails);
-  decache(cachedImage.imageLoadObject.promise);
+  decache(cachedImage.imageLoadObject);
 
   delete imageCacheDict[imageId];
 }
@@ -4180,10 +4180,14 @@ function getCacheInfo() {
 
 // This method should only be called by `removeImageLoadObject` because it's
 // The one that knows how to deal with shared cache keys and cache size.
-function decache(imagePromise) {
-  imagePromise.then(function (image) {
-    if (image.decache) {
-      image.decache();
+function decache(imageLoadObject) {
+  imageLoadObject.promise.then(function () {
+    if (imageLoadObject.decache) {
+      imageLoadObject.decache();
+    }
+  }, function () {
+    if (imageLoadObject.decache) {
+      imageLoadObject.decache();
     }
   });
 }
@@ -6025,6 +6029,8 @@ exports.default = function (element, options) {
   }
 
   var canvas = document.createElement('canvas');
+
+  canvas.style.display = 'block';
 
   element.appendChild(canvas);
 
