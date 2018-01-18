@@ -139,7 +139,6 @@ function getImageDataType (image, viewport) {
 function getShaderProgram (image, viewport) {
 
   const datatype = getImageDataType(image, viewport);
-  console.log(datatype);
   // We need a mechanism for
   // Choosing the shader based on the image datatype
   // Console.log("Datatype: " + datatype);
