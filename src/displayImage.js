@@ -14,6 +14,7 @@ import triggerEvent from './triggerEvent.js';
  * @param {Object} image An Image loaded by a Cornerstone Image Loader
  * @param {Object} [viewport] A set of Cornerstone viewport parameters
  * @returns {void}
+ * @memberof Drawing
  */
 export default function (element, image, viewport) {
   if (element === undefined) {

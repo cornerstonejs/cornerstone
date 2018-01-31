@@ -7,6 +7,7 @@ import drawImage from './internal/drawImage.js';
  * @param {Boolean} [invalidated=false] Whether or not the image pixel data has been changed, necessitating a redraw
  *
  * @returns {void}
+ * @memberof Drawing
  */
 export default function (element, invalidated = false) {
   const enabledElement = getEnabledElement(element);

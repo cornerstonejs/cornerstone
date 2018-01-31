@@ -6,9 +6,18 @@ import webGL from './webgl/index.js';
 import triggerEvent from './triggerEvent.js';
 
 /**
+ * @module Enable
  * This module is responsible for enabling an element to display images with cornerstone
  */
 
+/**
+ * Returns whether or not an Enabled Element has either a currently active image or
+ * a non-empty Array of Enabled Element Layers.
+ *
+ * @param enabledElement
+ * @return {boolean|number}
+ * @memberof Enable
+ */
 function hasImageOrLayers (enabledElement) {
   return enabledElement.image !== undefined || enabledElement.layers.length;
 }
@@ -21,6 +30,7 @@ function hasImageOrLayers (enabledElement) {
  * @param {Object} options Options for the enabledElement
  *
  * @return {void}
+ * @memberof Enable
  */
 export default function (element, options) {
   if (element === undefined) {
@@ -70,6 +80,7 @@ export default function (element, options) {
    *
    * @param {DOMHighResTimeStamp} timestamp The current time for when requestAnimationFrame starts to fire callbacks
    * @returns {void}
+   * @memberof Drawing
    */
   function draw (timestamp) {
     if (enabledElement.canvas === undefined) {

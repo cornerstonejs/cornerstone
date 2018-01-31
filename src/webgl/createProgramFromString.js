@@ -6,6 +6,7 @@
  * @param {number} shaderType The type of shader, VERTEX_SHADER or FRAGMENT_SHADER.
  *
  * @return {!WebGLShader} The shader.
+ * @memberof WebGLRendering
  */
 function compileShader (gl, shaderSource, shaderType) {
 
@@ -38,6 +39,7 @@ function compileShader (gl, shaderSource, shaderType) {
  * @param {!WebGLShader} vertexShader A vertex shader.
  * @param {!WebGLShader} fragmentShader A fragment shader.
  * @return {!WebGLProgram} A program.
+ * @memberof WebGLRendering
  */
 function createProgram (gl, vertexShader, fragmentShader) {
 
@@ -70,6 +72,7 @@ function createProgram (gl, vertexShader, fragmentShader) {
  * @param  {!WebGLShader} vertexShaderSrc   Vertex shader string
  * @param  {!WebGLShader} fragShaderSrc Fragment shader string
  * @return {!WebGLProgram}                 A program
+ * @memberof WebGLRendering
  */
 export default function (gl, vertexShaderSrc, fragShaderSrc) {
   const vertexShader = compileShader(gl, vertexShaderSrc, gl.VERTEX_SHADER);

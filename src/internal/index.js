@@ -11,6 +11,9 @@ import getTransform from './getTransform.js';
 import calculateTransform from './calculateTransform.js';
 import { Transform } from './transform.js';
 
+/**
+ * @module Internal
+ */
 export default {
   drawImage,
   generateLut,

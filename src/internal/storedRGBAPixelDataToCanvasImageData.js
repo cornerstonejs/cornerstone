@@ -8,6 +8,7 @@ import now from './now.js';
  * @param {Uint8ClampedArray} canvasImageDataData canvasImageData.data buffer filled with white pixels
  *
  * @returns {void}
+ * @memberof Internal
  */
 export default function (image, lut, canvasImageDataData) {
 

@@ -7,6 +7,7 @@ const rgbShader = {};
  *
  * @param {Image} image A Cornerstone Image Object
  * @returns {Uint8Array} The image data for use by the WebGL shader
+ * @memberof WebGLRendering
  */
 function storedPixelDataToImageData (image) {
   const minPixelValue = image.minPixelValue;
