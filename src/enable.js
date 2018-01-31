@@ -14,12 +14,12 @@ import triggerEvent from './triggerEvent.js';
  * Returns whether or not an Enabled Element has either a currently active image or
  * a non-empty Array of Enabled Element Layers.
  *
- * @param enabledElement
- * @return {boolean|number}
+ * @param {EnabledElement} enabledElement An Enabled Element
+ * @return {Boolean} Whether or not the Enabled Element has an active image or valid set of layers
  * @memberof Enable
  */
 function hasImageOrLayers (enabledElement) {
-  return enabledElement.image !== undefined || enabledElement.layers.length;
+  return enabledElement.image !== undefined || enabledElement.layers.length > 0;
 }
 
 

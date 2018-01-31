@@ -2,8 +2,6 @@
 
 The Pixel Coordinate System is used when referring to individual pixels in the image and supports subpixel precision. The origin of the coordinate system is such that 0.0,0.0 is the top left corner of the top left pixel in the image and columns, rows would be the bottom right corner of the bottom right pixel in the image. A coordinate of .5,.5 is therefore the center of the top left pixel.
 
-NOTES:
-
 1. The function pageToPixel() can be used to convert coordinates obtained from browser events to coordinates
 in the pixel coordinate system.
 2. The function setToPixelCoordinateSystem() can be used to set the canvas context to the pixel coordinate system.  This is useful when handling the CornerstoneImageRendered event to draw geometry on top of the image.

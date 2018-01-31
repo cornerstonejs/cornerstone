@@ -72,7 +72,7 @@ const enabledElements = [];
  * @property {Object} lut - The Lookup Table
  * @property {Boolean} rgba - Is the color pixel data stored in RGBA?
  * @property {Number} columnPixelSpacing - horizontal distance between the middle of each pixel (or width of each pixel) in mm or undefined if not known
- * @property {Number} rowPixelSpacing - vertical distance between the middle of each pixel (or heigh of each pixel) in mm or undefined if not known
+ * @property {Number} rowPixelSpacing - vertical distance between the middle of each pixel (or height of each pixel) in mm or undefined if not known
  * @property {Boolean} invert - true if the the image should initially be displayed be inverted, false if not. This is here mainly to support DICOM images with a photometric interpretation of MONOCHROME1
  * @property {Number} sizeInBytes - the number of bytes used to store the pixels for this image.
  * @property {Boolean} [falseColor=false] - Whether or not the image has undergone false color mapping
@@ -89,8 +89,8 @@ const enabledElements = [];
  * @typedef {Object} Viewport
  * @memberof Objects
  * @property {Number} [scale=1.0] - The scale applied to the image. A scale of 1.0 will display no zoom (one image pixel takes up one screen pixel). A scale of 2.0 will be double zoom and a scale of .5 will be zoomed out by 2x
- * @param {vec2} [translation] - An object with properties x and y which describe the translation to apply in the pixel coordinate system. Note that the image is initially displayed centered in the enabled element with a x and y translation of 0 and 0 respectively.
- * @param {VOI} [voi] - an object with properties windowWidth and windowCenter.
+ * @property {vec2} [translation] - An object with properties x and y which describe the translation to apply in the pixel coordinate system. Note that the image is initially displayed centered in the enabled element with a x and y translation of 0 and 0 respectively.
+ * @property {VOI} [voi] - an object with properties windowWidth and windowCenter.
  * @property {boolean} [invert=false] - Whether or not the image is inverted.
  * @property {boolean} [pixelReplication=false] - true if the image smooth / interpolation should be used when zoomed in on the image or false if pixel replication should be used.
  * @property {boolean} [hflip=false] - true if the image is flipped horizontally. Default is false

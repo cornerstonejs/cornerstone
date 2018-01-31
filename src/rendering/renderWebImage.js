@@ -1,6 +1,3 @@
-/**
- * This module is responsible for drawing an image to an enabled elements canvas element
- */
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
 import { renderColorImage } from './renderColorImage.js';
 

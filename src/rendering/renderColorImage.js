@@ -1,6 +1,3 @@
-/**
- * This module is responsible for drawing an image to an enabled elements canvas element
- */
 import now from '../internal/now.js';
 import generateColorLut from '../internal/generateColorLut.js';
 import storedColorPixelDataToCanvasImageData from '../internal/storedColorPixelDataToCanvasImageData.js';
