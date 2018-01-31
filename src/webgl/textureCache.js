@@ -3,6 +3,7 @@ import triggerEvent from '../triggerEvent.js';
 
 /**
  * This module deals with caching image textures in VRAM for WebGL
+ * @module WebGLTextureCache
  */
 
 const imageCache = {};

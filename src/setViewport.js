@@ -10,6 +10,7 @@ const MIN_VIEWPORT_SCALE = 0.0001;
  * @param {HTMLElement} element - DOM element of the enabled element
  * @param {Viewport} viewport - Object containing the viewport properties
  * @returns {void}
+ * @memberof ViewportSettings
  */
 export default function (element, viewport) {
   const enabledElement = getEnabledElement(element);

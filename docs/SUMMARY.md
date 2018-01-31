@@ -8,7 +8,7 @@ While this documentation grows, the [old GitHub wiki](https://github.com/corners
 
 **[Release Notes](https://github.com/cornerstonejs/cornerstone/releases)**
 
-This wiki is intended to be used as a reference for the concepts and APIs in Cornerstone.  If you are new to Cornerstone, we recommend that you start by reviewing the concepts below and then looking at the various [examples](https://rawgit.com/cornerstonejs/cornerstone/master/example/index.html) to see how Cornerstone is used.
+This wiki is intended to be used as a reference for the concepts and APIs in Cornerstone. If you are new to Cornerstone, we recommend that you start by reviewing the concepts below and then looking at the various [examples](https://rawgit.com/cornerstonejs/cornerstone/master/example/index.html) to see how Cornerstone is used.
 
 - [Installation](installation.md)
 - Concepts
@@ -16,8 +16,10 @@ This wiki is intended to be used as a reference for the concepts and APIs in Cor
   - [Image Ids](concepts/image-ids.md)
   - [Image Loaders](concepts/image-loaders.md)
   - [Viewports](concepts/viewports.md)
+  - [Images](concepts/images.md)
   - [Pixel Coordinate System](concepts/pixel-coordinate-system.md)
   - [Rendering Loop](concepts/rendering-loop.md)
   - [Libraries](concepts/libraries.md)
+  - [Rendering Pipeline](concepts/rendering-pipeline.md)
 - [API](api.md)
 - [Contributing](contributing.md)
