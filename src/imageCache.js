@@ -3,7 +3,9 @@ import triggerEvent from './triggerEvent.js';
 
 /**
  * This module deals with caching images
+ * @module ImageCache
  */
+
 let maximumSizeInBytes = 1024 * 1024 * 1024; // 1 GB
 let cacheSizeInBytes = 0;
 

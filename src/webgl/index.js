@@ -2,6 +2,10 @@ import { render, initRenderer, getRenderCanvas, isWebGLAvailable, isWebGLInitial
 import createProgramFromString from './createProgramFromString.js';
 import textureCache from './textureCache.js';
 
+/**
+ * @module WebGLRendering
+ */
+
 const mod = {
   createProgramFromString,
   renderer: {

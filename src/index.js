@@ -17,6 +17,10 @@ export { renderColorImage } from './rendering/renderColorImage.js';
 export { renderGrayscaleImage } from './rendering/renderGrayscaleImage.js';
 export { renderWebImage } from './rendering/renderWebImage.js';
 
+/**
+ * @module PixelCoordinateSystem
+ */
+
 export { default as canvasToPixel } from './canvasToPixel.js';
 export { default as disable } from './disable.js';
 export { default as displayImage } from './displayImage.js';

@@ -10,6 +10,7 @@
 
  Output units = m*SV + b.
  * @return {function(*): *} A linear modality LUT function. Given a stored pixel it returns the modality pixel value
+ * @memberof Internal
  */
 function generateLinearModalityLUT (slope, intercept) {
   return (storedPixelValue) => storedPixelValue * slope + intercept;

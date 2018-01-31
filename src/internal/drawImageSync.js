@@ -12,6 +12,7 @@ import triggerEvent from '../triggerEvent.js';
  * @param {EnabledElement} enabledElement An enabled element to draw into
  * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
  * @returns {void}
+ * @memberof Internal
  */
 export default function (enabledElement, invalidated) {
   const image = enabledElement.image;

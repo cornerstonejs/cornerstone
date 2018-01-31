@@ -69,6 +69,7 @@ function getRenderCanvas (enabledElement, image, invalidated) {
  * @param {EnabledElement} enabledElement The Cornerstone Enabled Element to redraw
  * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
  * @returns {void}
+ * @memberof rendering
  */
 export function renderLabelMapImage (enabledElement, invalidated) {
   if (enabledElement === undefined) {

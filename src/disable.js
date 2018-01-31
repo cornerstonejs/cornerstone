@@ -7,6 +7,7 @@ import triggerEvent from './triggerEvent.js';
  *
  * @param {HTMLElement} element An HTML Element enabled for Cornerstone
  * @returns {void}
+ * @memberof Enable
  */
 export default function (element) {
   if (element === undefined) {
