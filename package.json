@@ -25,7 +25,7 @@
     "clean:dist": "shx rm -rf dist",
     "clean:docs": "shx rm -f docs/api.md",
     "clean:coverage": "shx rm -rf coverage",
-    "apidocs:generate": "npm run clean:docs && documentation build src/index.js -f md -o docs/api.md",
+    "apidocs:generate": "npm run clean:docs && documentation build src/index.js -f md -c documentation.yml -o docs/api.md",
     "docs": "npm run apidocs:generate && cd docs && gitbook serve",
     "docs:deploy": "npm run apidocs:generate && bash ./build/update-docs.sh",
     "version": "node -p -e \"'export default \\'' + require('./package.json').version + '\\';'\" > src/version.js",

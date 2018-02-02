@@ -1,5 +1,5 @@
 {
-  "title": "cornerstone-tools",
+  "title": "cornerstone",
   "gitbook": ">3.0.0",
   "plugins": [
     "edit-link",
@@ -9,11 +9,11 @@
   ],
   "pluginsConfig": {
     "edit-link": {
-      "base": "https://github.com/cornerstonejs/cornerstoneTools/edit/master/docs",
+      "base": "https://github.com/cornerstonejs/cornerstone/edit/master/docs",
       "label": "Edit This Page"
     },
     "github": {
-      "url": "https://github.com/cornerstonejs/cornerstoneTools"
+      "url": "https://github.com/cornerstonejs/cornerstone"
     }
   },
   "links": {

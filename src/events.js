@@ -1,4 +1,11 @@
-class EventTarget {
+
+/**
+ * EventTarget - Provides the [EventTarget](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget) interface
+ *
+ * @class
+ * @memberof Polyfills
+ */
+ class EventTarget {
   constructor () {
     this.listeners = {};
   }
