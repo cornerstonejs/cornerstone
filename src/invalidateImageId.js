@@ -10,7 +10,6 @@ import drawImage from './internal/drawImage.js';
  * @memberof Drawing
  */
 export default function (imageId) {
-
   const enabledElements = getEnabledElementsByImageId(imageId);
 
   enabledElements.forEach(function (enabledElement) {

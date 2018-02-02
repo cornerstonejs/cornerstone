@@ -7,8 +7,10 @@ import colors from './colors/index.js';
  * @param {Object} lookupTable A lookup table Object
  *
  * @returns {void}
+ * @deprecated This function is superseded by the ability to set the Viewport parameters
+ * to include colormaps. 
  */
-export default function (image, lookupTable) {
+export default function pixelDataToFalseColorData (image, lookupTable) {
   if (image.color && !image.falseColor) {
     throw new Error('Color transforms are not implemented yet');
   }

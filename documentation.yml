@@ -1,15 +1,12 @@
 toc:
-  - name: Classes
-    description: |
-      These are the key objects used by Cornerstone.
-    children:
-      - EnabledElement
-      - EnabledElementLayer
-      - Viewport
-      - Image
-      - ImageLoadObject
-      - VOI
-      - LUT
-      - Viewport
-      - ImageStats
-      - VOILUTFunction
+  - Objects
+  - EnabledElements
+  - ImageLoader
+  - ImageCache
+  - Metadata
+  - ViewportSettings
+  - PixelCoordinateSystem
+  - EnabledElementLayers
+  - Internal
+  - rendering
+  - WebGLRendering

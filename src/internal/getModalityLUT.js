@@ -40,6 +40,7 @@ function generateNonLinearModalityLUT (modalityLUT) {
  * @param {Function} [modalityLUT] A modality LUT function. Given a stored pixel it returns the modality pixel value.
  *
  * @return {function(*): *} A modality LUT function. Given a stored pixel it returns the modality pixel value.
+ * @memberof Internal
  */
 export default function (slope, intercept, modalityLUT) {
   if (modalityLUT) {
