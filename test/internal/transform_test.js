@@ -34,7 +34,7 @@ describe('Transform', function () {
     clonedObject.invert();
     // Assert
     assert.deepEqual(transformObject.m, [-2, 1, 3 / 2, -1 / 2, 1, -2], 'Inversion works.');
-    assert.deepEqual(clonedObject.m, [Infinity, -Infinity, -Infinity, Infinity, Infinity, -Infinity], 'Noninvertible inversion.')
+    assert.deepEqual(clonedObject.m, [Infinity, -Infinity, -Infinity, Infinity, Infinity, -Infinity], 'Noninvertible inversion.');
   });
   it('transform point', function () {
     // Act
