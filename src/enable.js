@@ -4,6 +4,7 @@ import drawImageSync from './internal/drawImageSync.js';
 import requestAnimationFrame from './internal/requestAnimationFrame.js';
 import webGL from './webgl/index.js';
 import triggerEvent from './triggerEvent.js';
+import getCanvas from './internal/getCanvas.js';
 
 /**
  * @module Enable
@@ -21,7 +22,6 @@ import triggerEvent from './triggerEvent.js';
 function hasImageOrLayers (enabledElement) {
   return enabledElement.image !== undefined || enabledElement.layers.length > 0;
 }
-
 
 /**
  * Enable an HTML Element for use in Cornerstone
@@ -53,11 +53,7 @@ export default function (element, options) {
     }
   }
 
-  const canvas = document.createElement('canvas');
-
-  canvas.style.display = 'block';
-
-  element.appendChild(canvas);
+  const canvas = getCanvas(element);
 
   const enabledElement = {
     element,
