@@ -67,16 +67,27 @@ describe('pixelToCanvas', function () {
     enabledElement.canvas.height = 256;
 
     setViewport(element, this.viewport);
-    //enabledElement.canvas.style.width = '256px';//('style', 'width:256px');
-    //enabledElement.canvas.style.height = '256px';//.setAttribute('style', 'height:256px');
 
     // Act
-    const convertedPoint1 = pixelToCanvas(element, {x:30, y:30});
-    const convertedPoint2 = pixelToCanvas(element, {x:0, y:0});
-    const convertedPoint3 = pixelToCanvas(element, {x:0, y:128});
-    assert.deepEqual(convertedPoint1, {x:60, y:30});
-    assert.deepEqual(convertedPoint2, {x:0, y:0});
-    assert.deepEqual(convertedPoint3, {x:0, y:128});
+    const convertedPoint1 = pixelToCanvas(element, {
+      x: 30,
+      y: 30 });
+    const convertedPoint2 = pixelToCanvas(element, {
+      x: 0,
+      y: 0 });
+    const convertedPoint3 = pixelToCanvas(element, {
+      x: 0,
+      y: 128 });
+
+    assert.deepEqual(convertedPoint1, {
+      x: 60,
+      y: 30 });
+    assert.deepEqual(convertedPoint2, {
+      x: 0,
+      y: 0 });
+    assert.deepEqual(convertedPoint3, {
+      x: 0,
+      y: 128 });
   });
 
   it('should fail to convert points in the canvas coordinate system to non-corresponding points in the pixel coordinate system', function () {
@@ -93,12 +104,25 @@ describe('pixelToCanvas', function () {
     setViewport(element, this.viewport);
 
     // Act
-    const convertedPoint1 = pixelToCanvas(element, {x:30, y:30});
-    const convertedPoint2 = pixelToCanvas(element, {x:0, y:0});
-    const convertedPoint3 = pixelToCanvas(element, {x:0, y:128});
-    assert.notDeepEqual(convertedPoint1, {x:30, y:30});
-    assert.notDeepEqual(convertedPoint2, {x:1, y:0});
-    assert.notDeepEqual(convertedPoint3, {x:0, y:64});
+    const convertedPoint1 = pixelToCanvas(element, {
+      x: 30,
+      y: 30 });
+    const convertedPoint2 = pixelToCanvas(element, {
+      x: 0,
+      y: 0 });
+    const convertedPoint3 = pixelToCanvas(element, {
+      x: 0,
+      y: 128 });
+
+    assert.notDeepEqual(convertedPoint1, {
+      x: 30,
+      y: 30 });
+    assert.notDeepEqual(convertedPoint2, {
+      x: 1,
+      y: 0 });
+    assert.notDeepEqual(convertedPoint3, {
+      x: 0,
+      y: 64 });
   });
 
   afterEach(function () {
