@@ -1,4 +1,4 @@
-/*! cornerstone-core - 2.0.0 - 2018-01-17 | (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */
+/*! cornerstone-core - 2.0.0 - 2018-02-11 | (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -5421,7 +5421,7 @@ exports.dataUtilities = dataUtilities;
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 /* eslint no-bitwise: 0 */
 
@@ -5437,28 +5437,28 @@ var int16Shader = {};
  */
 function storedPixelDataToImageData(image) {
 
-    // Transfer image data to alpha and luminance channels of WebGL texture
-    // Credit to @jpambrun and @fernandojsg
+  // Transfer image data to alpha and luminance channels of WebGL texture
+  // Credit to @jpambrun and @fernandojsg
 
-    // Pack int16 into three uint8 channels (r, g, b)
-    var pixelData = image.getPixelData();
-    var numberOfChannels = 3;
-    var data = new Uint8Array(image.width * image.height * numberOfChannels);
-    var offset = 0;
+  // Pack int16 into three uint8 channels (r, g, b)
+  var pixelData = image.getPixelData();
+  var numberOfChannels = 3;
+  var data = new Uint8Array(image.width * image.height * numberOfChannels);
+  var offset = 0;
 
-    for (var i = 0; i < pixelData.length; i++) {
-        var val = Math.abs(pixelData[i]);
+  for (var i = 0; i < pixelData.length; i++) {
+    var val = Math.abs(pixelData[i]);
 
-        data[offset++] = val & 0xFF;
-        data[offset++] = val >> 8;
-        data[offset++] = pixelData[i] < 0 ? 0 : 1; // 0 For negative, 1 for positive
-    }
+    data[offset++] = val & 0xFF;
+    data[offset++] = val >> 8;
+    data[offset++] = pixelData[i] < 0 ? 0 : 1; // 0 For negative, 1 for positive
+  }
 
-    return data;
+  return data;
 }
 
 var int16DataUtilities = exports.int16DataUtilities = {
-    storedPixelDataToImageData: storedPixelDataToImageData
+  storedPixelDataToImageData: storedPixelDataToImageData
 };
 
 int16Shader.frag = 'precision mediump float;' + 'uniform sampler2D u_image;' + 'uniform float ww;' + 'uniform float wc;' + 'uniform float slope;' + 'uniform float intercept;' + 'uniform int invert;' + 'varying vec2 v_texCoord;' + 'void main() {' +
@@ -5490,7 +5490,7 @@ exports.int16Shader = int16Shader;
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+        value: true
 });
 var int8Shader = {};
 
@@ -5503,23 +5503,23 @@ var int8Shader = {};
  * @returns {Uint8Array} The image data for use by the WebGL shader
  */
 function storedPixelDataToImageData(image) {
-    // Transfer image data to alpha channel of WebGL texture
-    // Store data in Uint8Array
-    var pixelData = image.getPixelData();
-    var numberOfChannels = 2;
-    var data = new Uint8Array(image.width * image.height * numberOfChannels);
-    var offset = 0;
+        // Transfer image data to alpha channel of WebGL texture
+        // Store data in Uint8Array
+        var pixelData = image.getPixelData();
+        var numberOfChannels = 2;
+        var data = new Uint8Array(image.width * image.height * numberOfChannels);
+        var offset = 0;
 
-    for (var i = 0; i < pixelData.length; i++) {
-        data[offset++] = pixelData[i];
-        data[offset++] = pixelData[i] < 0 ? 0 : 1; // 0 For negative, 1 for positive
-    }
+        for (var i = 0; i < pixelData.length; i++) {
+                data[offset++] = pixelData[i];
+                data[offset++] = pixelData[i] < 0 ? 0 : 1; // 0 For negative, 1 for positive
+        }
 
-    return data;
+        return data;
 }
 
 var int8DataUtilities = exports.int8DataUtilities = {
-    storedPixelDataToImageData: storedPixelDataToImageData
+        storedPixelDataToImageData: storedPixelDataToImageData
 };
 
 int8Shader.frag = 'precision mediump float;' + 'uniform sampler2D u_image;' + 'uniform float ww;' + 'uniform float wc;' + 'uniform float slope;' + 'uniform float intercept;' + 'uniform int invert;' + 'varying vec2 v_texCoord;' + 'void main() {' +
@@ -5693,7 +5693,7 @@ exports.uint16Shader = uint16Shader;
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+        value: true
 });
 var uint8Shader = {};
 
@@ -5705,12 +5705,12 @@ var uint8Shader = {};
  * @returns {Uint8Array} The image data for use by the WebGL shader
  */
 function storedPixelDataToImageData(image) {
-    // Transfer image data to alpha channel of WebGL texture
-    return image.getPixelData();
+        // Transfer image data to alpha channel of WebGL texture
+        return image.getPixelData();
 }
 
 var uint8DataUtilities = exports.uint8DataUtilities = {
-    storedPixelDataToImageData: storedPixelDataToImageData
+        storedPixelDataToImageData: storedPixelDataToImageData
 };
 
 uint8Shader.frag = 'precision mediump float;' + 'uniform sampler2D u_image;' + 'uniform float ww;' + 'uniform float wc;' + 'uniform float slope;' + 'uniform float intercept;' + 'uniform int invert;' + 'varying vec2 v_texCoord;' + 'void main() {' +
