@@ -72,12 +72,14 @@
     document.getElementById('lRotate').addEventListener('click', function (e) {
         const viewport = cornerstone.getViewport(element);
         viewport.rotation-=90;
+        //viewport.vflip = !viewport.vflip;
         cornerstone.setViewport(element, viewport);
     });
 
     document.getElementById('rRotate').addEventListener('click', function (e) {
         const viewport = cornerstone.getViewport(element);
         viewport.rotation+=90;
+        viewport.hflip = !viewport.hflip;
         cornerstone.setViewport(element, viewport);
     });
 
