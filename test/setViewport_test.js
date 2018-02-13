@@ -56,10 +56,13 @@ describe('Set an enabled element\'s viewport', function () {
 
     enable(this.element, options);
 
-    displayImage(this.element, this.image, this.viewport);
   });
 
   it('should apply viewport settings if provided', function () {
+
+    // Act
+    displayImage(this.element, this.image, this.viewport);
+
     const element = this.element;
 
     const newViewport = {
@@ -91,6 +94,10 @@ describe('Set an enabled element\'s viewport', function () {
   });
 
   it('should prevent windowWidth from getting too small', function () {
+
+    // Act
+    displayImage(this.element, this.image, this.viewport);
+
     const element = this.element;
 
     // Arrange
@@ -106,6 +113,10 @@ describe('Set an enabled element\'s viewport', function () {
   });
 
   it('should prevent scale from getting too small', function () {
+
+    // Act
+    displayImage(this.element, this.image, this.viewport);
+
     const element = this.element;
 
     // Arrange
@@ -121,6 +132,10 @@ describe('Set an enabled element\'s viewport', function () {
   });
 
   it('should normalize rotation values above 359 degrees', function () {
+
+    // Act
+    displayImage(this.element, this.image, this.viewport);
+
     const element = this.element;
 
     // Arrange
@@ -136,6 +151,10 @@ describe('Set an enabled element\'s viewport', function () {
   });
 
   it('should normalize rotation values below 0 degrees', function () {
+
+    // Act
+    displayImage(this.element, this.image, this.viewport);
+
     const element = this.element;
 
     // Arrange
@@ -149,6 +168,40 @@ describe('Set an enabled element\'s viewport', function () {
 
     assert.equal(viewport.rotation, 355);
   });
+
+  it('should apply initial viewport settings with no displayed image', function () {
+
+    const element = this.element;
+
+    const newViewport = {
+      scale: 3.0,
+      translation: {
+        x: 2,
+        y: 2
+      },
+      voi: {
+        windowWidth: 11,
+        windowCenter: 16
+      },
+      invert: false,
+      pixelReplication: false,
+      rotation: 91,
+      hflip: false,
+      vflip: false
+    };
+
+    // Act
+    setViewport(element, newViewport);
+    displayImage(this.element, this.image);
+
+    // Assert
+    const viewport = getViewport(element);
+
+    Object.keys(newViewport).forEach((key) => {
+      assert.deepEqual(newViewport[key], viewport[key]);
+    });
+  });
+
 
   afterEach(function () {
     disable(this.element);
