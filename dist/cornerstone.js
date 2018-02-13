@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /*! cornerstone-core - 2.2.1-rc1 - 2018-04-12 | (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */
+=======
+/*! cornerstone-core - 2.0.0 - 2018-02-12 | (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */
+>>>>>>> simplified function definitions and fixed style errors.
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -6721,6 +6725,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.renderWebImage = renderWebImage;
 
+<<<<<<< HEAD
 var _setToPixelCoordinateSystem = __webpack_require__(/*! ../setToPixelCoordinateSystem.js */ "./setToPixelCoordinateSystem.js");
 
 var _setToPixelCoordinateSystem2 = _interopRequireDefault(_setToPixelCoordinateSystem);
@@ -6826,6 +6831,39 @@ exports.default = function (enabledElement) {
 
 "use strict";
 
+=======
+exports.default = function (element, options) {
+  var canvasInput = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+  if (element === undefined) {
+    throw new Error('enableElement: parameter element cannot be undefined');
+  }
+
+  // If this enabled element has the option set for WebGL, we should
+  // Check if this device actually supports it
+  if (options && options.renderer && options.renderer.toLowerCase() === 'webgl') {
+    if (_index2.default.renderer.isWebGLAvailable()) {
+      // If WebGL is available on the device, initialize the renderer
+      // And return the renderCanvas from the WebGL rendering path
+      _index2.default.renderer.initRenderer();
+      options.renderer = 'webgl';
+    } else {
+      // If WebGL is not available on this device, we will fall back
+      // To using the Canvas renderer
+      console.error('WebGL not available, falling back to Canvas renderer');
+      delete options.renderer;
+    }
+  }
+  var canvas = void 0;
+
+  if (canvasInput === null) {
+    canvas = document.createElement('canvas');
+    canvas.style.display = 'block';
+    element.appendChild(canvas);
+  } else {
+    canvas = canvasInput;
+  }
+>>>>>>> simplified function definitions and fixed style errors.
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6848,7 +6886,54 @@ var _updateImage = __webpack_require__(/*! ./updateImage.js */ "./updateImage.js
 
 var _updateImage2 = _interopRequireDefault(_updateImage);
 
+<<<<<<< HEAD
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+=======
+  draw();
+};
+
+var _enabledElements = __webpack_require__(0);
+
+var _resize = __webpack_require__(36);
+
+var _resize2 = _interopRequireDefault(_resize);
+
+var _drawImageSync = __webpack_require__(61);
+
+var _drawImageSync2 = _interopRequireDefault(_drawImageSync);
+
+var _requestAnimationFrame = __webpack_require__(17);
+
+var _requestAnimationFrame2 = _interopRequireDefault(_requestAnimationFrame);
+
+var _index = __webpack_require__(13);
+
+var _index2 = _interopRequireDefault(_index);
+
+var _triggerEvent = __webpack_require__(2);
+
+var _triggerEvent2 = _interopRequireDefault(_triggerEvent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * This module is responsible for enabling an element to display images with cornerstone
+ */
+
+function hasImageOrLayers(enabledElement) {
+  return enabledElement.image !== undefined || enabledElement.layers.length;
+}
+>>>>>>> simplified function definitions and fixed style errors.
+
+/**
+ * Enable an HTML Element for use in Cornerstone
+ *
+ * @param {HTMLElement} element An HTML Element enabled for Cornerstone
+ * @param {Object} options Options for the enabledElement
+ * @param {Canvas} canvasInput An HTML canvas to draw the image to
+ *
+ * @return {void}
+ */
 
 /***/ }),
 
