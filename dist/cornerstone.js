@@ -1,4 +1,4 @@
-/*! cornerstone-core - 2.0.0 - 2018-01-27 | (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */
+/*! cornerstone-core - 2.0.0 - 2018-02-12 | (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -6008,63 +6008,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 exports.default = function (element, options) {
-  enableElement(element, undefined, options);
-};
+  var canvasInput = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
-exports.enableElement = enableElement;
-
-var _enabledElements = __webpack_require__(0);
-
-var _resize = __webpack_require__(36);
-
-var _resize2 = _interopRequireDefault(_resize);
-
-var _drawImageSync = __webpack_require__(61);
-
-var _drawImageSync2 = _interopRequireDefault(_drawImageSync);
-
-var _requestAnimationFrame = __webpack_require__(17);
-
-var _requestAnimationFrame2 = _interopRequireDefault(_requestAnimationFrame);
-
-var _index = __webpack_require__(13);
-
-var _index2 = _interopRequireDefault(_index);
-
-var _triggerEvent = __webpack_require__(2);
-
-var _triggerEvent2 = _interopRequireDefault(_triggerEvent);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * This module is responsible for enabling an element to display images with cornerstone
- */
-
-function hasImageOrLayers(enabledElement) {
-  return enabledElement.image !== undefined || enabledElement.layers.length;
-}
-
-/**
- * Enable an HTML Element for use in Cornerstone
- *
- * @param {HTMLElement} element An HTML Element enabled for Cornerstone
- * @param {Object} options Options for the enabledElement
- *
- * @return {void}
- */
-
-
-/**
- * Enable an HTML Element for use in Cornerstone
- *
- * @param {HTMLElement} element An HTML Element enabled for Cornerstone
- * @param {Object} options Options for the enabledElement
- * @param {Canvas} canvas An HTML canvas to draw the image to
- *
- * @return {void}
- */
-function enableElement(element, canvasInput, options) {
   if (element === undefined) {
     throw new Error('enableElement: parameter element cannot be undefined');
   }
@@ -6084,26 +6029,15 @@ function enableElement(element, canvasInput, options) {
       delete options.renderer;
     }
   }
+  var canvas = void 0;
 
-  //console.log(canvasInput === undefined);
-
-  var canvas = canvasInput === undefined ? function () {
-    var newCanvas = document.createElement('canvas');
-    newCanvas.style.display = 'block';
-    element.appendChild(newCanvas);
-    return newCanvas;
-  }() : canvasInput;
-  //if (canvasInput === undefined) {
-  //console.log("IF");
-  //    const canvas = document.createElement('canvas');
-
-  //  canvas.style.display = 'block';
-  /*} else {
-      console.log("ELSE");
-      canvas = canvasInput;
-  }*/
-  //console.log(canvas)
-
+  if (canvasInput === null) {
+    canvas = document.createElement('canvas');
+    canvas.style.display = 'block';
+    element.appendChild(canvas);
+  } else {
+    canvas = canvasInput;
+  }
 
   var enabledElement = {
     element: element,
@@ -6147,7 +6081,49 @@ function enableElement(element, canvasInput, options) {
   }
 
   draw();
+};
+
+var _enabledElements = __webpack_require__(0);
+
+var _resize = __webpack_require__(36);
+
+var _resize2 = _interopRequireDefault(_resize);
+
+var _drawImageSync = __webpack_require__(61);
+
+var _drawImageSync2 = _interopRequireDefault(_drawImageSync);
+
+var _requestAnimationFrame = __webpack_require__(17);
+
+var _requestAnimationFrame2 = _interopRequireDefault(_requestAnimationFrame);
+
+var _index = __webpack_require__(13);
+
+var _index2 = _interopRequireDefault(_index);
+
+var _triggerEvent = __webpack_require__(2);
+
+var _triggerEvent2 = _interopRequireDefault(_triggerEvent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * This module is responsible for enabling an element to display images with cornerstone
+ */
+
+function hasImageOrLayers(enabledElement) {
+  return enabledElement.image !== undefined || enabledElement.layers.length;
 }
+
+/**
+ * Enable an HTML Element for use in Cornerstone
+ *
+ * @param {HTMLElement} element An HTML Element enabled for Cornerstone
+ * @param {Object} options Options for the enabledElement
+ * @param {Canvas} canvasInput An HTML canvas to draw the image to
+ *
+ * @return {void}
+ */
 
 /***/ }),
 /* 61 */
