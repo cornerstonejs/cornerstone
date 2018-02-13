@@ -9,7 +9,7 @@ const MIN_VIEWPORT_SCALE = 0.0001;
  * Sets/updates viewport of a given enabled element
  *
  * @param {HTMLElement} element - DOM element of the enabled element
- * @param {Viewport} viewport - Object containing the viewport properties
+ * @param {Viewport} [viewport] - Object containing the viewport properties
  * @returns {void}
  */
 export default function (element, viewport) {
