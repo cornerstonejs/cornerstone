@@ -29,10 +29,11 @@ In this example, javascript is used to image enable a div.
 </body>
 
 <!-- include the cornerstone library -->
-<script src="../../dist/cornerstone.js"></script>
+<script type="module" src="../../src/cornerstone-core.js"></script>
+<script nomodule src="../../dist/cornerstone.js"></script>
 
 <!-- include special code for these examples which provides images -->
-<script src="../exampleImageIdLoader.js"></script>
+<script defer src="../exampleImageIdLoader.js"></script>
 
 <script>
     const imageId = 'example://1';
