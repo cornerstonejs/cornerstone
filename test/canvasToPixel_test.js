@@ -68,12 +68,24 @@ describe('canvasToPixel', function () {
     setViewport(element, this.viewport);
 
     // Act
-    const convertedPoint1 = canvasToPixel(element, {x:60, y:30});
-    const convertedPoint2 = canvasToPixel(element, {x:0, y:0});
-    const convertedPoint3 = canvasToPixel(element, {x:0, y:128});
-    assert.deepEqual(convertedPoint1, {x:30, y:30});
-    assert.deepEqual(convertedPoint2, {x:0, y:0});
-    assert.deepEqual(convertedPoint3, {x:0, y:128});
+    const convertedPoint1 = canvasToPixel(element, {
+      x: 60,
+      y: 30 });
+    const convertedPoint2 = canvasToPixel(element, {
+      x: 0,
+      y: 0});
+    const convertedPoint3 = canvasToPixel(element, {
+      x: 0,
+      y: 128});
+    assert.deepEqual(convertedPoint1, {
+      x: 30,
+      y: 30 });
+    assert.deepEqual(convertedPoint2, {
+       x: 0,
+       y: 0 });
+    assert.deepEqual(convertedPoint3, {
+      x: 0,
+      y: 128 });
   });
 
   it('should fail to convert points in the pixel coordinate system to non-corresponding points in the canvas coordinate system', function () {
@@ -90,12 +102,24 @@ describe('canvasToPixel', function () {
     setViewport(element, this.viewport);
 
     // Act
-    const convertedPoint1 = canvasToPixel(element, {x:60, y:30});
-    const convertedPoint2 = canvasToPixel(element, {x:0, y:0});
-    const convertedPoint3 = canvasToPixel(element, {x:0, y:128});
-    assert.notDeepEqual(convertedPoint1, {x:60, y:30});
-    assert.notDeepEqual(convertedPoint2, {x:1, y:0});
-    assert.notDeepEqual(convertedPoint3, {x:0, y:256});
+    const convertedPoint1 = canvasToPixel(element, {
+      x: 60,
+      y: 30 });
+    const convertedPoint2 = canvasToPixel(element, {
+      x: 0,
+      y: 0 });
+    const convertedPoint3 = canvasToPixel(element, {
+      x: 0,
+      y: 128 });
+    assert.notDeepEqual(convertedPoint1, {
+      x: 60,
+      y: 30 });
+    assert.notDeepEqual(convertedPoint2, {
+      x: 1,
+      y: 0 });
+    assert.notDeepEqual(convertedPoint3, {
+      x: 0,
+      y: 256 });
   });
 
   afterEach(function () {
