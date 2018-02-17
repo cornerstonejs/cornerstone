@@ -90,41 +90,6 @@ describe('pixelToCanvas', function () {
       y: 128 });
   });
 
-  it('should fail to convert points in the canvas coordinate system to non-corresponding points in the pixel coordinate system', function () {
-    // Arrange
-    enable(this.element);
-    displayImage(this.element, this.image);
-
-    const element = this.element;
-    const enabledElement = getEnabledElement(this.element);
-
-    enabledElement.canvas.width = 256;
-    enabledElement.canvas.height = 256;
-
-    setViewport(element, this.viewport);
-
-    // Act
-    const convertedPoint1 = pixelToCanvas(element, {
-      x: 30,
-      y: 30 });
-    const convertedPoint2 = pixelToCanvas(element, {
-      x: 0,
-      y: 0 });
-    const convertedPoint3 = pixelToCanvas(element, {
-      x: 0,
-      y: 128 });
-
-    assert.notDeepEqual(convertedPoint1, {
-      x: 30,
-      y: 30 });
-    assert.notDeepEqual(convertedPoint2, {
-      x: 1,
-      y: 0 });
-    assert.notDeepEqual(convertedPoint3, {
-      x: 0,
-      y: 64 });
-  });
-
   afterEach(function () {
     disable(this.element);
   });
