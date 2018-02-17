@@ -6011,7 +6011,7 @@ exports.default = function (element, options) {
   var canvasInput = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
   if (element === undefined) {
-    throw new Error('enableElement: parameter element cannot be undefined');
+    throw new Error('enable: parameter element nust not be undefined');
   }
 
   // If this enabled element has the option set for WebGL, we should

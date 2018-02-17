@@ -1,12 +1,12 @@
 import { getEnabledElements } from '../enabledElements.js';
-import displayImage from '../displayImage.js'
-import { enableElement } from '../enable.js'
+import displayImage from '../displayImage.js';
+import enableElement from '../enable.js';
 
-export default function(canvas, imageID, viewport){
-  if (canvas === undefined){
-      throw new Error('renderToCanvas: parameter canvas cannot be undefined');
+export default function (canvas, imageID, viewport) {
+  if (canvas === undefined) {
+    throw new Error('renderToCanvas: parameter canvas cannot be undefined');
   }
-    
+
   const enabledElements = getEnabledElements();
   const elements = [];
 
@@ -17,11 +17,11 @@ export default function(canvas, imageID, viewport){
   });
 
   if (elements.length === 0) {
-    enableElement(canvas, canvas, undefined);
+    enableElement(canvas, null, canvas);
     elements.push(canvas);
   }
-  
+
   elements.forEach(function (element) {
     displayImage(element, imageID, viewport);
-  }); 
+  });
 }
