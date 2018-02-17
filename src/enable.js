@@ -59,7 +59,7 @@ export default function (element, options, canvasInput = null) {
     }
   }
   
-  const canvas = (canvasInput === undefined) ? getCanvas(element) : canvasInput;
+  const canvas = (canvasInput === null) ? getCanvas(element) : canvasInput;
 
   const enabledElement = {
     element,
