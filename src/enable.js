@@ -41,7 +41,7 @@ function hasImageOrLayers (enabledElement) {
  */
 export default function (element, options, canvasInput = null) {
   if (element === undefined) {
-    throw new Error('enableElement: parameter element cannot be undefined');
+    throw new Error('enable: parameter element cannot be undefined');
   }
 
   // If this enabled element has the option set for WebGL, we should

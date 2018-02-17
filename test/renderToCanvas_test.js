@@ -1,15 +1,10 @@
 import { assert } from 'chai';
 
-import renderToCanvas from '../src/rendering/renderToCanvas.js'
+import renderToCanvas from '../src/rendering/renderToCanvas.js';
 import enable from '../src/enable.js';
-import getTransform from '../src/internal/getTransform.js'
-import displayImage from '../src/displayImage.js';
-import canvasToPixel from '../src/canvasToPixel.js';
+import getTransform from '../src/internal/getTransform.js';
 import disable from '../src/disable.js';
 import { getEnabledElement } from '../src/enabledElements.js';
-//import calculateTransform from '../src/internal/calculateTransform.js';
-
-
 
 describe('renderToCanvas', function () {
   beforeEach(function () {
@@ -42,7 +37,7 @@ describe('renderToCanvas', function () {
 
   it('should store one image on the existing canvas, then ', function () {
     // Arrange
-    let enabledElement = getEnabledElement(this.element)
+    const enabledElement = getEnabledElement(this.element);
 
     // Act
     renderToCanvas(enabledElement.canvas, this.image);

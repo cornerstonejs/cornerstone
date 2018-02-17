@@ -4280,7 +4280,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
  */
 
 /**
+<<<<<<< HEAD
  * @module: VOILUT
+=======
+ * This module deals with caching image textures in VRAM for WebGL
+>>>>>>> fixed style errors
  */
 
 /**
@@ -4738,6 +4742,7 @@ var _now2 = _interopRequireDefault(_now);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
+<<<<<<< HEAD
  *
  * @param {Image} image A Cornerstone Image Object
  * @param {Array} grayscaleLut Lookup table array
@@ -4750,6 +4755,33 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function storedPixelDataToCanvasImageDataPseudocolorLUT(image, grayscaleLut, colorLut, canvasImageDataData) {
   var start = (0, _now2.default)();
   var pixelData = image.getPixelData();
+=======
+ * This module is responsible for enabling an element to display images with cornerstone
+ *
+ * @param {HTMLElement} element The DOM element enabled for Cornerstone
+ * @param {HTMLElement} canvas The Canvas DOM element within the DOM element enabled for Cornerstone
+ * @returns {void}
+ */
+function setCanvasSize(element, canvas) {
+  // The device pixel ratio is 1.0 for normal displays and > 1.0
+  // For high DPI displays like Retina
+  /*
+      This functionality is disabled due to buggy behavior on systems with mixed DPI's.  If the canvas
+    is created on a display with high DPI (e.g. 2.0) and then the browser window is dragged to
+    a different display with a different DPI (e.g. 1.0), the canvas is not recreated so the pageToPixel
+    produces incorrect results.  I couldn't find any way to determine when the DPI changed other than
+    by polling which is not very clean.  If anyone has any ideas here, please let me know, but for now
+    we will disable this functionality.  We may want
+    to add a mechanism to optionally enable this functionality if we can determine it is safe to do
+    so (e.g. iPad or iPhone or perhaps enumerate the displays on the system.  I am choosing
+    to be cautious here since I would rather not have bug reports or safety issues related to this
+    scenario.
+      var devicePixelRatio = window.devicePixelRatio;
+    if(devicePixelRatio === undefined) {
+        devicePixelRatio = 1.0;
+    }
+    */
+>>>>>>> fixed style errors
 
   image.stats.lastGetPixelDataTime = (0, _now2.default)() - start;
 
@@ -4792,7 +4824,17 @@ function storedPixelDataToCanvasImageDataPseudocolorLUT(image, grayscaleLut, col
   image.stats.lastStoredPixelDataToCanvasImageDataTime = (0, _now2.default)() - start;
 }
 
+<<<<<<< HEAD
 exports.default = storedPixelDataToCanvasImageDataPseudocolorLUT;
+=======
+/**
+ * Resizes an enabled element and optionally fits the image to window
+ *
+ * @param {HTMLElement} element The DOM element enabled for Cornerstone
+ * @param {Boolean} fitViewportToWindow true to refit, false to leave viewport parameters as they are
+ * @returns {void}
+ */
+>>>>>>> fixed style errors
 
 /***/ }),
 
@@ -6836,7 +6878,7 @@ exports.default = function (element, options) {
   var canvasInput = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
   if (element === undefined) {
-    throw new Error('enableElement: parameter element cannot be undefined');
+    throw new Error('enable: parameter element nust not be undefined');
   }
 
   // If this enabled element has the option set for WebGL, we should
@@ -6876,7 +6918,20 @@ exports.default = function (element) {
   (0, _updateImage2.default)(element);
 };
 
+<<<<<<< HEAD
 var _enabledElements = __webpack_require__(/*! ./enabledElements.js */ "./enabledElements.js");
+=======
+  /**
+   * Draw the image immediately
+   *
+   * @param {DOMHighResTimeStamp} timestamp The current time for when requestAnimationFrame starts to fire callbacks
+   * @returns {void}
+   */
+  function draw(timestamp) {
+    if (enabledElement.canvas === undefined) {
+      return;
+    }
+>>>>>>> fixed style errors
 
 var _getDefaultViewport = __webpack_require__(/*! ./internal/getDefaultViewport.js */ "./internal/getDefaultViewport.js");
 
@@ -7563,11 +7618,17 @@ function initWebGL(canvas) {
     canvas.removeEventListener('webglcontextlost', handleLostContext, false);
     canvas.addEventListener('webglcontextlost', handleLostContext, false);
 
+<<<<<<< HEAD
     canvas.removeEventListener('webglcontextrestored', handleRestoredContext, false);
     canvas.addEventListener('webglcontextrestored', handleRestoredContext, false);
   } catch (error) {
     throw new Error('Error creating WebGL context');
   }
+=======
+/**
+ * This module deals with ImageLoaders, loading images and caching images
+ */
+>>>>>>> fixed style errors
 
   // If we don't have a GL context, give up now
   if (!gl) {
@@ -7579,10 +7640,22 @@ function initWebGL(canvas) {
 }
 
 /**
+<<<<<<< HEAD
  * Returns the image data type as a string representation.
  * @param {any} image The cornerstone image object
  * @returns {string} image data type (rgb, iint16, uint16, int8 and uint8)
  * @memberof WebGLRendering
+=======
+ * Load an image using a registered Cornerstone Image Loader.
+ *
+ * The image loader that is used will be
+ * determined by the image loader scheme matching against the imageId.
+ *
+ * @param {String} imageId A Cornerstone Image Object's imageId
+ * @param {Object} [options] Options to be passed to the Image Loader
+ *
+ * @returns {ImageLoadObject} An Object which can be used to act after an image is loaded or loading fails
+>>>>>>> fixed style errors
  */
 function getImageDataType(image) {
   if (image.color) {
@@ -7606,7 +7679,23 @@ function getImageDataType(image) {
   return 'uint8';
 }
 
+<<<<<<< HEAD
 function getShaderProgram(image) {
+=======
+/**
+ * Loads an image given an imageId and optional priority and returns a promise which will resolve to
+ * the loaded image object or fail if an error occurred.  The loaded image is not stored in the cache.
+ *
+ * @param {String} imageId A Cornerstone Image Object's imageId
+ * @param {Object} [options] Options to be passed to the Image Loader
+ *
+ * @returns {ImageLoadObject} An Object which can be used to act after an image is loaded or loading fails
+ */
+function loadImage(imageId, options) {
+  if (imageId === undefined) {
+    throw new Error('loadImage: parameter imageId must not be undefined');
+  }
+>>>>>>> fixed style errors
 
   var datatype = getImageDataType(image);
   // We need a mechanism for
@@ -7629,12 +7718,28 @@ function generateTexture(image) {
     rgb: gl.RGB
   };
 
+<<<<<<< HEAD
   var TEXTURE_BYTES = {
     int8: 1, // Luminance
     uint16: 2, // Luminance + Alpha
     int16: 3, // RGB
     rgb: 3 // RGB
   };
+=======
+/**
+ * Loads an image given an imageId and optional priority and returns a promise which will resolve to
+ * the loaded image object or fail if an error occurred. The image is stored in the cache.
+ *
+ * @param {String} imageId A Cornerstone Image Object's imageId
+ * @param {Object} [options] Options to be passed to the Image Loader
+ *
+ * @returns {Object} Image Loader Object (TODO: define a JSDoc type for this)
+ */
+function loadAndCacheImage(imageId, options) {
+  if (imageId === undefined) {
+    throw new Error('loadAndCacheImage: parameter imageId must not be undefined');
+  }
+>>>>>>> fixed style errors
 
   var imageDataType = getImageDataType(image);
   var format = TEXTURE_FORMAT[imageDataType];
@@ -7652,6 +7757,7 @@ function generateTexture(image) {
 
   var imageData = _index.dataUtilities[imageDataType].storedPixelDataToImageData(image, image.width, image.height);
 
+<<<<<<< HEAD
   gl.texImage2D(gl.TEXTURE_2D, 0, format, image.width, image.height, 0, format, gl.UNSIGNED_BYTE, imageData);
 
   // Calculate the size in bytes of this image in memory
@@ -7665,6 +7771,28 @@ function generateTexture(image) {
 
 function getImageTexture(image) {
   var imageTexture = _textureCache2.default.getImageTexture(image.imageId);
+=======
+/**
+ * Registers an imageLoader plugin with cornerstone for the specified scheme
+ *
+ * @param {String} scheme The scheme to use for this image loader (e.g. 'dicomweb', 'wadouri', 'http')
+ * @param {Function} imageLoader A Cornerstone Image Loader function
+ * @returns {void}
+ */
+function registerImageLoader(scheme, imageLoader) {
+  imageLoaders[scheme] = imageLoader;
+}
+
+/**
+ * Registers a new unknownImageLoader and returns the previous one
+ *
+ * @param {Function} imageLoader A Cornerstone Image Loader
+ *
+ * @returns {Function|Undefined} The previous Unknown Image Loader
+ */
+function registerUnknownImageLoader(imageLoader) {
+  var oldImageLoader = unknownImageLoader;
+>>>>>>> fixed style errors
 
   if (!imageTexture) {
     // Console.log("Generating texture for imageid: ", image.imageId);
