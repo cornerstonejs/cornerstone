@@ -2,6 +2,7 @@ import { getEnabledElement } from './enabledElements.js';
 import fitToWindow from './fitToWindow.js';
 import updateImage from './updateImage.js';
 import triggerEvent from './triggerEvent.js';
+import getImageSize from './internal/getImageSize.js';
 
 /**
  * This module is responsible for enabling an element to display images with cornerstone
@@ -48,12 +49,15 @@ function setCanvasSize (element, canvas) {
  * Resizes an enabled element and optionally fits the image to window
  *
  * @param {HTMLElement} element The DOM element enabled for Cornerstone
- * @param {Boolean} fitViewportToWindow true to refit, false to leave viewport parameters as they are
+ * @param {Boolean} forceFitToWindow true to to force a refit, false to rescale accordingly
  * @returns {void}
  */
-export default function (element, fitViewportToWindow) {
+export default function (element, forceFitToWindow) {
 
   const enabledElement = getEnabledElement(element);
+
+  const oldCanvasWidth = enabledElement.canvas.width;
+  const oldCanvasHeight = enabledElement.canvas.height;
 
   setCanvasSize(element, enabledElement.canvas);
 
@@ -67,9 +71,37 @@ export default function (element, fitViewportToWindow) {
     return;
   }
 
-  if (fitViewportToWindow === true) {
+  if (forceFitToWindow === true) {
+    fitToWindow(element);
+
+    return;
+  }
+
+  const scale = enabledElement.viewport.scale;
+
+  const imageSize = getImageSize(enabledElement);
+  const imageWidth = Math.round(imageSize.width * scale);
+  const imageHeight = Math.round(imageSize.height * scale);
+  const x = enabledElement.viewport.translation.x;
+  const y = enabledElement.viewport.translation.y;
+
+  const wasFitToWindow =
+    (imageWidth === oldCanvasWidth && imageHeight <= oldCanvasHeight) ||
+    (imageWidth <= oldCanvasWidth && imageHeight === oldCanvasHeight) &&
+    (x === 0 && y === 0);
+
+  if (wasFitToWindow) {
+    // Fit the image to the window again if it fitted before the resize
     fitToWindow(element);
   } else {
+    // Adapt the scale of a zoomed or panned image
+    const canvasWidth = enabledElement.canvas.width;
+    const canvasHeight = enabledElement.canvas.height;
+    const relWidthChange = canvasWidth / oldCanvasWidth;
+    const relHeightChange = canvasHeight / oldCanvasHeight;
+    const relChange = Math.sqrt(relWidthChange * relHeightChange);
+
+    enabledElement.viewport.scale = relChange * scale;
     updateImage(element);
   }
 }
