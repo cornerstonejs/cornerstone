@@ -1,5 +1,5 @@
 import { should } from 'chai';
-import storedPixelDataToCanvasImageDataPseudocolorLUT from '../../src/internal/storedPixelDataToCanvasImageDataPseudocolorLUT';
+import storedPixelDataToCanvasImageDataPseudocolorLUT from '../../src/internal/storedPixelDataToCanvasImageDataPseudocolorLUT.js';
 
 should();
 
@@ -10,10 +10,10 @@ describe('storedPixelDataToCanvasImageDataPseudocolorLUT', function () {
     this.image = {
       minPixelValue: 0,
       stats: {},
-      getPixelData() {
-        return [0, 1]
+      getPixelData () {
+        return [0, 1];
       }
-    }
+    };
   });
 
   beforeEach(function () {
