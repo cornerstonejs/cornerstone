@@ -74,9 +74,6 @@ This is an example of WebGL use in cornerstone
 </div>
 </body>
 
-<!-- cornerstone depends on jQuery so it must be loaded first-->
-<script src="../jquery.min.js"></script>
-
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
 
@@ -84,91 +81,71 @@ This is an example of WebGL use in cornerstone
 <script src="../exampleImageIdLoader.js"></script>
 
 <script>
+    const element = document.getElementById('dicomImage');
+    const elementWebGL = document.getElementById('dicomImageWebGL');
 
-    $(document).ready(function() {
-        var element = document.getElementById('dicomImage');
-        var elementWebGL = document.getElementById('dicomImageWebGL');
+    // setup handlers before we display the image
+    function onImageRendered(e) {
+        const eventData = e.detail;
 
-        // setup handlers before we display the image
-        function onImageRendered(e) {
-            var eventData = e.detail;
+        // set the canvas context to the image coordinate system
+        cornerstone.setToPixelCoordinateSystem(eventData.enabledElement, eventData.canvasContext);
 
-            // set the canvas context to the image coordinate system
-            cornerstone.setToPixelCoordinateSystem(eventData.enabledElement, eventData.canvasContext);
+        const parent = eventData.element.parentNode;
+        parent.querySelector('.topright').textContent = "Render Time:" + eventData.renderTimeInMs + " ms";
+        parent.querySelector('.bottomleft').textContent = "WW/WL:" + Math.round(eventData.viewport.voi.windowWidth) + "/" + Math.round(eventData.viewport.voi.windowCenter);
+        parent.querySelector('.bottomright').textContent = "Zoom:" + eventData.viewport.scale.toFixed(2);
+    }
 
-            $(eventData.element).siblings('.topright').text("Render Time:" + eventData.renderTimeInMs + " ms");
-            $(eventData.element).siblings('.bottomleft').text("WW/WL:" + Math.round(eventData.viewport.voi.windowWidth) + "/" + Math.round(eventData.viewport.voi.windowCenter));
-            $(eventData.element).siblings('.bottomright').text("Zoom:" + eventData.viewport.scale.toFixed(2));
+    element.addEventListener('cornerstoneimagerendered', onImageRendered);
+    elementWebGL.addEventListener('cornerstoneimagerendered', onImageRendered);
 
+    const imageId = 'example://1';
+
+    cornerstone.enable(element);
+
+    cornerstone.loadAndCacheImage(imageId).then(function(image) {
+        cornerstone.displayImage(element, image);
+    });
+
+    const options = {
+        renderer: 'webgl'
+    };
+
+    cornerstone.enable(elementWebGL, options);
+
+    cornerstone.loadAndCacheImage(imageId).then(function(image) {
+        cornerstone.displayImage(elementWebGL, image);
+    });
+
+
+    const elements = [element, elementWebGL];
+    elements.forEach(function(elem) {
+      // add event handlers to mouse move to adjust window/center
+      elem.addEventListener('mousedown', function (e) {
+        let lastX = e.pageX;
+        let lastY = e.pageY;
+
+        function mouseMoveHandler(e) {
+          const deltaX = e.pageX - lastX;
+          const deltaY = e.pageY - lastY;
+          lastX = e.pageX;
+          lastY = e.pageY;
+
+          let viewport = cornerstone.getViewport(elem);
+          viewport.voi.windowWidth += (deltaX / viewport.scale);
+          viewport.voi.windowCenter += (deltaY / viewport.scale);
+          cornerstone.setViewport(elem, viewport);
         }
-        element.addEventListener('cornerstoneimagerendered', onImageRendered);
-        elementWebGL.addEventListener('cornerstoneimagerendered', onImageRendered);
 
-        var imageId = 'example://1';
+        function mouseUpHandler() {
+          document.removeEventListener('mousemove', mouseMoveHandler);
+          document.removeEventListener('mouseup', mouseUpHandler);
+        }
 
-        cornerstone.enable(element);
-
-        cornerstone.loadAndCacheImage(imageId).then(function(image) {
-            cornerstone.displayImage(element, image);
-        });
-
-
-        var options = {
-            renderer: 'webgl'
-        };
-
-        cornerstone.enable(elementWebGL, options);
-
-        cornerstone.loadAndCacheImage(imageId).then(function(image) {
-            cornerstone.displayImage(elementWebGL, image);
-        });
-
-
-        // add event handlers to mouse move to adjust window/center
-        $('#dicomImage').mousedown(function (e) {
-            var lastX = e.pageX;
-            var lastY = e.pageY;
-
-            $(document).mousemove(function (e) {
-                var deltaX = e.pageX - lastX,
-                        deltaY = e.pageY - lastY;
-                lastX = e.pageX;
-                lastY = e.pageY;
-
-                var viewport = cornerstone.getViewport(element);
-                viewport.voi.windowWidth += (deltaX / viewport.scale);
-                viewport.voi.windowCenter += (deltaY / viewport.scale);
-                cornerstone.setViewport(element, viewport);
-            });
-
-            $(document).mouseup(function (e) {
-                $(document).unbind('mousemove');
-                $(document).unbind('mouseup');
-            });
-        });
-
-        // add event handlers to mouse move to adjust window/center
-        $('#dicomImageWebGL').mousedown(function (e) {
-            var lastX = e.pageX;
-            var lastY = e.pageY;
-
-            $(document).mousemove(function (e) {
-                var deltaX = e.pageX - lastX,
-                        deltaY = e.pageY - lastY;
-                lastX = e.pageX;
-                lastY = e.pageY;
-
-                var viewport = cornerstone.getViewport(elementWebGL);
-                viewport.voi.windowWidth += (deltaX / viewport.scale);
-                viewport.voi.windowCenter += (deltaY / viewport.scale);
-                cornerstone.setViewport(elementWebGL, viewport);
-            });
-
-            $(document).mouseup(function (e) {
-                $(document).unbind('mousemove');
-                $(document).unbind('mouseup');
-            });
-        });
+        document.addEventListener('mousemove', mouseMoveHandler);
+        document.addEventListener('mouseup', mouseUpHandler);
+      });
     });
 </script>
 </html>

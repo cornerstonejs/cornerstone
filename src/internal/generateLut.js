@@ -13,6 +13,7 @@ import getVOILUT from './getVOILut.js';
  * @param {Array} [voiLUT] A Volume of Interest Lookup Table
  *
  * @returns {Uint8ClampedArray} A lookup table to apply to the image
+ * @memberof Internal
  */
 export default function (image, windowWidth, windowCenter, invert, modalityLUT, voiLUT) {
   const maxPixelValue = image.maxPixelValue;

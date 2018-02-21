@@ -1,4 +1,4 @@
-/*! cornerstone-core - 1.1.3 - 2017-11-17 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstone */
+/*! cornerstone-core - 2.0.0 - 2018-01-31 | (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -8,7 +8,7 @@
 		exports["cornerstone-core"] = factory();
 	else
 		root["cornerstone"] = factory();
-})(this, function() {
+})(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -91,9 +91,18 @@ exports.getEnabledElements = getEnabledElements;
 var enabledElements = [];
 
 /**
+ * @module EnabledElements
+ */
+
+/**
+ * @module Objects
+ */
+
+/**
  * A two-dimensional vector
  *
  * @typedef {Object} vec2
+ * @memberof Objects
  * @param {Number} x - The x distance
  * @param {Number} y - The y distance
  */
@@ -102,6 +111,7 @@ var enabledElements = [];
  * VOI
  *
  * @typedef {Object} VOI
+ * @memberof Objects
  * @param {Number} windowWidth - Window Width for display
  * @param {Number} windowCenter - Window Center for display
  */
@@ -110,6 +120,7 @@ var enabledElements = [];
  * Lookup Table Array
  *
  * @typedef {Object} LUT
+ * @memberof Objects
  * @property {Number} firstValueMapped
  * @property {Number} numBitsPerEntry
  * @property {Array} lut
@@ -119,7 +130,7 @@ var enabledElements = [];
  * Image Statistics Object
  *
  * @typedef {Object} ImageStats
- *
+ * @memberof Objects
  * @property {Number} [lastGetPixelDataTime] The time in ms taken to retrieve stored pixels required to draw the image
  * @property {Number} [lastStoredPixelDataToCanvasImageDataTime] The time in ms taken to map from stored pixel array to canvas pixel array
  * @property {Number} [lastPutImageDataTime] The time in ms taken for putImageData to put the canvas pixel data into the canvas context
@@ -131,7 +142,7 @@ var enabledElements = [];
  * An Image Object in Cornerstone
  *
  * @typedef {Object} Image
- *
+ * @memberof Objects
  * @property {string} imageId - The imageId associated with this image object
  * @property {Number} minPixelValue - the minimum stored pixel value in the image
  * @property {Number} maxPixelValue - the maximum stored pixel value in the image
@@ -151,7 +162,7 @@ var enabledElements = [];
  * @property {Object} lut - The Lookup Table
  * @property {Boolean} rgba - Is the color pixel data stored in RGBA?
  * @property {Number} columnPixelSpacing - horizontal distance between the middle of each pixel (or width of each pixel) in mm or undefined if not known
- * @property {Number} rowPixelSpacing - vertical distance between the middle of each pixel (or heigh of each pixel) in mm or undefined if not known
+ * @property {Number} rowPixelSpacing - vertical distance between the middle of each pixel (or height of each pixel) in mm or undefined if not known
  * @property {Boolean} invert - true if the the image should initially be displayed be inverted, false if not. This is here mainly to support DICOM images with a photometric interpretation of MONOCHROME1
  * @property {Number} sizeInBytes - the number of bytes used to store the pixels for this image.
  * @property {Boolean} [falseColor=false] - Whether or not the image has undergone false color mapping
@@ -166,10 +177,10 @@ var enabledElements = [];
  * A Viewport Settings Object Cornerstone
  *
  * @typedef {Object} Viewport
- *
+ * @memberof Objects
  * @property {Number} [scale=1.0] - The scale applied to the image. A scale of 1.0 will display no zoom (one image pixel takes up one screen pixel). A scale of 2.0 will be double zoom and a scale of .5 will be zoomed out by 2x
- * @param {vec2} [translation] - An object with properties x and y which describe the translation to apply in the pixel coordinate system. Note that the image is initially displayed centered in the enabled element with a x and y translation of 0 and 0 respectively.
- * @param {VOI} [voi] - an object with properties windowWidth and windowCenter.
+ * @property {vec2} [translation] - An object with properties x and y which describe the translation to apply in the pixel coordinate system. Note that the image is initially displayed centered in the enabled element with a x and y translation of 0 and 0 respectively.
+ * @property {VOI} [voi] - an object with properties windowWidth and windowCenter.
  * @property {boolean} [invert=false] - Whether or not the image is inverted.
  * @property {boolean} [pixelReplication=false] - true if the image smooth / interpolation should be used when zoomed in on the image or false if pixel replication should be used.
  * @property {boolean} [hflip=false] - true if the image is flipped horizontally. Default is false
@@ -185,7 +196,7 @@ var enabledElements = [];
  * An Enabled Element in Cornerstone
  *
  * @typedef {Object} EnabledElement
- *
+ * @memberof Objects
  * @property {HTMLElement} element - The DOM element which has been enabled for use by Cornerstone
  * @property {Image} [image] - The image currently displayed in the enabledElement
  * @property {Viewport} [viewport] - The current viewport settings of the enabledElement
@@ -202,7 +213,7 @@ var enabledElements = [];
  * An Enabled Element Layer in Cornerstone
  *
  * @typedef {Object} EnabledElementLayer
- *
+ * @memberof Objects
  * @property {HTMLElement} element - The DOM element which has been enabled for use by Cornerstone
  * @property {Image} [image] - The image currently displayed in the enabledElement
  * @property {Viewport} [viewport] - The current viewport settings of the enabledElement
@@ -213,11 +224,21 @@ var enabledElements = [];
  */
 
 /**
+ * An Image Load Object
+ *
+ * @typedef {Object} ImageLoadObject
+ * @memberof Objects
+ * @property {Promise} promise - The Promise tracking the loading of this image
+ * @property {Function|undefined} cancelFn - A function to cancel the image load request
+ */
+
+/**
  * Retrieves a Cornerstone Enabled Element object
  *
  * @param {HTMLElement} element An HTML Element enabled for Cornerstone
  *
  * @returns {EnabledElement} A Cornerstone Enabled Element
+ * @memberof EnabledElements
  */
 function getEnabledElement(element) {
   if (element === undefined) {
@@ -237,6 +258,7 @@ function getEnabledElement(element) {
  *
  * @param {EnabledElement} enabledElement A Cornerstone enabledElement Object
  * @returns {void}
+ * @memberof EnabledElements
  */
 function addEnabledElement(enabledElement) {
   if (enabledElement === undefined) {
@@ -251,6 +273,7 @@ function addEnabledElement(enabledElement) {
  *
  * @param {string} imageId A Cornerstone Image ID
  * @returns {EnabledElement[]} An Array of Cornerstone enabledElement Objects
+ * @memberof EnabledElements
  */
 function getEnabledElementsByImageId(imageId) {
   var ees = [];
@@ -268,6 +291,7 @@ function getEnabledElementsByImageId(imageId) {
  * Retrieve all of the currently enabled Cornerstone elements
  *
  * @return {EnabledElement[]} An Array of Cornerstone enabledElement Objects
+ * @memberof EnabledElements
  */
 function getEnabledElements() {
   return enabledElements;
@@ -303,16 +327,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = triggerEvent;
-
-var _externalModules = __webpack_require__(33);
-
 /**
  * Trigger a CustomEvent
  *
  * @param {EventTarget} el The element or EventTarget to trigger the event upon
  * @param {String} type The event type name
  * @param {Object|null} detail=null The event data to be sent
- * @returns {void}
+ * @returns {Boolean} The return value is false if at least one event listener called preventDefault(). Otherwise it returns true.
  */
 function triggerEvent(el, type) {
   var detail = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
@@ -321,15 +342,16 @@ function triggerEvent(el, type) {
 
   // This check is needed to polyfill CustomEvent on IE11-
   if (typeof window.CustomEvent === 'function') {
-    event = new CustomEvent(type.toLocaleLowerCase(), { detail: detail });
+    event = new CustomEvent(type, {
+      detail: detail,
+      cancelable: true
+    });
   } else {
     event = document.createEvent('CustomEvent');
-    event.initCustomEvent(type.toLocaleLowerCase(), true, true, detail);
+    event.initCustomEvent(type, true, true, detail);
   }
 
-  // TODO: remove jQuery event triggers
-  _externalModules.external.$(el).trigger(type, detail);
-  el.dispatchEvent(event);
+  return el.dispatchEvent(event);
 }
 
 /***/ }),
@@ -356,7 +378,7 @@ exports.default = function (enabledElement, context, scale) {
   context.setTransform(transform.m[0], transform.m[1], transform.m[2], transform.m[3], transform.m[4], transform.m[5]);
 };
 
-var _calculateTransform = __webpack_require__(22);
+var _calculateTransform = __webpack_require__(24);
 
 var _calculateTransform2 = _interopRequireDefault(_calculateTransform);
 
@@ -490,9 +512,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _colormap = __webpack_require__(27);
+var _colormap = __webpack_require__(28);
 
-var _lookupTable = __webpack_require__(28);
+var _lookupTable = __webpack_require__(29);
 
 var _lookupTable2 = _interopRequireDefault(_lookupTable);
 
@@ -521,11 +543,11 @@ var _now = __webpack_require__(1);
 
 var _now2 = _interopRequireDefault(_now);
 
-var _generateLut = __webpack_require__(9);
+var _generateColorLut = __webpack_require__(44);
 
-var _generateLut2 = _interopRequireDefault(_generateLut);
+var _generateColorLut2 = _interopRequireDefault(_generateColorLut);
 
-var _storedColorPixelDataToCanvasImageData = __webpack_require__(19);
+var _storedColorPixelDataToCanvasImageData = __webpack_require__(21);
 
 var _storedColorPixelDataToCanvasImageData2 = _interopRequireDefault(_storedColorPixelDataToCanvasImageData);
 
@@ -537,7 +559,7 @@ var _setToPixelCoordinateSystem = __webpack_require__(3);
 
 var _setToPixelCoordinateSystem2 = _interopRequireDefault(_setToPixelCoordinateSystem);
 
-var _index = __webpack_require__(14);
+var _index = __webpack_require__(15);
 
 var _index2 = _interopRequireDefault(_index);
 
@@ -562,16 +584,13 @@ function getLut(image, viewport) {
   }
 
   // Lut is invalid or not present, regenerate it and cache it
-  (0, _generateLut2.default)(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert);
+  (0, _generateColorLut2.default)(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert);
   image.cachedLut.windowWidth = viewport.voi.windowWidth;
   image.cachedLut.windowCenter = viewport.voi.windowCenter;
   image.cachedLut.invert = viewport.invert;
 
   return image.cachedLut.lutArray;
-} /**
-   * This module is responsible for drawing an image to an enabled elements canvas element
-   */
-
+}
 
 function getRenderCanvas(enabledElement, image, invalidated) {
   if (!enabledElement.renderingTools.renderCanvas) {
@@ -629,6 +648,7 @@ function getRenderCanvas(enabledElement, image, invalidated) {
  * @param {EnabledElement} enabledElement The Cornerstone Enabled Element to redraw
  * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
  * @returns {void}
+ * @memberof rendering
  */
 function renderColorImage(enabledElement, invalidated) {
   if (enabledElement === undefined) {
@@ -709,42 +729,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-exports.default = function (image, windowWidth, windowCenter, invert, modalityLUT, voiLUT) {
-  var maxPixelValue = image.maxPixelValue;
-  var minPixelValue = image.minPixelValue;
-  var offset = Math.min(minPixelValue, 0);
-
-  if (image.cachedLut === undefined) {
-    var length = maxPixelValue - offset + 1;
-
-    image.cachedLut = {};
-    image.cachedLut.lutArray = new Uint8ClampedArray(length);
-  }
-
-  var lut = image.cachedLut.lutArray;
-  var mlutfn = (0, _getModalityLUT2.default)(image.slope, image.intercept, modalityLUT);
-  var vlutfn = (0, _getVOILut2.default)(windowWidth, windowCenter, voiLUT);
-
-  if (invert === true) {
-    for (var storedValue = minPixelValue; storedValue <= maxPixelValue; storedValue++) {
-      lut[storedValue + -offset] = 255 - vlutfn(mlutfn(storedValue));
-    }
-  } else {
-    for (var _storedValue = minPixelValue; _storedValue <= maxPixelValue; _storedValue++) {
-      lut[_storedValue + -offset] = vlutfn(mlutfn(_storedValue));
-    }
-  }
-
-  return lut;
+exports.default = function (enabledElement) {
+  // For now we will calculate it every time it is requested.
+  // In the future, we may want to cache it in the enabled element to speed things up.
+  return (0, _calculateTransform2.default)(enabledElement);
 };
 
-var _getModalityLUT = __webpack_require__(26);
+var _calculateTransform = __webpack_require__(24);
 
-var _getModalityLUT2 = _interopRequireDefault(_getModalityLUT);
-
-var _getVOILut = __webpack_require__(42);
-
-var _getVOILut2 = _interopRequireDefault(_getVOILut);
+var _calculateTransform2 = _interopRequireDefault(_calculateTransform);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -758,18 +751,170 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.renderLabelMapImage = renderLabelMapImage;
+exports.addLabelMapLayer = addLabelMapLayer;
 
-exports.default = function (enabledElement) {
-  // For now we will calculate it every time it is requested.
-  // In the future, we may want to cache it in the enabled element to speed things up.
-  return (0, _calculateTransform2.default)(enabledElement);
-};
+var _setToPixelCoordinateSystem = __webpack_require__(3);
 
-var _calculateTransform = __webpack_require__(22);
+var _setToPixelCoordinateSystem2 = _interopRequireDefault(_setToPixelCoordinateSystem);
 
-var _calculateTransform2 = _interopRequireDefault(_calculateTransform);
+var _now = __webpack_require__(1);
+
+var _now2 = _interopRequireDefault(_now);
+
+var _initializeRenderCanvas = __webpack_require__(11);
+
+var _initializeRenderCanvas2 = _interopRequireDefault(_initializeRenderCanvas);
+
+var _saveLastRendered = __webpack_require__(12);
+
+var _saveLastRendered2 = _interopRequireDefault(_saveLastRendered);
+
+var _doesImageNeedToBeRendered = __webpack_require__(13);
+
+var _doesImageNeedToBeRendered2 = _interopRequireDefault(_doesImageNeedToBeRendered);
+
+var _storedPixelDataToCanvasImageDataColorLUT = __webpack_require__(22);
+
+var _storedPixelDataToCanvasImageDataColorLUT2 = _interopRequireDefault(_storedPixelDataToCanvasImageDataColorLUT);
+
+var _index = __webpack_require__(7);
+
+var _index2 = _interopRequireDefault(_index);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function getRenderCanvas(enabledElement, image, invalidated) {
+  if (!enabledElement.renderingTools.renderCanvas) {
+    enabledElement.renderingTools.renderCanvas = document.createElement('canvas');
+  }
+
+  var renderCanvas = enabledElement.renderingTools.renderCanvas;
+
+  // TODO: Deprecate enabledElement.options.colormap
+  var colormap = enabledElement.viewport.colormap || enabledElement.options.colormap;
+
+  if (colormap && typeof colormap === 'string') {
+    colormap = _index2.default.getColormap(colormap);
+  }
+
+  if (!colormap) {
+    throw new Error('renderLabelMapImage: colormap not found.');
+  }
+
+  var colormapId = colormap.getId();
+
+  if ((0, _doesImageNeedToBeRendered2.default)(enabledElement, image) === false && invalidated !== true && enabledElement.renderingTools.colormapId === colormapId) {
+    return renderCanvas;
+  }
+
+  // If our render canvas does not match the size of this image reset it
+  // NOTE: This might be inefficient if we are updating multiple images of different
+  // Sizes frequently.
+  if (renderCanvas.width !== image.width || renderCanvas.height !== image.height) {
+    (0, _initializeRenderCanvas2.default)(enabledElement, image);
+  }
+
+  // Get the lut to use
+  var start = (0, _now2.default)();
+
+  if (!enabledElement.renderingTools.colorLut || invalidated || enabledElement.renderingTools.colormapId !== colormapId) {
+    enabledElement.renderingTools.colorLut = colormap.createLookupTable();
+    enabledElement.renderingTools.colormapId = colormapId;
+  }
+
+  image.stats = image.stats || {};
+  image.stats.lastLutGenerateTime = (0, _now2.default)() - start;
+
+  var colorLut = enabledElement.renderingTools.colorLut;
+  var renderCanvasData = enabledElement.renderingTools.renderCanvasData;
+  var renderCanvasContext = enabledElement.renderingTools.renderCanvasContext;
+
+  (0, _storedPixelDataToCanvasImageDataColorLUT2.default)(image, colorLut, renderCanvasData.data);
+
+  start = (0, _now2.default)();
+  renderCanvasContext.putImageData(renderCanvasData, 0, 0);
+  image.stats.lastPutImageDataTime = (0, _now2.default)() - start;
+
+  return renderCanvas;
+}
+
+/**
+ * API function to draw a label map image to a given enabledElement
+ *
+ * @param {EnabledElement} enabledElement The Cornerstone Enabled Element to redraw
+ * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
+ * @returns {void}
+ * @memberof rendering
+ */
+function renderLabelMapImage(enabledElement, invalidated) {
+  if (enabledElement === undefined) {
+    throw new Error('renderLabelMapImage: enabledElement parameter must not be undefined');
+  }
+
+  var image = enabledElement.image;
+
+  if (image === undefined) {
+    throw new Error('renderLabelMapImage: image must be loaded before it can be drawn');
+  }
+
+  // Get the canvas context and reset the transform
+  var context = enabledElement.canvas.getContext('2d');
+
+  context.setTransform(1, 0, 0, 1, 0, 0);
+
+  // Clear the canvas
+  context.fillStyle = 'black';
+  context.fillRect(0, 0, enabledElement.canvas.width, enabledElement.canvas.height);
+
+  // Turn off image smooth/interpolation if pixelReplication is set in the viewport
+  context.imageSmoothingEnabled = !enabledElement.viewport.pixelReplication;
+  context.mozImageSmoothingEnabled = context.imageSmoothingEnabled;
+
+  // Save the canvas context state and apply the viewport properties
+  (0, _setToPixelCoordinateSystem2.default)(enabledElement, context);
+
+  // If no options are set we will retrieve the renderCanvas through the
+  // Normal Canvas rendering path
+  // TODO: Add WebGL support for label map pipeline
+  var renderCanvas = getRenderCanvas(enabledElement, image, invalidated);
+  var width = image.width,
+      height = image.height;
+
+
+  context.drawImage(renderCanvas, 0, 0, width, height, 0, 0, width, height);
+
+  enabledElement.renderingTools = (0, _saveLastRendered2.default)(enabledElement);
+}
+
+/**
+ * API function to draw a pseudo-color image to a given layer
+ *
+ * @param {EnabledElementLayer} layer The layer that the image will be added to
+ * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
+ * @returns {void}
+ */
+function addLabelMapLayer(layer, invalidated) {
+  if (layer === undefined) {
+    throw new Error('addLabelMapLayer: layer parameter must not be undefined');
+  }
+
+  var image = layer.image;
+
+  if (image === undefined) {
+    throw new Error('addLabelMapLayer: image must be loaded before it can be drawn');
+  }
+
+  layer.canvas = getRenderCanvas(layer, image, invalidated);
+
+  var context = layer.canvas.getContext('2d');
+
+  // Turn off image smooth/interpolation if pixelReplication is set in the viewport
+  context.imageSmoothingEnabled = !layer.viewport.pixelReplication;
+  context.mozImageSmoothingEnabled = context.imageSmoothingEnabled;
+
+  layer.renderingTools = (0, _saveLastRendered2.default)(layer);
+}
 
 /***/ }),
 /* 11 */
@@ -861,6 +1006,188 @@ exports.default = function (enabledElement, image) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.renderPseudoColorImage = renderPseudoColorImage;
+exports.addPseudoColorLayer = addPseudoColorLayer;
+
+var _setToPixelCoordinateSystem = __webpack_require__(3);
+
+var _setToPixelCoordinateSystem2 = _interopRequireDefault(_setToPixelCoordinateSystem);
+
+var _now = __webpack_require__(1);
+
+var _now2 = _interopRequireDefault(_now);
+
+var _initializeRenderCanvas = __webpack_require__(11);
+
+var _initializeRenderCanvas2 = _interopRequireDefault(_initializeRenderCanvas);
+
+var _getLut = __webpack_require__(32);
+
+var _getLut2 = _interopRequireDefault(_getLut);
+
+var _saveLastRendered = __webpack_require__(12);
+
+var _saveLastRendered2 = _interopRequireDefault(_saveLastRendered);
+
+var _doesImageNeedToBeRendered = __webpack_require__(13);
+
+var _doesImageNeedToBeRendered2 = _interopRequireDefault(_doesImageNeedToBeRendered);
+
+var _storedPixelDataToCanvasImageDataPseudocolorLUT = __webpack_require__(23);
+
+var _storedPixelDataToCanvasImageDataPseudocolorLUT2 = _interopRequireDefault(_storedPixelDataToCanvasImageDataPseudocolorLUT);
+
+var _index = __webpack_require__(7);
+
+var _index2 = _interopRequireDefault(_index);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function getRenderCanvas(enabledElement, image, invalidated) {
+  if (!enabledElement.renderingTools.renderCanvas) {
+    enabledElement.renderingTools.renderCanvas = document.createElement('canvas');
+  }
+
+  var renderCanvas = enabledElement.renderingTools.renderCanvas;
+
+  // TODO: Deprecate enabledElement.options.colormap
+  var colormap = enabledElement.viewport.colormap || enabledElement.options.colormap;
+
+  if (colormap && typeof colormap === 'string') {
+    colormap = _index2.default.getColormap(colormap);
+  }
+
+  if (!colormap) {
+    throw new Error('renderPseudoColorImage: colormap not found.');
+  }
+
+  var colormapId = colormap.getId();
+
+  if ((0, _doesImageNeedToBeRendered2.default)(enabledElement, image) === false && invalidated !== true && enabledElement.renderingTools.colormapId === colormapId) {
+    return renderCanvas;
+  }
+
+  // If our render canvas does not match the size of this image reset it
+  // NOTE: This might be inefficient if we are updating multiple images of different
+  // Sizes frequently.
+  if (renderCanvas.width !== image.width || renderCanvas.height !== image.height) {
+    (0, _initializeRenderCanvas2.default)(enabledElement, image);
+  }
+
+  // Get the lut to use
+  var start = (0, _now2.default)();
+
+  if (!enabledElement.renderingTools.colorLut || invalidated || enabledElement.renderingTools.colormapId !== colormapId) {
+    colormap.setNumberOfColors(256);
+    enabledElement.renderingTools.colorLut = colormap.createLookupTable();
+    enabledElement.renderingTools.colormapId = colormapId;
+  }
+
+  var lut = (0, _getLut2.default)(image, enabledElement.viewport, invalidated);
+
+  image.stats = image.stats || {};
+  image.stats.lastLutGenerateTime = (0, _now2.default)() - start;
+
+  var colorLut = enabledElement.renderingTools.colorLut;
+  var renderCanvasData = enabledElement.renderingTools.renderCanvasData;
+  var renderCanvasContext = enabledElement.renderingTools.renderCanvasContext;
+
+  (0, _storedPixelDataToCanvasImageDataPseudocolorLUT2.default)(image, lut, colorLut, renderCanvasData.data);
+
+  start = (0, _now2.default)();
+  renderCanvasContext.putImageData(renderCanvasData, 0, 0);
+  image.stats.lastPutImageDataTime = (0, _now2.default)() - start;
+
+  return renderCanvas;
+}
+
+/**
+ * API function to draw a pseudo-color image to a given enabledElement
+ *
+ * @param {EnabledElement} enabledElement The Cornerstone Enabled Element to redraw
+ * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
+ * @returns {void}
+ * @memberof rendering
+ */
+function renderPseudoColorImage(enabledElement, invalidated) {
+  if (enabledElement === undefined) {
+    throw new Error('drawImage: enabledElement parameter must not be undefined');
+  }
+
+  var image = enabledElement.image;
+
+  if (image === undefined) {
+    throw new Error('drawImage: image must be loaded before it can be drawn');
+  }
+
+  // Get the canvas context and reset the transform
+  var context = enabledElement.canvas.getContext('2d');
+
+  context.setTransform(1, 0, 0, 1, 0, 0);
+
+  // Clear the canvas
+  context.fillStyle = 'black';
+  context.fillRect(0, 0, enabledElement.canvas.width, enabledElement.canvas.height);
+
+  // Turn off image smooth/interpolation if pixelReplication is set in the viewport
+  context.imageSmoothingEnabled = !enabledElement.viewport.pixelReplication;
+  context.mozImageSmoothingEnabled = context.imageSmoothingEnabled;
+
+  // Save the canvas context state and apply the viewport properties
+  (0, _setToPixelCoordinateSystem2.default)(enabledElement, context);
+
+  // If no options are set we will retrieve the renderCanvas through the
+  // Normal Canvas rendering path
+  // TODO: Add WebGL support for pseudocolor pipeline
+  var renderCanvas = getRenderCanvas(enabledElement, image, invalidated);
+  var width = image.width,
+      height = image.height;
+
+
+  context.drawImage(renderCanvas, 0, 0, width, height, 0, 0, width, height);
+
+  enabledElement.renderingTools = (0, _saveLastRendered2.default)(enabledElement);
+}
+
+/**
+ * API function to draw a pseudo-color image to a given layer
+ *
+ * @param {EnabledElementLayer} layer The layer that the image will be added to
+ * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
+ * @returns {void}
+ */
+function addPseudoColorLayer(layer, invalidated) {
+  if (layer === undefined) {
+    throw new Error('addPseudoColorLayer: layer parameter must not be undefined');
+  }
+
+  var image = layer.image;
+
+  if (image === undefined) {
+    throw new Error('addPseudoColorLayer: image must be loaded before it can be drawn');
+  }
+
+  layer.canvas = getRenderCanvas(layer, image, invalidated);
+
+  var context = layer.canvas.getContext('2d');
+
+  // Turn off image smooth/interpolation if pixelReplication is set in the viewport
+  context.imageSmoothingEnabled = !layer.viewport.pixelReplication;
+  context.mozImageSmoothingEnabled = context.imageSmoothingEnabled;
+
+  layer.renderingTools = (0, _saveLastRendered2.default)(layer);
+}
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _renderer = __webpack_require__(46);
 
@@ -868,11 +1195,15 @@ var _createProgramFromString = __webpack_require__(34);
 
 var _createProgramFromString2 = _interopRequireDefault(_createProgramFromString);
 
-var _textureCache = __webpack_require__(32);
+var _textureCache = __webpack_require__(33);
 
 var _textureCache2 = _interopRequireDefault(_textureCache);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @module WebGLRendering
+ */
 
 var mod = {
   createProgramFromString: _createProgramFromString2.default,
@@ -896,7 +1227,7 @@ Object.defineProperty(mod, 'isWebGLInitialized', {
 exports.default = mod;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -968,7 +1299,7 @@ var events = new EventTarget();
 exports.default = events;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -980,11 +1311,11 @@ Object.defineProperty(exports, "__esModule", {
 exports.renderGrayscaleImage = renderGrayscaleImage;
 exports.addGrayscaleLayer = addGrayscaleLayer;
 
-var _storedPixelDataToCanvasImageData = __webpack_require__(18);
+var _storedPixelDataToCanvasImageData = __webpack_require__(20);
 
 var _storedPixelDataToCanvasImageData2 = _interopRequireDefault(_storedPixelDataToCanvasImageData);
 
-var _storedPixelDataToCanvasImageDataRGBA = __webpack_require__(29);
+var _storedPixelDataToCanvasImageDataRGBA = __webpack_require__(30);
 
 var _storedPixelDataToCanvasImageDataRGBA2 = _interopRequireDefault(_storedPixelDataToCanvasImageDataRGBA);
 
@@ -996,11 +1327,11 @@ var _now = __webpack_require__(1);
 
 var _now2 = _interopRequireDefault(_now);
 
-var _index = __webpack_require__(14);
+var _index = __webpack_require__(15);
 
 var _index2 = _interopRequireDefault(_index);
 
-var _getLut = __webpack_require__(31);
+var _getLut = __webpack_require__(32);
 
 var _getLut2 = _interopRequireDefault(_getLut);
 
@@ -1068,6 +1399,7 @@ function getRenderCanvas(enabledElement, image, invalidated) {
  * @param {EnabledElement} enabledElement The Cornerstone Enabled Element to redraw
  * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
  * @returns {void}
+ * @memberof rendering
  */
 function renderGrayscaleImage(enabledElement, invalidated) {
   if (enabledElement === undefined) {
@@ -1147,7 +1479,57 @@ function addGrayscaleLayer(layer, invalidated) {
 }
 
 /***/ }),
-/* 17 */
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.default = function (image, windowWidth, windowCenter, invert, modalityLUT, voiLUT) {
+  var maxPixelValue = image.maxPixelValue;
+  var minPixelValue = image.minPixelValue;
+  var offset = Math.min(minPixelValue, 0);
+
+  if (image.cachedLut === undefined) {
+    var length = maxPixelValue - offset + 1;
+
+    image.cachedLut = {};
+    image.cachedLut.lutArray = new Uint8ClampedArray(length);
+  }
+
+  var lut = image.cachedLut.lutArray;
+  var mlutfn = (0, _getModalityLUT2.default)(image.slope, image.intercept, modalityLUT);
+  var vlutfn = (0, _getVOILut2.default)(windowWidth, windowCenter, voiLUT);
+
+  if (invert === true) {
+    for (var storedValue = minPixelValue; storedValue <= maxPixelValue; storedValue++) {
+      lut[storedValue + -offset] = 255 - vlutfn(mlutfn(storedValue));
+    }
+  } else {
+    for (var _storedValue = minPixelValue; _storedValue <= maxPixelValue; _storedValue++) {
+      lut[_storedValue + -offset] = vlutfn(mlutfn(_storedValue));
+    }
+  }
+
+  return lut;
+};
+
+var _getModalityLUT = __webpack_require__(26);
+
+var _getModalityLUT2 = _interopRequireDefault(_getModalityLUT);
+
+var _getVOILut = __webpack_require__(27);
+
+var _getVOILut2 = _interopRequireDefault(_getVOILut);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ }),
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1171,10 +1553,11 @@ function requestFrame(callback) {
  * @param {Function} callback A parameter specifying a function to call when it's time to update your animation for the next repaint. The callback has one single argument, a DOMHighResTimeStamp, which indicates the current time (the time returned from performance.now() ) for when requestAnimationFrame starts to fire callbacks.
  *
  * @return {Number} A long integer value, the request id, that uniquely identifies the entry in the callback list. This is a non-zero value, but you may not make any other assumptions about its value. You can pass this value to window.cancelAnimationFrame() to cancel the refresh callback request.
+ * @memberof Polyfills
  */
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1239,7 +1622,7 @@ var _now2 = _interopRequireDefault(_now);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1291,7 +1674,7 @@ var _now2 = _interopRequireDefault(_now);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1318,6 +1701,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @param {Uint8ClampedArray} canvasImageDataData canvasImageData.data buffer filled with white pixels
  *
  * @returns {void}
+ * @memberof Internal
  */
 function storedPixelDataToCanvasImageDataColorLUT(image, colorLut, canvasImageDataData) {
   var start = (0, _now2.default)();
@@ -1364,7 +1748,7 @@ function storedPixelDataToCanvasImageDataColorLUT(image, colorLut, canvasImageDa
 exports.default = storedPixelDataToCanvasImageDataColorLUT;
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1392,6 +1776,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @param {Uint8ClampedArray} canvasImageDataData canvasImageData.data buffer filled with white pixels
  *
  * @returns {void}
+ * @memberof Internal
  */
 function storedPixelDataToCanvasImageDataPseudocolorLUT(image, grayscaleLut, colorLut, canvasImageDataData) {
   var start = (0, _now2.default)();
@@ -1441,7 +1826,7 @@ function storedPixelDataToCanvasImageDataPseudocolorLUT(image, grayscaleLut, col
 exports.default = storedPixelDataToCanvasImageDataPseudocolorLUT;
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1508,362 +1893,7 @@ exports.default = function (enabledElement, scale) {
   return transform;
 };
 
-var _transform = __webpack_require__(30);
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.renderLabelMapImage = renderLabelMapImage;
-exports.addLabelMapLayer = addLabelMapLayer;
-
-var _setToPixelCoordinateSystem = __webpack_require__(3);
-
-var _setToPixelCoordinateSystem2 = _interopRequireDefault(_setToPixelCoordinateSystem);
-
-var _now = __webpack_require__(1);
-
-var _now2 = _interopRequireDefault(_now);
-
-var _initializeRenderCanvas = __webpack_require__(11);
-
-var _initializeRenderCanvas2 = _interopRequireDefault(_initializeRenderCanvas);
-
-var _saveLastRendered = __webpack_require__(12);
-
-var _saveLastRendered2 = _interopRequireDefault(_saveLastRendered);
-
-var _doesImageNeedToBeRendered = __webpack_require__(13);
-
-var _doesImageNeedToBeRendered2 = _interopRequireDefault(_doesImageNeedToBeRendered);
-
-var _storedPixelDataToCanvasImageDataColorLUT = __webpack_require__(20);
-
-var _storedPixelDataToCanvasImageDataColorLUT2 = _interopRequireDefault(_storedPixelDataToCanvasImageDataColorLUT);
-
-var _index = __webpack_require__(7);
-
-var _index2 = _interopRequireDefault(_index);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function getRenderCanvas(enabledElement, image, invalidated) {
-  if (!enabledElement.renderingTools.renderCanvas) {
-    enabledElement.renderingTools.renderCanvas = document.createElement('canvas');
-  }
-
-  var renderCanvas = enabledElement.renderingTools.renderCanvas;
-
-  // TODO: Deprecate enabledElement.options.colormap
-  var colormap = enabledElement.viewport.colormap || enabledElement.options.colormap;
-
-  if (colormap && typeof colormap === 'string') {
-    colormap = _index2.default.getColormap(colormap);
-  }
-
-  if (!colormap) {
-    throw new Error('renderLabelMapImage: colormap not found.');
-  }
-
-  var colormapId = colormap.getId();
-
-  if ((0, _doesImageNeedToBeRendered2.default)(enabledElement, image) === false && invalidated !== true && enabledElement.renderingTools.colormapId === colormapId) {
-    return renderCanvas;
-  }
-
-  // If our render canvas does not match the size of this image reset it
-  // NOTE: This might be inefficient if we are updating multiple images of different
-  // Sizes frequently.
-  if (renderCanvas.width !== image.width || renderCanvas.height !== image.height) {
-    (0, _initializeRenderCanvas2.default)(enabledElement, image);
-  }
-
-  // Get the lut to use
-  var start = (0, _now2.default)();
-
-  if (!enabledElement.renderingTools.colorLut || invalidated || enabledElement.renderingTools.colormapId !== colormapId) {
-    enabledElement.renderingTools.colorLut = colormap.createLookupTable();
-    enabledElement.renderingTools.colormapId = colormapId;
-  }
-
-  image.stats = image.stats || {};
-  image.stats.lastLutGenerateTime = (0, _now2.default)() - start;
-
-  var colorLut = enabledElement.renderingTools.colorLut;
-  var renderCanvasData = enabledElement.renderingTools.renderCanvasData;
-  var renderCanvasContext = enabledElement.renderingTools.renderCanvasContext;
-
-  (0, _storedPixelDataToCanvasImageDataColorLUT2.default)(image, colorLut, renderCanvasData.data);
-
-  start = (0, _now2.default)();
-  renderCanvasContext.putImageData(renderCanvasData, 0, 0);
-  image.stats.lastPutImageDataTime = (0, _now2.default)() - start;
-
-  return renderCanvas;
-}
-
-/**
- * API function to draw a label map image to a given enabledElement
- *
- * @param {EnabledElement} enabledElement The Cornerstone Enabled Element to redraw
- * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
- * @returns {void}
- */
-function renderLabelMapImage(enabledElement, invalidated) {
-  if (enabledElement === undefined) {
-    throw new Error('renderLabelMapImage: enabledElement parameter must not be undefined');
-  }
-
-  var image = enabledElement.image;
-
-  if (image === undefined) {
-    throw new Error('renderLabelMapImage: image must be loaded before it can be drawn');
-  }
-
-  // Get the canvas context and reset the transform
-  var context = enabledElement.canvas.getContext('2d');
-
-  context.setTransform(1, 0, 0, 1, 0, 0);
-
-  // Clear the canvas
-  context.fillStyle = 'black';
-  context.fillRect(0, 0, enabledElement.canvas.width, enabledElement.canvas.height);
-
-  // Turn off image smooth/interpolation if pixelReplication is set in the viewport
-  context.imageSmoothingEnabled = !enabledElement.viewport.pixelReplication;
-  context.mozImageSmoothingEnabled = context.imageSmoothingEnabled;
-
-  // Save the canvas context state and apply the viewport properties
-  (0, _setToPixelCoordinateSystem2.default)(enabledElement, context);
-
-  // If no options are set we will retrieve the renderCanvas through the
-  // Normal Canvas rendering path
-  // TODO: Add WebGL support for label map pipeline
-  var renderCanvas = getRenderCanvas(enabledElement, image, invalidated);
-  var width = image.width,
-      height = image.height;
-
-
-  context.drawImage(renderCanvas, 0, 0, width, height, 0, 0, width, height);
-
-  enabledElement.renderingTools = (0, _saveLastRendered2.default)(enabledElement);
-}
-
-/**
- * API function to draw a pseudo-color image to a given layer
- *
- * @param {EnabledElementLayer} layer The layer that the image will be added to
- * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
- * @returns {void}
- */
-function addLabelMapLayer(layer, invalidated) {
-  if (layer === undefined) {
-    throw new Error('addLabelMapLayer: layer parameter must not be undefined');
-  }
-
-  var image = layer.image;
-
-  if (image === undefined) {
-    throw new Error('addLabelMapLayer: image must be loaded before it can be drawn');
-  }
-
-  layer.canvas = getRenderCanvas(layer, image, invalidated);
-
-  var context = layer.canvas.getContext('2d');
-
-  // Turn off image smooth/interpolation if pixelReplication is set in the viewport
-  context.imageSmoothingEnabled = !layer.viewport.pixelReplication;
-  context.mozImageSmoothingEnabled = context.imageSmoothingEnabled;
-
-  layer.renderingTools = (0, _saveLastRendered2.default)(layer);
-}
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.renderPseudoColorImage = renderPseudoColorImage;
-exports.addPseudoColorLayer = addPseudoColorLayer;
-
-var _setToPixelCoordinateSystem = __webpack_require__(3);
-
-var _setToPixelCoordinateSystem2 = _interopRequireDefault(_setToPixelCoordinateSystem);
-
-var _now = __webpack_require__(1);
-
-var _now2 = _interopRequireDefault(_now);
-
-var _initializeRenderCanvas = __webpack_require__(11);
-
-var _initializeRenderCanvas2 = _interopRequireDefault(_initializeRenderCanvas);
-
-var _getLut = __webpack_require__(31);
-
-var _getLut2 = _interopRequireDefault(_getLut);
-
-var _saveLastRendered = __webpack_require__(12);
-
-var _saveLastRendered2 = _interopRequireDefault(_saveLastRendered);
-
-var _doesImageNeedToBeRendered = __webpack_require__(13);
-
-var _doesImageNeedToBeRendered2 = _interopRequireDefault(_doesImageNeedToBeRendered);
-
-var _storedPixelDataToCanvasImageDataPseudocolorLUT = __webpack_require__(21);
-
-var _storedPixelDataToCanvasImageDataPseudocolorLUT2 = _interopRequireDefault(_storedPixelDataToCanvasImageDataPseudocolorLUT);
-
-var _index = __webpack_require__(7);
-
-var _index2 = _interopRequireDefault(_index);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function getRenderCanvas(enabledElement, image, invalidated) {
-  if (!enabledElement.renderingTools.renderCanvas) {
-    enabledElement.renderingTools.renderCanvas = document.createElement('canvas');
-  }
-
-  var renderCanvas = enabledElement.renderingTools.renderCanvas;
-
-  // TODO: Deprecate enabledElement.options.colormap
-  var colormap = enabledElement.viewport.colormap || enabledElement.options.colormap;
-
-  if (colormap && typeof colormap === 'string') {
-    colormap = _index2.default.getColormap(colormap);
-  }
-
-  if (!colormap) {
-    throw new Error('renderPseudoColorImage: colormap not found.');
-  }
-
-  var colormapId = colormap.getId();
-
-  if ((0, _doesImageNeedToBeRendered2.default)(enabledElement, image) === false && invalidated !== true && enabledElement.renderingTools.colormapId === colormapId) {
-    return renderCanvas;
-  }
-
-  // If our render canvas does not match the size of this image reset it
-  // NOTE: This might be inefficient if we are updating multiple images of different
-  // Sizes frequently.
-  if (renderCanvas.width !== image.width || renderCanvas.height !== image.height) {
-    (0, _initializeRenderCanvas2.default)(enabledElement, image);
-  }
-
-  // Get the lut to use
-  var start = (0, _now2.default)();
-
-  if (!enabledElement.renderingTools.colorLut || invalidated || enabledElement.renderingTools.colormapId !== colormapId) {
-    colormap.setNumberOfColors(256);
-    enabledElement.renderingTools.colorLut = colormap.createLookupTable();
-    enabledElement.renderingTools.colormapId = colormapId;
-  }
-
-  var lut = (0, _getLut2.default)(image, enabledElement.viewport, invalidated);
-
-  image.stats = image.stats || {};
-  image.stats.lastLutGenerateTime = (0, _now2.default)() - start;
-
-  var colorLut = enabledElement.renderingTools.colorLut;
-  var renderCanvasData = enabledElement.renderingTools.renderCanvasData;
-  var renderCanvasContext = enabledElement.renderingTools.renderCanvasContext;
-
-  (0, _storedPixelDataToCanvasImageDataPseudocolorLUT2.default)(image, lut, colorLut, renderCanvasData.data);
-
-  start = (0, _now2.default)();
-  renderCanvasContext.putImageData(renderCanvasData, 0, 0);
-  image.stats.lastPutImageDataTime = (0, _now2.default)() - start;
-
-  return renderCanvas;
-}
-
-/**
- * API function to draw a pseudo-color image to a given enabledElement
- *
- * @param {EnabledElement} enabledElement The Cornerstone Enabled Element to redraw
- * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
- * @returns {void}
- */
-function renderPseudoColorImage(enabledElement, invalidated) {
-  if (enabledElement === undefined) {
-    throw new Error('drawImage: enabledElement parameter must not be undefined');
-  }
-
-  var image = enabledElement.image;
-
-  if (image === undefined) {
-    throw new Error('drawImage: image must be loaded before it can be drawn');
-  }
-
-  // Get the canvas context and reset the transform
-  var context = enabledElement.canvas.getContext('2d');
-
-  context.setTransform(1, 0, 0, 1, 0, 0);
-
-  // Clear the canvas
-  context.fillStyle = 'black';
-  context.fillRect(0, 0, enabledElement.canvas.width, enabledElement.canvas.height);
-
-  // Turn off image smooth/interpolation if pixelReplication is set in the viewport
-  context.imageSmoothingEnabled = !enabledElement.viewport.pixelReplication;
-  context.mozImageSmoothingEnabled = context.imageSmoothingEnabled;
-
-  // Save the canvas context state and apply the viewport properties
-  (0, _setToPixelCoordinateSystem2.default)(enabledElement, context);
-
-  // If no options are set we will retrieve the renderCanvas through the
-  // Normal Canvas rendering path
-  // TODO: Add WebGL support for pseudocolor pipeline
-  var renderCanvas = getRenderCanvas(enabledElement, image, invalidated);
-  var width = image.width,
-      height = image.height;
-
-
-  context.drawImage(renderCanvas, 0, 0, width, height, 0, 0, width, height);
-
-  enabledElement.renderingTools = (0, _saveLastRendered2.default)(enabledElement);
-}
-
-/**
- * API function to draw a pseudo-color image to a given layer
- *
- * @param {EnabledElementLayer} layer The layer that the image will be added to
- * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
- * @returns {void}
- */
-function addPseudoColorLayer(layer, invalidated) {
-  if (layer === undefined) {
-    throw new Error('addPseudoColorLayer: layer parameter must not be undefined');
-  }
-
-  var image = layer.image;
-
-  if (image === undefined) {
-    throw new Error('addPseudoColorLayer: image must be loaded before it can be drawn');
-  }
-
-  layer.canvas = getRenderCanvas(layer, image, invalidated);
-
-  var context = layer.canvas.getContext('2d');
-
-  // Turn off image smooth/interpolation if pixelReplication is set in the viewport
-  context.imageSmoothingEnabled = !layer.viewport.pixelReplication;
-  context.mozImageSmoothingEnabled = context.imageSmoothingEnabled;
-
-  layer.renderingTools = (0, _saveLastRendered2.default)(layer);
-}
+var _transform = __webpack_require__(31);
 
 /***/ }),
 /* 25 */
@@ -1906,6 +1936,10 @@ var _triggerEvent2 = _interopRequireDefault(_triggerEvent);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
+ * @module EnabledElementLayers
+ */
+
+/**
  * Helper function to trigger an event on a Cornerstone element with
  * a specific layerId
  *
@@ -1913,8 +1947,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @param {EnabledElement} enabledElement The Cornerstone enabled element
  * @param {String} layerId The layer's unique identifier
  * @returns {void}
+ * @memberof EnabledElementLayers
  */
-function triggerEvent(eventName, enabledElement, layerId) {
+function triggerEventForLayer(eventName, enabledElement, layerId) {
   var element = enabledElement.element;
   var eventData = {
     viewport: enabledElement.viewport,
@@ -1937,6 +1972,7 @@ function triggerEvent(eventName, enabledElement, layerId) {
  * @param {EnabledElementLayer} baseLayer The base layer
  * @param {EnabledElementLayer} targetLayer The target layer to rescale
  * @returns {void}
+ * @memberof EnabledElementLayers
  */
 function rescaleImage(baseLayer, targetLayer) {
   if (baseLayer.layerId === targetLayer.layerId) {
@@ -1967,6 +2003,7 @@ function rescaleImage(baseLayer, targetLayer) {
  * @param {Object} options Options for the layer
  *
  * @returns {String} layerId The new layer's unique identifier
+ * @memberof EnabledElementLayers
  */
 function addLayer(element, image, options) {
   var layerId = (0, _guid2.default)();
@@ -2005,7 +2042,7 @@ function addLayer(element, image, options) {
 
   layers.push(newLayer);
 
-  triggerEvent('CornerstoneLayerAdded', enabledElement, layerId);
+  triggerEventForLayer('cornerstonelayeradded', enabledElement, layerId);
 
   // Set the layer as active if it's the first layer added
   if (layers.length === 1 && image) {
@@ -2021,6 +2058,7 @@ function addLayer(element, image, options) {
  * @param {HTMLElement} element The DOM element enabled for Cornerstone
  * @param {String} layerId The unique identifier for the layer
  * @returns {void}
+ * @memberof EnabledElementLayers
  */
 function removeLayer(element, layerId) {
   var enabledElement = (0, _enabledElements.getEnabledElement)(element);
@@ -2038,7 +2076,7 @@ function removeLayer(element, layerId) {
       setActiveLayer(element, layers[0].layerId);
     }
 
-    triggerEvent('CornerstoneLayerRemoved', enabledElement, layerId);
+    triggerEventForLayer('cornerstonelayerremoved', enabledElement, layerId);
   }
 }
 
@@ -2048,6 +2086,7 @@ function removeLayer(element, layerId) {
  * @param {HTMLElement} element The DOM element enabled for Cornerstone
  * @param {String} layerId The unique identifier for the layer
  * @return {EnabledElementLayer} The layer
+ * @memberof EnabledElementLayers
  */
 function getLayer(element, layerId) {
   var enabledElement = (0, _enabledElements.getEnabledElement)(element);
@@ -2063,6 +2102,7 @@ function getLayer(element, layerId) {
  * @param {HTMLElement} element The DOM element enabled for Cornerstone
  *
  * @return {EnabledElementLayer[]} An array of layers
+ * @memberof EnabledElementLayers
  */
 function getLayers(element) {
   var enabledElement = (0, _enabledElements.getEnabledElement)(element);
@@ -2076,6 +2116,7 @@ function getLayers(element) {
  * @param {HTMLElement} element The DOM element enabled for Cornerstone
  *
  * @return {EnabledElementLayer[]} An array of layers
+ * @memberof EnabledElementLayers
  */
 function getVisibleLayers(element) {
   var enabledElement = (0, _enabledElements.getEnabledElement)(element);
@@ -2091,6 +2132,7 @@ function getVisibleLayers(element) {
  * @param {HTMLElement} element The DOM element enabled for Cornerstone
  * @param {String} layerId The unique identifier for the layer
  * @returns {void}
+ * @memberof EnabledElementLayers
  */
 function setActiveLayer(element, layerId) {
   var enabledElement = (0, _enabledElements.getEnabledElement)(element);
@@ -2119,7 +2161,7 @@ function setActiveLayer(element, layerId) {
   enabledElement.viewport = layer.viewport;
 
   (0, _updateImage2.default)(element);
-  triggerEvent('CornerstoneActiveLayerChanged', enabledElement, layerId);
+  triggerEventForLayer('cornerstoneactivelayerchanged', enabledElement, layerId);
 }
 
 /**
@@ -2129,6 +2171,7 @@ function setActiveLayer(element, layerId) {
  * @param {Image} image The image to be displayed in this layer
  * @param {String} [layerId] The unique identifier for the layer
  * @returns {void}
+ * @memberof EnabledElementLayers
  */
 function setLayerImage(element, image, layerId) {
   var enabledElement = (0, _enabledElements.getEnabledElement)(element);
@@ -2174,6 +2217,7 @@ function setLayerImage(element, image, layerId) {
  *
  * @param {HTMLElement} element The DOM element enabled for Cornerstone
  * @return {EnabledElementLayer} The currently active layer
+ * @memberof EnabledElementLayers
  */
 function getActiveLayer(element) {
   var enabledElement = (0, _enabledElements.getEnabledElement)(element);
@@ -2214,6 +2258,7 @@ exports.default = function (slope, intercept, modalityLUT) {
 
  Output units = m*SV + b.
  * @return {function(*): *} A linear modality LUT function. Given a stored pixel it returns the modality pixel value
+ * @memberof Internal
  */
 function generateLinearModalityLUT(slope, intercept) {
   return function (storedPixelValue) {
@@ -2257,10 +2302,99 @@ function generateNonLinearModalityLUT(modalityLUT) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+exports.default = function (windowWidth, windowCenter, voiLUT) {
+  if (voiLUT) {
+    return generateNonLinearVOILUT(voiLUT);
+  }
+
+  return generateLinearVOILUT(windowWidth, windowCenter);
+};
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+/* eslint no-bitwise: 0 */
+
+/**
+ * Volume of Interest Lookup Table Function
+ *
+ * @typedef {Function} VOILUTFunction
+ *
+ * @param {Number} modalityLutValue
+ * @returns {Number} transformed value
+ * @memberof Objects
+ */
+
+/**
+ * @module: VOILUT
+ */
+
+/**
+ *
+ * @param {Number} windowWidth Window Width
+ * @param {Number} windowCenter Window Center
+ * @returns {VOILUTFunction} VOI LUT mapping function
+ * @memberof VOILUT
+ */
+function generateLinearVOILUT(windowWidth, windowCenter) {
+  return function (modalityLutValue) {
+    return ((modalityLutValue - windowCenter) / windowWidth + 0.5) * 255.0;
+  };
+}
+
+/**
+ * Generate a non-linear volume of interest lookup table
+ *
+ * @param {LUT} voiLUT Volume of Interest Lookup Table Object
+ *
+ * @returns {VOILUTFunction} VOI LUT mapping function
+ * @memberof VOILUT
+ */
+function generateNonLinearVOILUT(voiLUT) {
+  // We don't trust the voiLUT.numBitsPerEntry, mainly thanks to Agfa!
+  var bitsPerEntry = Math.max.apply(Math, _toConsumableArray(voiLUT.lut)).toString(2).length;
+  var shift = bitsPerEntry - 8;
+  var minValue = voiLUT.lut[0] >> shift;
+  var maxValue = voiLUT.lut[voiLUT.lut.length - 1] >> shift;
+  var maxValueMapped = voiLUT.firstValueMapped + voiLUT.lut.length - 1;
+
+  return function (modalityLutValue) {
+    if (modalityLutValue < voiLUT.firstValueMapped) {
+      return minValue;
+    } else if (modalityLutValue >= maxValueMapped) {
+      return maxValue;
+    }
+
+    return voiLUT.lut[modalityLutValue - voiLUT.firstValueMapped] >> shift;
+  };
+}
+
+/**
+ * Retrieve a VOI LUT mapping function given the current windowing settings
+ * and the VOI LUT for the image
+ *
+ * @param {Number} windowWidth Window Width
+ * @param {Number} windowCenter Window Center
+ * @param {LUT} [voiLUT] Volume of Interest Lookup Table Object
+ *
+ * @return {VOILUTFunction} VOI LUT mapping function
+ * @memberof VOILUT
+ */
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.getColormapsList = getColormapsList;
 exports.getColormap = getColormap;
 
-var _lookupTable = __webpack_require__(28);
+var _lookupTable = __webpack_require__(29);
 
 var _lookupTable2 = _interopRequireDefault(_lookupTable);
 
@@ -2718,7 +2852,7 @@ function getColormap(id, colormapData) {
 }
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3091,7 +3225,7 @@ var LookupTable = function () {
 exports.default = LookupTable;
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3172,7 +3306,7 @@ var _now2 = _interopRequireDefault(_now);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3320,7 +3454,7 @@ var Transform = exports.Transform = function () {
 }();
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3348,18 +3482,18 @@ exports.default = function (image, viewport, invalidated) {
   return image.cachedLut.lutArray;
 };
 
-var _lutMatches = __webpack_require__(44);
+var _lutMatches = __webpack_require__(43);
 
 var _lutMatches2 = _interopRequireDefault(_lutMatches);
 
-var _generateLut = __webpack_require__(9);
+var _generateLut = __webpack_require__(18);
 
 var _generateLut2 = _interopRequireDefault(_generateLut);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3369,7 +3503,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _events = __webpack_require__(15);
+var _events = __webpack_require__(16);
 
 var _events2 = _interopRequireDefault(_events);
 
@@ -3381,6 +3515,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /**
  * This module deals with caching image textures in VRAM for WebGL
+ * @module WebGLTextureCache
  */
 
 var imageCache = {};
@@ -3426,12 +3561,12 @@ function purgeCacheIfNecessary() {
     delete imageCache[lastCachedImage.imageId];
     cachedImages.pop();
 
-    (0, _triggerEvent2.default)(_events2.default, 'CornerstoneWebGLTextureRemoved', { imageId: lastCachedImage.imageId });
+    (0, _triggerEvent2.default)(_events2.default, 'cornerstonewebgltextureremoved', { imageId: lastCachedImage.imageId });
   }
 
   var cacheInfo = getCacheInfo();
 
-  (0, _triggerEvent2.default)(_events2.default, 'CornerstoneWebGLTextureCacheFull', cacheInfo);
+  (0, _triggerEvent2.default)(_events2.default, 'cornerstonewebgltexturecachefull', cacheInfo);
 }
 
 function setMaximumSizeBytes(numBytes) {
@@ -3535,29 +3670,6 @@ exports.default = {
 };
 
 /***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var $ = window.$;
-
-var external = {
-  set $(module) {
-    $ = module;
-  },
-  get $() {
-    return $;
-  }
-};
-
-exports.external = external;
-
-/***/ }),
 /* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3583,6 +3695,7 @@ exports.default = function (gl, vertexShaderSrc, fragShaderSrc) {
  * @param {number} shaderType The type of shader, VERTEX_SHADER or FRAGMENT_SHADER.
  *
  * @return {!WebGLShader} The shader.
+ * @memberof WebGLRendering
  */
 function compileShader(gl, shaderSource, shaderType) {
 
@@ -3615,6 +3728,7 @@ function compileShader(gl, shaderSource, shaderType) {
  * @param {!WebGLShader} vertexShader A vertex shader.
  * @param {!WebGLShader} fragmentShader A fragment shader.
  * @return {!WebGLProgram} A program.
+ * @memberof WebGLRendering
  */
 function createProgram(gl, vertexShader, fragmentShader) {
 
@@ -3647,6 +3761,7 @@ function createProgram(gl, vertexShader, fragmentShader) {
  * @param  {!WebGLShader} vertexShaderSrc   Vertex shader string
  * @param  {!WebGLShader} fragShaderSrc Fragment shader string
  * @return {!WebGLProgram}                 A program
+ * @memberof WebGLRendering
  */
 
 /***/ }),
@@ -3675,9 +3790,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @param {EnabledElement} enabledElement The Cornerstone Enabled Element to redraw
  * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
  * @returns {void}
- */
-/**
- * This module is responsible for drawing an image to an enabled elements canvas element
+ * @memberof rendering
  */
 function renderWebImage(enabledElement, invalidated) {
   if (enabledElement === undefined) {
@@ -3737,7 +3850,7 @@ exports.default = function (element, fitViewportToWindow) {
     element: element
   };
 
-  (0, _triggerEvent2.default)(element, 'CornerstoneElementResized', eventData);
+  (0, _triggerEvent2.default)(element, 'cornerstoneelementresized', eventData);
 
   if (enabledElement.image === undefined) {
     return;
@@ -3923,14 +4036,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.cachedImages = undefined;
 exports.setMaximumSizeBytes = setMaximumSizeBytes;
-exports.putImagePromise = putImagePromise;
-exports.getImagePromise = getImagePromise;
-exports.removeImagePromise = removeImagePromise;
+exports.putImageLoadObject = putImageLoadObject;
+exports.getImageLoadObject = getImageLoadObject;
+exports.removeImageLoadObject = removeImageLoadObject;
 exports.getCacheInfo = getCacheInfo;
 exports.purgeCache = purgeCache;
 exports.changeImageIdCacheSize = changeImageIdCacheSize;
 
-var _events = __webpack_require__(15);
+var _events = __webpack_require__(16);
 
 var _events2 = _interopRequireDefault(_events);
 
@@ -3942,7 +4055,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /**
  * This module deals with caching images
+ * @module ImageCache
  */
+
 var maximumSizeInBytes = 1024 * 1024 * 1024; // 1 GB
 var cacheSizeInBytes = 0;
 
@@ -3962,7 +4077,7 @@ function setMaximumSizeBytes(numBytes) {
 
   maximumSizeInBytes = numBytes;
 
-  (0, _triggerEvent2.default)(_events2.default, 'CornerstoneImageCacheMaximumSizeChanged');
+  (0, _triggerEvent2.default)(_events2.default, 'cornerstoneimagecachemaximumsizechanged');
 
   purgeCacheIfNecessary();
 }
@@ -3992,32 +4107,35 @@ function purgeCacheIfNecessary() {
     var lastCachedImage = cachedImages[cachedImages.length - 1];
     var imageId = lastCachedImage.imageId;
 
-    removeImagePromise(imageId);
+    removeImageLoadObject(imageId);
 
-    (0, _triggerEvent2.default)(_events2.default, 'CornerstoneImageCachePromiseRemoved', { imageId: imageId });
+    (0, _triggerEvent2.default)(_events2.default, 'cornerstoneimagecachepromiseremoved', { imageId: imageId });
   }
 
   var cacheInfo = getCacheInfo();
 
-  (0, _triggerEvent2.default)(_events2.default, 'CornerstoneImageCacheFull', cacheInfo);
+  (0, _triggerEvent2.default)(_events2.default, 'cornerstoneimagecachefull', cacheInfo);
 }
 
-function putImagePromise(imageId, imagePromise) {
+function putImageLoadObject(imageId, imageLoadObject) {
   if (imageId === undefined) {
-    throw new Error('putImagePromise: imageId must not be undefined');
+    throw new Error('putImageLoadObject: imageId must not be undefined');
   }
-  if (imagePromise === undefined) {
-    throw new Error('putImagePromise: imagePromise must not be undefined');
+  if (imageLoadObject.promise === undefined) {
+    throw new Error('putImageLoadObject: imageLoadObject.promise must not be undefined');
   }
   if (imageCacheDict.hasOwnProperty(imageId) === true) {
-    throw new Error('putImagePromise: imageId already in cache');
+    throw new Error('putImageLoadObject: imageId already in cache');
+  }
+  if (imageLoadObject.cancelFn && typeof imageLoadObject.cancelFn !== 'function') {
+    throw new Error('putImageLoadObject: imageLoadObject.cancelFn must be a function');
   }
 
   var cachedImage = {
     loaded: false,
     imageId: imageId,
     sharedCacheKey: undefined, // The sharedCacheKey for this imageId.  undefined by default
-    imagePromise: imagePromise,
+    imageLoadObject: imageLoadObject,
     timeStamp: Date.now(),
     sizeInBytes: 0
   };
@@ -4025,7 +4143,7 @@ function putImagePromise(imageId, imagePromise) {
   imageCacheDict[imageId] = cachedImage;
   cachedImages.push(cachedImage);
 
-  imagePromise.then(function (image) {
+  imageLoadObject.promise.then(function (image) {
     if (cachedImages.indexOf(cachedImage) === -1) {
       // If the image has been purged before being loaded, we stop here.
       return;
@@ -4035,10 +4153,10 @@ function putImagePromise(imageId, imagePromise) {
     cachedImage.image = image;
 
     if (image.sizeInBytes === undefined) {
-      throw new Error('putImagePromise: sizeInBytes must not be undefined');
+      throw new Error('putImageLoadObject: image.sizeInBytes must not be undefined');
     }
     if (image.sizeInBytes.toFixed === undefined) {
-      throw new Error('putImagePromise: image.sizeInBytes is not a number');
+      throw new Error('putImageLoadObject: image.sizeInBytes is not a number');
     }
 
     cachedImage.sizeInBytes = image.sizeInBytes;
@@ -4049,17 +4167,22 @@ function putImagePromise(imageId, imagePromise) {
       image: cachedImage
     };
 
-    (0, _triggerEvent2.default)(_events2.default, 'CornerstoneImageCacheChanged', eventDetails);
+    (0, _triggerEvent2.default)(_events2.default, 'cornerstoneimagecachechanged', eventDetails);
 
     cachedImage.sharedCacheKey = image.sharedCacheKey;
 
     purgeCacheIfNecessary();
+  }, function () {
+    var cachedImage = imageCacheDict[imageId];
+
+    cachedImages.splice(cachedImages.indexOf(cachedImage), 1);
+    delete imageCacheDict[imageId];
   });
 }
 
-function getImagePromise(imageId) {
+function getImageLoadObject(imageId) {
   if (imageId === undefined) {
-    throw new Error('getImagePromise: imageId must not be undefined');
+    throw new Error('getImageLoadObject: imageId must not be undefined');
   }
   var cachedImage = imageCacheDict[imageId];
 
@@ -4070,20 +4193,19 @@ function getImagePromise(imageId) {
   // Bump time stamp for cached image
   cachedImage.timeStamp = Date.now();
 
-  return cachedImage.imagePromise;
+  return cachedImage.imageLoadObject;
 }
 
-function removeImagePromise(imageId) {
+function removeImageLoadObject(imageId) {
   if (imageId === undefined) {
-    throw new Error('removeImagePromise: imageId must not be undefined');
+    throw new Error('removeImageLoadObject: imageId must not be undefined');
   }
   var cachedImage = imageCacheDict[imageId];
 
   if (cachedImage === undefined) {
-    throw new Error('removeImagePromise: imageId was not present in imageCache');
+    throw new Error('removeImageLoadObject: imageId was not present in imageCache');
   }
 
-  cachedImage.imagePromise.reject();
   cachedImages.splice(cachedImages.indexOf(cachedImage), 1);
   cacheSizeInBytes -= cachedImage.sizeInBytes;
 
@@ -4092,8 +4214,8 @@ function removeImagePromise(imageId) {
     image: cachedImage
   };
 
-  (0, _triggerEvent2.default)(_events2.default, 'CornerstoneImageCacheChanged', eventDetails);
-  decache(cachedImage.imagePromise);
+  (0, _triggerEvent2.default)(_events2.default, 'cornerstoneimagecachechanged', eventDetails);
+  decache(cachedImage.imageLoadObject);
 
   delete imageCacheDict[imageId];
 }
@@ -4106,12 +4228,16 @@ function getCacheInfo() {
   };
 }
 
-// This method should only be called by `removeImagePromise` because it's
+// This method should only be called by `removeImageLoadObject` because it's
 // The one that knows how to deal with shared cache keys and cache size.
-function decache(imagePromise) {
-  imagePromise.then(function (image) {
-    if (image.decache) {
-      image.decache();
+function decache(imageLoadObject) {
+  imageLoadObject.promise.then(function () {
+    if (imageLoadObject.decache) {
+      imageLoadObject.decache();
+    }
+  }, function () {
+    if (imageLoadObject.decache) {
+      imageLoadObject.decache();
     }
   });
 }
@@ -4120,7 +4246,7 @@ function purgeCache() {
   while (cachedImages.length > 0) {
     var removedCachedImage = cachedImages[0];
 
-    removeImagePromise(removedCachedImage.imageId);
+    removeImageLoadObject(removedCachedImage.imageId);
   }
 }
 
@@ -4128,7 +4254,7 @@ function changeImageIdCacheSize(imageId, newCacheSize) {
   var cacheEntry = imageCacheDict[imageId];
 
   if (cacheEntry) {
-    cacheEntry.imagePromise.then(function (image) {
+    cacheEntry.imageLoadObject.promise.then(function (image) {
       var cacheSizeDifference = newCacheSize - image.sizeInBytes;
 
       image.sizeInBytes = newCacheSize;
@@ -4140,7 +4266,7 @@ function changeImageIdCacheSize(imageId, newCacheSize) {
         image: image
       };
 
-      (0, _triggerEvent2.default)(_events2.default, 'CornerstoneImageCacheChanged', eventDetails);
+      (0, _triggerEvent2.default)(_events2.default, 'cornerstoneimagecachechanged', eventDetails);
     });
   }
 }
@@ -4149,9 +4275,9 @@ exports.default = {
   imageCache: imageCacheDict,
   cachedImages: cachedImages,
   setMaximumSizeBytes: setMaximumSizeBytes,
-  putImagePromise: putImagePromise,
-  getImagePromise: getImagePromise,
-  removeImagePromise: removeImagePromise,
+  putImageLoadObject: putImageLoadObject,
+  getImageLoadObject: getImageLoadObject,
+  removeImageLoadObject: removeImageLoadObject,
   getCacheInfo: getCacheInfo,
   purgeCache: purgeCache,
   changeImageIdCacheSize: changeImageIdCacheSize
@@ -4255,7 +4381,7 @@ Object.defineProperty(exports, 'drawImage', {
   }
 });
 
-var _generateLut = __webpack_require__(9);
+var _generateLut = __webpack_require__(18);
 
 Object.defineProperty(exports, 'generateLut', {
   enumerable: true,
@@ -4273,7 +4399,7 @@ Object.defineProperty(exports, 'getDefaultViewport', {
   }
 });
 
-var _requestAnimationFrame = __webpack_require__(17);
+var _requestAnimationFrame = __webpack_require__(19);
 
 Object.defineProperty(exports, 'requestAnimationFrame', {
   enumerable: true,
@@ -4282,7 +4408,7 @@ Object.defineProperty(exports, 'requestAnimationFrame', {
   }
 });
 
-var _storedPixelDataToCanvasImageData = __webpack_require__(18);
+var _storedPixelDataToCanvasImageData = __webpack_require__(20);
 
 Object.defineProperty(exports, 'storedPixelDataToCanvasImageData', {
   enumerable: true,
@@ -4291,7 +4417,7 @@ Object.defineProperty(exports, 'storedPixelDataToCanvasImageData', {
   }
 });
 
-var _storedColorPixelDataToCanvasImageData = __webpack_require__(19);
+var _storedColorPixelDataToCanvasImageData = __webpack_require__(21);
 
 Object.defineProperty(exports, 'storedColorPixelDataToCanvasImageData', {
   enumerable: true,
@@ -4300,7 +4426,7 @@ Object.defineProperty(exports, 'storedColorPixelDataToCanvasImageData', {
   }
 });
 
-var _storedPixelDataToCanvasImageDataColorLUT = __webpack_require__(20);
+var _storedPixelDataToCanvasImageDataColorLUT = __webpack_require__(22);
 
 Object.defineProperty(exports, 'storedPixelDataToCanvasImageDataColorLUT', {
   enumerable: true,
@@ -4309,7 +4435,7 @@ Object.defineProperty(exports, 'storedPixelDataToCanvasImageDataColorLUT', {
   }
 });
 
-var _storedPixelDataToCanvasImageDataPseudocolorLUT = __webpack_require__(21);
+var _storedPixelDataToCanvasImageDataPseudocolorLUT = __webpack_require__(23);
 
 Object.defineProperty(exports, 'storedPixelDataToCanvasImageDataPseudocolorLUT', {
   enumerable: true,
@@ -4318,7 +4444,7 @@ Object.defineProperty(exports, 'storedPixelDataToCanvasImageDataPseudocolorLUT',
   }
 });
 
-var _index = __webpack_require__(43);
+var _index = __webpack_require__(42);
 
 Object.defineProperty(exports, 'internal', {
   enumerable: true,
@@ -4327,7 +4453,7 @@ Object.defineProperty(exports, 'internal', {
   }
 });
 
-var _renderLabelMapImage = __webpack_require__(23);
+var _renderLabelMapImage = __webpack_require__(10);
 
 Object.defineProperty(exports, 'renderLabelMapImage', {
   enumerable: true,
@@ -4336,7 +4462,7 @@ Object.defineProperty(exports, 'renderLabelMapImage', {
   }
 });
 
-var _renderPseudoColorImage = __webpack_require__(24);
+var _renderPseudoColorImage = __webpack_require__(14);
 
 Object.defineProperty(exports, 'renderPseudoColorImage', {
   enumerable: true,
@@ -4354,7 +4480,7 @@ Object.defineProperty(exports, 'renderColorImage', {
   }
 });
 
-var _renderGrayscaleImage = __webpack_require__(16);
+var _renderGrayscaleImage = __webpack_require__(17);
 
 Object.defineProperty(exports, 'renderGrayscaleImage', {
   enumerable: true,
@@ -4717,7 +4843,7 @@ Object.defineProperty(exports, 'metaData', {
   }
 });
 
-var _index3 = __webpack_require__(14);
+var _index3 = __webpack_require__(15);
 
 Object.defineProperty(exports, 'webGL', {
   enumerable: true,
@@ -4756,7 +4882,7 @@ Object.defineProperty(exports, 'restoreImage', {
   }
 });
 
-var _events = __webpack_require__(15);
+var _events = __webpack_require__(16);
 
 Object.defineProperty(exports, 'events', {
   enumerable: true,
@@ -4774,15 +4900,6 @@ Object.defineProperty(exports, 'triggerEvent', {
   }
 });
 
-var _externalModules = __webpack_require__(33);
-
-Object.defineProperty(exports, 'external', {
-  enumerable: true,
-  get: function get() {
-    return _externalModules.external;
-  }
-});
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
@@ -4796,92 +4913,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-exports.default = function (windowWidth, windowCenter, voiLUT) {
-  if (voiLUT) {
-    return generateNonLinearVOILUT(voiLUT);
-  }
-
-  return generateLinearVOILUT(windowWidth, windowCenter);
-};
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-/* eslint no-bitwise: 0 */
-
-/**
- * Volume of Interest Lookup Table Function
- *
- * @typedef {Function} VOILUTFunction
- *
- * @param {Number} modalityLutValue
- * @returns {Number} transformed value
- */
-
-/**
- *
- * @param {Number} windowWidth Window Width
- * @param {Number} windowCenter Window Center
- * @returns {VOILUTFunction} VOI LUT mapping function
- */
-function generateLinearVOILUT(windowWidth, windowCenter) {
-  return function (modalityLutValue) {
-    return ((modalityLutValue - windowCenter) / windowWidth + 0.5) * 255.0;
-  };
-}
-
-/**
- * Generate a non-linear volume of interest lookup table
- *
- * @param {LUT} voiLUT Volume of Interest Lookup Table Object
- *
- * @returns {VOILUTFunction} VOI LUT mapping function
- */
-function generateNonLinearVOILUT(voiLUT) {
-  // We don't trust the voiLUT.numBitsPerEntry, mainly thanks to Agfa!
-  var bitsPerEntry = Math.max.apply(Math, _toConsumableArray(voiLUT.lut)).toString(2).length;
-  var shift = bitsPerEntry - 8;
-  var minValue = voiLUT.lut[0] >> shift;
-  var maxValue = voiLUT.lut[voiLUT.lut.length - 1] >> shift;
-  var maxValueMapped = voiLUT.firstValueMapped + voiLUT.lut.length - 1;
-
-  return function (modalityLutValue) {
-    if (modalityLutValue < voiLUT.firstValueMapped) {
-      return minValue;
-    } else if (modalityLutValue >= maxValueMapped) {
-      return maxValue;
-    }
-
-    return voiLUT.lut[modalityLutValue - voiLUT.firstValueMapped] >> shift;
-  };
-}
-
-/**
- * Retrieve a VOI LUT mapping function given the current windowing settings
- * and the VOI LUT for the image
- *
- * @param {Number} windowWidth Window Width
- * @param {Number} windowCenter Window Center
- * @param {LUT} [voiLUT] Volume of Interest Lookup Table Object
- *
- * @return {VOILUTFunction} VOI LUT mapping function
- */
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
 var _drawImage = __webpack_require__(5);
 
 var _drawImage2 = _interopRequireDefault(_drawImage);
 
-var _generateLut = __webpack_require__(9);
+var _generateLut = __webpack_require__(18);
 
 var _generateLut2 = _interopRequireDefault(_generateLut);
 
@@ -4889,42 +4925,45 @@ var _getDefaultViewport = __webpack_require__(6);
 
 var _getDefaultViewport2 = _interopRequireDefault(_getDefaultViewport);
 
-var _requestAnimationFrame = __webpack_require__(17);
+var _requestAnimationFrame = __webpack_require__(19);
 
 var _requestAnimationFrame2 = _interopRequireDefault(_requestAnimationFrame);
 
-var _storedPixelDataToCanvasImageData = __webpack_require__(18);
+var _storedPixelDataToCanvasImageData = __webpack_require__(20);
 
 var _storedPixelDataToCanvasImageData2 = _interopRequireDefault(_storedPixelDataToCanvasImageData);
 
-var _storedPixelDataToCanvasImageDataRGBA = __webpack_require__(29);
+var _storedPixelDataToCanvasImageDataRGBA = __webpack_require__(30);
 
 var _storedPixelDataToCanvasImageDataRGBA2 = _interopRequireDefault(_storedPixelDataToCanvasImageDataRGBA);
 
-var _storedColorPixelDataToCanvasImageData = __webpack_require__(19);
+var _storedColorPixelDataToCanvasImageData = __webpack_require__(21);
 
 var _storedColorPixelDataToCanvasImageData2 = _interopRequireDefault(_storedColorPixelDataToCanvasImageData);
 
-var _storedPixelDataToCanvasImageDataColorLUT = __webpack_require__(20);
+var _storedPixelDataToCanvasImageDataColorLUT = __webpack_require__(22);
 
 var _storedPixelDataToCanvasImageDataColorLUT2 = _interopRequireDefault(_storedPixelDataToCanvasImageDataColorLUT);
 
-var _storedPixelDataToCanvasImageDataPseudocolorLUT = __webpack_require__(21);
+var _storedPixelDataToCanvasImageDataPseudocolorLUT = __webpack_require__(23);
 
 var _storedPixelDataToCanvasImageDataPseudocolorLUT2 = _interopRequireDefault(_storedPixelDataToCanvasImageDataPseudocolorLUT);
 
-var _getTransform = __webpack_require__(10);
+var _getTransform = __webpack_require__(9);
 
 var _getTransform2 = _interopRequireDefault(_getTransform);
 
-var _calculateTransform = __webpack_require__(22);
+var _calculateTransform = __webpack_require__(24);
 
 var _calculateTransform2 = _interopRequireDefault(_calculateTransform);
 
-var _transform = __webpack_require__(30);
+var _transform = __webpack_require__(31);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/**
+ * @module Internal
+ */
 exports.default = {
   drawImage: _drawImage2.default,
   generateLut: _generateLut2.default,
@@ -4941,7 +4980,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 44 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4964,6 +5003,51 @@ exports.default = function (a, b) {
   // Check the unique ids
   return a.id === b.id;
 };
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.default = function (image, windowWidth, windowCenter, invert, voiLUT) {
+  var maxPixelValue = image.maxPixelValue;
+  var minPixelValue = image.minPixelValue;
+  var offset = Math.min(minPixelValue, 0);
+
+  if (image.cachedLut === undefined) {
+    var length = maxPixelValue - offset + 1;
+
+    image.cachedLut = {};
+    image.cachedLut.lutArray = new Uint8ClampedArray(length);
+  }
+
+  var lut = image.cachedLut.lutArray;
+  var vlutfn = (0, _getVOILut2.default)(windowWidth, windowCenter, voiLUT);
+
+  if (invert === true) {
+    for (var storedValue = minPixelValue; storedValue <= maxPixelValue; storedValue++) {
+      lut[storedValue + -offset] = 255 - vlutfn(storedValue);
+    }
+  } else {
+    for (var _storedValue = minPixelValue; _storedValue <= maxPixelValue; _storedValue++) {
+      lut[_storedValue + -offset] = vlutfn(_storedValue);
+    }
+  }
+
+  return lut;
+};
+
+var _getVOILut = __webpack_require__(27);
+
+var _getVOILut2 = _interopRequireDefault(_getVOILut);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
 /* 45 */
@@ -5035,7 +5119,7 @@ var _index = __webpack_require__(47);
 
 var _vertexShader = __webpack_require__(53);
 
-var _textureCache = __webpack_require__(32);
+var _textureCache = __webpack_require__(33);
 
 var _textureCache2 = _interopRequireDefault(_textureCache);
 
@@ -5403,6 +5487,7 @@ var int16Shader = {};
  *
  * @param {Image} image A Cornerstone Image Object
  * @returns {Uint8Array} The image data for use by the WebGL shader
+ * @memberof WebGLRendering
  */
 function storedPixelDataToImageData(image) {
 
@@ -5470,6 +5555,7 @@ var int8Shader = {};
  *
  * @param {Image} image A Cornerstone Image Object
  * @returns {Uint8Array} The image data for use by the WebGL shader
+ * @memberof WebGLRendering
  */
 function storedPixelDataToImageData(image) {
     // Transfer image data to alpha channel of WebGL texture
@@ -5531,6 +5617,7 @@ var rgbShader = {};
  *
  * @param {Image} image A Cornerstone Image Object
  * @returns {Uint8Array} The image data for use by the WebGL shader
+ * @memberof WebGLRendering
  */
 function storedPixelDataToImageData(image) {
   var minPixelValue = image.minPixelValue;
@@ -5607,6 +5694,7 @@ var uint16Shader = {};
  *
  * @param {Image} image A Cornerstone Image Object
  * @returns {Uint8Array} The image data for use by the WebGL shader
+ * @memberof WebGLRendering
  */
 function storedPixelDataToImageData(image) {
 
@@ -5672,6 +5760,7 @@ var uint8Shader = {};
  *
  * @param {Image} image A Cornerstone Image Object
  * @returns {Uint8Array} The image data for use by the WebGL shader
+ * @memberof WebGLRendering
  */
 function storedPixelDataToImageData(image) {
     // Transfer image data to alpha channel of WebGL texture
@@ -5737,7 +5826,7 @@ exports.default = function (element, pt) {
 
 var _enabledElements = __webpack_require__(0);
 
-var _getTransform = __webpack_require__(10);
+var _getTransform = __webpack_require__(9);
 
 var _getTransform2 = _interopRequireDefault(_getTransform);
 
@@ -5771,7 +5860,7 @@ exports.default = function (element) {
         element: element
       };
 
-      (0, _triggerEvent2.default)(element, 'CornerstoneElementDisabled', eventData);
+      (0, _triggerEvent2.default)(element, 'cornerstoneelementdisabled', eventData);
 
       // Remove the child DOM elements that we created (e.g.canvas)
       enabledElements[i].element.removeChild(enabledElements[i].canvas);
@@ -5853,7 +5942,7 @@ exports.default = function (element, image, viewport) {
     frameRate: frameRate
   };
 
-  (0, _triggerEvent2.default)(enabledElement.element, 'CornerstoneNewImage', newImageEventData);
+  (0, _triggerEvent2.default)(enabledElement.element, 'cornerstonenewimage', newImageEventData);
 
   (0, _updateImage2.default)(element);
 };
@@ -5903,6 +5992,7 @@ function s4() {
  * Generate a unique identifier
  *
  * @return {string} A unique identifier
+ * @memberof Internal
  */
 
 /***/ }),
@@ -5999,6 +6089,8 @@ exports.default = function (element, options) {
 
   var canvas = document.createElement('canvas');
 
+  canvas.style.display = 'block';
+
   element.appendChild(canvas);
 
   var enabledElement = {
@@ -6022,6 +6114,7 @@ exports.default = function (element, options) {
    *
    * @param {DOMHighResTimeStamp} timestamp The current time for when requestAnimationFrame starts to fire callbacks
    * @returns {void}
+   * @memberof Drawing
    */
   function draw(timestamp) {
     if (enabledElement.canvas === undefined) {
@@ -6033,7 +6126,7 @@ exports.default = function (element, options) {
       timestamp: timestamp
     };
 
-    (0, _triggerEvent2.default)(enabledElement.element, 'CornerstonePreRender', eventDetails);
+    (0, _triggerEvent2.default)(enabledElement.element, 'cornerstoneprerender', eventDetails);
 
     if (enabledElement.needsRedraw && hasImageOrLayers(enabledElement)) {
       (0, _drawImageSync2.default)(enabledElement, enabledElement.invalid);
@@ -6055,11 +6148,11 @@ var _drawImageSync = __webpack_require__(61);
 
 var _drawImageSync2 = _interopRequireDefault(_drawImageSync);
 
-var _requestAnimationFrame = __webpack_require__(17);
+var _requestAnimationFrame = __webpack_require__(19);
 
 var _requestAnimationFrame2 = _interopRequireDefault(_requestAnimationFrame);
 
-var _index = __webpack_require__(14);
+var _index = __webpack_require__(15);
 
 var _index2 = _interopRequireDefault(_index);
 
@@ -6070,11 +6163,20 @@ var _triggerEvent2 = _interopRequireDefault(_triggerEvent);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
+ * @module Enable
  * This module is responsible for enabling an element to display images with cornerstone
  */
 
+/**
+ * Returns whether or not an Enabled Element has either a currently active image or
+ * a non-empty Array of Enabled Element Layers.
+ *
+ * @param {EnabledElement} enabledElement An Enabled Element
+ * @return {Boolean} Whether or not the Enabled Element has an active image or valid set of layers
+ * @memberof Enable
+ */
 function hasImageOrLayers(enabledElement) {
-  return enabledElement.image !== undefined || enabledElement.layers.length;
+  return enabledElement.image !== undefined || enabledElement.layers.length > 0;
 }
 
 /**
@@ -6084,6 +6186,7 @@ function hasImageOrLayers(enabledElement) {
  * @param {Object} options Options for the enabledElement
  *
  * @return {void}
+ * @memberof Enable
  */
 
 /***/ }),
@@ -6155,7 +6258,7 @@ exports.default = function (enabledElement, invalidated) {
   enabledElement.invalid = false;
   enabledElement.needsRedraw = false;
 
-  (0, _triggerEvent2.default)(element, 'CornerstoneImageRendered', eventData);
+  (0, _triggerEvent2.default)(element, 'cornerstoneimagerendered', eventData);
 };
 
 var _now = __webpack_require__(1);
@@ -6168,11 +6271,11 @@ var _drawCompositeImage2 = _interopRequireDefault(_drawCompositeImage);
 
 var _renderColorImage = __webpack_require__(8);
 
-var _renderGrayscaleImage = __webpack_require__(16);
+var _renderGrayscaleImage = __webpack_require__(17);
 
-var _renderPseudoColorImage = __webpack_require__(24);
+var _renderPseudoColorImage = __webpack_require__(14);
 
-var _renderLabelMapImage = __webpack_require__(23);
+var _renderLabelMapImage = __webpack_require__(10);
 
 var _triggerEvent = __webpack_require__(2);
 
@@ -6232,13 +6335,13 @@ exports.default = function (enabledElement, invalidated) {
 
 var _layers = __webpack_require__(25);
 
-var _renderGrayscaleImage = __webpack_require__(16);
+var _renderGrayscaleImage = __webpack_require__(17);
 
 var _renderColorImage = __webpack_require__(8);
 
-var _renderPseudoColorImage = __webpack_require__(24);
+var _renderPseudoColorImage = __webpack_require__(14);
 
-var _renderLabelMapImage = __webpack_require__(23);
+var _renderLabelMapImage = __webpack_require__(10);
 
 var _setToPixelCoordinateSystem = __webpack_require__(3);
 
@@ -6290,6 +6393,7 @@ function syncViewports(layers, activeLayer) {
  * @param {EnabledElementLayer[]} layers The array of all layers for this enabled element
  * @param {Boolean} invalidated A boolean whether or not this image has been invalidated and must be redrawn
  * @returns {void}
+ * @memberof Internal
  */
 function renderLayers(context, layers, invalidated) {
   // Loop through each layer and draw it to the canvas
@@ -6524,7 +6628,7 @@ exports.registerUnknownImageLoader = registerUnknownImageLoader;
 
 var _imageCache = __webpack_require__(39);
 
-var _events = __webpack_require__(15);
+var _events = __webpack_require__(16);
 
 var _events2 = _interopRequireDefault(_events);
 
@@ -6536,6 +6640,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /**
  * This module deals with ImageLoaders, loading images and caching images
+ * @module ImageLoader
  */
 
 var imageLoaders = {};
@@ -6551,32 +6656,37 @@ var unknownImageLoader = void 0;
  * @param {String} imageId A Cornerstone Image Object's imageId
  * @param {Object} [options] Options to be passed to the Image Loader
  *
- * @returns {Deferred} A jQuery Deferred which can be used to act after an image is loaded or loading fails
+ * @returns {ImageLoadObject} An Object which can be used to act after an image is loaded or loading fails
+ * @memberof ImageLoader
  */
 function loadImageFromImageLoader(imageId, options) {
   var colonIndex = imageId.indexOf(':');
   var scheme = imageId.substring(0, colonIndex);
   var loader = imageLoaders[scheme];
-  var imagePromise = void 0;
 
   if (loader === undefined || loader === null) {
     if (unknownImageLoader !== undefined) {
-      imagePromise = unknownImageLoader(imageId);
-
-      return imagePromise;
+      return unknownImageLoader(imageId);
     }
 
     throw new Error('loadImageFromImageLoader: no image loader for imageId');
   }
 
-  imagePromise = loader(imageId, options);
+  var imageLoadObject = loader(imageId, options);
 
   // Broadcast an image loaded event once the image is loaded
-  imagePromise.then(function (image) {
-    (0, _triggerEvent2.default)(_events2.default, 'CornerstoneImageLoaded', { image: image });
+  imageLoadObject.promise.then(function (image) {
+    (0, _triggerEvent2.default)(_events2.default, 'cornerstoneimageloaded', { image: image });
+  }, function (error) {
+    var errorObject = {
+      imageId: imageId,
+      error: error
+    };
+
+    (0, _triggerEvent2.default)(_events2.default, 'cornerstoneimageloadfailed', errorObject);
   });
 
-  return imagePromise;
+  return imageLoadObject;
 }
 
 /**
@@ -6586,22 +6696,21 @@ function loadImageFromImageLoader(imageId, options) {
  * @param {String} imageId A Cornerstone Image Object's imageId
  * @param {Object} [options] Options to be passed to the Image Loader
  *
- * @returns {Deferred} A jQuery Deferred which can be used to act after an image is loaded or loading fails
+ * @returns {ImageLoadObject} An Object which can be used to act after an image is loaded or loading fails
+ * @memberof ImageLoader
  */
 function loadImage(imageId, options) {
   if (imageId === undefined) {
     throw new Error('loadImage: parameter imageId must not be undefined');
   }
 
-  var imagePromise = (0, _imageCache.getImagePromise)(imageId);
+  var imageLoadObject = (0, _imageCache.getImageLoadObject)(imageId);
 
-  if (imagePromise !== undefined) {
-    return imagePromise;
+  if (imageLoadObject !== undefined) {
+    return imageLoadObject.promise;
   }
 
-  imagePromise = loadImageFromImageLoader(imageId, options);
-
-  return imagePromise;
+  return loadImageFromImageLoader(imageId, options).promise;
 }
 
 //
@@ -6613,24 +6722,25 @@ function loadImage(imageId, options) {
  * @param {String} imageId A Cornerstone Image Object's imageId
  * @param {Object} [options] Options to be passed to the Image Loader
  *
- * @returns {Deferred} A jQuery Deferred which can be used to act after an image is loaded or loading fails
+ * @returns {ImageLoadObject} Image Loader Object
+ * @memberof ImageLoader
  */
 function loadAndCacheImage(imageId, options) {
   if (imageId === undefined) {
     throw new Error('loadAndCacheImage: parameter imageId must not be undefined');
   }
 
-  var imagePromise = (0, _imageCache.getImagePromise)(imageId);
+  var imageLoadObject = (0, _imageCache.getImageLoadObject)(imageId);
 
-  if (imagePromise !== undefined) {
-    return imagePromise;
+  if (imageLoadObject !== undefined) {
+    return imageLoadObject.promise;
   }
 
-  imagePromise = loadImageFromImageLoader(imageId, options);
+  imageLoadObject = loadImageFromImageLoader(imageId, options);
 
-  (0, _imageCache.putImagePromise)(imageId, imagePromise);
+  (0, _imageCache.putImageLoadObject)(imageId, imageLoadObject);
 
-  return imagePromise;
+  return imageLoadObject.promise;
 }
 
 /**
@@ -6639,6 +6749,7 @@ function loadAndCacheImage(imageId, options) {
  * @param {String} scheme The scheme to use for this image loader (e.g. 'dicomweb', 'wadouri', 'http')
  * @param {Function} imageLoader A Cornerstone Image Loader function
  * @returns {void}
+ * @memberof ImageLoader
  */
 function registerImageLoader(scheme, imageLoader) {
   imageLoaders[scheme] = imageLoader;
@@ -6650,6 +6761,7 @@ function registerImageLoader(scheme, imageLoader) {
  * @param {Function} imageLoader A Cornerstone Image Loader
  *
  * @returns {Function|Undefined} The previous Unknown Image Loader
+ * @memberof ImageLoader
  */
 function registerUnknownImageLoader(imageLoader) {
   var oldImageLoader = unknownImageLoader;
@@ -6679,7 +6791,7 @@ exports.default = function (element) {
     element: element
   };
 
-  (0, _triggerEvent2.default)(element, 'CornerstoneInvalidated', eventData);
+  (0, _triggerEvent2.default)(element, 'cornerstoneinvalidated', eventData);
 };
 
 var _enabledElements = __webpack_require__(0);
@@ -6752,7 +6864,7 @@ exports.default = function (element, pageX, pageY) {
 
 var _enabledElements = __webpack_require__(0);
 
-var _getTransform = __webpack_require__(10);
+var _getTransform = __webpack_require__(9);
 
 var _getTransform2 = _interopRequireDefault(_getTransform);
 
@@ -6778,7 +6890,7 @@ exports.default = function (element, pt) {
 
 var _enabledElements = __webpack_require__(0);
 
-var _getTransform = __webpack_require__(10);
+var _getTransform = __webpack_require__(9);
 
 var _getTransform2 = _interopRequireDefault(_getTransform);
 
@@ -6875,6 +6987,7 @@ var MIN_VIEWPORT_SCALE = 0.0001;
  * @param {HTMLElement} element - DOM element of the enabled element
  * @param {Viewport} viewport - Object containing the viewport properties
  * @returns {void}
+ * @memberof ViewportSettings
  */
 
 /***/ }),
@@ -6890,14 +7003,23 @@ Object.defineProperty(exports, "__esModule", {
 
 var _renderColorImage = __webpack_require__(8);
 
-var _renderGrayscaleImage = __webpack_require__(16);
+var _renderGrayscaleImage = __webpack_require__(17);
 
 var _renderWebImage = __webpack_require__(35);
 
+var _renderPseudoColorImage = __webpack_require__(14);
+
+var _renderLabelMapImage = __webpack_require__(10);
+
+/**
+ * @module rendering
+ */
 exports.default = {
   colorImage: _renderColorImage.renderColorImage,
   grayscaleImage: _renderGrayscaleImage.renderGrayscaleImage,
-  webImage: _renderWebImage.renderWebImage
+  webImage: _renderWebImage.renderWebImage,
+  pseudoColorImage: _renderPseudoColorImage.renderPseudoColorImage,
+  labelMapImage: _renderLabelMapImage.renderLabelMapImage
 };
 
 /***/ }),
@@ -6918,11 +7040,16 @@ exports.removeProvider = removeProvider;
 var providers = [];
 
 /**
+ * @module Metadata
+ */
+
+/**
  * Adds a metadata provider with the specified priority
  * @param {Function} provider Metadata provider function
  * @param {Number} [priority=0] - 0 is default/normal, > 0 is high, < 0 is low
  *
  * @returns {void}
+ * @memberof Metadata
  */
 function addProvider(provider) {
   var priority = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
@@ -6949,6 +7076,7 @@ function addProvider(provider) {
  * @param {Function} provider Metadata provider function
  *
  * @returns {void}
+ * @memberof Metadata
  */
 function removeProvider(provider) {
   for (var i = 0; i < providers.length; i++) {
@@ -6968,6 +7096,7 @@ function removeProvider(provider) {
  * @param {String} imageId The Cornerstone Image Object's imageId
  *
  * @returns {*} The metadata retrieved from the metadata store
+ * @memberof Metadata
  */
 function getMetaData(type, imageId) {
   // Invoke each provider in priority order until one returns something
@@ -7004,7 +7133,7 @@ var _pixelDataToFalseColorData = __webpack_require__(40);
 
 var _pixelDataToFalseColorData2 = _interopRequireDefault(_pixelDataToFalseColorData);
 
-var _colormap = __webpack_require__(27);
+var _colormap = __webpack_require__(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

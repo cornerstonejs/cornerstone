@@ -43,9 +43,6 @@ by the developer
 </div>
 </body>
 
-<!-- cornerstone depends on jQuery so it must be loaded first-->
-<script src="../jquery.min.js"></script>
-
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
 
@@ -53,73 +50,74 @@ by the developer
 <script src="../exampleImageIdLoader.js"></script>
 
 <script>
-    $(document).ready(function() {
+    // image enable the dicomImage element
+    const element = document.getElementById('dicomImage');
+    cornerstone.enable(element);
 
-        // image enable the dicomImage element
-        var element = $('#dicomImage').get(0);
-        cornerstone.enable(element);
-
-        //load the image and display it
-        var imageId = 'example://1';
-        cornerstone.loadImage(imageId).then(function(image) {
-            cornerstone.displayImage(element, image);
-        });
-
-        // Add event handlers to zoom the image in and out
-        $('#zoomIn').click(function (e) {
-            var viewport = cornerstone.getViewport(element);
-            viewport.scale += 0.25;
-            cornerstone.setViewport(element, viewport);
-        });
-        $('#zoomOut').click(function (e) {
-            var viewport = cornerstone.getViewport(element);
-            viewport.scale -= 0.25;
-            cornerstone.setViewport(element, viewport);
-        });
-        $('#reset').click(function (e) {
-            cornerstone.reset(element);
-        });
-
-        // add event handlers to pan image on mouse move
-        $('#dicomImage').mousedown(function (e) {
-            var lastX = e.pageX;
-            var lastY = e.pageY;
-
-
-            $(document).mousemove(function (e) {
-                var deltaX = e.pageX - lastX,
-                        deltaY = e.pageY - lastY;
-                lastX = e.pageX;
-                lastY = e.pageY;
-
-                var viewport = cornerstone.getViewport(element);
-                viewport.translation.x += (deltaX / viewport.scale);
-                viewport.translation.y += (deltaY / viewport.scale);
-                cornerstone.setViewport(element, viewport);
-            });
-
-            $(document).mouseup(function (e) {
-                $(document).unbind('mousemove');
-                $(document).unbind('mouseup');
-            });
-        });
-
-        $('#dicomImage').on('mousewheel DOMMouseScroll', function (e) {
-            // Firefox e.originalEvent.detail > 0 scroll back, < 0 scroll forward
-            // chrome/safari e.originalEvent.wheelDelta < 0 scroll back, > 0 scroll forward
-            if (e.originalEvent.wheelDelta < 0 || e.originalEvent.detail > 0) {
-                var viewport = cornerstone.getViewport(element);
-                viewport.scale -= 0.25;
-                cornerstone.setViewport(element, viewport);
-            } else {
-                var viewport = cornerstone.getViewport(element);
-                viewport.scale += 0.25;
-                cornerstone.setViewport(element, viewport);
-            }
-            //prevent page fom scrolling
-            return false;
-        });
+    //load the image and display it
+    const imageId = 'example://1';
+    cornerstone.loadImage(imageId).then(function(image) {
+        cornerstone.displayImage(element, image);
     });
 
+    // Add event handlers to zoom the image in and out
+    document.getElementById('zoomIn').addEventListener('click', function (e) {
+        const viewport = cornerstone.getViewport(element);
+        viewport.scale += 0.25;
+        cornerstone.setViewport(element, viewport);
+    });
+    document.getElementById('zoomOut').addEventListener('click', function (e) {
+        const viewport = cornerstone.getViewport(element);
+        viewport.scale -= 0.25;
+        cornerstone.setViewport(element, viewport);
+    });
+    document.getElementById('reset').addEventListener('click', function (e) {
+        cornerstone.reset(element);
+    });
+
+    // add event handlers to pan image on mouse move
+    element.addEventListener('mousedown', function (e) {
+      let lastX = e.pageX;
+      let lastY = e.pageY;
+
+      function mouseMoveHandler(e) {
+        const deltaX = e.pageX - lastX;
+        const deltaY = e.pageY - lastY;
+        lastX = e.pageX;
+        lastY = e.pageY;
+
+        const viewport = cornerstone.getViewport(element);
+        viewport.translation.x += (deltaX / viewport.scale);
+        viewport.translation.y += (deltaY / viewport.scale);
+        cornerstone.setViewport(element, viewport);
+      }
+
+      function mouseUpHandler() {
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        document.removeEventListener('mouseup', mouseUpHandler);
+      }
+
+      document.addEventListener('mousemove', mouseMoveHandler);
+      document.addEventListener('mouseup', mouseUpHandler);
+    });
+
+    const mouseWheelEvents = ['mousewheel', 'DOMMouseScroll'];
+    mouseWheelEvents.forEach(function(eventType) {
+      element.addEventListener(eventType, function (e) {
+        // Firefox e.detail > 0 scroll back, < 0 scroll forward
+        // chrome/safari e.wheelDelta < 0 scroll back, > 0 scroll forward
+        let viewport = cornerstone.getViewport(element);
+        if (e.wheelDelta < 0 || e.detail > 0) {
+          viewport.scale -= 0.25;
+        } else {
+          viewport.scale += 0.25;
+        }
+
+        cornerstone.setViewport(element, viewport);
+
+        // Prevent page from scrolling
+        return false;
+      });
+    });
 </script>
 </html>

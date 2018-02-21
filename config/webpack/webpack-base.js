@@ -15,7 +15,6 @@ module.exports = {
     filename: '[name].js',
     library: {
       commonjs: "cornerstone-core",
-      commonjs2: "cornerstone-core",
       amd: "cornerstone-core",
       root: 'cornerstone'
     },

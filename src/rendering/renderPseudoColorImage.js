@@ -4,7 +4,7 @@ import initializeRenderCanvas from './initializeRenderCanvas.js';
 import getLut from './getLut.js';
 import saveLastRendered from './saveLastRendered.js';
 import doesImageNeedToBeRendered from './doesImageNeedToBeRendered.js';
-import storedPixelDataToCanvasImageDataPseudocolorLUT from '../internal/storedPixelDataToCanvasImageDataPseudocolorLUT';
+import storedPixelDataToCanvasImageDataPseudocolorLUT from '../internal/storedPixelDataToCanvasImageDataPseudocolorLUT.js';
 import colors from '../colors/index.js';
 
 function getRenderCanvas (enabledElement, image, invalidated) {
@@ -73,6 +73,7 @@ function getRenderCanvas (enabledElement, image, invalidated) {
  * @param {EnabledElement} enabledElement The Cornerstone Enabled Element to redraw
  * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
  * @returns {void}
+ * @memberof rendering
  */
 export function renderPseudoColorImage (enabledElement, invalidated) {
   if (enabledElement === undefined) {

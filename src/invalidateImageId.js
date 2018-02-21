@@ -1,7 +1,3 @@
-/**
- * This module contains a function to immediately invalidate an image
- */
-
 import { getEnabledElementsByImageId } from './enabledElements.js';
 import drawImage from './internal/drawImage.js';
 
@@ -11,9 +7,9 @@ import drawImage from './internal/drawImage.js';
  *
  * @param {string} imageId The imageId of the Cornerstone Image Object to redraw
  * @returns {void}
+ * @memberof Drawing
  */
 export default function (imageId) {
-
   const enabledElements = getEnabledElementsByImageId(imageId);
 
   enabledElements.forEach(function (enabledElement) {

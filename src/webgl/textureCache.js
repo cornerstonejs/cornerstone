@@ -3,6 +3,7 @@ import triggerEvent from '../triggerEvent.js';
 
 /**
  * This module deals with caching image textures in VRAM for WebGL
+ * @module WebGLTextureCache
  */
 
 const imageCache = {};
@@ -48,12 +49,12 @@ function purgeCacheIfNecessary () {
     delete imageCache[lastCachedImage.imageId];
     cachedImages.pop();
 
-    triggerEvent(events, 'CornerstoneWebGLTextureRemoved', { imageId: lastCachedImage.imageId });
+    triggerEvent(events, 'cornerstonewebgltextureremoved', { imageId: lastCachedImage.imageId });
   }
 
   const cacheInfo = getCacheInfo();
 
-  triggerEvent(events, 'CornerstoneWebGLTextureCacheFull', cacheInfo);
+  triggerEvent(events, 'cornerstonewebgltexturecachefull', cacheInfo);
 }
 
 function setMaximumSizeBytes (numBytes) {

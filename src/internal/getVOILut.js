@@ -7,6 +7,11 @@
  *
  * @param {Number} modalityLutValue
  * @returns {Number} transformed value
+ * @memberof Objects
+ */
+
+/**
+ * @module: VOILUT
  */
 
 /**
@@ -14,6 +19,7 @@
  * @param {Number} windowWidth Window Width
  * @param {Number} windowCenter Window Center
  * @returns {VOILUTFunction} VOI LUT mapping function
+ * @memberof VOILUT
  */
 function generateLinearVOILUT (windowWidth, windowCenter) {
   return function (modalityLutValue) {
@@ -27,6 +33,7 @@ function generateLinearVOILUT (windowWidth, windowCenter) {
  * @param {LUT} voiLUT Volume of Interest Lookup Table Object
  *
  * @returns {VOILUTFunction} VOI LUT mapping function
+ * @memberof VOILUT
  */
 function generateNonLinearVOILUT (voiLUT) {
   // We don't trust the voiLUT.numBitsPerEntry, mainly thanks to Agfa!
@@ -56,6 +63,7 @@ function generateNonLinearVOILUT (voiLUT) {
  * @param {LUT} [voiLUT] Volume of Interest Lookup Table Object
  *
  * @return {VOILUTFunction} VOI LUT mapping function
+ * @memberof VOILUT
  */
 export default function (windowWidth, windowCenter, voiLUT) {
   if (voiLUT) {

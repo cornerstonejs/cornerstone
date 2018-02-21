@@ -30,9 +30,6 @@
 </div>
 </body>
 
-<!-- cornerstone depends on jQuery so it must be loaded first-->
-<script src="../jquery.min.js"></script>
-
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
 
@@ -40,27 +37,23 @@
 <script src="../exampleImageIdLoader.js"></script>
 
 <script>
-
-    $(document).ready(function() {
-        var viewportOptions = {
-            scale: 6.0,
-            translation: {
-                x: -24,
-                y: 10
-            },
-            voi: {
-                windowWidth: 89,
-                windowCenter: 150
-            },
-            invert: false,
-            pixelReplication: false
-        };
-        var element = document.getElementById('dicomImage');
-        cornerstone.enable(document.getElementById('dicomImage'));
-        cornerstone.loadImage("example://1").then(function (image) {
-            cornerstone.displayImage(element, image, viewportOptions);
-        });
+    const viewportOptions = {
+        scale: 6.0,
+        translation: {
+            x: -24,
+            y: 10
+        },
+        voi: {
+            windowWidth: 89,
+            windowCenter: 150
+        },
+        invert: false,
+        pixelReplication: false
+    };
+    const element = document.getElementById('dicomImage');
+    cornerstone.enable(element);
+    cornerstone.loadImage("example://1").then(function (image) {
+        cornerstone.displayImage(element, image, viewportOptions);
     });
 </script>
-
 </html>

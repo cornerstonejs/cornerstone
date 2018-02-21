@@ -29,20 +29,16 @@
     var image2PixelData = getPixelData(image109Base64);
 
     function getExampleImage(imageId) {
+        const width = 256;
+        const height = 256;
 
-        var width = 256;
-        var height = 256;
-
-        function getPixelData()
-        {
-            if(imageId == 'example://1')
-            {
+        function getPixelData () {
+            if(imageId === 'example://1') {
                 return image1PixelData;
-            }
-            else if(imageId = 'example://2')
-            {
+            } else if (imageId === 'example://2') {
                 return image2PixelData;
             }
+
             throw "unknown imageId";
         }
 
@@ -65,9 +61,12 @@
             sizeInBytes: width * height * 2
         };
 
-        var deferred = $.Deferred();
-        deferred.resolve(image);
-        return deferred;
+        return {
+            promise: new Promise((resolve) => {
+              resolve(image);
+            }),
+            cancelFn: undefined
+        };
     }
 
 

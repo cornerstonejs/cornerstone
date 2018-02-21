@@ -1,6 +1,8 @@
 node_modules
-build
 npm-debug.log
 .idea
 coverage
 documentation
+docs/_book
+package-lock.json
+docs/api.md

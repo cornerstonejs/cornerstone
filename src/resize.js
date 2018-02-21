@@ -61,7 +61,7 @@ export default function (element, fitViewportToWindow) {
     element
   };
 
-  triggerEvent(element, 'CornerstoneElementResized', eventData);
+  triggerEvent(element, 'cornerstoneelementresized', eventData);
 
   if (enabledElement.image === undefined) {
     return;
