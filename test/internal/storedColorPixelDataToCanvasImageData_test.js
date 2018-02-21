@@ -1,13 +1,13 @@
 import { should } from 'chai';
-import storedColorPixelDataToCanvasImageData from '../../src/internal/storedColorPixelDataToCanvasImageData';
+import storedColorPixelDataToCanvasImageData from '../../src/internal/storedColorPixelDataToCanvasImageData.js';
 
 should();
 
 describe('storedColorPixelDataToCanvasImageData', function () {
   before(function () {
     this.image = {
-      getPixelData() {
-        return [1, 2, 3, 4, 2, 0, 1, 0]
+      getPixelData () {
+        return [1, 2, 3, 4, 2, 0, 1, 0];
       },
       stats: {}
     };
@@ -20,7 +20,7 @@ describe('storedColorPixelDataToCanvasImageData', function () {
     });
 
     it('should generate the image subtracting the minimum pixel value', function () {
-      let canvasImageDataData = [0, 0, 0, 0, 0, 0, 0, 0];
+      const canvasImageDataData = [0, 0, 0, 0, 0, 0, 0, 0];
 
       storedColorPixelDataToCanvasImageData(this.image, this.lut, canvasImageDataData);
 
@@ -34,7 +34,7 @@ describe('storedColorPixelDataToCanvasImageData', function () {
     });
 
     it('should generate the image just using the lookup table', function () {
-      let canvasImageDataData = [0, 0, 0, 0, 0, 0, 0, 0];
+      const canvasImageDataData = [0, 0, 0, 0, 0, 0, 0, 0];
 
       storedColorPixelDataToCanvasImageData(this.image, this.lut, canvasImageDataData);
 
