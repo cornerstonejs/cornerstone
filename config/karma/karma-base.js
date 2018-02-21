@@ -23,7 +23,7 @@ module.exports = {
     'node_modules/phantomjs-polyfill-object-assign/object-assign-polyfill.js',
     'node_modules/phantomjs-polyfill-find-index/findIndex-polyfill.js',
     'node_modules/phantomjs-polyfill-find/find-polyfill.js',
-    'node_modules/promise-polyfill/promise.js',
+    'node_modules/promise-polyfill/dist/promise.js',
     'test/*_test.js',
     'test/**/*_test.js'
   ],
