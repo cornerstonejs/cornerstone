@@ -6,6 +6,7 @@ import disable from '../../src/disable.js';
 import { renderColorImage } from '../../src/rendering/renderColorImage.js';
 import { getEnabledElement } from '../../src/enabledElements.js';
 import setViewport from '../../src/setViewport.js';
+// import getCanvas from '../../src/internal/getCanvas.js';
 
 describe('renderColorImage', function () {
   beforeEach(function () {
@@ -58,8 +59,8 @@ describe('renderColorImage', function () {
         y: 0
       },
       voi: {
-        windowWidth: 256,
-        windowCenter: 127
+        windowWidth: 255,
+        windowCenter: 128
       },
       invert: false,
       pixelReplication: false,
@@ -84,12 +85,32 @@ describe('renderColorImage', function () {
 
     const renderCanvas = enabledElement.renderingTools.renderCanvas;
 
+    // Act
     // TODO: add additional checks?
     // Checking that render canvas exists and that its dimensions match the image dimensions
     assert.exists(renderCanvas);
     assert.equal(renderCanvas.height, image.height);
     assert.equal(renderCanvas.width, image.width);
   });
+
+  it('should create a render canvas, then recycle the existing render canvas when applied again', function () {
+    // Arrange
+    const element = this.element;
+    const image = this.image;
+    const enabledElement = getEnabledElement(element);
+
+    // Act
+    renderColorImage(enabledElement, true);
+    const renderCanvas1 = Object.assign({}, enabledElement.renderingTools.renderCanvas);
+    renderColorImage(enabledElement, false);
+    const renderCanvas2 = Object.assign({}, enabledElement.renderingTools.renderCanvas);
+    assert.deepEqual(renderCanvas1, renderCanvas2);
+    renderColorImage(enabledElement, true);
+    const renderCanvas3 = Object.assign({}, enabledElement.renderingTools.renderCanvas);
+    assert.deepEqual(renderCanvas1, renderCanvas3);
+
+  });
+
 
   it('should fail to render color image without image or enabled element', function () {
     // Arrange
