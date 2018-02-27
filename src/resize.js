@@ -46,6 +46,47 @@ function setCanvasSize (element, canvas) {
 }
 
 /**
+ * Checks if the image of a given enabled element fitted the window
+ * before the resize
+ *
+ * @param {EnabledElement} enabledElement The Cornerstone Enabled Element
+ * @param {number} oldCanvasWidth The width of the canvas before the resize
+ * @param {number} oldCanvasHeight The height of the canvas before the resize
+ * @return {Boolean} true if it fitted the windows, false otherwise
+ */
+function wasFitToWindow (enabledElement, oldCanvasWidth, oldCanvasHeight) {
+  const scale = enabledElement.viewport.scale;
+  const imageSize = getImageSize(enabledElement);
+  const imageWidth = Math.round(imageSize.width * scale);
+  const imageHeight = Math.round(imageSize.height * scale);
+  const x = enabledElement.viewport.translation.x;
+  const y = enabledElement.viewport.translation.y;
+
+  return (imageWidth === oldCanvasWidth && imageHeight <= oldCanvasHeight) ||
+    (imageWidth <= oldCanvasWidth && imageHeight === oldCanvasHeight) &&
+    (x === 0 && y === 0);
+}
+
+/**
+ * Rescale the image relative to the changed size of the canvas
+ *
+ * @param {EnabledElement} enabledElement The Cornerstone Enabled Element
+ * @param {number} oldCanvasWidth The width of the canvas before the resize
+ * @param {number} oldCanvasHeight The height of the canvas before the resize
+ * @return {void}
+ */
+function relativeRescale (enabledElement, oldCanvasWidth, oldCanvasHeight) {
+  const scale = enabledElement.viewport.scale;
+  const canvasWidth = enabledElement.canvas.width;
+  const canvasHeight = enabledElement.canvas.height;
+  const relWidthChange = canvasWidth / oldCanvasWidth;
+  const relHeightChange = canvasHeight / oldCanvasHeight;
+  const relChange = Math.sqrt(relWidthChange * relHeightChange);
+
+  enabledElement.viewport.scale = relChange * scale;
+}
+
+/**
  * Resizes an enabled element and optionally fits the image to window
  *
  * @param {HTMLElement} element The DOM element enabled for Cornerstone
@@ -53,7 +94,6 @@ function setCanvasSize (element, canvas) {
  * @returns {void}
  */
 export default function (element, forceFitToWindow) {
-
   const enabledElement = getEnabledElement(element);
 
   const oldCanvasWidth = enabledElement.canvas.width;
@@ -61,9 +101,7 @@ export default function (element, forceFitToWindow) {
 
   setCanvasSize(element, enabledElement.canvas);
 
-  const eventData = {
-    element
-  };
+  const eventData = { element };
 
   triggerEvent(element, 'cornerstoneelementresized', eventData);
 
@@ -77,31 +115,13 @@ export default function (element, forceFitToWindow) {
     return;
   }
 
-  const scale = enabledElement.viewport.scale;
-
-  const imageSize = getImageSize(enabledElement);
-  const imageWidth = Math.round(imageSize.width * scale);
-  const imageHeight = Math.round(imageSize.height * scale);
-  const x = enabledElement.viewport.translation.x;
-  const y = enabledElement.viewport.translation.y;
-
-  const wasFitToWindow =
-    (imageWidth === oldCanvasWidth && imageHeight <= oldCanvasHeight) ||
-    (imageWidth <= oldCanvasWidth && imageHeight === oldCanvasHeight) &&
-    (x === 0 && y === 0);
-
-  if (wasFitToWindow) {
+  if (wasFitToWindow(enabledElement, oldCanvasWidth, oldCanvasHeight)) {
     // Fit the image to the window again if it fitted before the resize
     fitToWindow(element);
   } else {
-    // Adapt the scale of a zoomed or panned image
-    const canvasWidth = enabledElement.canvas.width;
-    const canvasHeight = enabledElement.canvas.height;
-    const relWidthChange = canvasWidth / oldCanvasWidth;
-    const relHeightChange = canvasHeight / oldCanvasHeight;
-    const relChange = Math.sqrt(relWidthChange * relHeightChange);
+    // Adapt the scale of a zoomed or panned image relative to the size change
+    relativeRescale(enabledElement, oldCanvasWidth, oldCanvasHeight);
 
-    enabledElement.viewport.scale = relChange * scale;
     updateImage(element);
   }
 }
