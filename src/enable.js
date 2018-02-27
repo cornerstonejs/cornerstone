@@ -4,6 +4,7 @@ import drawImageSync from './internal/drawImageSync.js';
 import requestAnimationFrame from './internal/requestAnimationFrame.js';
 import webGL from './webgl/index.js';
 import triggerEvent from './triggerEvent.js';
+import { EVENTS } from './events.js';
 import getCanvas from './internal/getCanvas.js';
 
 /**
@@ -93,7 +94,7 @@ export default function (element, options) {
       timestamp
     };
 
-    triggerEvent(enabledElement.element, 'cornerstoneprerender', eventDetails);
+    triggerEvent(enabledElement.element, EVENTS.PRE_RENDER, eventDetails);
 
     if (enabledElement.needsRedraw && hasImageOrLayers(enabledElement)) {
       drawImageSync(enabledElement, enabledElement.invalid);

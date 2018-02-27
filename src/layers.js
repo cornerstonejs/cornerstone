@@ -3,6 +3,7 @@ import { getEnabledElement } from './enabledElements.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import updateImage from './updateImage.js';
 import triggerCustomEvent from './triggerEvent.js';
+import { EVENTS } from './events.js';
 
 /**
  * @module EnabledElementLayers
@@ -112,7 +113,7 @@ export function addLayer (element, image, options) {
 
   layers.push(newLayer);
 
-  triggerEventForLayer('cornerstonelayeradded', enabledElement, layerId);
+  triggerEventForLayer(EVENTS.LAYER_ADDED, enabledElement, layerId);
 
   // Set the layer as active if it's the first layer added
   if (layers.length === 1 && image) {
@@ -144,7 +145,7 @@ export function removeLayer (element, layerId) {
       setActiveLayer(element, layers[0].layerId);
     }
 
-    triggerEventForLayer('cornerstonelayerremoved', enabledElement, layerId);
+    triggerEventForLayer(EVENTS.LAYER_REMOVED, enabledElement, layerId);
   }
 }
 
@@ -227,7 +228,7 @@ export function setActiveLayer (element, layerId) {
   enabledElement.viewport = layer.viewport;
 
   updateImage(element);
-  triggerEventForLayer('cornerstoneactivelayerchanged', enabledElement, layerId);
+  triggerEventForLayer(EVENTS.ACTIVE_LAYER_CHANGED, enabledElement, layerId);
 }
 
 /**

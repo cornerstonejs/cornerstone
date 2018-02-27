@@ -2,6 +2,7 @@ import { getEnabledElement } from './enabledElements.js';
 import fitToWindow from './fitToWindow.js';
 import updateImage from './updateImage.js';
 import triggerEvent from './triggerEvent.js';
+import { EVENTS } from './events.js';
 
 /**
  * This module is responsible for enabling an element to display images with cornerstone
@@ -61,7 +62,7 @@ export default function (element, fitViewportToWindow) {
     element
   };
 
-  triggerEvent(element, 'cornerstoneelementresized', eventData);
+  triggerEvent(element, EVENTS.ELEMENT_RESIZED, eventData);
 
   if (enabledElement.image === undefined) {
     return;
