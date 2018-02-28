@@ -29,7 +29,7 @@
     "docs": "npm run apidocs:generate && cd docs && gitbook serve",
     "docs:deploy": "npm run apidocs:generate && bash ./build/update-docs.sh",
     "version": "node -p -e \"'export default \\'' + require('./package.json').version + '\\';'\" > src/version.js",
-    "build": "npm run test && npm run version && npm run webpack && npm run doc:generate",
+    "build": "npm run test && npm run version && npm run webpack",
     "webpack": "npm run clean:dist && npm run webpack:prod && npm run webpack:dev",
     "start": "npm run webpack",
     "webpack:dev": "webpack --progress --config ./config/webpack/webpack-dev",
