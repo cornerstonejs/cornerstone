@@ -1,4 +1,4 @@
-/*! cornerstone-core - 2.0.0 - 2018-02-27 | (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */
+/*! cornerstone-core - 2.0.0 - 2018-03-01 | (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -1252,11 +1252,39 @@ var EventTarget = function () {
     _classCallCheck(this, EventTarget);
 
     this.listeners = {};
+    this.namespaces = {};
   }
 
   _createClass(EventTarget, [{
-    key: "addEventListener",
+    key: 'addEventNamespaceListener',
+    value: function addEventNamespaceListener(type, callback) {
+      if (type.indexOf('.') <= 0) {
+        return;
+      }
+
+      this.namespaces[type] = callback;
+      this.addEventListener(type.split('.')[0], callback);
+    }
+  }, {
+    key: 'removeEventNamespaceListener',
+    value: function removeEventNamespaceListener(type) {
+      if (type.indexOf('.') <= 0 || !this.namespaces[type]) {
+        return;
+      }
+
+      this.removeEventListener(type.split('.')[0], this.namespaces[type]);
+      delete this.namespaces[type];
+    }
+  }, {
+    key: 'addEventListener',
     value: function addEventListener(type, callback) {
+      // Check if it is an event namespace
+      if (type.indexOf('.') > 0) {
+        this.addEventNamespaceListener(type, callback);
+
+        return;
+      }
+
       if (!(type in this.listeners)) {
         this.listeners[type] = [];
       }
@@ -1264,8 +1292,15 @@ var EventTarget = function () {
       this.listeners[type].push(callback);
     }
   }, {
-    key: "removeEventListener",
+    key: 'removeEventListener',
     value: function removeEventListener(type, callback) {
+      // Check if it is an event namespace
+      if (type.indexOf('.') > 0) {
+        this.removeEventNamespaceListener(type);
+
+        return;
+      }
+
       if (!(type in this.listeners)) {
         return;
       }
@@ -1281,7 +1316,7 @@ var EventTarget = function () {
       }
     }
   }, {
-    key: "dispatchEvent",
+    key: 'dispatchEvent',
     value: function dispatchEvent(event) {
       if (!(event.type in this.listeners)) {
         return true;
