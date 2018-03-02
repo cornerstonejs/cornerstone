@@ -1,26 +1,6 @@
 import { getEnabledElement } from './enabledElements.js';
 import updateImage from './updateImage.js';
-
-/**
- * Retrieves the current image dimensions given an enabled element
- *
- * @param {EnabledElement} enabledElement The Cornerstone Enabled Element
- * @return {{width, height}} The Image dimensions
- */
-function getImageSize (enabledElement) {
-  if (enabledElement.viewport.rotation === 0 || enabledElement.viewport.rotation === 180) {
-    return {
-      width: enabledElement.image.width,
-      height: enabledElement.image.height
-    };
-  }
-
-  return {
-    width: enabledElement.image.height,
-    height: enabledElement.image.width
-  };
-
-}
+import getImageSize from './internal/getImageSize.js';
 
 /**
  * Adjusts an image's scale and translation so the image is centered and all pixels
