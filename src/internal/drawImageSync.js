@@ -5,6 +5,7 @@ import { renderGrayscaleImage } from '../rendering/renderGrayscaleImage.js';
 import { renderPseudoColorImage } from '../rendering/renderPseudoColorImage.js';
 import { renderLabelMapImage } from '../rendering/renderLabelMapImage.js';
 import triggerEvent from '../triggerEvent.js';
+import { EVENTS } from '../events.js';
 
 /**
  * Draw an image to a given enabled element synchronously
@@ -74,5 +75,5 @@ export default function (enabledElement, invalidated) {
   enabledElement.invalid = false;
   enabledElement.needsRedraw = false;
 
-  triggerEvent(element, 'cornerstoneimagerendered', eventData);
+  triggerEvent(element, EVENTS.IMAGE_RENDERED, eventData);
 }

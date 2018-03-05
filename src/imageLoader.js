@@ -1,5 +1,5 @@
 import { getImageLoadObject, putImageLoadObject } from './imageCache.js';
-import events from './events.js';
+import events, { EVENTS } from './events.js';
 import triggerEvent from './triggerEvent.js';
 
 /**
@@ -41,14 +41,14 @@ function loadImageFromImageLoader (imageId, options) {
 
   // Broadcast an image loaded event once the image is loaded
   imageLoadObject.promise.then(function (image) {
-    triggerEvent(events, 'cornerstoneimageloaded', { image });
+    triggerEvent(events, EVENTS.IMAGE_LOADED, { image });
   }, function (error) {
     const errorObject = {
       imageId,
       error
     };
 
-    triggerEvent(events, 'cornerstoneimageloadfailed', errorObject);
+    triggerEvent(events, EVENTS.IMAGE_LOAD_FAILED, errorObject);
   });
 
   return imageLoadObject;

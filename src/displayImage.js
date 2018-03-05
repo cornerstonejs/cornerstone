@@ -4,6 +4,7 @@ import updateImage from './updateImage.js';
 import now from './internal/now.js';
 import { setLayerImage } from './layers.js';
 import triggerEvent from './triggerEvent.js';
+import { EVENTS } from './events.js';
 
 /**
  * Sets a new image object for a given element.
@@ -65,7 +66,7 @@ export default function (element, image, viewport) {
     frameRate
   };
 
-  triggerEvent(enabledElement.element, 'cornerstonenewimage', newImageEventData);
+  triggerEvent(enabledElement.element, EVENTS.NEW_IMAGE, newImageEventData);
 
   updateImage(element);
 }

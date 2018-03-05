@@ -3,6 +3,7 @@ import fitToWindow from './fitToWindow.js';
 import updateImage from './updateImage.js';
 import triggerEvent from './triggerEvent.js';
 import getImageSize from './internal/getImageSize.js';
+import { EVENTS } from './events.js';
 
 /**
  * This module is responsible for enabling an element to display images with cornerstone
@@ -103,7 +104,7 @@ export default function (element, forceFitToWindow) {
 
   const eventData = { element };
 
-  triggerEvent(element, 'cornerstoneelementresized', eventData);
+  triggerEvent(element, EVENTS.ELEMENT_RESIZED, eventData);
 
   if (enabledElement.image === undefined) {
     return;
