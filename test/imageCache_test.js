@@ -9,7 +9,7 @@ import { default as imageCache,
   // changeImageIdCacheSize,
   purgeCache } from '../src/imageCache.js';
 
-import events from '../src/events.js';
+import { eventProxy } from '../src/events.js';
 
 describe('Set maximum cache size', function () {
   it('should allow setting of cache size', function () {
@@ -256,7 +256,7 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
     getImageLoadObject('imageId-6');
 
     // Setup event listeners to check that the promise removed and cache full events have fired properly
-    events.addEventListener('cornerstoneimagecachepromiseremoved', (event) => {
+    eventProxy.addEventListener('cornerstoneimagecachepromiseremoved', (event) => {
       const imageId = event.detail.imageId;
 
       // Detect that the earliest image added has been removed
@@ -270,7 +270,7 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
       done();
     });
 
-    events.addEventListener('cornerstoneimagecachefull', (event) => {
+    eventProxy.addEventListener('cornerstoneimagecachefull', (event) => {
       assert.equal(event.detail.numberOfImagesCached, 10);
       assert.equal(event.detail.cacheSizeInBytes, maxCacheSize);
       done();

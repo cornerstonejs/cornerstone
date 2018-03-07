@@ -1,6 +1,6 @@
 import { getEnabledElements } from './enabledElements.js';
 import triggerEvent from './triggerEvent.js';
-import { EVENTS } from './events.js';
+import EVENTS from './events.js';
 
 
 /**

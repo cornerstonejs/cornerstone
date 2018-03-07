@@ -84,5 +84,5 @@ export { convertImageToFalseColorImage,
   convertToFalseColorImage,
   restoreImage } from './falseColorMapping.js';
 
-export { default as events } from './events.js';
+export { default as EVENTS, eventProxy } from './events.js';
 export { default as triggerEvent } from './triggerEvent.js';

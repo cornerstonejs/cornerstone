@@ -1,6 +1,6 @@
 import { getEnabledElement } from './enabledElements.js';
 import triggerEvent from './triggerEvent.js';
-import { EVENTS } from './events.js';
+import EVENTS from './events.js';
 
 /**
  * Sets the invalid flag on the enabled element and fire an event

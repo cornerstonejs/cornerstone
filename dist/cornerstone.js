@@ -1,4 +1,4 @@
-/*! cornerstone-core - 2.1.0 - 2018-03-02 | (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */
+/*! cornerstone-core - 2.1.0 - 2018-03-07 | (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -331,7 +331,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var EVENTS = exports.EVENTS = {
+var EVENTS = {
   NEW_IMAGE: 'cornerstonenewimage',
   INVALIDATED: 'cornerstoneinvalidated',
   PRE_RENDER: 'cornerstoneprerender',
@@ -350,6 +350,8 @@ var EVENTS = exports.EVENTS = {
   ACTIVE_LAYER_CHANGED: 'cornerstoneactivelayerchanged',
   ELEMENT_DISABLED: 'cornerstoneelementdisabled'
 };
+
+exports.default = EVENTS;
 
 /**
  * EventTarget - Provides the [EventTarget](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget) interface
@@ -446,9 +448,7 @@ var EventTarget = function () {
   return EventTarget;
 }();
 
-var events = new EventTarget();
-
-exports.default = events;
+var eventProxy = exports.eventProxy = new EventTarget();
 
 /***/ }),
 /* 3 */
@@ -1997,6 +1997,8 @@ var _triggerEvent2 = _interopRequireDefault(_triggerEvent);
 
 var _events = __webpack_require__(2);
 
+var _events2 = _interopRequireDefault(_events);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -2106,7 +2108,7 @@ function addLayer(element, image, options) {
 
   layers.push(newLayer);
 
-  triggerEventForLayer(_events.EVENTS.LAYER_ADDED, enabledElement, layerId);
+  triggerEventForLayer(_events2.default.LAYER_ADDED, enabledElement, layerId);
 
   // Set the layer as active if it's the first layer added
   if (layers.length === 1 && image) {
@@ -2140,7 +2142,7 @@ function removeLayer(element, layerId) {
       setActiveLayer(element, layers[0].layerId);
     }
 
-    triggerEventForLayer(_events.EVENTS.LAYER_REMOVED, enabledElement, layerId);
+    triggerEventForLayer(_events2.default.LAYER_REMOVED, enabledElement, layerId);
   }
 }
 
@@ -2225,7 +2227,7 @@ function setActiveLayer(element, layerId) {
   enabledElement.viewport = layer.viewport;
 
   (0, _updateImage2.default)(element);
-  triggerEventForLayer(_events.EVENTS.ACTIVE_LAYER_CHANGED, enabledElement, layerId);
+  triggerEventForLayer(_events2.default.ACTIVE_LAYER_CHANGED, enabledElement, layerId);
 }
 
 /**
@@ -3626,12 +3628,12 @@ function purgeCacheIfNecessary() {
     delete imageCache[lastCachedImage.imageId];
     cachedImages.pop();
 
-    (0, _triggerEvent2.default)(_events2.default, _events.EVENTS.WEBGL_TEXTURE_REMOVED, { imageId: lastCachedImage.imageId });
+    (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.WEBGL_TEXTURE_REMOVED, { imageId: lastCachedImage.imageId });
   }
 
   var cacheInfo = getCacheInfo();
 
-  (0, _triggerEvent2.default)(_events2.default, _events.EVENTS.WEBGL_TEXTURE_CACHE_FULL, cacheInfo);
+  (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.WEBGL_TEXTURE_CACHE_FULL, cacheInfo);
 }
 
 function setMaximumSizeBytes(numBytes) {
@@ -3915,7 +3917,7 @@ exports.default = function (element, forceFitToWindow) {
 
   var eventData = { element: element };
 
-  (0, _triggerEvent2.default)(element, _events.EVENTS.ELEMENT_RESIZED, eventData);
+  (0, _triggerEvent2.default)(element, _events2.default.ELEMENT_RESIZED, eventData);
 
   if (enabledElement.image === undefined) {
     return;
@@ -3957,6 +3959,8 @@ var _getImageSize = __webpack_require__(38);
 var _getImageSize2 = _interopRequireDefault(_getImageSize);
 
 var _events = __webpack_require__(2);
+
+var _events2 = _interopRequireDefault(_events);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4198,7 +4202,7 @@ function setMaximumSizeBytes(numBytes) {
 
   maximumSizeInBytes = numBytes;
 
-  (0, _triggerEvent2.default)(_events2.default, _events.EVENTS.IMAGE_CACHE_MAXIMUM_SIZE_CHANGED);
+  (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.IMAGE_CACHE_MAXIMUM_SIZE_CHANGED);
 
   purgeCacheIfNecessary();
 }
@@ -4230,12 +4234,12 @@ function purgeCacheIfNecessary() {
 
     removeImageLoadObject(imageId);
 
-    (0, _triggerEvent2.default)(_events2.default, _events.EVENTS.IMAGE_CACHE_PROMISE_REMOVED, { imageId: imageId });
+    (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.IMAGE_CACHE_PROMISE_REMOVED, { imageId: imageId });
   }
 
   var cacheInfo = getCacheInfo();
 
-  (0, _triggerEvent2.default)(_events2.default, _events.EVENTS.IMAGE_CACHE_FULL, cacheInfo);
+  (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.IMAGE_CACHE_FULL, cacheInfo);
 }
 
 function putImageLoadObject(imageId, imageLoadObject) {
@@ -4288,7 +4292,7 @@ function putImageLoadObject(imageId, imageLoadObject) {
       image: cachedImage
     };
 
-    (0, _triggerEvent2.default)(_events2.default, _events.EVENTS.IMAGE_CACHE_CHANGED, eventDetails);
+    (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.IMAGE_CACHE_CHANGED, eventDetails);
 
     cachedImage.sharedCacheKey = image.sharedCacheKey;
 
@@ -4335,7 +4339,7 @@ function removeImageLoadObject(imageId) {
     image: cachedImage
   };
 
-  (0, _triggerEvent2.default)(_events2.default, _events.EVENTS.IMAGE_CACHE_CHANGED, eventDetails);
+  (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.IMAGE_CACHE_CHANGED, eventDetails);
   decache(cachedImage.imageLoadObject);
 
   delete imageCacheDict[imageId];
@@ -4387,7 +4391,7 @@ function changeImageIdCacheSize(imageId, newCacheSize) {
         image: image
       };
 
-      (0, _triggerEvent2.default)(_events2.default, _events.EVENTS.IMAGE_CACHE_CHANGED, eventDetails);
+      (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.IMAGE_CACHE_CHANGED, eventDetails);
     });
   }
 }
@@ -5016,10 +5020,16 @@ Object.defineProperty(exports, 'restoreImage', {
 
 var _events = __webpack_require__(2);
 
-Object.defineProperty(exports, 'events', {
+Object.defineProperty(exports, 'EVENTS', {
   enumerable: true,
   get: function get() {
     return _interopRequireDefault(_events).default;
+  }
+});
+Object.defineProperty(exports, 'eventProxy', {
+  enumerable: true,
+  get: function get() {
+    return _events.eventProxy;
   }
 });
 
@@ -5992,7 +6002,7 @@ exports.default = function (element) {
         element: element
       };
 
-      (0, _triggerEvent2.default)(element, _events.EVENTS.ELEMENT_DISABLED, eventData);
+      (0, _triggerEvent2.default)(element, _events2.default.ELEMENT_DISABLED, eventData);
 
       // Remove the child DOM elements that we created (e.g.canvas)
       enabledElements[i].element.removeChild(enabledElements[i].canvas);
@@ -6013,6 +6023,8 @@ var _triggerEvent = __webpack_require__(3);
 var _triggerEvent2 = _interopRequireDefault(_triggerEvent);
 
 var _events = __webpack_require__(2);
+
+var _events2 = _interopRequireDefault(_events);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6076,7 +6088,7 @@ exports.default = function (element, image, viewport) {
     frameRate: frameRate
   };
 
-  (0, _triggerEvent2.default)(enabledElement.element, _events.EVENTS.NEW_IMAGE, newImageEventData);
+  (0, _triggerEvent2.default)(enabledElement.element, _events2.default.NEW_IMAGE, newImageEventData);
 
   (0, _updateImage2.default)(element);
 };
@@ -6102,6 +6114,8 @@ var _triggerEvent = __webpack_require__(3);
 var _triggerEvent2 = _interopRequireDefault(_triggerEvent);
 
 var _events = __webpack_require__(2);
+
+var _events2 = _interopRequireDefault(_events);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6258,7 +6272,7 @@ exports.default = function (element, options) {
       timestamp: timestamp
     };
 
-    (0, _triggerEvent2.default)(enabledElement.element, _events.EVENTS.PRE_RENDER, eventDetails);
+    (0, _triggerEvent2.default)(enabledElement.element, _events2.default.PRE_RENDER, eventDetails);
 
     if (enabledElement.needsRedraw && hasImageOrLayers(enabledElement)) {
       (0, _drawImageSync2.default)(enabledElement, enabledElement.invalid);
@@ -6293,6 +6307,8 @@ var _triggerEvent = __webpack_require__(3);
 var _triggerEvent2 = _interopRequireDefault(_triggerEvent);
 
 var _events = __webpack_require__(2);
+
+var _events2 = _interopRequireDefault(_events);
 
 var _getCanvas = __webpack_require__(64);
 
@@ -6401,7 +6417,7 @@ exports.default = function (enabledElement, invalidated) {
   enabledElement.invalid = false;
   enabledElement.needsRedraw = false;
 
-  (0, _triggerEvent2.default)(element, _events.EVENTS.IMAGE_RENDERED, eventData);
+  (0, _triggerEvent2.default)(element, _events2.default.IMAGE_RENDERED, eventData);
 };
 
 var _now = __webpack_require__(1);
@@ -6425,6 +6441,8 @@ var _triggerEvent = __webpack_require__(3);
 var _triggerEvent2 = _interopRequireDefault(_triggerEvent);
 
 var _events = __webpack_require__(2);
+
+var _events2 = _interopRequireDefault(_events);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6862,14 +6880,14 @@ function loadImageFromImageLoader(imageId, options) {
 
   // Broadcast an image loaded event once the image is loaded
   imageLoadObject.promise.then(function (image) {
-    (0, _triggerEvent2.default)(_events2.default, _events.EVENTS.IMAGE_LOADED, { image: image });
+    (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.IMAGE_LOADED, { image: image });
   }, function (error) {
     var errorObject = {
       imageId: imageId,
       error: error
     };
 
-    (0, _triggerEvent2.default)(_events2.default, _events.EVENTS.IMAGE_LOAD_FAILED, errorObject);
+    (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.IMAGE_LOAD_FAILED, errorObject);
   });
 
   return imageLoadObject;
@@ -6977,7 +6995,7 @@ exports.default = function (element) {
     element: element
   };
 
-  (0, _triggerEvent2.default)(element, _events.EVENTS.INVALIDATED, eventData);
+  (0, _triggerEvent2.default)(element, _events2.default.INVALIDATED, eventData);
 };
 
 var _enabledElements = __webpack_require__(0);
@@ -6987,6 +7005,8 @@ var _triggerEvent = __webpack_require__(3);
 var _triggerEvent2 = _interopRequireDefault(_triggerEvent);
 
 var _events = __webpack_require__(2);
+
+var _events2 = _interopRequireDefault(_events);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

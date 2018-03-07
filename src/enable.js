@@ -4,7 +4,7 @@ import drawImageSync from './internal/drawImageSync.js';
 import requestAnimationFrame from './internal/requestAnimationFrame.js';
 import webGL from './webgl/index.js';
 import triggerEvent from './triggerEvent.js';
-import { EVENTS } from './events.js';
+import EVENTS from './events.js';
 import getCanvas from './internal/getCanvas.js';
 
 /**
