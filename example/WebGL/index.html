@@ -7,69 +7,41 @@
 <body>
 <div class="container">
 
-<h1>
-WebGL Example
-</h1>
+    <h1>
+        WebGL Example
+    </h1>
 
-This is an example of WebGL use in cornerstone
+    This is an example of WebGL use in cornerstone
 
-<br>
-<br>
+    <br>
+    <br>
 
-<div class="row">
-    <div class="col-xs-6">
-        <h4>WebGL</h4>
-        <div style="width:512px;height:512px;position:relative;color: white;"
-             class="cornerstone-enabled-image"
-             oncontextmenu="return false"
-             unselectable='on'
-             onselectstart='return false;'
-             onmousedown='return false;'>
-            <div id="dicomImageWebGL" oncontextmenu="return false"
-                 style="width:512px;height:512px;top:0px;left:0px; position:absolute">
-            </div>
-            <div class="topleft" style="position: absolute;top:0px; left:0px">
-                Patient Name
-            </div>
-            <div class="topright" style="position: absolute;top:0px; right:0px">
-                Render Time:
-            </div>
-            <div class="bottomright" style="position: absolute;bottom:0px; right:0px">
-                Zoom:
-            </div>
-            <div class="bottomleft" style="position: absolute;bottom:0px; left:0px">
-                WW/WC:
+    <div class="row">
+        <div class="col-xs-6">
+            <h4>WebGL</h4>
+
+            <div id="dicomImageWebGL"
+                 style="width:512px;height:512px"
+                 oncontextmenu="return false"
+                 onmousedown="return false">
             </div>
 
+            <div class="wwwc">WW/WC:</div>
+            <div class="renderTime">Render Time:</div>
+        </div>
+        <div class="col-xs-6">
+            <h4>Canvas</h4>
+
+            <div id="dicomImage"
+                 style="width:512px;height:512px"
+                 oncontextmenu="return false"
+                 onmousedown="return false">
+            </div>
+
+            <div class="wwwc">WW/WC:</div>
+            <div class="renderTime">Render Time:</div>
         </div>
     </div>
-    <div class="col-xs-6">
-        <h4>Canvas</h4>
-        <div style="width:512px;height:512px;position:relative;color: white;"
-             class="cornerstone-enabled-image"
-             oncontextmenu="return false"
-             unselectable='on'
-             onselectstart='return false;'
-             onmousedown='return false;'>
-            <div id="dicomImage" oncontextmenu="return false"
-                 style="width:512px;height:512px;top:0px;left:0px; position:absolute">
-            </div>
-            <div class="topleft" style="position: absolute;top:0px; left:0px">
-                Patient Name
-            </div>
-            <div class="topright" style="position: absolute;top:0px; right:0px">
-                Render Time:
-            </div>
-            <div class="bottomright" style="position: absolute;bottom:0px; right:0px">
-                Zoom:
-            </div>
-            <div class="bottomleft" style="position: absolute;bottom:0px; left:0px">
-                WW/WC:
-            </div>
-
-        </div>
-    </div>
-</div>
 
 </div>
 </body>
@@ -92,9 +64,9 @@ This is an example of WebGL use in cornerstone
         cornerstone.setToPixelCoordinateSystem(eventData.enabledElement, eventData.canvasContext);
 
         const parent = eventData.element.parentNode;
-        parent.querySelector('.topright').textContent = "Render Time:" + eventData.renderTimeInMs + " ms";
-        parent.querySelector('.bottomleft').textContent = "WW/WL:" + Math.round(eventData.viewport.voi.windowWidth) + "/" + Math.round(eventData.viewport.voi.windowCenter);
-        parent.querySelector('.bottomright').textContent = "Zoom:" + eventData.viewport.scale.toFixed(2);
+        parent.querySelector('.renderTime').textContent = "Render Time:" + eventData.renderTimeInMs + " ms";
+        parent.querySelector('.wwwc').textContent = "WW/WL:" + Math.round(eventData.viewport.voi.windowWidth)
+            + "/" + Math.round(eventData.viewport.voi.windowCenter);
     }
 
     element.addEventListener('cornerstoneimagerendered', onImageRendered);
