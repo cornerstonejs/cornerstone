@@ -3,7 +3,7 @@ import { getEnabledElement } from './enabledElements.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import updateImage from './updateImage.js';
 import triggerCustomEvent from './triggerEvent.js';
-import { EVENTS } from './events.js';
+import EVENTS from './events.js';
 
 /**
  * @module EnabledElementLayers

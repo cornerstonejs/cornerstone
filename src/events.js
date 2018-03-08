@@ -1,4 +1,4 @@
-export const EVENTS = {
+const EVENTS = {
   NEW_IMAGE: 'cornerstonenewimage',
   INVALIDATED: 'cornerstoneinvalidated',
   PRE_RENDER: 'cornerstoneprerender',
@@ -17,6 +17,8 @@ export const EVENTS = {
   ACTIVE_LAYER_CHANGED: 'cornerstoneactivelayerchanged',
   ELEMENT_DISABLED: 'cornerstoneelementdisabled'
 };
+
+export default EVENTS;
 
 /**
  * EventTarget - Provides the [EventTarget](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget) interface
@@ -102,6 +104,4 @@ class EventTarget {
 }
 
 
-const events = new EventTarget();
-
-export default events;
+export const eventProxy = new EventTarget();

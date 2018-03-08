@@ -3,7 +3,7 @@ import fitToWindow from './fitToWindow.js';
 import updateImage from './updateImage.js';
 import triggerEvent from './triggerEvent.js';
 import getImageSize from './internal/getImageSize.js';
-import { EVENTS } from './events.js';
+import EVENTS from './events.js';
 
 /**
  * This module is responsible for enabling an element to display images with cornerstone

@@ -1,4 +1,4 @@
-import events, { EVENTS } from '../events.js';
+import EVENTS, { eventProxy } from '../events.js';
 import triggerEvent from '../triggerEvent.js';
 
 /**
@@ -49,12 +49,12 @@ function purgeCacheIfNecessary () {
     delete imageCache[lastCachedImage.imageId];
     cachedImages.pop();
 
-    triggerEvent(events, EVENTS.WEBGL_TEXTURE_REMOVED, { imageId: lastCachedImage.imageId });
+    triggerEvent(eventProxy, EVENTS.WEBGL_TEXTURE_REMOVED, { imageId: lastCachedImage.imageId });
   }
 
   const cacheInfo = getCacheInfo();
 
-  triggerEvent(events, EVENTS.WEBGL_TEXTURE_CACHE_FULL, cacheInfo);
+  triggerEvent(eventProxy, EVENTS.WEBGL_TEXTURE_CACHE_FULL, cacheInfo);
 }
 
 function setMaximumSizeBytes (numBytes) {
