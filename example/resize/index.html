@@ -3,9 +3,6 @@
 <head>
     <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- cornerstone css - provides some useful css classes -->
-    <link href="../cornerstone.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -17,11 +14,13 @@
     This is an example of resizing the enabled image
 
     <br>
-    <br>
+
     When the enabled element's width or height changes, you must call resize() so cornerstone can update
     the canvas width and height. The image is automatically rescaled. When the image fitted the window
     before the resize then it will also fit after the resize. If the image was zoomed or panned before
-    the resize then the image will be rescaled accordingly.
+    the resize then the image will be rescaled accordingly. Try this out here by dragging the red square
+    in the right corner of the image.
+
     <br>
     <br>
 
@@ -31,20 +30,16 @@
     <br>
     <br>
 
-    <div id="resize-container" style="display:inline-block;position:relative">
+    <div style="display:inline-block;position:relative">
       <div
-        id="resizer"
+        id="resizeKnob"
         style="position:absolute;right:-5px;bottom:-5px;width:20px;height:20px;background:red;cursor:se-resize">
       </div>
       <div id="dicomImage" style="width:256px;height:256px"
-           class="cornerstone-enabled-image"
            oncontextmenu="return false"
-           unselectable='on'
-           onselectstart='return false;'
-           onmousedown='return false;'>
+           onmousedown="return false">
       </div>
     </div>
-
 
 </div>
 </body>
@@ -79,7 +74,7 @@
         return Math.random() * (max - min) + min;
     }
 
-    document.getElementById('resizer').addEventListener('mousedown', function (e) {
+    document.getElementById('resizeKnob').addEventListener('mousedown', function (e) {
         const initWidth = element.clientWidth;
         const initHeight = element.clientHeight;
         const startX = e.clientX;
