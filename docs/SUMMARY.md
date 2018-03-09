@@ -21,5 +21,12 @@ This wiki is intended to be used as a reference for the concepts and APIs in Cor
   - [Rendering Loop](concepts/rendering-loop.md)
   - [Libraries](concepts/libraries.md)
   - [Rendering Pipeline](concepts/rendering-pipeline.md)
+- Advanced
+  - [Image Cache](advanced/image-cache.md)
+  - [Enabled Element Layers](advanced/enabled-element-layers.md)
+  - [Modality LUT and VOI LUT](advanced/modality-lut-and-voi-lut.md)
+  - [Color Lookup Tables](advanced/color-lookup-tables.md)
+  - [WebGL Rendering Pipeline](advanced/webgl-rendering-pipeline.md)
+  - [Retrieving Pixel Data](advanced/retrieving-pixel-data.md)
 - [API](api.md)
 - [Contributing](contributing.md)
