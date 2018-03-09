@@ -37,8 +37,18 @@ function metaDataProvider(type, imageId)
     }
   }
 }
+
+// Register this provider with CornerstoneJS
+cornerstone.metaData.addProvider(metaDataProvider);
+
+// Retrieve this metaData
+var imagePlaneModule = cornerstone.metaData.get('imagePlaneModule', 'ct://1');
 ````
 
-
-
-In web-based imaging applications it is beneficial for performance to only request images when they are required. T
+## Basics
+  * Cornerstone allows for the registration of multiple Metadata Providers.
+  * Each provider can provide whichever information the developer desires.
+  * When a request is made for metadata for an image, Cornerstone will iterate through the known providers until it retrieves a defined set of metadata for the specified metadata type.
+  * Providers can be added to Cornerstone with an optional priority value in order to influence the order in which they are called.
+  * When DICOM images are loaded by [Cornerstone WADO Image Loader](https://github.com/cornerstonejs/cornerstoneWADOImageLoader), their metadata will be parsed and added to a metadata provider automatically.
+  * Within [Cornerstone Tools](https://github.com/cornerstonejs/cornerstoneTools), specific metadata types are used to provide metadata for tools.

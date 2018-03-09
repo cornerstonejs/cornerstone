@@ -21,6 +21,7 @@ This wiki is intended to be used as a reference for the concepts and APIs in Cor
   - [Rendering Loop](concepts/rendering-loop.md)
   - [Libraries](concepts/libraries.md)
   - [Rendering Pipeline](concepts/rendering-pipeline.md)
+  - [Metadata Providers](concepts/metadata-providers.md)
 - Advanced
   - [Image Cache](advanced/image-cache.md)
   - [Enabled Element Layers](advanced/enabled-element-layers.md)
