@@ -8,7 +8,7 @@ import colors from './colors/index.js';
  *
  * @returns {void}
  * @deprecated This function is superseded by the ability to set the Viewport parameters
- * to include colormaps. 
+ * to include colormaps.
  */
 export default function pixelDataToFalseColorData (image, lookupTable) {
   if (image.color && !image.falseColor) {

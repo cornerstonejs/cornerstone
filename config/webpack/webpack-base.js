@@ -6,6 +6,7 @@ const outputPath = path.join(rootPath, 'dist');
 const bannerPlugin = require(path.join(__dirname, 'plugins', 'banner.js'));
 
 module.exports = {
+  mode: 'development',
   context: context,
   entry: {
     cornerstone: path.join(context, 'index.js')
@@ -22,7 +23,7 @@ module.exports = {
     path: outputPath,
     umdNamedDefine: true
   },
-  devtool: 'source-map',
+  //devtool: 'hidden-source-map',
   externals: {},
   module: {
     rules: [{
