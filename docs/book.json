@@ -5,7 +5,8 @@
     "edit-link",
     "theme-cornerstone",
     "-fontsettings",
-    "github"
+    "github",
+    "ga"
   ],
   "pluginsConfig": {
     "edit-link": {
@@ -14,6 +15,9 @@
     },
     "github": {
       "url": "https://github.com/cornerstonejs/cornerstone"
+    },
+    "ga": {
+      "token": "UA-110573590-1"
     }
   },
   "links": {

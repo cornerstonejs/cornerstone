@@ -55,6 +55,7 @@
     "eslint-loader": "^1.9.0",
     "eslint-plugin-import": "^2.8.0",
     "gitbook-plugin-edit-link": "^2.0.2",
+    "gitbook-plugin-ga": "^2.0.0",
     "gitbook-plugin-github": "^3.0.0",
     "istanbul": "^0.4.5",
     "istanbul-instrumenter-loader": "^3.0.0",
