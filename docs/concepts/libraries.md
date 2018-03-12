@@ -8,7 +8,7 @@ description: Cornerstone is an open source project with a goal to deliver a comp
 
 ![Library Hierarchy](../assets/img/library-hierarchy.png)
 
-The central element of the Cornerstone ecosystem is the Cornerstone Core library, commonly referred to just as *Cornerstone*. This is the library that handles the [image rendering pipeline](./rendering-pipeline.md), [loading](./image-loaders.md), [caching](./image-cache.md), and [viewport transformations](./viewports.md).
+The central element of the Cornerstone ecosystem is the Cornerstone Core library, commonly referred to just as *Cornerstone*. This is the library that handles the [image rendering pipeline](./rendering-pipeline.md), [loading](./image-loaders.md), [caching](../advanced/image-cache.md), and [viewport transformations](./viewports.md).
 
 Aside from the core library, there are several other libraries supported by the Cornerstone development team which provide the ecosystem for developing complex imaging applications.
 
