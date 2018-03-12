@@ -104,4 +104,4 @@ class EventTarget {
 }
 
 
-export const eventProxy = new EventTarget();
+export const events = new EventTarget();
