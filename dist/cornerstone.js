@@ -1,4 +1,4 @@
-/*! cornerstone-core - 2.1.0 - 2018-03-08 | (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */
+/*! cornerstone-core - 2.1.0 - 2018-03-12 | (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -448,7 +448,7 @@ var EventTarget = function () {
   return EventTarget;
 }();
 
-var eventProxy = exports.eventProxy = new EventTarget();
+var events = exports.events = new EventTarget();
 
 /***/ }),
 /* 3 */
@@ -3628,12 +3628,12 @@ function purgeCacheIfNecessary() {
     delete imageCache[lastCachedImage.imageId];
     cachedImages.pop();
 
-    (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.WEBGL_TEXTURE_REMOVED, { imageId: lastCachedImage.imageId });
+    (0, _triggerEvent2.default)(_events.events, _events2.default.WEBGL_TEXTURE_REMOVED, { imageId: lastCachedImage.imageId });
   }
 
   var cacheInfo = getCacheInfo();
 
-  (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.WEBGL_TEXTURE_CACHE_FULL, cacheInfo);
+  (0, _triggerEvent2.default)(_events.events, _events2.default.WEBGL_TEXTURE_CACHE_FULL, cacheInfo);
 }
 
 function setMaximumSizeBytes(numBytes) {
@@ -4202,7 +4202,7 @@ function setMaximumSizeBytes(numBytes) {
 
   maximumSizeInBytes = numBytes;
 
-  (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.IMAGE_CACHE_MAXIMUM_SIZE_CHANGED);
+  (0, _triggerEvent2.default)(_events.events, _events2.default.IMAGE_CACHE_MAXIMUM_SIZE_CHANGED);
 
   purgeCacheIfNecessary();
 }
@@ -4234,12 +4234,12 @@ function purgeCacheIfNecessary() {
 
     removeImageLoadObject(imageId);
 
-    (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.IMAGE_CACHE_PROMISE_REMOVED, { imageId: imageId });
+    (0, _triggerEvent2.default)(_events.events, _events2.default.IMAGE_CACHE_PROMISE_REMOVED, { imageId: imageId });
   }
 
   var cacheInfo = getCacheInfo();
 
-  (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.IMAGE_CACHE_FULL, cacheInfo);
+  (0, _triggerEvent2.default)(_events.events, _events2.default.IMAGE_CACHE_FULL, cacheInfo);
 }
 
 function putImageLoadObject(imageId, imageLoadObject) {
@@ -4292,7 +4292,7 @@ function putImageLoadObject(imageId, imageLoadObject) {
       image: cachedImage
     };
 
-    (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.IMAGE_CACHE_CHANGED, eventDetails);
+    (0, _triggerEvent2.default)(_events.events, _events2.default.IMAGE_CACHE_CHANGED, eventDetails);
 
     cachedImage.sharedCacheKey = image.sharedCacheKey;
 
@@ -4339,7 +4339,7 @@ function removeImageLoadObject(imageId) {
     image: cachedImage
   };
 
-  (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.IMAGE_CACHE_CHANGED, eventDetails);
+  (0, _triggerEvent2.default)(_events.events, _events2.default.IMAGE_CACHE_CHANGED, eventDetails);
   decache(cachedImage.imageLoadObject);
 
   delete imageCacheDict[imageId];
@@ -4391,7 +4391,7 @@ function changeImageIdCacheSize(imageId, newCacheSize) {
         image: image
       };
 
-      (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.IMAGE_CACHE_CHANGED, eventDetails);
+      (0, _triggerEvent2.default)(_events.events, _events2.default.IMAGE_CACHE_CHANGED, eventDetails);
     });
   }
 }
@@ -5026,10 +5026,10 @@ Object.defineProperty(exports, 'EVENTS', {
     return _interopRequireDefault(_events).default;
   }
 });
-Object.defineProperty(exports, 'eventProxy', {
+Object.defineProperty(exports, 'events', {
   enumerable: true,
   get: function get() {
-    return _events.eventProxy;
+    return _events.events;
   }
 });
 
@@ -6880,14 +6880,14 @@ function loadImageFromImageLoader(imageId, options) {
 
   // Broadcast an image loaded event once the image is loaded
   imageLoadObject.promise.then(function (image) {
-    (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.IMAGE_LOADED, { image: image });
+    (0, _triggerEvent2.default)(_events.events, _events2.default.IMAGE_LOADED, { image: image });
   }, function (error) {
     var errorObject = {
       imageId: imageId,
       error: error
     };
 
-    (0, _triggerEvent2.default)(_events.eventProxy, _events2.default.IMAGE_LOAD_FAILED, errorObject);
+    (0, _triggerEvent2.default)(_events.events, _events2.default.IMAGE_LOAD_FAILED, errorObject);
   });
 
   return imageLoadObject;

@@ -1,4 +1,4 @@
-import EVENTS, { eventProxy } from './events.js';
+import EVENTS, { events } from './events.js';
 import triggerEvent from './triggerEvent.js';
 
 /**
@@ -25,7 +25,7 @@ export function setMaximumSizeBytes (numBytes) {
 
   maximumSizeInBytes = numBytes;
 
-  triggerEvent(eventProxy, EVENTS.IMAGE_CACHE_MAXIMUM_SIZE_CHANGED);
+  triggerEvent(events, EVENTS.IMAGE_CACHE_MAXIMUM_SIZE_CHANGED);
 
   purgeCacheIfNecessary();
 }
@@ -57,12 +57,12 @@ function purgeCacheIfNecessary () {
 
     removeImageLoadObject(imageId);
 
-    triggerEvent(eventProxy, EVENTS.IMAGE_CACHE_PROMISE_REMOVED, { imageId });
+    triggerEvent(events, EVENTS.IMAGE_CACHE_PROMISE_REMOVED, { imageId });
   }
 
   const cacheInfo = getCacheInfo();
 
-  triggerEvent(eventProxy, EVENTS.IMAGE_CACHE_FULL, cacheInfo);
+  triggerEvent(events, EVENTS.IMAGE_CACHE_FULL, cacheInfo);
 }
 
 export function putImageLoadObject (imageId, imageLoadObject) {
@@ -115,7 +115,7 @@ export function putImageLoadObject (imageId, imageLoadObject) {
       image: cachedImage
     };
 
-    triggerEvent(eventProxy, EVENTS.IMAGE_CACHE_CHANGED, eventDetails);
+    triggerEvent(events, EVENTS.IMAGE_CACHE_CHANGED, eventDetails);
 
     cachedImage.sharedCacheKey = image.sharedCacheKey;
 
@@ -162,7 +162,7 @@ export function removeImageLoadObject (imageId) {
     image: cachedImage
   };
 
-  triggerEvent(eventProxy, EVENTS.IMAGE_CACHE_CHANGED, eventDetails);
+  triggerEvent(events, EVENTS.IMAGE_CACHE_CHANGED, eventDetails);
   decache(cachedImage.imageLoadObject);
 
   delete imageCacheDict[imageId];
@@ -217,7 +217,7 @@ export function changeImageIdCacheSize (imageId, newCacheSize) {
         image
       };
 
-      triggerEvent(eventProxy, EVENTS.IMAGE_CACHE_CHANGED, eventDetails);
+      triggerEvent(events, EVENTS.IMAGE_CACHE_CHANGED, eventDetails);
     });
   }
 }
