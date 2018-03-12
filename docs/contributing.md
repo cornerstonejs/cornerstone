@@ -1,3 +1,7 @@
+---
+description: Cornerstone contribution frequently asked questions.
+---
+
 # Contributing
 
 ### I would like to contribute code - how do I do this?

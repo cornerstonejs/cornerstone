@@ -1,5 +1,6 @@
 {
   "title": "cornerstone",
+  "description": "Documentation for Cornerstone Core",
   "gitbook": ">3.0.0",
   "plugins": [
     "edit-link",
@@ -7,7 +8,8 @@
     "-fontsettings",
     "github",
     "ga",
-    "sitemap"
+    "sitemap",
+    "anchors"
   ],
   "pluginsConfig": {
     "edit-link": {
