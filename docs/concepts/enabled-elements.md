@@ -1,3 +1,7 @@
+---
+description: In Cornerstone, an Enabled Element is an HTMLElement which we display an interactive medical image inside of.
+---
+
 # Enabled Elements
 
 > In Cornerstone, an **Enabled Element** is an [HTMLElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement) (typically a [div](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div)) which we display an interactive medical image inside of.

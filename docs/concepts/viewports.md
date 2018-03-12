@@ -1,3 +1,7 @@
+---
+description: Each Enabled Element has a Viewport which describes how the Image should be rendered.
+---
+
 # Viewports
 
 > Each [Enabled Element](enabled-elements.md) has a **Viewport** which describes how the [Image](image.md) should be rendered.

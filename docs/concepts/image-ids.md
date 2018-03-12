@@ -1,3 +1,7 @@
+---
+description: A Cornerstone **Image Id** is a URL which identifies a single image for cornerstone to display.
+---
+
 # Image Ids
 
 > A Cornerstone **Image Id** is a URL which identifies a single image for cornerstone to display.

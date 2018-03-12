@@ -1,3 +1,7 @@
+---
+description: A Metadata Provider is a JavaScript function that acts as an interface for accessing metadata related to Images in Cornerstone.
+---
+
 # Metadata Providers
 
 > A **Metadata Provider** is a JavaScript function that acts as an interface for accessing metadata related to Images in Cornerstone. Users can define their own provider functions in order to return any metadata they wish for each specific image.

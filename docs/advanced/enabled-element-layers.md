@@ -1,3 +1,7 @@
+---
+description: Adding Layers to an Enabled Element allows Cornerstone to display labels maps and perform image fusion.
+---
+
 # Enabled Element Layers
 
 > Adding **Layers** to an **Enabled Element** allows Cornerstone to display labels maps and perform image fusion.

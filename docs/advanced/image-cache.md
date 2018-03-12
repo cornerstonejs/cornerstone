@@ -1,3 +1,7 @@
+---
+description: Cornerstone stores Images inside the Image Cache to keep track of memory usage.
+---
+
 # Image Cache
 
 > Cornerstone stores **Images** inside the **Image Cache** to keep track of memory usage.

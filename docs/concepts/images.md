@@ -1,3 +1,7 @@
+---
+description: Cornerstone Image objects have various properties (e.g. pixel spacing) which are used within the rendering pipeline.
+---
+
 # Images
 
 > [Image Loaders](image-loaders.md) return an **Image** Object.

@@ -1,3 +1,7 @@
+---
+description: Cornerstone will select from multiple image rendering pipelines depending on the Image (e.g. grayscale, color, label map, viewport pseudocolor) type.
+---
+
 # Rendering Pipeline
 
 > Cornerstone will select from multiple image rendering pipelines depending on the Image (e.g. grayscale, color, label map, viewport pseudocolor) type.
@@ -13,4 +17,3 @@ Rendering path | Description
 [renderColorImage](../api.md#rendercolorimage) | Default rendering pipeline for color images. Alpha for all pixels are left opaque unless the **rgba** property of the Image is set to **true**.
 [renderWebImage](../api.md#renderwebimage) | Custom rendering pipeline used for images (PNG, JPEG) which have been loaded by the browser. If no VOI LUT transformations (windowWidth, windowCenter, invert) have been applied, the canvas can be drawn directly from the Image **getImage** function.
 [renderLabelMapImage](../api.md#renderlabelmapimage) | Rendering pipeline for label maps. The pseudocolor LUT transform is applied directly to the stored pixel data. No Modality or VOI LUT transformations are applied.
-

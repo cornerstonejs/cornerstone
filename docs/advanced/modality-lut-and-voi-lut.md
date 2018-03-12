@@ -1,3 +1,7 @@
+---
+description: Cornerstone supports both Value of Interest (VOI) and Modality Lookup Tables (LUTs).
+---
+
 # Modality LUT and VOI LUT
 
 > Cornerstone supports both Value of Interest (VOI) and Modality Lookup Tables

@@ -1,3 +1,7 @@
+---
+description: Cornerstone allows developers to define their own Image Loaders to create Images for display and manipulation.
+---
+
 # Image Loaders
 
 > An **Image Loader** is a JavaScript function that is responsible for taking an [Image Id](image-ids.md) for an Image and returning the corresponding **Image Load Object** for that Image to Cornerstone. The **Image Load Object** contains a Promise which resolves to produce an **Image**.

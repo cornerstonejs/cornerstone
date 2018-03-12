@@ -1,3 +1,7 @@
+---
+description: Viewport (e.g. windowing, pan, zoom) changes for Cornerstone Enabled Elements are updated through a rendering loop based on requestAnimationFrame.
+---
+
 # Rendering Loop
 
 > Viewport (e.g. windowing, pan, zoom, etc...) changes for Cornerstone Enabled Elements are updated through a rendering loop based on [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
