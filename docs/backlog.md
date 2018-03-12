@@ -1,7 +1,5 @@
 Backlog:
 ========
-* more viewport functionality
-  * pseudo color tables (for PET, MRI)
 * Very large image support (e.g. pathology > 4kx4k resolution)
 * Performance related
   * switch to lower resolution image during ww/wc operation to improve framerate

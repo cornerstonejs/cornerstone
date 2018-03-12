@@ -1,3 +1,7 @@
+---
+description: Cornerstone installation guide - How to use Cornerstone in your project.
+---
+
 # Installation
 
 ### Direct Download / CDN
