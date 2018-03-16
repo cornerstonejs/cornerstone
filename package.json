@@ -77,5 +77,11 @@
     "promise-polyfill": "^7.1.0",
     "shx": "^0.2.2",
     "webpack": "^3.11.0"
-  }
+  },
+  "files": [
+    "dist/cornerstone.js",
+    "dist/cornerstone.js.map",
+    "dist/cornerstone.min.js",
+    "dist/cornerstone.min.js.map"
+  ]
 }
