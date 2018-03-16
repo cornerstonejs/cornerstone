@@ -37,7 +37,13 @@ Get a packaged source file:
 
 Or install via [NPM](https://www.npmjs.com/):
 
+**Latest stable release:**
+
 > npm install cornerstone-core
+
+**Pre-release, unstable, mostly for contributors:**
+
+> npm install cornerstone-core@next
 
 
 Key Features
