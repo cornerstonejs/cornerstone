@@ -2,7 +2,7 @@
 <html>
 <head>
     <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -37,12 +37,13 @@
 
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
+<script>window.cornerstone || document.write('<script src="https://unpkg.com/cornerstone-core">\x3C/script>')</script>
 
 <!-- include special code for these examples which provides images -->
 <script src="../exampleImageIdLoader.js"></script>
 
 <script>
-    // Populate colormap dropdown with all the default ones available 
+    // Populate colormap dropdown with all the default ones available
     // in cornerstone and also a "Custom" option
     function fillColormapsList() {
         const dropdown = document.getElementById('colormaps');
