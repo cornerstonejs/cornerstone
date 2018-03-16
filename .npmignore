@@ -1,10 +1,10 @@
 ## All Non-Dist Directories
-build
-config
-docs
-example
-src
-test
+build/
+config/
+docs/
+example/
+src/
+test/
 
 ## Root Files
 
