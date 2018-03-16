@@ -29,6 +29,7 @@
     "eslint-quiet": "eslint -c .eslintrc.js --quiet src",
     "eslint-fix": "eslint -c .eslintrc.js --fix src",
     "eslint-fix-test": "eslint -c .eslintrc.js --fix test",
+    "prepublish": "yarn run build",
     "start": "npm run webpack",
     "test": "npm run test:phantom",
     "test:watch": "karma start config/karma/karma-watch.js",
