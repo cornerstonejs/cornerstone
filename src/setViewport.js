@@ -1,3 +1,4 @@
+import computeVoi from './computeVoi.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import { getEnabledElement } from './enabledElements.js';
 import updateImage from './updateImage.js';
@@ -29,6 +30,15 @@ export default function (element, viewport) {
         enabledElement.viewport[attrname] = viewport[attrname];
       }
     }
+  }
+
+  if (viewport.computeVoi !== undefined) {
+    enabledElement.viewport.computeVoi = {
+      forceAutoVoi: viewport.computeVoi.forceAutoVoi,
+      type: viewport.computeVoi.type,
+      voiPresetIndex: viewport.computeVoi.voiPresetIndex
+    };
+    computeVoi(enabledElement.viewport, enabledElement.image);
   }
 
   // Prevent window width from being too small (note that values close to zero are valid and can occur with
