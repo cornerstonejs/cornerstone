@@ -1,3 +1,4 @@
+// @flow
 import drawImage from './drawImage.js';
 import generateLut from './generateLut.js';
 import getDefaultViewport from './getDefaultViewport.js';

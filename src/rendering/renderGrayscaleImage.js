@@ -1,3 +1,4 @@
+// @flow
 import storedPixelDataToCanvasImageData from '../internal/storedPixelDataToCanvasImageData.js';
 import storedPixelDataToCanvasImageDataRGBA from '../internal/storedPixelDataToCanvasImageDataRGBA.js';
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';

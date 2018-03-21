@@ -1,3 +1,4 @@
+// @flow
 import { render, initRenderer, getRenderCanvas, isWebGLAvailable, isWebGLInitialized } from './renderer.js';
 import createProgramFromString from './createProgramFromString.js';
 import textureCache from './textureCache.js';

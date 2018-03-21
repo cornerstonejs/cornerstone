@@ -1,3 +1,4 @@
+// @flow
 /**
  * Generates a linear modality transformation function
  *

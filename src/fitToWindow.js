@@ -1,3 +1,4 @@
+// @flow
 import { getEnabledElement } from './enabledElements.js';
 import updateImage from './updateImage.js';
 import getImageSize from './internal/getImageSize.js';

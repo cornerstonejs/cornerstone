@@ -1,3 +1,4 @@
+// @flow
 const EVENTS = {
   NEW_IMAGE: 'cornerstonenewimage',
   INVALIDATED: 'cornerstoneinvalidated',

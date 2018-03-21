@@ -1,3 +1,4 @@
+// @flow
 import getModalityLUT from './getModalityLUT.js';
 import getVOILUT from './getVOILut.js';
 

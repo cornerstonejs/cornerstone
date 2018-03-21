@@ -1,3 +1,4 @@
+// @flow
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
 import now from '../internal/now.js';
 import initializeRenderCanvas from './initializeRenderCanvas.js';

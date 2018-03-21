@@ -1,3 +1,4 @@
+// @flow
 import { getEnabledElement } from './enabledElements.js';
 import triggerEvent from './triggerEvent.js';
 import EVENTS from './events.js';

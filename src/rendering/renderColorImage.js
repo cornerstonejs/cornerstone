@@ -1,3 +1,4 @@
+// @flow
 import now from '../internal/now.js';
 import generateColorLut from '../internal/generateColorLut.js';
 import storedColorPixelDataToCanvasImageData from '../internal/storedColorPixelDataToCanvasImageData.js';

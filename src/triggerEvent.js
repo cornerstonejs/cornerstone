@@ -1,3 +1,4 @@
+// @flow
 /**
  * Trigger a CustomEvent
  *

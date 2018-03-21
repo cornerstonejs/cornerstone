@@ -1,3 +1,4 @@
+// @flow
 import { getImageLoadObject, putImageLoadObject } from './imageCache.js';
 import EVENTS, { events } from './events.js';
 import triggerEvent from './triggerEvent.js';

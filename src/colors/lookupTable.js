@@ -1,3 +1,4 @@
+// @flow
 // This code was created based on vtkLookupTable
 // http://www.vtk.org/doc/release/5.0/html/a01697.html
 // https://github.com/Kitware/VTK/blob/master/Common/Core/vtkLookupTable.cxx

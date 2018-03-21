@@ -1,3 +1,4 @@
+// @flow
 import now from './now.js';
 
 /**

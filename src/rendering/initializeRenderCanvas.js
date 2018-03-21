@@ -1,3 +1,4 @@
+// @flow
 export default function (enabledElement, image) {
   const renderCanvas = enabledElement.renderingTools.renderCanvas;
 

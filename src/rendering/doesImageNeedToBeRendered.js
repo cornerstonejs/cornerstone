@@ -1,3 +1,4 @@
+// @flow
 /**
  * Determine whether or not an Enabled Element needs to be re-rendered.
  *

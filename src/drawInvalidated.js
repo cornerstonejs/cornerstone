@@ -1,3 +1,4 @@
+// @flow
 /**
  * This module is responsible for drawing invalidated enabled elements
  */

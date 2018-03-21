@@ -1,3 +1,4 @@
+// @flow
 import { getEnabledElement } from './enabledElements.js';
 import getTransform from './internal/getTransform.js';
 

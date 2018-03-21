@@ -1,3 +1,4 @@
+// @flow
 /**
  * Creates and compiles a shader.
  *

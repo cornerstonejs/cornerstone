@@ -1,3 +1,4 @@
+// @flow
 // By Simon Sarris
 // Www.simonsarris.com
 // Sarris@acm.org

@@ -1,3 +1,4 @@
+// @flow
 import { getLayers, getActiveLayer, getVisibleLayers } from '../layers.js';
 import { addGrayscaleLayer } from '../rendering/renderGrayscaleImage.js';
 import { addColorLayer } from '../rendering/renderColorImage.js';

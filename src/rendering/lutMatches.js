@@ -1,3 +1,4 @@
+// @flow
 /**
  * Check if two lookup tables match
  *

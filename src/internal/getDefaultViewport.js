@@ -1,3 +1,4 @@
+// @flow
 /**
  * Creates a new viewport object containing default values for the image and canvas
  *

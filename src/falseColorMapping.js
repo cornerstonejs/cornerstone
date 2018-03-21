@@ -1,3 +1,4 @@
+// @flow
 import { getEnabledElement } from './enabledElements.js';
 import pixelDataToFalseColorData from './pixelDataToFalseColorData.js';
 import { getColormap } from './colors/colormap.js';

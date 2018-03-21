@@ -1,3 +1,4 @@
+// @flow
 const CANVAS_CSS_CLASS = 'cornerstone-canvas';
 
 /**

@@ -1,3 +1,4 @@
+// @flow
 export const vertexShader = 'attribute vec2 a_position;' +
     'attribute vec2 a_texCoord;' +
     'uniform vec2 u_resolution;' +

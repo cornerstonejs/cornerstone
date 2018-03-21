@@ -1,3 +1,4 @@
+// @flow
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import { getEnabledElement } from './enabledElements.js';
 import updateImage from './updateImage.js';

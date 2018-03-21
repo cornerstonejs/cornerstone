@@ -1,3 +1,4 @@
+// @flow
 import LookupTable from './lookupTable.js';
 
 const COLOR_TRANSPARENT = [0, 0, 0, 0];

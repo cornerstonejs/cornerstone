@@ -1,3 +1,4 @@
+// @flow
 import lutMatches from './lutMatches.js';
 import generateLut from '../internal/generateLut.js';
 

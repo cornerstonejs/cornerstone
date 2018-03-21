@@ -1,3 +1,4 @@
+// @flow
 export default function (enabledElement) {
   const imageId = enabledElement.image.imageId;
   const viewport = enabledElement.viewport;

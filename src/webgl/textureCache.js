@@ -1,3 +1,4 @@
+// @flow
 import EVENTS, { events } from '../events.js';
 import triggerEvent from '../triggerEvent.js';
 

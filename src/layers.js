@@ -1,3 +1,4 @@
+// @flow
 import guid from './internal/guid.js';
 import { getEnabledElement } from './enabledElements.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';

@@ -1,3 +1,4 @@
+// @flow
 import { getEnabledElement } from './enabledElements.js';
 import getStoredPixels from './getStoredPixels.js';
 import getModalityLUT from './internal/getModalityLUT.js';

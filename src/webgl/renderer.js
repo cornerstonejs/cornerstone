@@ -1,3 +1,4 @@
+// @flow
 /* eslint no-bitwise: 0 */
 
 import { shaders, dataUtilities } from './shaders/index.js';

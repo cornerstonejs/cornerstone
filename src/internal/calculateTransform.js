@@ -1,3 +1,4 @@
+// @flow
 import { Transform } from './transform.js';
 
 /**

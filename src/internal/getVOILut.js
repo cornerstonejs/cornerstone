@@ -1,3 +1,4 @@
+// @flow
 /* eslint no-bitwise: 0 */
 
 /**

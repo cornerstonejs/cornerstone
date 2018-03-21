@@ -1,3 +1,5 @@
+// @flow
+// @flow
 // Internal (some of these are from old internal/legacy expose)
 export { default as drawImage } from './internal/drawImage.js';
 export { default as generateLut } from './internal/generateLut.js';
@@ -9,6 +11,7 @@ export { default as storedPixelDataToCanvasImageDataColorLUT } from './internal/
 export { default as storedPixelDataToCanvasImageDataPseudocolorLUT } from './internal/storedPixelDataToCanvasImageDataPseudocolorLUT.js';
 
 export { default as internal } from './internal/index.js';
+import './test.js';
 
 // Rendering
 export { renderLabelMapImage } from './rendering/renderLabelMapImage.js';

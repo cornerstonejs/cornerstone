@@ -1,3 +1,4 @@
+// @flow
 import { getEnabledElementsByImageId } from './enabledElements.js';
 import drawImage from './internal/drawImage.js';
 

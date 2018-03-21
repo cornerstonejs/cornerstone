@@ -1,3 +1,4 @@
+// @flow
 import calculateTransform from './calculateTransform.js';
 
 export default function (enabledElement) {

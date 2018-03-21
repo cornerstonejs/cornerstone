@@ -1,3 +1,4 @@
+// @flow
 /**
  * Internal API function to draw an image to a given enabled element
  *

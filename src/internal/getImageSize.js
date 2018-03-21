@@ -1,3 +1,4 @@
+// @flow
 /**
  * Retrieves the current image dimensions given an enabled element
  *

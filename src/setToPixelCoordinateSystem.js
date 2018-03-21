@@ -1,3 +1,4 @@
+// @flow
 import calculateTransform from './internal/calculateTransform.js';
 
 /**

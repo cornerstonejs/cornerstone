@@ -1,3 +1,4 @@
+// @flow
 import colors from '../colors/index.js';
 import now from './now.js';
 
