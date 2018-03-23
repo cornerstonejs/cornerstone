@@ -23,7 +23,7 @@ module.exports = {
     path: outputPath,
     umdNamedDefine: true
   },
-  //devtool: 'hidden-source-map',
+  devtool: 'source-map',
   externals: {},
   module: {
     rules: [{
