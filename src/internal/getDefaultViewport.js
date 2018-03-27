@@ -30,7 +30,20 @@ export default function (canvas, image) {
       modalityLUT: undefined,
       voiLUT: undefined,
       colormap: undefined,
-      labelmap: false
+      labelmap: false,
+      displayedArea : {
+        tlhc : {
+          x : 1,
+          y : 1
+        },
+        brhc : {
+          x : 1,
+          y : 1
+        },
+        rowPixelSpacing : 1,
+        columnPixelSpacing : 1,
+        presentationSizeMode : 'SCALE TO FIT'
+      }
     };
   }
 
@@ -57,6 +70,19 @@ export default function (canvas, image) {
     modalityLUT: image.modalityLUT,
     voiLUT: image.voiLUT,
     colormap: image.colormap,
-    labelmap: Boolean(image.labelmap)
+    labelmap: Boolean(image.labelmap),
+    displayedArea : {
+      tlhc : {
+        x : 1,
+        y : 1
+      },
+      brhc : {
+        x : image.columns + 1,
+        y : image.rows + 1
+      },
+      rowPixelSpacing : image.rowPixelSpacing !== undefined ? image.rowPixelSpacing : 1,
+      columnPixelSpacing : image.columnPixelSpacing !== undefined ? image.columnPixelSpacing : 1,
+      presentationSizeMode : 'SCALE TO FIT'
+    }
   };
 }

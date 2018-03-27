@@ -12,6 +12,7 @@ export default function (enabledElement, scale) {
 
   const transform = new Transform();
 
+  //Move to center of canvas
   transform.translate(enabledElement.canvas.width / 2, enabledElement.canvas.height / 2);
 
   // Apply the rotation before scaling for non square pixels
@@ -25,11 +26,12 @@ export default function (enabledElement, scale) {
   let widthScale = enabledElement.viewport.scale;
   let heightScale = enabledElement.viewport.scale;
 
-  if (enabledElement.image.rowPixelSpacing < enabledElement.image.columnPixelSpacing) {
-    widthScale *= (enabledElement.image.columnPixelSpacing / enabledElement.image.rowPixelSpacing);
-  } else if (enabledElement.image.columnPixelSpacing < enabledElement.image.rowPixelSpacing) {
-    heightScale *= (enabledElement.image.rowPixelSpacing / enabledElement.image.columnPixelSpacing);
+  if (enabledElement.viewport.displayedArea.rowPixelSpacing < enabledElement.viewport.displayedArea.columnPixelSpacing) {
+    widthScale *= (enabledElement.viewport.displayedArea.columnPixelSpacing / enabledElement.viewport.displayedArea.rowPixelSpacing);
+  } else if (enabledElement.viewport.displayedArea.columnPixelSpacing < enabledElement.viewport.displayedArea.rowPixelSpacing) {
+    heightScale *= (enabledElement.viewport.displayedArea.rowPixelSpacing / enabledElement.viewport.displayedArea.columnPixelSpacing);
   }
+
   transform.scale(widthScale, heightScale);
 
   // Unrotate to so we can translate unrotated
@@ -59,8 +61,10 @@ export default function (enabledElement, scale) {
     transform.scale(1, -1);
   }
 
-  // Translate the origin back to the corner of the image so the event handlers can draw in image coordinate system
-  transform.translate(-enabledElement.image.width / 2, -enabledElement.image.height / 2);
+  //Move back from center of image
+  const width = enabledElement.viewport.displayedArea.brhc.x - enabledElement.viewport.displayedArea.tlhc.x;
+  const height = enabledElement.viewport.displayedArea.brhc.y - enabledElement.viewport.displayedArea.tlhc.y;
+  transform.translate(-width / 2, -height / 2);
 
   return transform;
 }

@@ -5,11 +5,40 @@ const uint8Shader = {};
  * all data in the alpha channel.
  *
  * @param {Image} image A Cornerstone Image Object
+ * @param {Array} lut Lookup table to apply to the image pixel data
  * @returns {Uint8Array} The image data for use by the WebGL shader
  * @memberof WebGLRendering
  */
-function storedPixelDataToImageData (image) {
+function storedPixelDataToImageData (image, mlutfn, vlutfn) {
   // Transfer image data to alpha channel of WebGL texture
+
+  if (mlutfn || vlutfn) {
+    const pixelData = image.getPixelData();
+    const data = new Uint8Array(pixelData.length);
+
+    for (let i = 0; i < pixelData.length; i++) {
+      var sv = pixelData[i];
+
+      if (image.photometricInterpretation === "MONOCHROME1") {
+        sv = image.maxPixelValue - sv;
+      }
+
+      if (mlutfn) {
+        sv = mlutfn(sv);
+      }
+
+      if (vlutfn) {
+        sv = vlutfn(sv);
+      }
+
+      data[i] = sv;
+    }
+
+    return data;
+  } else if (image.photometricInterpretation === "MONOCHROME1") {
+    image.getPixelData().map(function(sv) { return image.maxPixelValue - sv; });
+  }
+
   return image.getPixelData();
 }
 

@@ -1,11 +1,15 @@
 import getModalityLUT from './getModalityLUT.js';
 import getVOILUT from './getVOILut.js';
+import autoWindow from './autoWindow.js';
 
 /**
  * Creates a LUT used while rendering to convert stored pixel values to
  * display pixels
  *
- * @param {Image} image A Cornerstone Image Object
+ * @param {image} image A Cornerstone Image Object
+ * @param {viewport} image A Cornerstone Viewport Object
+ *
+ * Properties that may be used:
  * @param {Number} windowWidth The Window Width
  * @param {Number} windowCenter The Window Center
  * @param {Boolean} invert A boolean describing whether or not the image has been inverted
@@ -15,7 +19,16 @@ import getVOILUT from './getVOILut.js';
  * @returns {Uint8ClampedArray} A lookup table to apply to the image
  * @memberof Internal
  */
-export default function (image, windowWidth, windowCenter, invert, modalityLUT, voiLUT) {
+export default function (image, viewport) {
+  //Auto window
+  autoWindow(image, viewport);
+
+  const modalityLUT = viewport.modalityLUT;
+  const voiLUT = viewport.voiLUT;
+  const windowWidth = viewport.voi.windowWidth;
+  const windowCenter = viewport.voi.windowCenter;
+  const invert = viewport.invert || image.photometricInterpretation === 'MONOCHROME1';
+
   const maxPixelValue = image.maxPixelValue;
   const minPixelValue = image.minPixelValue;
   const offset = Math.min(minPixelValue, 0);

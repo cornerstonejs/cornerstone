@@ -101,9 +101,12 @@ function renderLayers (context, layers, invalidated) {
     context.mozImageSmoothingEnabled = context.imageSmoothingEnabled;
 
     // Draw from the current layer's canvas onto the enabled element's canvas
-    const { width, height } = layer.image;
+    const sx = layer.viewport.displayedArea.tlhc.x - 1;
+    const sy = layer.viewport.displayedArea.tlhc.y - 1;
+    const width = layer.viewport.displayedArea.brhc.x - layer.viewport.displayedArea.tlhc.x;
+    const height = layer.viewport.displayedArea.brhc.y - layer.viewport.displayedArea.tlhc.y;
 
-    context.drawImage(layer.canvas, 0, 0, width, height, 0, 0, width, height);
+    context.drawImage(layer.canvas, sx, sy, width, height, 0, 0, width, height);
     context.restore();
 
     layer.invalid = false;

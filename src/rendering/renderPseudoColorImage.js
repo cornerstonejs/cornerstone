@@ -107,9 +107,13 @@ export function renderPseudoColorImage (enabledElement, invalidated) {
   // Normal Canvas rendering path
   // TODO: Add WebGL support for pseudocolor pipeline
   const renderCanvas = getRenderCanvas(enabledElement, image, invalidated);
-  const { width, height } = image;
 
-  context.drawImage(renderCanvas, 0, 0, width, height, 0, 0, width, height);
+  const sx = enabledElement.viewport.displayedArea.tlhc.x - 1;
+  const sy = enabledElement.viewport.displayedArea.tlhc.y - 1;
+  const width = enabledElement.viewport.displayedArea.brhc.x - enabledElement.viewport.displayedArea.tlhc.x;
+  const height = enabledElement.viewport.displayedArea.brhc.y - enabledElement.viewport.displayedArea.tlhc.y;
+
+  context.drawImage(renderCanvas, sx, sy, width, height, 0, 0, width, height);
 
   enabledElement.renderingTools = saveLastRendered(enabledElement);
 }
@@ -142,4 +146,3 @@ export function addPseudoColorLayer (layer, invalidated) {
 
   layer.renderingTools = saveLastRendered(layer);
 }
-
