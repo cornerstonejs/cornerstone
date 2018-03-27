@@ -2,49 +2,45 @@
 <html>
 <head>
     <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- cornerstone css - provides some useful css classes -->
-    <link href="../cornerstone.css" rel="stylesheet">
-
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
 
-<h1>
-    zoompan/index.html
-</h1>
+    <h1>
+        zoompan/index.html
+    </h1>
 
-This is an example of interactive zoom and pan
+    This is an example of interactive zoom and pan.
 
-<br>
-<br>
+    <br>
 
-In this example, the zoom can be changed via the mouse wheel or the buttons on the screen.
-Panning is done via left mouse click dragging.  Note that the core cornerstone library does
-not specify any interaction paradigm and allows any interaction paradigm to be implemented
-by the developer
-<br>
-<br>
+    In this example, the zoom can be changed via the mouse wheel or the buttons on the screen.
+    Panning is done via left mouse click dragging.  Note that the core cornerstone library does
+    not specify any interaction paradigm and allows any interaction paradigm to be implemented
+    by the developer
 
+    <br>
+    <br>
 
-<div id="dicomImage" style="width:512px;height:512px"
-     class="cornerstone-enabled-image"
-     oncontextmenu="return false"
-     unselectable='on'
-     onselectstart='return false;'
-     onmousedown='return false;'>
-</div>
+    <div id="dicomImage"
+         style="width:512px;height:512px"
+         oncontextmenu="return false"
+         onmousedown="return false">
+    </div>
 
-<button id="zoomIn" type="button" class="btn btn-default">Zoom In</button>
-<button id="zoomOut" type="button" class="btn btn-default">Zoom Out</button>
-<button id="reset" type="button" class="btn btn-default">Reset</button>
+    <br>
+
+    <button id="zoomIn" type="button" class="btn btn-default">Zoom In</button>
+    <button id="zoomOut" type="button" class="btn btn-default">Zoom Out</button>
+    <button id="reset" type="button" class="btn btn-default">Reset</button>
 
 </div>
 </body>
 
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
+<script>window.cornerstone || document.write('<script src="https://unpkg.com/cornerstone-core">\x3C/script>')</script>
 
 <!-- include special code for these examples which provides images -->
 <script src="../exampleImageIdLoader.js"></script>

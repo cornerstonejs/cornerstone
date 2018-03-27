@@ -9,7 +9,7 @@ import { default as imageCache,
   // changeImageIdCacheSize,
   purgeCache } from '../src/imageCache.js';
 
-import events from '../src/events.js';
+import { events } from '../src/events.js';
 
 describe('Set maximum cache size', function () {
   it('should allow setting of cache size', function () {

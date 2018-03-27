@@ -2,11 +2,7 @@
 <html>
 <head>
     <!-- twitter bootstrap CSS stylesheet - included to make things pretty, not needed or used by cornerstone -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- cornerstone css - provides some useful css classes -->
-    <link href="../cornerstone.css" rel="stylesheet">
-
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -14,27 +10,31 @@
     <h1>
         dynamicImage/index.html
     </h1>
+
     This example shows how to integrate dynamically generated images with cornerstone.  A dynamic image generator
     is one that can produce new images on the client side.  This could be used to do image fusion as well as
     MPR or Volume Rendering.
+
     <br>
     <br>
 
     <button id="opacity25" class="btn">Opacity .25</button>
     <button id="opacity75" class="btn">Opacity .75</button>
 
-    <div id="dicomImage" style="width:512px;height:512px;"
-         class="cornerstone-enabled-image"
+    <br>
+    <br>
+
+    <div id="dicomImage" style="width:512px;height:512px"
          oncontextmenu="return false"
-         unselectable='on'
-         onselectstart='return false;'
-         onmousedown='return false;'>
+         onmousedown="return false">
     </div>
+
 </div>
 </body>
 
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
+<script>window.cornerstone || document.write('<script src="https://unpkg.com/cornerstone-core">\x3C/script>')</script>
 
 <script>
     function getPixelData() {

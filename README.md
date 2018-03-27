@@ -32,12 +32,20 @@ Install
 
 Get a packaged source file:
 
-* [cornerstone.js](https://raw.githubusercontent.com/cornerstonejs/cornerstone/master/dist/cornerstone.js)
-* [cornerstone.min.js](https://raw.githubusercontent.com/cornerstonejs/cornerstone/master/dist/cornerstone.min.js)
+* [cornerstone.js](https://unpkg.com/cornerstone-core)
+  * `https://unpkg.com/cornerstone-core`
+* [cornerstone.min.js](https://unpkg.com/cornerstone-core/dist/cornerstone.js)
+  * `https://unpkg.com/cornerstone-core/dist/cornerstone.js`
 
 Or install via [NPM](https://www.npmjs.com/):
 
+**Latest stable release:**
+
 > npm install cornerstone-core
+
+**Pre-release, unstable, mostly for contributors:**
+
+> npm install cornerstone-core@next
 
 
 Key Features

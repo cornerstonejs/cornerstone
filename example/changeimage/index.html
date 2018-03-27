@@ -2,39 +2,36 @@
 <html>
 <head>
     <!-- twitter bootstrap CSS stylesheet - included to make things pretty, not needed or used by cornerstone -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- cornerstone css - provides some useful css classes -->
-    <link href="../cornerstone.css" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container">
+    <div class="container">
 
-<h1>
-    changeimage/index.html
-</h1>
-This is an example of changing the image displayed in an element.  This could be used
-to show different key images or a stack of images (e.g. MRI series).  Use the mouse wheel
-to change between images or press the buttons below.
-<br>
-<br>
+        <h1>
+            changeimage/index.html
+        </h1>
 
-<div id="dicomImage" style="width:512px;height:512px"
-     class="cornerstone-enabled-image"
-     oncontextmenu="return false"
-     unselectable='on'
-     onselectstart='return false;'
-     onmousedown='return false;'>
-</div>
+        This is an example of changing the image displayed in an element.  This could be used
+        to show different key images or a stack of images (e.g. MRI series).  Use the mouse wheel
+        to change between images or press the buttons below.
 
-<button id="imageButton1" type="button" class="btn btn-default">Image #1</button>
-<button id="imageButton2" type="button" class="btn btn-default">Image #2</button>
+        <br>
+        <br>
 
-</div>
+        <div id="dicomImage" style="width:512px;height:512px"
+            oncontextmenu="return false"
+            onmousedown="return false">
+        </div>
+
+        <button id="imageButton1" type="button" class="btn btn-default">Image #1</button>
+        <button id="imageButton2" type="button" class="btn btn-default">Image #2</button>
+
+    </div>
 </body>
 
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
+<script>window.cornerstone || document.write('<script src="https://unpkg.com/cornerstone-core">\x3C/script>')</script>
 
 <!-- include special code for these examples which provides images -->
 <script src="../exampleImageIdLoader.js"></script>

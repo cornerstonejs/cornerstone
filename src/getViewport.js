@@ -5,6 +5,7 @@ import { getEnabledElement } from './enabledElements.js';
  *
  * @param {HTMLElement} element The DOM element enabled for Cornerstone
  * @returns {Viewport|undefined} The Cornerstone Viewport settings for this element, if they exist. Otherwise, undefined
+ * @memberof ViewportSettings
  */
 export default function (element) {
   const enabledElement = getEnabledElement(element);

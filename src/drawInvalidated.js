@@ -9,6 +9,7 @@ import drawImage from './internal/drawImage.js';
  * Draws all invalidated enabled elements and clears the invalid flag after drawing it
  *
  * @returns {void}
+ * @memberof Drawing
  */
 export default function () {
   const enabledElements = getEnabledElements();

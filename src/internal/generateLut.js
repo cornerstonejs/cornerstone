@@ -17,6 +17,7 @@ import autoWindow from './autoWindow.js';
  * @param {Array} [voiLUT] A Volume of Interest Lookup Table
  *
  * @returns {Uint8ClampedArray} A lookup table to apply to the image
+ * @memberof Internal
  */
 export default function (image, viewport) {
   //Auto window

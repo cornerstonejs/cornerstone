@@ -1,8 +1,3 @@
-/**
- * This module contains a function that will set the canvas context to the pixel coordinates system
- * making it easy to draw geometry on the image
- */
-
 import calculateTransform from './internal/calculateTransform.js';
 
 /**

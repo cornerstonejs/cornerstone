@@ -2,46 +2,45 @@
 <html>
 <head>
     <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- cornerstone css - provides some useful css classes -->
-    <link href="../cornerstone.css" rel="stylesheet">
-
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
 
-<h1>
-    fliprotate/index.html
-</h1>
+    <h1>
+        fliprotate/index.html
+    </h1>
 
-This is an example of image flips and rotations
+    This is an example of image flips and rotations
 
-<br>
-<br>
+    <br>
 
-In this example,the image can be flipped (Horizontal/Vertical) or rotated (Clockwise/Anti-clockwise)
-<br>
-<br>
+    In this example,the image can be flipped (Horizontal/Vertical) or rotated (Clockwise/Anti-clockwise)
+
+    <br>
+    <br>
 
     <button id="hFlip" type="button" class="btn btn-default">HFlip</button>
     <button id="vFlip" type="button" class="btn btn-default">VFlip</button>
     <button id="lRotate" type="button" class="btn btn-default">Rotate Left</button>
     <button id="rRotate" type="button" class="btn btn-default">Rotate Right</button>
     <button id="reset" type="button" class="btn btn-default">Reset</button>
+
+    <br>
+    <br>
+
     <div id="dicomImage" style="width:512px;height:512px"
-    class="cornerstone-enabled-image"
-    oncontextmenu="return false"
-    unselectable='on'
-    onselectstart='return false;'
-    onmousedown='return false;'>
+         oncontextmenu="return false"
+         onmousedown="return false">
     </div>
     <div><span id="coords"></span></div>
+
 </div>
 </body>
 
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
+<script>window.cornerstone || document.write('<script src="https://unpkg.com/cornerstone-core">\x3C/script>')</script>
 
 <!-- include special code for these examples which provides images -->
 <script src="../exampleImageIdLoader.js"></script>

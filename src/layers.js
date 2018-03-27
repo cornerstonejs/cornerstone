@@ -3,6 +3,11 @@ import { getEnabledElement } from './enabledElements.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import updateImage from './updateImage.js';
 import triggerCustomEvent from './triggerEvent.js';
+import EVENTS from './events.js';
+
+/**
+ * @module EnabledElementLayers
+ */
 
 /**
  * Helper function to trigger an event on a Cornerstone element with
@@ -12,8 +17,9 @@ import triggerCustomEvent from './triggerEvent.js';
  * @param {EnabledElement} enabledElement The Cornerstone enabled element
  * @param {String} layerId The layer's unique identifier
  * @returns {void}
+ * @memberof EnabledElementLayers
  */
-function triggerEvent (eventName, enabledElement, layerId) {
+function triggerEventForLayer (eventName, enabledElement, layerId) {
   const element = enabledElement.element;
   const eventData = {
     viewport: enabledElement.viewport,
@@ -36,6 +42,7 @@ function triggerEvent (eventName, enabledElement, layerId) {
  * @param {EnabledElementLayer} baseLayer The base layer
  * @param {EnabledElementLayer} targetLayer The target layer to rescale
  * @returns {void}
+ * @memberof EnabledElementLayers
  */
 export function rescaleImage (baseLayer, targetLayer) {
   if (baseLayer.layerId === targetLayer.layerId) {
@@ -67,6 +74,7 @@ export function rescaleImage (baseLayer, targetLayer) {
  * @param {Object} options Options for the layer
  *
  * @returns {String} layerId The new layer's unique identifier
+ * @memberof EnabledElementLayers
  */
 export function addLayer (element, image, options) {
   const layerId = guid();
@@ -105,7 +113,7 @@ export function addLayer (element, image, options) {
 
   layers.push(newLayer);
 
-  triggerEvent('cornerstonelayeradded', enabledElement, layerId);
+  triggerEventForLayer(EVENTS.LAYER_ADDED, enabledElement, layerId);
 
   // Set the layer as active if it's the first layer added
   if (layers.length === 1 && image) {
@@ -121,6 +129,7 @@ export function addLayer (element, image, options) {
  * @param {HTMLElement} element The DOM element enabled for Cornerstone
  * @param {String} layerId The unique identifier for the layer
  * @returns {void}
+ * @memberof EnabledElementLayers
  */
 export function removeLayer (element, layerId) {
   const enabledElement = getEnabledElement(element);
@@ -136,7 +145,7 @@ export function removeLayer (element, layerId) {
       setActiveLayer(element, layers[0].layerId);
     }
 
-    triggerEvent('cornerstonelayerremoved', enabledElement, layerId);
+    triggerEventForLayer(EVENTS.LAYER_REMOVED, enabledElement, layerId);
   }
 }
 
@@ -146,6 +155,7 @@ export function removeLayer (element, layerId) {
  * @param {HTMLElement} element The DOM element enabled for Cornerstone
  * @param {String} layerId The unique identifier for the layer
  * @return {EnabledElementLayer} The layer
+ * @memberof EnabledElementLayers
  */
 export function getLayer (element, layerId) {
   const enabledElement = getEnabledElement(element);
@@ -160,6 +170,7 @@ export function getLayer (element, layerId) {
  * @param {HTMLElement} element The DOM element enabled for Cornerstone
  *
  * @return {EnabledElementLayer[]} An array of layers
+ * @memberof EnabledElementLayers
  */
 export function getLayers (element) {
   const enabledElement = getEnabledElement(element);
@@ -174,6 +185,7 @@ export function getLayers (element) {
  * @param {HTMLElement} element The DOM element enabled for Cornerstone
  *
  * @return {EnabledElementLayer[]} An array of layers
+ * @memberof EnabledElementLayers
  */
 export function getVisibleLayers (element) {
   const enabledElement = getEnabledElement(element);
@@ -189,6 +201,7 @@ export function getVisibleLayers (element) {
  * @param {HTMLElement} element The DOM element enabled for Cornerstone
  * @param {String} layerId The unique identifier for the layer
  * @returns {void}
+ * @memberof EnabledElementLayers
  */
 export function setActiveLayer (element, layerId) {
   const enabledElement = getEnabledElement(element);
@@ -215,7 +228,7 @@ export function setActiveLayer (element, layerId) {
   enabledElement.viewport = layer.viewport;
 
   updateImage(element);
-  triggerEvent('cornerstoneactivelayerchanged', enabledElement, layerId);
+  triggerEventForLayer(EVENTS.ACTIVE_LAYER_CHANGED, enabledElement, layerId);
 }
 
 /**
@@ -225,6 +238,7 @@ export function setActiveLayer (element, layerId) {
  * @param {Image} image The image to be displayed in this layer
  * @param {String} [layerId] The unique identifier for the layer
  * @returns {void}
+ * @memberof EnabledElementLayers
  */
 export function setLayerImage (element, image, layerId) {
   const enabledElement = getEnabledElement(element);
@@ -270,6 +284,7 @@ export function setLayerImage (element, image, layerId) {
  *
  * @param {HTMLElement} element The DOM element enabled for Cornerstone
  * @return {EnabledElementLayer} The currently active layer
+ * @memberof EnabledElementLayers
  */
 export function getActiveLayer (element) {
   const enabledElement = getEnabledElement(element);

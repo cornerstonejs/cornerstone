@@ -7,6 +7,7 @@ const uint8Shader = {};
  * @param {Image} image A Cornerstone Image Object
  * @param {Array} lut Lookup table to apply to the image pixel data
  * @returns {Uint8Array} The image data for use by the WebGL shader
+ * @memberof WebGLRendering
  */
 function storedPixelDataToImageData (image, mlutfn, vlutfn) {
   // Transfer image data to alpha channel of WebGL texture

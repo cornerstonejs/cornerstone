@@ -2,10 +2,22 @@
 <html>
 <head>
     <!-- twitter bootstrap CSS stylesheet - included to make things pretty, not needed or used by cornerstone -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- cornerstone css - provides some useful css classes -->
-    <link href="../cornerstone.css" rel="stylesheet">
+    <style>
+        .overlay {
+            /* prevent text selection on overlay */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+
+            /* ignore pointer event on overlay */
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -13,38 +25,41 @@
     <h1>
         htmloverlays/index.html
     </h1>
+
     This example demonstrates using HTML to put overlays on top of the image
+
     <br>
     <br>
 
     <!-- note we disable selection on the top most div -->
-    <div style="width:512px;height:512px;position:relative;color: white;"
-         class="cornerstone-enabled-image"
+    <div style="width:512px;height:512px;position:relative;color:white"
          oncontextmenu="return false"
-         unselectable='on'
-         onselectstart='return false;'
-         onmousedown='return false;'>
+         onmousedown="return false">
+
         <div id="dicomImage"
-             style="width:512px;height:512px;top:0px;left:0px; position:absolute">
+             style="width:512px;height:512px;top:0px;left:0px;position:absolute">
         </div>
-        <div id="topleft" style="position: absolute;top:0px; left:0px">
+
+        <div id="topleft" class="overlay" style="position:absolute;top:0px;left:0px">
             Patient Name
         </div>
-        <div id="topright" style="position: absolute;top:0px; right:0px">
+        <div id="topright" class="overlay" style="position:absolute;top:0px;right:0px">
             Hospital
         </div>
-        <div id="bottomright" style="position: absolute;bottom:0px; right:0px">
+        <div id="bottomright" class="overlay" style="position:absolute;bottom:0px;right:0px">
             Zoom:
         </div>
-        <div id="bottomleft" style="position: absolute;bottom:0px; left:0px">
+        <div id="bottomleft" class="overlay" style="position:absolute;bottom:0px;left:0px">
             WW/WC:
         </div>
     </div>
+
 </div>
 </body>
 
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
+<script>window.cornerstone || document.write('<script src="https://unpkg.com/cornerstone-core">\x3C/script>')</script>
 
 <!-- include special code for these examples which provides images -->
 <script src="../exampleImageIdLoader.js"></script>
@@ -60,7 +75,8 @@
         cornerstone.displayImage(element, image);
         const viewport = cornerstone.getViewport(element);
         document.getElementById('bottomright').textContent = "Zoom: " + viewport.scale + "x";
-        document.getElementById('bottomleft').textContent = "WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter);
+        document.getElementById('bottomleft').textContent = "WW/WC:" + Math.round(viewport.voi.windowWidth)
+            + "/" + Math.round(viewport.voi.windowCenter);
     });
 
     // add event handlers to mouse move to adjust window/center
@@ -79,7 +95,8 @@
             viewport.voi.windowCenter += (deltaY / viewport.scale);
             cornerstone.setViewport(element, viewport);
 
-            document.getElementById('bottomleft').textContent = "WW/WC:" + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter);
+            document.getElementById('bottomleft').textContent = "WW/WC:" + Math.round(viewport.voi.windowWidth)
+                + "/" + Math.round(viewport.voi.windowCenter);
         }
 
         function mouseUpHandler() {

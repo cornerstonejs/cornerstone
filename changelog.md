@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2018-03-02
+### Added
+- Added Gitbook and documentationjs for API docs
+- Added new tests
+- Added API to support setting the initial viewport for an image without displaying it (thanks @ClaireTagoe)
+- Added support for event handler namespaces
+
+### Fixed
+- Fixed scrollbar issues by making the canvas a block element (thanks @medihack)
+- Fixed image caching issues
+- Fixed certain front-end framework (e.g. React) issues by avoiding manipulating the DOM when enabling an element
+- Fixed scaling issue when resizing (thanks @medihack)
+
+
 ## [2.0.0] - 2017-12-08
 ### Changed
 - *Breaking Change!!!* Removed jQuery events from triggerEvent, lower-cased all the event names. e.g. "CornerstoneWebGLTextureRemoved" is now "cornerstonewebgltextureremoved". Only native CustomEvents are now triggered by Cornerstone Core.

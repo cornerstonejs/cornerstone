@@ -1,6 +1,20 @@
-test
-src
-example
-docs
-documentation
-coverage
+## All Non-Dist Directories
+build/
+config/
+docs/
+example/
+src/
+test/
+
+## Root Files
+
+.babelrc
+.eslintignore
+.eslintrc.js
+.gitignore
+.jsdocrc
+.npmignore
+.travis.yml
+changelog.md
+documentation.yml
+karma.conf.js

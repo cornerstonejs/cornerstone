@@ -10,6 +10,7 @@ import getTransform from './internal/getTransform.js';
  * @param {{x: Number, y: Number}} pt The transformed point in the pixel coordinate system
  *
  * @returns {{x: Number, y: Number}} The input point in the canvas coordinate system
+ * @memberof PixelCoordinateSystem
  */
 export default function (element, pt) {
   const enabledElement = getEnabledElement(element);

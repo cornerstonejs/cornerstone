@@ -1,9 +1,18 @@
 const enabledElements = [];
 
 /**
+ * @module EnabledElements
+ */
+
+/**
+ * @module Objects
+ */
+
+/**
  * A two-dimensional vector
  *
  * @typedef {Object} vec2
+ * @memberof Objects
  * @param {Number} x - The x distance
  * @param {Number} y - The y distance
  */
@@ -12,6 +21,7 @@ const enabledElements = [];
  * VOI
  *
  * @typedef {Object} VOI
+ * @memberof Objects
  * @param {Number} windowWidth - Window Width for display
  * @param {Number} windowCenter - Window Center for display
  */
@@ -20,6 +30,7 @@ const enabledElements = [];
  * Lookup Table Array
  *
  * @typedef {Object} LUT
+ * @memberof Objects
  * @property {Number} firstValueMapped
  * @property {Number} numBitsPerEntry
  * @property {Array} lut
@@ -29,7 +40,7 @@ const enabledElements = [];
  * Image Statistics Object
  *
  * @typedef {Object} ImageStats
- *
+ * @memberof Objects
  * @property {Number} [lastGetPixelDataTime] The time in ms taken to retrieve stored pixels required to draw the image
  * @property {Number} [lastStoredPixelDataToCanvasImageDataTime] The time in ms taken to map from stored pixel array to canvas pixel array
  * @property {Number} [lastPutImageDataTime] The time in ms taken for putImageData to put the canvas pixel data into the canvas context
@@ -41,7 +52,7 @@ const enabledElements = [];
  * An Image Object in Cornerstone
  *
  * @typedef {Object} Image
- *
+ * @memberof Objects
  * @property {string} imageId - The imageId associated with this image object
  * @property {Number} minPixelValue - the minimum stored pixel value in the image
  * @property {Number} maxPixelValue - the maximum stored pixel value in the image
@@ -61,7 +72,7 @@ const enabledElements = [];
  * @property {Object} lut - The Lookup Table
  * @property {Boolean} rgba - Is the color pixel data stored in RGBA?
  * @property {Number} columnPixelSpacing - horizontal distance between the middle of each pixel (or width of each pixel) in mm or undefined if not known
- * @property {Number} rowPixelSpacing - vertical distance between the middle of each pixel (or heigh of each pixel) in mm or undefined if not known
+ * @property {Number} rowPixelSpacing - vertical distance between the middle of each pixel (or height of each pixel) in mm or undefined if not known
  * @property {Boolean} invert - true if the the image should initially be displayed be inverted, false if not. This is here mainly to support DICOM images with a photometric interpretation of MONOCHROME1
  * @property {Number} sizeInBytes - the number of bytes used to store the pixels for this image.
  * @property {Boolean} [falseColor=false] - Whether or not the image has undergone false color mapping
@@ -76,10 +87,10 @@ const enabledElements = [];
  * A Viewport Settings Object Cornerstone
  *
  * @typedef {Object} Viewport
- *
+ * @memberof Objects
  * @property {Number} [scale=1.0] - The scale applied to the image. A scale of 1.0 will display no zoom (one image pixel takes up one screen pixel). A scale of 2.0 will be double zoom and a scale of .5 will be zoomed out by 2x
- * @param {vec2} [translation] - An object with properties x and y which describe the translation to apply in the pixel coordinate system. Note that the image is initially displayed centered in the enabled element with a x and y translation of 0 and 0 respectively.
- * @param {VOI} [voi] - an object with properties windowWidth and windowCenter.
+ * @property {vec2} [translation] - An object with properties x and y which describe the translation to apply in the pixel coordinate system. Note that the image is initially displayed centered in the enabled element with a x and y translation of 0 and 0 respectively.
+ * @property {VOI} [voi] - an object with properties windowWidth and windowCenter.
  * @property {boolean} [invert=false] - Whether or not the image is inverted.
  * @property {boolean} [pixelReplication=false] - true if the image smooth / interpolation should be used when zoomed in on the image or false if pixel replication should be used.
  * @property {boolean} [hflip=false] - true if the image is flipped horizontally. Default is false
@@ -95,7 +106,7 @@ const enabledElements = [];
  * An Enabled Element in Cornerstone
  *
  * @typedef {Object} EnabledElement
- *
+ * @memberof Objects
  * @property {HTMLElement} element - The DOM element which has been enabled for use by Cornerstone
  * @property {Image} [image] - The image currently displayed in the enabledElement
  * @property {Viewport} [viewport] - The current viewport settings of the enabledElement
@@ -112,7 +123,7 @@ const enabledElements = [];
  * An Enabled Element Layer in Cornerstone
  *
  * @typedef {Object} EnabledElementLayer
- *
+ * @memberof Objects
  * @property {HTMLElement} element - The DOM element which has been enabled for use by Cornerstone
  * @property {Image} [image] - The image currently displayed in the enabledElement
  * @property {Viewport} [viewport] - The current viewport settings of the enabledElement
@@ -126,7 +137,7 @@ const enabledElements = [];
  * An Image Load Object
  *
  * @typedef {Object} ImageLoadObject
- *
+ * @memberof Objects
  * @property {Promise} promise - The Promise tracking the loading of this image
  * @property {Function|undefined} cancelFn - A function to cancel the image load request
  */
@@ -137,6 +148,7 @@ const enabledElements = [];
  * @param {HTMLElement} element An HTML Element enabled for Cornerstone
  *
  * @returns {EnabledElement} A Cornerstone Enabled Element
+ * @memberof EnabledElements
  */
 export function getEnabledElement (element) {
   if (element === undefined) {
@@ -156,6 +168,7 @@ export function getEnabledElement (element) {
  *
  * @param {EnabledElement} enabledElement A Cornerstone enabledElement Object
  * @returns {void}
+ * @memberof EnabledElements
  */
 export function addEnabledElement (enabledElement) {
   if (enabledElement === undefined) {
@@ -170,6 +183,7 @@ export function addEnabledElement (enabledElement) {
  *
  * @param {string} imageId A Cornerstone Image ID
  * @returns {EnabledElement[]} An Array of Cornerstone enabledElement Objects
+ * @memberof EnabledElements
  */
 export function getEnabledElementsByImageId (imageId) {
   const ees = [];
@@ -187,6 +201,7 @@ export function getEnabledElementsByImageId (imageId) {
  * Retrieve all of the currently enabled Cornerstone elements
  *
  * @return {EnabledElement[]} An Array of Cornerstone enabledElement Objects
+ * @memberof EnabledElements
  */
 export function getEnabledElements () {
   return enabledElements;

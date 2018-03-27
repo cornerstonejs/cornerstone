@@ -2,10 +2,7 @@
 <html>
 <head>
     <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- cornerstone css - provides some useful css classes -->
-    <link href="../cornerstone.css" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -17,36 +14,39 @@
     This is an example of resizing the enabled image
 
     <br>
-    <br>
+
     When the enabled element's width or height changes, you must call resize() so cornerstone can update
-    the canvas width and height.  Resizing will recenter the image and scale it so all pixels are visible.
+    the canvas width and height. The image is automatically rescaled. When the image fitted the window
+    before the resize then it will also fit after the resize. If the image was zoomed or panned before
+    the resize then the image will be rescaled accordingly. Try this out here by dragging the red square
+    in the right corner of the image.
+
     <br>
     <br>
 
+    <button id="reset" class="btn">Reset & fit to window</button>
+    <button id="randomZoomPan" class="btn">Apply random zoom & pan</button>
 
-    <button id="x256" class="btn">256x256</button>
-    <button id="x512" class="btn">512x512</button>
-    <div class="checkbox">
-        <label>
-            <input id="fitToWindow" type="checkbox"> Fit To Window
-        </label>
+    <br>
+    <br>
+
+    <div style="display:inline-block;position:relative">
+      <div
+        id="resizeKnob"
+        style="position:absolute;right:-5px;bottom:-5px;width:20px;height:20px;background:red;cursor:se-resize">
+      </div>
+      <div id="dicomImage" style="width:256px;height:256px"
+           oncontextmenu="return false"
+           onmousedown="return false">
+      </div>
     </div>
-
-
-    <div id="dicomImage" style="width:512px;height:512px"
-         class="cornerstone-enabled-image"
-         oncontextmenu="return false"
-         unselectable='on'
-         onselectstart='return false;'
-         onmousedown='return false;'>
-    </div>
-
 
 </div>
 </body>
 
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
+<script>window.cornerstone || document.write('<script src="https://unpkg.com/cornerstone-core">\x3C/script>')</script>
 
 <!-- include special code for these examples which provides images -->
 <script src="../exampleImageIdLoader.js"></script>
@@ -60,19 +60,57 @@
         cornerstone.displayImage(element, image);
     });
 
-    // Add event handler to the ww/wc apply button
-    document.getElementById('x256').addEventListener('click', function (e) {
-        element.style.width = '256px';
-        element.style.height = '256px';
-        const fitToWindow = document.getElementById('fitToWindow').checked;
-        cornerstone.resize(element, fitToWindow);
+    function doResize(width, height) {
+        if (width < 100)
+            width = 100
+        if (height < 100)
+            height = 100
+
+        element.style.width = width + 'px';
+        element.style.height = height + 'px';
+        cornerstone.resize(element);
+    }
+
+    function getRandomFloat(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    document.getElementById('resizeKnob').addEventListener('mousedown', function (e) {
+        const initWidth = element.clientWidth;
+        const initHeight = element.clientHeight;
+        const startX = e.clientX;
+        const startY = e.clientY;
+        function dragResize (e) {
+            const x = e.clientX - startX;
+            const y = e.clientY - startY;
+            const w = initWidth + x;
+            const h = initHeight + y;
+            doResize(w, h);
+        }
+        document.addEventListener('mousemove', dragResize);
+        document.addEventListener('mouseup', function (e) {
+            document.removeEventListener('mouseup', arguments.callee);
+            document.removeEventListener('mousemove', dragResize);
+        })
     });
 
-    document.getElementById('x512').addEventListener('click', function (e) {
-        element.style.width = '512px';
-        element.style.height = '512px';
-        const fitToWindow = document.getElementById('fitToWindow').checked;
-        cornerstone.resize(element, fitToWindow);
+    document.getElementById('reset').addEventListener('click', function (e) {
+        element.style.width = '256px';
+        element.style.height = '256px';
+        cornerstone.resize(element, true);
     });
+
+    document.getElementById('randomZoomPan').addEventListener('click', function (e) {
+        let viewport = cornerstone.getViewport(element);
+        const scale = viewport.scale;
+        const minScale = scale - scale / 2;
+        const maxScale = scale + scale / 2;
+        viewport.scale = getRandomFloat(minScale, maxScale);
+        viewport.translation.x = getRandomFloat(-50.0, 50.0)
+        viewport.translation.y = getRandomFloat(-50.0, 50.0)
+
+        cornerstone.setViewport(element, viewport);
+    });
+
 </script>
 </html>

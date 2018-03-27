@@ -51,6 +51,7 @@ function syncViewports (layers, activeLayer) {
  * @param {EnabledElementLayer[]} layers The array of all layers for this enabled element
  * @param {Boolean} invalidated A boolean whether or not this image has been invalidated and must be redrawn
  * @returns {void}
+ * @memberof Internal
  */
 function renderLayers (context, layers, invalidated) {
   // Loop through each layer and draw it to the canvas

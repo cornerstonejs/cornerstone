@@ -16,6 +16,7 @@ import getStoredValue from './getStoredValue.js';
  * @param {Uint8ClampedArray} canvasImageDataData canvasImageData.data buffer filled with white pixels
  *
  * @returns {void}
+ * @memberof Internal
  */
 export default function (image, lut, canvasImageDataData) {
   let start = now();

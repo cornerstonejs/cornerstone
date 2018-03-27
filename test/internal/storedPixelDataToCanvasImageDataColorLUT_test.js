@@ -1,5 +1,5 @@
 import { should } from 'chai';
-import storedPixelDataToCanvasImageDataColorLUT from '../../src/internal/storedPixelDataToCanvasImageDataColorLUT';
+import storedPixelDataToCanvasImageDataColorLUT from '../../src/internal/storedPixelDataToCanvasImageDataColorLUT.js';
 
 should();
 
@@ -17,7 +17,7 @@ describe('storedPixelDataToCanvasImageDataColorLUT', function () {
 
   it('should get LUT values equal to its pixels when minPixelValue == 0', function () {
     this.image.minPixelValue = 0;
-    this.image.getPixelData = function() {
+    this.image.getPixelData = function () {
       return [0, 1];
     };
 
@@ -28,7 +28,7 @@ describe('storedPixelDataToCanvasImageDataColorLUT', function () {
 
   it('should get LUT values equal to its pixels minus its minimun pixel value when minPixelValue < 0', function () {
     this.image.minPixelValue = -1;
-    this.image.getPixelData = function() {
+    this.image.getPixelData = function () {
       return [-1, 1];
     };
 

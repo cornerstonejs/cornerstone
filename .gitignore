@@ -1,7 +1,8 @@
 node_modules
-build
 npm-debug.log
 .idea
-coverage
-documentation
-/.project
+coverage/
+documentation/
+docs/_book
+docs/api.md
+dist/

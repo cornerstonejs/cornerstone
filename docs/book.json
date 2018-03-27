@@ -1,0 +1,35 @@
+{
+  "title": "cornerstone",
+  "description": "Documentation for Cornerstone Core",
+  "gitbook": ">3.0.0",
+  "plugins": [
+    "edit-link",
+    "theme-cornerstone",
+    "-fontsettings",
+    "github",
+    "ga",
+    "sitemap",
+    "anchors"
+  ],
+  "pluginsConfig": {
+    "edit-link": {
+      "base": "https://github.com/cornerstonejs/cornerstone/edit/master/docs",
+      "label": "Edit This Page"
+    },
+    "github": {
+      "url": "https://github.com/cornerstonejs/cornerstone"
+    },
+    "ga": {
+      "token": "UA-110573590-1"
+    },
+    "sitemap": {
+      "hostname": "https://docs.cornerstonejs.org"
+    }
+  },
+  "links": {
+    "sharing": {
+      "facebook": false,
+      "twitter": false
+    }
+  }
+}

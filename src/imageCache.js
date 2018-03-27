@@ -1,9 +1,11 @@
-import events from './events.js';
+import EVENTS, { events } from './events.js';
 import triggerEvent from './triggerEvent.js';
 
 /**
  * This module deals with caching images
+ * @module ImageCache
  */
+
 let maximumSizeInBytes = 1024 * 1024 * 1024; // 1 GB
 let cacheSizeInBytes = 0;
 
@@ -23,7 +25,7 @@ export function setMaximumSizeBytes (numBytes) {
 
   maximumSizeInBytes = numBytes;
 
-  triggerEvent(events, 'cornerstoneimagecachemaximumsizechanged');
+  triggerEvent(events, EVENTS.IMAGE_CACHE_MAXIMUM_SIZE_CHANGED);
 
   purgeCacheIfNecessary();
 }
@@ -55,12 +57,12 @@ function purgeCacheIfNecessary () {
 
     removeImageLoadObject(imageId);
 
-    triggerEvent(events, 'cornerstoneimagecachepromiseremoved', { imageId });
+    triggerEvent(events, EVENTS.IMAGE_CACHE_PROMISE_REMOVED, { imageId });
   }
 
   const cacheInfo = getCacheInfo();
 
-  triggerEvent(events, 'cornerstoneimagecachefull', cacheInfo);
+  triggerEvent(events, EVENTS.IMAGE_CACHE_FULL, cacheInfo);
 }
 
 export function putImageLoadObject (imageId, imageLoadObject) {
@@ -113,7 +115,7 @@ export function putImageLoadObject (imageId, imageLoadObject) {
       image: cachedImage
     };
 
-    triggerEvent(events, 'cornerstoneimagecachechanged', eventDetails);
+    triggerEvent(events, EVENTS.IMAGE_CACHE_CHANGED, eventDetails);
 
     cachedImage.sharedCacheKey = image.sharedCacheKey;
 
@@ -160,8 +162,8 @@ export function removeImageLoadObject (imageId) {
     image: cachedImage
   };
 
-  triggerEvent(events, 'cornerstoneimagecachechanged', eventDetails);
-  decache(cachedImage.imageLoadObject.promise);
+  triggerEvent(events, EVENTS.IMAGE_CACHE_CHANGED, eventDetails);
+  decache(cachedImage.imageLoadObject);
 
   delete imageCacheDict[imageId];
 }
@@ -176,12 +178,19 @@ export function getCacheInfo () {
 
 // This method should only be called by `removeImageLoadObject` because it's
 // The one that knows how to deal with shared cache keys and cache size.
-function decache (imagePromise) {
-  imagePromise.then(function (image) {
-    if (image.decache) {
-      image.decache();
+function decache (imageLoadObject) {
+  imageLoadObject.promise.then(
+    function () {
+      if (imageLoadObject.decache) {
+        imageLoadObject.decache();
+      }
+    },
+    function () {
+      if (imageLoadObject.decache) {
+        imageLoadObject.decache();
+      }
     }
-  });
+  );
 }
 
 export function purgeCache () {
@@ -208,7 +217,7 @@ export function changeImageIdCacheSize (imageId, newCacheSize) {
         image
       };
 
-      triggerEvent(events, 'cornerstoneimagecachechanged', eventDetails);
+      triggerEvent(events, EVENTS.IMAGE_CACHE_CHANGED, eventDetails);
     });
   }
 }

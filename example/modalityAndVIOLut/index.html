@@ -2,11 +2,7 @@
 <html>
 <head>
     <!-- twitter bootstrap CSS stylesheet - included to make things pretty, not needed or used by cornerstone -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- cornerstone css - provides some useful css classes -->
-    <link href="../cornerstone.css" rel="stylesheet">
-
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -14,29 +10,29 @@
     <h1>
         imageloader/index.html
     </h1>
+
     This example shows the application of Modality LUT and VOI LUT to the image display pipeline
+
     <br>
     <br>
 
     <input type="checkbox" id="toggleModalityLUT">Apply Modality LUT</input>
     <input type="checkbox" id="toggleVOILUT">Apply VOI LUT</input>
 
-    <div id="dicomImage" style="width:512px;height:512px;"
-         class="cornerstone-enabled-image"
+    <br>
+    <br>
+
+    <div id="dicomImage" style="width:512px;height:512px"
          oncontextmenu="return false"
-         unselectable='on'
-         onselectstart='return false;'
-         onmousedown='return false;'>
+         onmousedown="return false">
     </div>
-
-
-
 
 </div>
 </body>
 
 <!-- include the cornerstone library -->
 <script src="../../dist/cornerstone.js"></script>
+<script>window.cornerstone || document.write('<script src="https://unpkg.com/cornerstone-core">\x3C/script>')</script>
 
 <script>
     // create an inverting lut

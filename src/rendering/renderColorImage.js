@@ -1,6 +1,3 @@
-/**
- * This module is responsible for drawing an image to an enabled elements canvas element
- */
 import now from '../internal/now.js';
 import generateColorLut from '../internal/generateColorLut.js';
 import storedColorPixelDataToCanvasImageData from '../internal/storedColorPixelDataToCanvasImageData.js';
@@ -90,6 +87,7 @@ function getRenderCanvas (enabledElement, image, invalidated) {
  * @param {EnabledElement} enabledElement The Cornerstone Enabled Element to redraw
  * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
  * @returns {void}
+ * @memberof rendering
  */
 export function renderColorImage (enabledElement, invalidated) {
   if (enabledElement === undefined) {

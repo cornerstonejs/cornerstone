@@ -4,6 +4,7 @@
  * @param {HTMLElement} canvas A Canvas DOM element
  * @param {Image} image A Cornerstone Image Object
  * @returns {Viewport} viewport object
+ * @memberof Internal
  */
 export default function (canvas, image) {
   if (canvas === undefined) {

@@ -9,6 +9,7 @@ import now from './now.js';
  * @param {Uint8ClampedArray} canvasImageDataData canvasImageData.data buffer filled with white pixels
  *
  * @returns {void}
+ * @memberof Internal
  */
 function storedPixelDataToCanvasImageDataPseudocolorLUT (image, grayscaleLut, colorLut, canvasImageDataData) {
   let start = now();

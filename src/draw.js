@@ -1,7 +1,3 @@
-/**
- * This module is responsible for immediately drawing an enabled element
- */
-
 import { getEnabledElement } from './enabledElements.js';
 import drawImage from './internal/drawImage.js';
 
@@ -10,6 +6,7 @@ import drawImage from './internal/drawImage.js';
  *
  * @param {HTMLElement} element An HTML Element enabled for Cornerstone
  * @returns {void}
+ * @memberof Drawing
  */
 export default function (element) {
   const enabledElement = getEnabledElement(element);
