@@ -1,4 +1,4 @@
-import computeVoi from './computeVoi.js';
+//import computeVoi from './computeVoi.js';
 import { getEnabledElement } from './enabledElements.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import updateImage from './updateImage.js';
@@ -48,9 +48,10 @@ export default function (element, image, viewport) {
     }
   }
 
-  if (enabledElement.viewport.computeVoi !== undefined) {
-    computeVoi(enabledElement.viewport, enabledElement.image);
-  }
+  //TODO:zaid- no need to call this here. This is now called in getLut
+  //if (enabledElement.viewport.computeVoi !== undefined) {
+  //  computeVoi(enabledElement.viewport, enabledElement.image);
+  //}
 
   let frameRate;
 
