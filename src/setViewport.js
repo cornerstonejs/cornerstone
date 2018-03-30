@@ -1,4 +1,3 @@
-//import computeVoi from './computeVoi.js';
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import { getEnabledElement } from './enabledElements.js';
 import updateImage from './updateImage.js';
@@ -32,17 +31,6 @@ export default function (element, viewport) {
     }
   }
 
-   //TODO: is this necessary? there is a code above that will merge the viewport.
-  //if (viewport.computeVoi !== undefined) {
-  //  enabledElement.viewport.computeVoi = {
-  //    forceAutoVoi: viewport.computeVoi.forceAutoVoi,
-  //    type: viewport.computeVoi.type,
-  //    voiPresetIndex: viewport.computeVoi.voiPresetIndex
-  //   };
-
-     //TODO:zaid- no need to call this here. This is now called in getLut
-    //computeVoi(enabledElement.viewport, enabledElement.image);
-  //}
 
   // Prevent window width from being too small (note that values close to zero are valid and can occur with
   // PET images in particular)

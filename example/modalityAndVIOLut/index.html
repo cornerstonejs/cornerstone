@@ -5,29 +5,39 @@
     <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container">
+    <div class="container">
 
-    <h1>
-        imageloader/index.html
-    </h1>
+        <h1>
+            imageloader/index.html
+        </h1>
 
-    This example shows the application of Modality LUT and VOI LUT to the image display pipeline
+        This example shows the application of Modality LUT and VOI LUT to the image display pipeline
 
-    <br>
-    <br>
+        <br>
+        <br>
 
-    <input type="checkbox" id="toggleModalityLUT">Apply Modality LUT</input>
-    <input type="checkbox" id="toggleVOILUT">Apply VOI LUT</input>
+        <input type="checkbox" id="toggleModalityLUT">Apply Modality LUT</input>
+        <br />
+        <input type="checkbox" id="toggleVOILUT">Apply VOI LUT</input>
+        <span>|</span>
+        <span>Select a preset VOI: </span>
+        <select id="selectPreset">
+            <option value="-1">(WW/WC)</option>
+            <option value="0">200/50</option>
+            <option value="1">100/127</option>
+            <option value="2">Random VoiLut Function</option>
+        </select>
+        <span>|</span>
+        <input type="button" id="resetVOI" value="Reset VOI" />
+        <br>
+        <br>
 
-    <br>
-    <br>
+        <div id="dicomImage" style="width:512px;height:512px"
+             oncontextmenu="return false"
+             onmousedown="return false">
+        </div>
 
-    <div id="dicomImage" style="width:512px;height:512px"
-         oncontextmenu="return false"
-         onmousedown="return false">
     </div>
-
-</div>
 </body>
 
 <!-- include the cornerstone library -->
@@ -35,6 +45,7 @@
 <script>window.cornerstone || document.write('<script src="https://unpkg.com/cornerstone-core">\x3C/script>')</script>
 
 <script>
+
     // create an inverting lut
     var modalityLUT = {
         id : '1',
@@ -57,6 +68,21 @@
     for(let i=0; i < 256; i++) {
         voiLUT.lut[i] = i / 2 + 127;
     }
+
+
+    //create VOI Presets
+    var presetVoiLUT = {
+        id: '2',
+        firstValueMapped: 0,
+        numBitsPerEntry: 8,
+        lut: []
+    };
+
+    for (let i = 0; i < 256; i++) {
+        presetVoiLUT.lut[i] = Math.floor(Math.random() * 256);
+    }
+
+    var voiPresets = [{ ww: 200, wc: 50 }, { ww: 100, wc: 127 }, { voiLUT: presetVoiLUT }];
 
     // Loads an image given an imageId
     function loadImage(imageId) {
@@ -116,6 +142,10 @@
     const imageId = 'myImageLoader://1';
     cornerstone.loadImage(imageId).then(function(image) {
         cornerstone.displayImage(element, image);
+
+        let viewport = cornerstone.getViewport(element);
+        viewport.voi.voiPresets = voiPresets;
+        cornerstone.setViewport(element, viewport);
     });
 
     document.getElementById('toggleModalityLUT').addEventListener('click', function() {
@@ -139,7 +169,40 @@
         } else {
             viewport.voiLUT = undefined;
         }
+
+        document.getElementById('selectPreset').value = -1;
+
         cornerstone.setViewport(element, viewport);
     });
+
+    document.getElementById('selectPreset').addEventListener("change", function () {
+        let selectedIndex = parseInt(document.getElementById('selectPreset').value, 10);
+        let image = cornerstone.getImage(element);
+        let viewport = cornerstone.getViewport(element);
+
+        if (selectedIndex >= 0 && selectedIndex < voiPresets.length) {
+            cornerstone.computeVoi(viewport, image, false, selectedIndex);
+        }
+        else {
+            cornerstone.computeVoi(viewport, image, true);
+        }
+
+        document.getElementById('toggleVOILUT').checked = false;
+
+        cornerstone.setViewport(element, viewport);
+    });
+
+    document.getElementById('resetVOI').addEventListener("click", function () {
+        let image = cornerstone.getImage(element);
+        let viewport = cornerstone.getViewport(element);
+
+        document.getElementById('selectPreset').value = -1;
+        document.getElementById('toggleVOILUT').checked = false;
+
+        cornerstone.computeVoi(viewport, image, true);
+        cornerstone.setViewport(element, viewport);
+
+    });
+
 </script>
 </html>
