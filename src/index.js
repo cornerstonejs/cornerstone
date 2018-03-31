@@ -26,7 +26,6 @@ export { renderWebImage } from './rendering/renderWebImage.js';
  */
 
 export { default as canvasToPixel } from './canvasToPixel.js';
-export { default as computeVoi } from './computeVoi.js';
 export { default as disable } from './disable.js';
 export { default as displayImage } from './displayImage.js';
 export { default as draw } from './draw.js';

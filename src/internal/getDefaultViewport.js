@@ -20,8 +20,7 @@ export default function (canvas, image) {
       },
       voi: {
         windowWidth: undefined,
-        windowCenter: undefined,
-        voiPresets: [] //{ww, wc, voiLUT}
+        windowCenter: undefined
       },
       invert: false,
       pixelReplication: false,
@@ -48,8 +47,7 @@ export default function (canvas, image) {
     },
     voi: {
       windowWidth: image.windowWidth,
-      windowCenter: image.windowCenter,
-      voiPresets: [] //{ww, wc, voiLUT}
+      windowCenter: image.windowCenter
     },
     invert: image.invert,
     pixelReplication: false,

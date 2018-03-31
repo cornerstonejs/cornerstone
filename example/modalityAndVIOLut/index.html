@@ -181,28 +181,43 @@
         let viewport = cornerstone.getViewport(element);
 
         if (selectedIndex >= 0 && selectedIndex < voiPresets.length) {
-            cornerstone.computeVoi(viewport, image, false, selectedIndex);
+
+            let voiPreset = voiPresets[selectedIndex];
+
+            //keep old values as a state since user might only pass the voiLUT
+            viewport.voi.windowWidth = (voiPreset.ww === undefined) ? viewport.voi.windowWidth : voiPreset.ww;
+            viewport.voi.windowCenter = (voiPreset.wc === undefined) ? viewport.voi.windowCenter : voiPreset.wc;
+
+            //this always apply
+            viewport.voiLUT = voiPreset.voiLUT; 
+
+            cornerstone.setViewport(element, viewport);
+
+            document.getElementById('toggleVOILUT').checked = false;
         }
         else {
-            cornerstone.computeVoi(viewport, image, true);
+            resetVoiLUT();
         }
 
-        document.getElementById('toggleVOILUT').checked = false;
 
-        cornerstone.setViewport(element, viewport);
     });
 
     document.getElementById('resetVOI').addEventListener("click", function () {
-        let image = cornerstone.getImage(element);
+        resetVoiLUT();
+    });
+
+    function resetVoiLUT() {
         let viewport = cornerstone.getViewport(element);
 
         document.getElementById('selectPreset').value = -1;
         document.getElementById('toggleVOILUT').checked = false;
 
-        cornerstone.computeVoi(viewport, image, true);
-        cornerstone.setViewport(element, viewport);
+        viewport.voiLUT = undefined;
+        viewport.voi.windowWidth = undefined;
+        viewport.voi.windowCenter = undefined;
 
-    });
+        cornerstone.setViewport(element, viewport);
+    }
 
 </script>
 </html>

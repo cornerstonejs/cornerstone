@@ -1,4 +1,4 @@
-import computeVoi from '../computeVoi.js';
+import computeAutoVoi from '../internal/computeAutoVoi.js';
 import lutMatches from './lutMatches.js';
 import generateLut from '../internal/generateLut.js';
 
@@ -23,7 +23,7 @@ export default function (image, viewport, invalidated) {
     return image.cachedLut.lutArray;
   }
 
-  computeVoi(viewport, image,false);
+  computeAutoVoi(viewport, image);
 
   // Lut is invalid or not present, regenerate it and cache it
   generateLut(image, viewport.voi.windowWidth, viewport.voi.windowCenter, viewport.invert, viewport.modalityLUT, viewport.voiLUT);
