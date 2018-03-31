@@ -78,7 +78,7 @@
     "phantomjs-prebuilt": "^2.1.16",
     "promise-polyfill": "^7.1.0",
     "shx": "^0.2.2",
-    "webpack": "swederik/webpack#issue-6843",
+    "webpack": "^4.1.1",
     "webpack-cli": "^2.0.13"
   },
   "files": [
