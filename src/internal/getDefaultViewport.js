@@ -13,7 +13,6 @@ export default function (canvas, image) {
 
   if (image === undefined) {
     return {
-      //FIXME: CHANGE THIS TO BE A PART OF DISPLAYED AREA
       scale: 1,
       translation: {
         x: 0,
@@ -32,6 +31,7 @@ export default function (canvas, image) {
       voiLUT: undefined,
       colormap: undefined,
       labelmap: false,
+
       /**
       /* C.10.4 Displayed Area Module
       * This Module describes Attributes required to define a Specified Displayed Area space.
@@ -57,28 +57,28 @@ export default function (canvas, image) {
       * http://dicom.nema.org/medical/Dicom/2016b/output/chtml/part03/sect_C.10.4.html
       */
       displayedArea: {
-         //Top Left Hand Corner
-         tlhc: {
-          x : 1,
-          y : 1
-         },
-         //Bottom Right Hand Corner
-        brhc : {
-          x : 1,
-          y : 1
+        // Top Left Hand Corner
+        tlhc: {
+          x: 1,
+          y: 1
         },
-        rowPixelSpacing : 1,
-        columnPixelSpacing : 1,
-        presentationSizeMode: "SCALE TO FIT"
+        // Bottom Right Hand Corner
+        brhc: {
+          x: 1,
+          y: 1
+        },
+        rowPixelSpacing: 1,
+        columnPixelSpacing: 1,
+        presentationSizeMode: 'SCALE TO FIT'
       }
     };
   }
 
-   /**
-    * Enumeration that describes the displayedArea presentation size mode.
-    */
-   //TODO: Causing build error in the examples
-  //const presentationSizeModes = { scaleToFit: "SCALE TO FIT", trueSize: "TRUE SIZE", magnify: "MAGNIFY" };
+  /**
+  * Enumeration that describes the displayedArea presentation size mode.
+  */
+  // TODO: Causing build error in the examples
+  // const presentationSizeModes = { scaleToFit: "SCALE TO FIT", trueSize: "TRUE SIZE", magnify: "MAGNIFY" };
 
   // Fit image to window
   const verticalScale = canvas.height / image.rows;
@@ -104,18 +104,18 @@ export default function (canvas, image) {
     voiLUT: image.voiLUT,
     colormap: image.colormap,
     labelmap: Boolean(image.labelmap),
-    displayedArea : {
-      tlhc : {
-        x : 1,
-        y : 1
+    displayedArea: {
+      tlhc: {
+        x: 1,
+        y: 1
       },
-      brhc : {
-        x : image.columns + 1,
-        y : image.rows + 1
+      brhc: {
+        x: image.columns + 1,
+        y: image.rows + 1
       },
-      rowPixelSpacing : image.rowPixelSpacing !== undefined ? image.rowPixelSpacing : 1,
-      columnPixelSpacing : image.columnPixelSpacing !== undefined ? image.columnPixelSpacing : 1,
-      presentationSizeMode: "SCALE TO FIT"
+      rowPixelSpacing: image.rowPixelSpacing !== undefined ? image.rowPixelSpacing : 1,
+      columnPixelSpacing: image.columnPixelSpacing !== undefined ? image.columnPixelSpacing : 1,
+      presentationSizeMode: 'SCALE TO FIT'
     }
   };
 }

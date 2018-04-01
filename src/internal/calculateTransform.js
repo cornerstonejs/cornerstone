@@ -12,7 +12,7 @@ export default function (enabledElement, scale) {
 
   const transform = new Transform();
 
-  //Move to center of canvas
+  // Move to center of canvas
   transform.translate(enabledElement.canvas.width / 2, enabledElement.canvas.height / 2);
 
   // Apply the rotation before scaling for non square pixels
@@ -61,9 +61,10 @@ export default function (enabledElement, scale) {
     transform.scale(1, -1);
   }
 
-  //Move back from center of image
+  // Move back from center of image
   const width = enabledElement.viewport.displayedArea.brhc.x - enabledElement.viewport.displayedArea.tlhc.x;
   const height = enabledElement.viewport.displayedArea.brhc.y - enabledElement.viewport.displayedArea.tlhc.y;
+
   transform.translate(-width / 2, -height / 2);
 
   return transform;
