@@ -41,12 +41,17 @@
           let promise = new Promise((resolve) => {
             var req = new XMLHttpRequest();
             req.onreadystatechange = function () {
-              if (this.readyState === 4 && this.status === 200 ) {
-                  let imageData = req.responseText;
+              if (this.readyState === 4 && this.status === 200) {
+                let imageData = req.responseText;
 
+                try {
                   let image = JSON.parse(imageData);
 
                   resolve(image);
+                }
+                catch (err) {
+                  console.error(err);
+                }
               }
             }
             req.open('GET', baseUrl + imageId + '.json', true);
