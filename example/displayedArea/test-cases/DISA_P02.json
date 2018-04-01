@@ -1,0 +1,17 @@
+{
+  "imageId": "example//DISA_P02",
+  "minPixelValue": 0,
+  "maxPixelValue": 255,
+  "slope": 1.0,
+  "intercept": 0,
+  "windowCenter": 127.5,
+  "windowWidth": 255,
+  "rows": 900,
+  "columns": 1280,
+  "height": 900,
+  "width": 1280,
+  "color": false,
+  "columnPixelSpacing": 1,
+  "rowPixelSpacing": 1,
+  "sizeInBytes": 1152000
+}

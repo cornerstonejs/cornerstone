@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- twitter bootstrap CSS stylesheet - included to make things pretty, not needed or used by cornerstone -->
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+
+        <h1>
+            displaedArea/index.html
+        </h1>
+
+        This example demonstrates the IHE Image Display Test 521: Consistent Presentation of Images.
+        <br>
+        <br>
+        <span>Select a test:</span>
+        <select id="testCasesSelect">
+            <option value="example://DISA_P01">DISA_P01</option>
+            <option value="example://DISA_P02">DISA_P02</option>
+            
+
+        </select> 
+
+        <div id="displayArea" style="width:512px;">
+            <h3>Display Area:</h3>
+            <span>top/left hand corner:</span>
+            <div class="input-group">
+                <input id="area-top" class="form-control" type="text" placeholder="top" />
+                <span class="input-group-addon">/</span>
+                <input id="area-left" class="form-control" type="text" placeholder="left" />
+            </div>
+            <span>bottom/right hand corner:</span>
+            <div class="input-group">
+                <input id="area-bottom" class="form-control" type="text" placeholder="bottom" />
+                <span class="input-group-addon">/</span>
+                <input id="area-right" class="form-control" type="text" placeholder="right" />
+            </div>
+            <input id="area-apply" type="button" value="Apply Area" />
+        </div>
+
+        <br>
+
+        <div id="dicomImage" style="width:512px;height:512px;"
+             oncontextmenu="return false"
+             onmousedown="return false">
+        </div>
+
+    </div>
+</body>
+
+<!-- include the cornerstone library -->
+<script src="../../dist/cornerstone.js"></script>
+<script>window.cornerstone || document.write('<script src="https://unpkg.com/cornerstone-core">\x3C/script>')</script>
+
+<!-- include special code for these examples which provides images -->
+<script src="../exampleImageIdLoaderRaw.js"></script>
+
+<script>
+    const viewportOptions = {
+        scale: 1.0,
+        translation: {
+            x: 0,
+            y: 0
+        },
+        invert: false,
+        pixelReplication: false
+    };
+    const element = document.getElementById('dicomImage');
+    cornerstone.enable(element);
+
+    loadSelectedCase();
+
+
+    document.getElementById('testCasesSelect').addEventListener('change', () => {
+        loadSelectedCase();
+    });
+
+
+    document.getElementById('area-apply').addEventListener("click", function () {
+        let viewport = cornerstone.getViewport(element);
+
+        viewport.displayedArea.tlhc.x = document.getElementById('area-top').value;
+        viewport.displayedArea.tlhc.y = document.getElementById('area-left').value;
+        viewport.displayedArea.brhc.x = document.getElementById('area-bottom').value;
+        viewport.displayedArea.brhc.y = document.getElementById('area-right').value;
+
+        cornerstone.setViewport(element, viewport);
+    });
+
+    function loadSelectedCase() {
+        let imageId = document.getElementById('testCasesSelect').value;
+
+        cornerstone.loadImage(imageId).then(function (image) {
+            let dicomImageElement = document.getElementById('dicomImage');
+
+
+            dicomImageElement.style.width = image.width + "px";
+            dicomImageElement.style.height = image.height + "px";
+            cornerstone.resize (element, true);
+            cornerstone.displayImage(element, image, viewportOptions);
+            updateUI();
+        });
+    }
+
+    function updateUI() {
+        let viewport = cornerstone.getViewport(element);
+
+        document.getElementById('area-top').value = viewport.displayedArea.tlhc.x;
+        document.getElementById('area-left').value = viewport.displayedArea.tlhc.y;
+        document.getElementById('area-bottom').value = viewport.displayedArea.brhc.x;
+        document.getElementById('area-right').value = viewport.displayedArea.brhc.y;
+    }
+</script>
+</html>
