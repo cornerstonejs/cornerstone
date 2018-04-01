@@ -13,5 +13,23 @@
   "color": false,
   "columnPixelSpacing": 1,
   "rowPixelSpacing": 1,
-  "sizeInBytes": 1152000
+  "sizeInBytes": 1152000,
+  "testCase": {
+    "displayedArea": {
+      "tlhc": {
+        "x": 389,
+        "y": 769
+      },
+      "brhc": {
+        "x": 1280,
+        "y": 900
+      },
+      "rowPixelSpacing": 1,
+      "columnPixelSpacing": 1,
+      "presentationSizeMode": "SCALE TO FIT"
+    },
+    "result": {
+      "description": "Display should be a normal SMPTE pattern (full screen)"
+    }
+  }
 }

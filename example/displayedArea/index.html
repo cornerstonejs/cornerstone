@@ -18,9 +18,9 @@
         <select id="testCasesSelect">
             <option value="example://DISA_P01">DISA_P01</option>
             <option value="example://DISA_P02">DISA_P02</option>
-            
 
-        </select> 
+
+        </select>
 
         <div id="displayArea" style="width:512px;">
             <h3>Display Area:</h3>
@@ -36,14 +36,33 @@
                 <span class="input-group-addon">/</span>
                 <input id="area-right" class="form-control" type="text" placeholder="right" />
             </div>
+            <input id="presentationMode" type="text" value="SCALE TO FIT" disabled="disabled" />
             <input id="area-apply" type="button" value="Apply Area" />
         </div>
-
+        <div><h3 id="testResult"></h3></div>
         <br>
+        <div>
+            <span>Viewer Size:</span><span id="viewerSize"></span><span> | </span>
+            <span>Image Size:</span><span id="imageSize"></span>
+        </div>
 
-        <div id="dicomImage" style="width:512px;height:512px;"
-             oncontextmenu="return false"
-             onmousedown="return false">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6" style="padding-right:10px">
+                    <h4>Displayed Image area</h4>
+                    <div id="dicomImage" style="height:512px"
+                         oncontextmenu="return false"
+                         onmousedown="return false"></div>
+                </div> 
+
+                <div class="col-sm-6">
+                    <h4>Referenced image loaded 'Fit To Window':</h4>
+                    <div id="origDicomImage" style="height:512px"
+                         oncontextmenu="return false"
+                         onmousedown="return false"></div>
+                </div>
+
+            </div>
         </div>
 
     </div>
@@ -67,11 +86,13 @@
         pixelReplication: false
     };
     const element = document.getElementById('dicomImage');
+    const origElement = document.getElementById('origDicomImage');
+    
     cornerstone.enable(element);
+    cornerstone.enable(origElement);
 
     loadSelectedCase();
-
-
+    
     document.getElementById('testCasesSelect').addEventListener('change', () => {
         loadSelectedCase();
     });
@@ -80,10 +101,11 @@
     document.getElementById('area-apply').addEventListener("click", function () {
         let viewport = cornerstone.getViewport(element);
 
-        viewport.displayedArea.tlhc.x = document.getElementById('area-top').value;
-        viewport.displayedArea.tlhc.y = document.getElementById('area-left').value;
-        viewport.displayedArea.brhc.x = document.getElementById('area-bottom').value;
-        viewport.displayedArea.brhc.y = document.getElementById('area-right').value;
+        viewport.displayedArea.tlhc.x = document.getElementById('area-left').value;
+        viewport.displayedArea.tlhc.y = document.getElementById('area-top').value;
+        viewport.displayedArea.brhc.x = document.getElementById('area-right').value;
+        viewport.displayedArea.brhc.y = document.getElementById('area-bottom').value;
+        document.getElementById('testResult').textContent = "";
 
         cornerstone.setViewport(element, viewport);
     });
@@ -93,23 +115,40 @@
 
         cornerstone.loadImage(imageId).then(function (image) {
             let dicomImageElement = document.getElementById('dicomImage');
-
-
-            dicomImageElement.style.width = image.width + "px";
-            dicomImageElement.style.height = image.height + "px";
-            cornerstone.resize (element, true);
+            
             cornerstone.displayImage(element, image, viewportOptions);
-            updateUI();
+            cornerstone.displayImage(origElement, image, viewportOptions);
+
+            cornerstone.fitToWindow(origElement);
+            applyTestViewport(element,image);
         });
     }
 
-    function updateUI() {
-        let viewport = cornerstone.getViewport(element);
+    function applyTestViewport(element, image) {
+        if (image.testCase) {
+            let viewport = cornerstone.getViewport(element);
 
-        document.getElementById('area-top').value = viewport.displayedArea.tlhc.x;
-        document.getElementById('area-left').value = viewport.displayedArea.tlhc.y;
-        document.getElementById('area-bottom').value = viewport.displayedArea.brhc.x;
-        document.getElementById('area-right').value = viewport.displayedArea.brhc.y;
+            viewport.displayedArea = image.testCase.displayedArea;
+
+            cornerstone.setViewport(element, viewport);
+
+            updateUI(element, image, viewport, image.testCase.result);
+        }
+    }
+
+    function updateUI(element, image, viewport, result) {
+        
+        if (result) {
+            document.getElementById('testResult').textContent = result.description;
+        }
+
+        document.getElementById('area-left').value = viewport.displayedArea.tlhc.x;
+        document.getElementById('area-top').value = viewport.displayedArea.tlhc.y;
+        document.getElementById('area-right').value = viewport.displayedArea.brhc.x;
+        document.getElementById('area-bottom').value = viewport.displayedArea.brhc.y;
+
+        document.getElementById('viewerSize').textContent = element.clientWidth + 'px X ' + element.clientHeight + 'px';
+        document.getElementById('imageSize').textContent = image.width + 'px X ' + image.height + 'px';
     }
 </script>
 </html>
