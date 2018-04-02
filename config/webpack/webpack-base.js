@@ -6,6 +6,7 @@ const outputPath = path.join(rootPath, 'dist');
 const bannerPlugin = require(path.join(__dirname, 'plugins', 'banner.js'));
 
 module.exports = {
+  mode: 'development',
   context: context,
   entry: {
     cornerstone: path.join(context, 'index.js')

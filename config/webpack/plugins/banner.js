@@ -11,13 +11,13 @@ const getCurrentDate = () => {
   const date = ('0' + today.getDate()).slice(-2);
 
   return `${year}-${month}-${date}`;
-}
+};
 
 const getBanner = () => {
   return `/*! ${pkg.name} - ${pkg.version} - ` +
          `${getCurrentDate()} ` +
          `| (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */`
-}
+};
 
 module.exports = () => {
   return new webpack.BannerPlugin({
@@ -25,4 +25,4 @@ module.exports = () => {
     entryOnly: true,
     raw: true
   });
-}
+};
