@@ -4,7 +4,7 @@ const COLOR_TRANSPARENT = [0, 0, 0, 0];
 
 // Colormaps
 //
-// Hot Iron, PET, Hot Metal Blue and PET 20 Step are color palattes
+// Hot Iron, PET, Hot Metal Blue and PET 20 Step are color palettes
 // Defined by the DICOM standard
 // http://dicom.nema.org/dicom/2013/output/chtml/part06/chapter_B.html
 //
@@ -467,8 +467,15 @@ const colormapsData = {
   }
 };
 
-// Generate linearly spaced vectors
-// http://cens.ioc.ee/local/man/matlab/techdoc/ref/linspace.html
+/**
+ *  Generate linearly spaced vectors
+*  http://cens.ioc.ee/local/man/matlab/techdoc/ref/linspace.html
+ * @param {Number} a A number representing the first vector  
+ * @param {Number} b A number representing the second vector
+ * @param {Number} n The number of linear spaced vectors to generate
+ * @returns {Array} An array of points representing linear spaced vectors.
+ * @memberof Colors
+ */
 function linspace (a, b, n) {
   n = n === null ? 100 : n;
 
@@ -487,7 +494,13 @@ function linspace (a, b, n) {
   return vector;
 }
 
-// Return the number of elements smaller than "elem" (binary search)
+/**
+ * Returns the "rank/index" of the element in a sorted array if found or the highest index if not. Uses (binary search)
+ * @param {Array} array A sorted array to search in
+ * @param {any} elem the element in the array to search for
+ * @returns {number} The rank/index of the element in the given array
+ * @memberof Colors
+ */
 function getRank (array, elem) {
   let left = 0;
   let right = array.length - 1;
@@ -508,9 +521,15 @@ function getRank (array, elem) {
   return left;
 }
 
-// Find the indices into a sorted array a such that, if the corresponding elements
-// In v were inserted before the indices, the order of a would be preserved.
-// http://lagrange.univ-lyon1.fr/docs/numpy/1.11.0/reference/generated/numpy.searchsorted.html
+/**
+ * Find the indices into a sorted array a such that, if the corresponding elements
+ * In v were inserted before the indices, the order of a would be preserved.
+ *  http://lagrange.univ-lyon1.fr/docs/numpy/1.11.0/reference/generated/numpy.searchsorted.html
+ * @param {Array} inputArray The array where the values will be inserted
+ * @param {Array} values An array of the values to be inserted into the inputArray
+ * @returns {Array} The indices where elements should be inserted to maintain order.
+ * @memberof Colors
+ */
 function searchSorted (inputArray, values) {
   let i;
   const indexes = [];
@@ -527,19 +546,23 @@ function searchSorted (inputArray, values) {
   return indexes;
 }
 
-// Create an *N* -element 1-d lookup table
-//
-// *Data* represented by a list of x,y0,y1 mapping correspondences. Each element in this
-// List represents how a value between 0 and 1 (inclusive) represented by x is mapped to
-// A corresponding value between 0 and 1 (inclusive). The two values of y are to allow for
-// Discontinuous mapping functions (say as might be found in a sawtooth) where y0 represents
-// The value of y for values of x <= to that given, and y1 is the value to be used for x >
-// Than that given). The list must start with x=0, end with x=1, and all values of x must be
-// In increasing order. Values between the given mapping points are determined by simple linear
-// Interpolation.
-//
-// The function returns an array "result" where result[x*(N-1)] gives the closest value for
-// Values of x between 0 and 1.
+/**
+ * Creates an *N* -element 1-d lookup table
+ * @param {Number} N The number of elements in the result lookup table
+ * @param {Array} data represented by a list of x,y0,y1 mapping correspondences. Each element in this
+ * List represents how a value between 0 and 1 (inclusive) represented by x is mapped to
+ * A corresponding value between 0 and 1 (inclusive). The two values of y are to allow for
+ * Discontinuous mapping functions (say as might be found in a sawtooth) where y0 represents
+ * The value of y for values of x <= to that given, and y1 is the value to be used for x >
+ * Than that given). The list must start with x=0, end with x=1, and all values of x must be
+ * In increasing order. Values between the given mapping points are determined by simple linear
+ * Interpolation.
+ * @param {any} gamma value denotes a "gamma curve" value which adjusts the brightness
+ * at the bottom and top of the map.
+ * @returns an array "result" where result[x*(N-1)] gives the closest value for
+ * Values of x between 0 and 1.
+ * @memberof Colors
+ */
 function makeMappingArray (N, data, gamma) {
   let i;
   const x = [];
@@ -579,13 +602,20 @@ function makeMappingArray (N, data, gamma) {
   return lut;
 }
 
-// Colormap based on lookup tables using linear segments.
-//
-// The lookup table is generated using linear interpolation for each
-// Primary color, with the 0-1 domain divided into any number of
-// Segments.
-//
-// https://github.com/stefanv/matplotlib/blob/3f1a23755e86fef97d51e30e106195f34425c9e3/lib/matplotlib/colors.py#L663
+/**
+ * Creates a Colormap based on lookup tables using linear segments.
+ * @param {{red:Array, green:Array, blue:Array}} segmentedData An object with a red, green and blue entries.
+ * Each entry should be a list of x, y0, y1 tuples, forming rows in a table.
+ * @param {Number} N The number of elements in the result Colormap
+ * @param {any} gamma value denotes a "gamma curve" value which adjusts the brightness
+ * at the bottom and top of the Colormap.
+ * @returns {Array} The created Colormap object
+ * @description The lookup table is generated using linear interpolation for each
+ *  Primary color, with the 0-1 domain divided into any number of
+ * Segments.
+ * https://github.com/stefanv/matplotlib/blob/3f1a23755e86fef97d51e30e106195f34425c9e3/lib/matplotlib/colors.py#L663
+ * @memberof Colors
+ */
 function createLinearSegmentedColormap (segmentedData, N, gamma) {
   let i;
   const lut = [];
@@ -609,9 +639,11 @@ function createLinearSegmentedColormap (segmentedData, N, gamma) {
   return lut;
 }
 
-/*
-* Return all colormaps (id and name) available
-*/
+/**
+ * Return all available colormaps (id and name)
+ * @returns {Array<{id,key}>} An array of colormaps with an object containing the "id" and display "name"
+ * @memberof Colors
+ */
 export function getColormapsList () {
   const colormaps = [];
   const keys = Object.keys(colormapsData);
@@ -642,13 +674,14 @@ export function getColormapsList () {
 }
 
 /**
- * Convert the image of a element to a false color image
- *
+ * Return a colorMap object with the provided id and colormapData
+ * if the Id matches existent colorMap objects (check colormapsData) the colormapData is ignored.
+ * if the colormapData is not empty, the colorMap will be added to the colormapsData list. Otherwise, an empty colorMap object is returned.
  * @param {string} id The ID of the colormap
  * @param {Object} colormapData - An object that can contain a name, numColors, gama, segmentedData and/or colors
- *
  * @returns {*} The Colormap Object
- */
+ * @memberof Colors
+*/
 export function getColormap (id, colormapData) {
   let colormap = colormapsData[id];
 
