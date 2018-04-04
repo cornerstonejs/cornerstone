@@ -131,8 +131,8 @@ export function renderColorImage (enabledElement, invalidated) {
 
   const sx = enabledElement.viewport.displayedArea.tlhc.x - 1;
   const sy = enabledElement.viewport.displayedArea.tlhc.y - 1;
-  const width = enabledElement.viewport.displayedArea.brhc.x - enabledElement.viewport.displayedArea.tlhc.x;
-  const height = enabledElement.viewport.displayedArea.brhc.y - enabledElement.viewport.displayedArea.tlhc.y;
+  const width = enabledElement.viewport.displayedArea.brhc.x - sx;
+  const height = enabledElement.viewport.displayedArea.brhc.y - sy;
 
   context.drawImage(renderCanvas, sx, sy, width, height, 0, 0, width, height);
 

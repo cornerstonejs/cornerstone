@@ -1,4 +1,14 @@
 /**
+ * Enumeration that describes the displayedArea presentation size mode.
+ */
+// const DisplayedAreaSizeMode = Object.freeze({
+//   NONE: Symbol('NONE'),
+//   SCALE_TO_FIT: Symbol('SCALE TO FIT'),
+//   TRUE_SIZE: Symbol('TRUE SIZE'),
+//   MAGNIFY: Symbol('MAGNIFY')
+// });
+
+/**
  * Creates a new viewport object containing default values for the image and canvas
  *
  * @param {HTMLElement} canvas A Canvas DOM element
@@ -69,16 +79,10 @@ export default function (canvas, image) {
         },
         rowPixelSpacing: 1,
         columnPixelSpacing: 1,
-        presentationSizeMode: 'SCALE TO FIT'
+        presentationSizeMode: 'NONE'
       }
     };
   }
-
-  /**
-  * Enumeration that describes the displayedArea presentation size mode.
-  */
-  // TODO: Causing build error in the examples
-  // const presentationSizeModes = { scaleToFit: "SCALE TO FIT", trueSize: "TRUE SIZE", magnify: "MAGNIFY" };
 
   // Fit image to window
   const verticalScale = canvas.height / image.rows;
@@ -110,12 +114,12 @@ export default function (canvas, image) {
         y: 1
       },
       brhc: {
-        x: image.columns + 1,
-        y: image.rows + 1
+        x: image.columns,
+        y: image.rows
       },
       rowPixelSpacing: image.rowPixelSpacing !== undefined ? image.rowPixelSpacing : 1,
       columnPixelSpacing: image.columnPixelSpacing !== undefined ? image.columnPixelSpacing : 1,
-      presentationSizeMode: 'SCALE TO FIT'
+      presentationSizeMode: 'NONE'
     }
   };
 }
