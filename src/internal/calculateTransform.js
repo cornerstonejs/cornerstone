@@ -26,11 +26,16 @@ export default function (enabledElement, scale) {
   let widthScale = enabledElement.viewport.scale;
   let heightScale = enabledElement.viewport.scale;
 
-  const width = enabledElement.viewport.displayedArea.brhc.x - (enabledElement.viewport.displayedArea.tlhc.x -1);
+  const width = enabledElement.viewport.displayedArea.brhc.x - (enabledElement.viewport.displayedArea.tlhc.x - 1);
   const height = enabledElement.viewport.displayedArea.brhc.y - (enabledElement.viewport.displayedArea.tlhc.y - 1);
 
-  if (enabledElement.viewport.displayedArea.presentationSizeMode !== 'NONE') {
-
+  if (enabledElement.viewport.displayedArea.presentationSizeMode === 'NONE') {
+    if (enabledElement.image.rowPixelSpacing < enabledElement.image.columnPixelSpacing) {
+      widthScale *= (enabledElement.image.columnPixelSpacing / enabledElement.image.rowPixelSpacing);
+    } else if (enabledElement.image.columnPixelSpacing < enabledElement.image.rowPixelSpacing) {
+      heightScale *= (enabledElement.image.rowPixelSpacing / enabledElement.image.columnPixelSpacing);
+    }
+  } else {
     // These should be good for "TRUE SIZE" and "MAGNIFY"
     widthScale = enabledElement.viewport.displayedArea.columnPixelSpacing;
     heightScale = enabledElement.viewport.displayedArea.rowPixelSpacing;
@@ -48,12 +53,6 @@ export default function (enabledElement, scale) {
       } else if (enabledElement.viewport.displayedArea.columnPixelSpacing < enabledElement.viewport.displayedArea.rowPixelSpacing) {
         heightScale *= (enabledElement.viewport.displayedArea.rowPixelSpacing / enabledElement.viewport.displayedArea.columnPixelSpacing);
       }
-    }
-  } else {
-    if (enabledElement.image.rowPixelSpacing < enabledElement.image.columnPixelSpacing) {
-      widthScale *= (enabledElement.image.columnPixelSpacing / enabledElement.image.rowPixelSpacing);
-    } else if (enabledElement.image.columnPixelSpacing < enabledElement.image.rowPixelSpacing) {
-      heightScale *= (enabledElement.image.rowPixelSpacing / enabledElement.image.columnPixelSpacing);
     }
   }
 
