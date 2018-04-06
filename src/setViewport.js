@@ -31,6 +31,7 @@ export default function (element, viewport) {
     }
   }
 
+
   // Prevent window width from being too small (note that values close to zero are valid and can occur with
   // PET images in particular)
   if (enabledElement.viewport.voi.windowWidth) {
