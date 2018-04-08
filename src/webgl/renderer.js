@@ -110,24 +110,32 @@ function initWebGL (canvas) {
   return gl;
 }
 
+/**
+ * Returns the image data type as a string representation.
+ * @param {any} image The cornerstone image object
+ * @returns {string} image data type (rgb, iint16, uint16, int8 and uint8)
+ * @memberof WebGLRendering
+ */
 function getImageDataType (image) {
   if (image.color) {
     return 'rgb';
   }
 
-  let datatype = 'int';
+  const pixelData = image.getPixelData();
 
-  if (image.minPixelValue >= 0) {
-    datatype = `u${datatype}`;
+  if (pixelData instanceof Int16Array) {
+    return 'int16';
   }
 
-  if (image.maxPixelValue > 255) {
-    datatype += '16';
-  } else {
-    datatype += '8';
+  if (pixelData instanceof Uint16Array) {
+    return 'uint16';
   }
 
-  return datatype;
+  if (pixelData instanceof Int8Array) {
+    return 'int8';
+  }
+
+  return 'uint8';
 }
 
 function getShaderProgram (image) {
