@@ -470,7 +470,7 @@ const colormapsData = {
 /**
  *  Generate linearly spaced vectors
 *  http://cens.ioc.ee/local/man/matlab/techdoc/ref/linspace.html
- * @param {Number} a A number representing the first vector  
+ * @param {Number} a A number representing the first vector
  * @param {Number} b A number representing the second vector
  * @param {Number} n The number of linear spaced vectors to generate
  * @returns {Array} An array of points representing linear spaced vectors.
@@ -559,7 +559,7 @@ function searchSorted (inputArray, values) {
  * Interpolation.
  * @param {any} gamma value denotes a "gamma curve" value which adjusts the brightness
  * at the bottom and top of the map.
- * @returns an array "result" where result[x*(N-1)] gives the closest value for
+ * @returns {any[]} an array "result" where result[x*(N-1)] gives the closest value for
  * Values of x between 0 and 1.
  * @memberof Colors
  */
