@@ -87,7 +87,7 @@ function HSVToRGB (hue, sat, val) {
  * @param {Number} v A double value which table index will be returned.
  * @param {any} p An object that contains the Table "Range", the table "MaxIndex",
  * A "Shift" from first value in the table and the table "Scale" value
- * @returns The mapped index in the table
+ * @returns {Number} The mapped index in the table
  * @memberof Colors
  */
 function linearIndexLookupMain (v, p) {
@@ -205,7 +205,7 @@ class LookupTable {
 
   /**
    * (Not Used) Sets the range of scalars which will be mapped.
-   * @param {Number} start the minimum scalar value in the range 
+   * @param {Number} start the minimum scalar value in the range
    * @param {Number} end the maximum scalar value in the range
    * @returns {void}
    * @memberof Colors
@@ -308,6 +308,8 @@ class LookupTable {
 
   /**
    * Ensures the out-of-range colors (Below range and Above range) are set correctly.
+   * @returns {void}
+   * @memberof Colors
    */
   buildSpecialColors () {
     const numberOfColors = this.NumberOfColors;
