@@ -87,7 +87,7 @@ function HSVToRGB (hue, sat, val) {
  * @param {Number} v A double value which table index will be returned.
  * @param {any} p An object that contains the Table "Range", the table "MaxIndex",
  * A "Shift" from first value in the table and the table "Scale" value
- * @returns {Numeber} The mapped index in the table
+ * @returns {Number} The mapped index in the table
  * @memberof Colors
  */
 function linearIndexLookupMain (v, p) {
