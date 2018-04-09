@@ -4,6 +4,8 @@
 Cornerstone Core
 ================
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/cornerstonejs/cornerstone.svg)](https://greenkeeper.io/)
+
 Cornerstone is an open source project with a goal to deliver a complete web based medical imaging platform. This repository contains the Cornerstone Core component which is a lightweight JavaScript library for displaying medical images in modern web browsers that support the HTML5 canvas element. Cornerstone Core is not meant to be a complete application itself, but instead a component that can be used as part of larger more complex applications.  See the
 [OHIF Viewer](http://viewer.ohif.org/) for an example of using the various Cornerstone
 libraries to build a simple study viewer.
