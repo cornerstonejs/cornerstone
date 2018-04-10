@@ -1,20 +1,23 @@
-const path = require('path');
-const outputPath = path.resolve(__dirname, 'dist');
 const webpackConfig = require('./webpack.config.js');
 
 // Deleting output.library to avoid "Uncaught SyntaxError: Unexpected token /" error
 // when running testes (var test/foo_test.js = ...)
 delete webpackConfig.output.library;
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
     basePath: './',
     singleRun: true,
-    browsers: ['PhantomJS'],
+    browsers: ['ChromeHeadlessNoSandbox'],
+    customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      }
+    },
     frameworks: ['mocha'],
     reporters: ['progress', 'coverage'],
     files: [
-      'node_modules/promise-polyfill/promise.js',
       'test/*_test.js',
       'test/**/*_test.js'
     ],
@@ -22,7 +25,6 @@ module.exports = function(config) {
     plugins: [
       require('karma-webpack'),
       require('karma-mocha'),
-      require('karma-phantomjs-launcher'),
       require('karma-chrome-launcher')
     ],
 
@@ -35,9 +37,9 @@ module.exports = function(config) {
 
     webpackMiddleware: {
       noInfo: false,
-      // use stats to turn off verbose output
+      // Use stats to turn off verbose output
       stats: {
-        // options i.e. 
+        // Options i.e.
         chunks: false,
         colors: true,
         timings: false,
