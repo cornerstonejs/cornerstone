@@ -1,0 +1,35 @@
+{
+  "imageId": "example//DISA_P04",
+  "minPixelValue": 0,
+  "maxPixelValue": 255,
+  "slope": 1.0,
+  "intercept": 0,
+  "windowCenter": 127.5,
+  "windowWidth": 255,
+  "rows": 1536,
+  "columns": 1024,
+  "height": 1536,
+  "width": 1024,
+  "color": false,
+  "columnPixelSpacing": 1,
+  "rowPixelSpacing": 1,
+  "sizeInBytes": 1572864,
+  "testCase": {
+    "image": "SC image containing SMPTE pattern (magnified by factor 2.0 and 3.0 respectively), Columns 1024, Rows 1536, Bits Allocated 8, Bits Stored 8, Pixel Range 0 to +255, Pixel Representation is unsigned, Photometric Interpretation is MONOCHROME2, no LUTs",
+    "pState": "Presentation Size Mode: TRUE SIZE, Displayed Area Top Left Hand Corner 1\\1, Displayed Area Bottom Right Hand Corner 1024\\1536, Presentation Pixel Aspect Ratio 0.1302089\\0.1953125",
+    "result": "Display should be a normal SMPTE pattern (size: 200*200 mm)",
+    "displayedArea": {
+      "tlhc": {
+        "x": 1,
+        "y": 1
+      },
+      "brhc": {
+        "x": 1024,
+        "y": 1536
+      },
+      "rowPixelSpacing": 0.1302089,
+      "columnPixelSpacing": 0.1953125,
+      "presentationSizeMode": "TRUE SIZE"
+    }
+  }
+}

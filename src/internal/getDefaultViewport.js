@@ -1,4 +1,14 @@
 /**
+ * Enumeration that describes the displayedArea presentation size mode.
+ */
+// const DisplayedAreaSizeMode = Object.freeze({
+//   NONE: Symbol('NONE'),
+//   SCALE_TO_FIT: Symbol('SCALE TO FIT'),
+//   TRUE_SIZE: Symbol('TRUE SIZE'),
+//   MAGNIFY: Symbol('MAGNIFY')
+// });
+
+/**
  * Creates a new viewport object containing default values for the image and canvas
  *
  * @param {HTMLElement} canvas A Canvas DOM element
@@ -30,7 +40,26 @@ export default function (canvas, image) {
       modalityLUT: undefined,
       voiLUT: undefined,
       colormap: undefined,
-      labelmap: false
+      labelmap: false,
+
+      /**
+       * C.10.4 Displayed Area Module: This Module describes Attributes required to define a Specified Displayed Area space.
+       */
+      displayedArea: {
+        // Top Left Hand Corner
+        tlhc: {
+          x: 1,
+          y: 1
+        },
+        // Bottom Right Hand Corner
+        brhc: {
+          x: 1,
+          y: 1
+        },
+        rowPixelSpacing: 1,
+        columnPixelSpacing: 1,
+        presentationSizeMode: 'NONE'
+      }
     };
   }
 
@@ -57,6 +86,19 @@ export default function (canvas, image) {
     modalityLUT: image.modalityLUT,
     voiLUT: image.voiLUT,
     colormap: image.colormap,
-    labelmap: Boolean(image.labelmap)
+    labelmap: Boolean(image.labelmap),
+    displayedArea: {
+      tlhc: {
+        x: 1,
+        y: 1
+      },
+      brhc: {
+        x: image.columns,
+        y: image.rows
+      },
+      rowPixelSpacing: image.rowPixelSpacing === undefined ? 1 : image.rowPixelSpacing,
+      columnPixelSpacing: image.columnPixelSpacing === undefined ? 1 : image.columnPixelSpacing,
+      presentationSizeMode: 'NONE'
+    }
   };
 }

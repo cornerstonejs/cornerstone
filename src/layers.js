@@ -59,8 +59,8 @@ export function rescaleImage (baseLayer, targetLayer) {
 
   // Column pixel spacing need to be considered when calculating the
   // ratio between the layer added and base layer images
-  const colRelative = (targetImage.columnPixelSpacing * targetImage.width) /
-                      (baseImage.columnPixelSpacing * baseImage.width);
+  const colRelative = (targetLayer.viewport.displayedArea.columnPixelSpacing * targetImage.width) /
+                      (baseLayer.viewport.displayedArea.columnPixelSpacing * baseImage.width);
   const viewportRatio = targetLayer.viewport.scale / baseLayer.viewport.scale * colRelative;
 
   targetLayer.viewport.scale = baseLayer.viewport.scale * viewportRatio;

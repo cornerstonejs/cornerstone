@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- twitter bootstrap CSS stylesheet - included to make things pretty, not needed or used by cornerstone -->
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+
+        <h1>
+            displaedArea/index.html
+        </h1>
+
+        This example demonstrates the IHE Image Display Test 521: Consistent Presentation of Images.
+        <br>
+        <br>
+        <label>Select a test:</label>
+        <select id="testCasesSelect">
+            <option value="example://DISA_P01">DISA_P01</option>
+            <option value="example://DISA_P02">DISA_P02</option>
+            <option value="example://DISA_P03">DISA_P03</option>
+            <option value="example://DISA_P04">DISA_P04</option>
+            <option value="example://DISA_P05">DISA_P05</option>
+        </select>
+        <div class="row">
+            <div id="displayArea" class="col-sm-6">
+                <h3>Display Area:</h3>
+                <label>top/left hand corner:</label>
+                <div class="input-group">
+                    <input id="area-top" class="form-control" type="text" placeholder="top" />
+                    <span class="input-group-addon">/</span>
+                    <input id="area-left" class="form-control" type="text" placeholder="left" />
+                </div>
+                <label>bottom/right hand corner:</label>
+                <div class="input-group">
+                    <input id="area-bottom" class="form-control" type="text" placeholder="bottom" />
+                    <span class="input-group-addon">/</span>
+                    <input id="area-right" class="form-control" type="text" placeholder="right" />
+                </div>
+                <label>Pixel Spacing (Row/Column)</label>
+                <div class="input-group">
+                    <input id="row-pixel-spacing" class="form-control" type="text" placeholder="row pixel spacing" />
+                    <span class="input-group-addon">/</span>
+                    <input id="col-pixel-spacing" class="form-control" type="text" placeholder="column pixel spacing" />
+                </div>
+                <input id="presentation-mode" type="text" value="" />
+                <input id="area-apply" type="button" value="Apply Area" />
+            </div>
+        </div>
+        <div>
+            <span>Viewer Size:</span><span id="viewerSize"></span><span> | </span>
+            <span>Image Size:</span><span id="imageSize"></span>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div style="padding-right:10px">
+                    <h4>Displayed Image area</h4>
+                    <div id="dicomImage" style="height:650px"
+                         oncontextmenu="return false"
+                         onmousedown="return false"></div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div style="padding-left:10px">
+                    <h4>Referenced image loaded 'Fit To Window':</h4>
+                    <div id="origDicomImage" style="height:650px"
+                         oncontextmenu="return false"
+                         onmousedown="return false"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <h3>Test Image</h3>
+                <div class="alert alert-success" id="test-image"></div>
+            </div>
+            <div class="col-sm-4">
+                <h3>Presentation State</h3>
+                <div class="alert alert-info" id="test-pState"></div>
+            </div>
+            <div class="col-sm-4">
+                <h3>Result</h3>
+                <div class="alert alert-danger" id="test-result"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<!-- include the cornerstone library -->
+<script src="../../dist/cornerstone.js"></script>
+<script>window.cornerstone || document.write('<script src="https://unpkg.com/cornerstone-core">\x3C/script>')</script>
+
+<!-- include special code for these examples which provides images -->
+<script src="../exampleImageIdLoaderRaw.js"></script>
+
+<script>
+    const viewportOptions = {
+        scale: 1.0,
+        translation: {
+            x: 0,
+            y: 0
+        },
+        invert: false,
+        pixelReplication: false
+    };
+    const element = document.getElementById('dicomImage');
+    const origElement = document.getElementById('origDicomImage');
+    
+    loadSelectedCase();
+    
+    document.getElementById('testCasesSelect').addEventListener('change', () => {
+        loadSelectedCase();
+    });
+
+
+    document.getElementById('area-apply').addEventListener("click", function () {
+        let viewport = cornerstone.getViewport(element);
+
+        viewport.displayedArea.tlhc.x = document.getElementById('area-left').value;
+        viewport.displayedArea.tlhc.y = document.getElementById('area-top').value;
+        viewport.displayedArea.brhc.x = document.getElementById('area-right').value;
+        viewport.displayedArea.brhc.y = document.getElementById('area-bottom').value;
+        viewport.displayedArea.rowPixelSpacing = document.getElementById('row-pixel-spacing').value;
+        viewport.displayedArea.columnPixelSpacing = document.getElementById('col-pixel-spacing').value;
+        viewport.displayedArea.presentationSizeMode = document.getElementById('presentation-mode').value;
+
+        document.getElementById('test-result').textContent = "";
+        document.getElementById('test-image').textContent = "";
+        document.getElementById('test-pState').textContent = "";
+
+        cornerstone.setViewport(element, viewport);
+    });
+
+    function loadSelectedCase() {
+        let imageId = document.getElementById('testCasesSelect').value;
+
+        cornerstone.disable(element);
+        cornerstone.disable(origElement);
+
+        cornerstone.enable(element);
+        cornerstone.enable(origElement);
+
+        cornerstone.loadImage(imageId).then(function (image) {
+            
+            cornerstone.displayImage(element, image, viewportOptions);
+            cornerstone.displayImage(origElement, image, viewportOptions);
+
+            cornerstone.fitToWindow(origElement);
+            applyTestViewport(element,image);
+        });
+    }
+
+    function applyTestViewport(element, image) {
+        if (image.testCase) {
+            let viewport = cornerstone.getViewport(element);
+
+            viewport.displayedArea = image.testCase.displayedArea;
+
+            cornerstone.setViewport(element, viewport);
+
+            updateUI(element, image, viewport, image.testCase);
+        }
+    }
+
+    function updateUI(element, image, viewport, testCase) {
+        
+        if (testCase) {
+            document.getElementById('test-image').textContent = testCase.image;
+            document.getElementById('test-pState').textContent = testCase.pState;
+            document.getElementById('test-result').textContent = testCase.result;
+        }
+
+        document.getElementById('area-left').value = viewport.displayedArea.tlhc.x;
+        document.getElementById('area-top').value = viewport.displayedArea.tlhc.y;
+        document.getElementById('area-right').value = viewport.displayedArea.brhc.x;
+        document.getElementById('area-bottom').value = viewport.displayedArea.brhc.y;
+        document.getElementById('row-pixel-spacing').value = viewport.displayedArea.rowPixelSpacing;
+        document.getElementById('col-pixel-spacing').value = viewport.displayedArea.columnPixelSpacing;
+
+        document.getElementById('viewerSize').textContent = element.clientWidth + 'px X ' + element.clientHeight + 'px';
+        document.getElementById('imageSize').textContent = image.width + 'px X ' + image.height + 'px';
+
+        document.getElementById('presentation-mode').value = viewport.displayedArea.presentationSizeMode;
+    }
+</script>
+</html>

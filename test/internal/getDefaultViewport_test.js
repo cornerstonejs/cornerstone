@@ -11,6 +11,6 @@ describe('getDefaultViewport', function () {
   it('should return an empty viewport if no image is provided', function () {
     const emptyViewport = getDefaultViewport({});
 
-    emptyViewport.should.have.all.keys(['scale', 'translation', 'voi', 'invert', 'pixelReplication', 'rotation', 'hflip', 'vflip', 'modalityLUT', 'voiLUT', 'colormap', 'labelmap']);
+    emptyViewport.should.have.all.keys(['scale', 'translation', 'voi', 'invert', 'pixelReplication', 'rotation', 'hflip', 'vflip', 'modalityLUT', 'voiLUT', 'colormap', 'labelmap', 'displayedArea']);
   });
 });
