@@ -23,7 +23,13 @@
 
     <br>
     <br>
-
+    <label>Row Pixel Spacing:</label>
+    <input id="rowPixelSpacing" type="text" value="" />
+    <span>&#32;</span>
+    <label>Column Pixel Spacing:</label>
+    <input id="colPixelSpacing" type="text" value="" />
+    <br>
+    <br>
     <button id="reset" class="btn">Reset & fit to window</button>
     <button id="randomZoomPan" class="btn">Apply random zoom & pan</button>
 
@@ -58,6 +64,9 @@
     cornerstone.enable(element);
     cornerstone.loadImage(imageId).then(function(image) {
         cornerstone.displayImage(element, image);
+
+        document.getElementById('rowPixelSpacing').value = image.rowPixelSpacing;
+        document.getElementById('colPixelSpacing').value = image.columnPixelSpacing;
     });
 
     function doResize(width, height) {
@@ -95,19 +104,31 @@
     });
 
     document.getElementById('reset').addEventListener('click', function (e) {
+        let image = cornerstone.getImage(element);
+
         element.style.width = '256px';
         element.style.height = '256px';
+
+        image.rowPixelSpacing = parseInt (document.getElementById('rowPixelSpacing').value, 10);
+        image.columnPixelSpacing = parseInt(document.getElementById('colPixelSpacing').value, 10);
+
         cornerstone.resize(element, true);
     });
 
     document.getElementById('randomZoomPan').addEventListener('click', function (e) {
         let viewport = cornerstone.getViewport(element);
+        let image = cornerstone.getImage(element);
         const scale = viewport.scale;
         const minScale = scale - scale / 2;
         const maxScale = scale + scale / 2;
         viewport.scale = getRandomFloat(minScale, maxScale);
         viewport.translation.x = getRandomFloat(-50.0, 50.0)
         viewport.translation.y = getRandomFloat(-50.0, 50.0)
+
+
+
+        image.rowPixelSpacing = parseInt(document.getElementById('rowPixelSpacing').value, 10);
+        image.columnPixelSpacing = parseInt(document.getElementById('colPixelSpacing').value, 10);
 
         cornerstone.setViewport(element, viewport);
     });
