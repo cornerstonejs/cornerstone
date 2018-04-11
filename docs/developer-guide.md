@@ -84,7 +84,7 @@ Cornerstone relies on a number of open source tools, components, and free servic
 * [Istanbul](https://istanbul.js.org/) is used to report code coverage
 * [Travis CI](https://travis-ci.org/) is used to automatically run tests. See [Cornerstone Core on Travis CI](https://travis-ci.org/cornerstonejs/cornerstone)
 * [Coveralls](https://coveralls.io/) is used to display code coverage following automatic tests. See [Cornerstone Core Coveralls Test Coverage](https://coveralls.io/github/cornerstonejs/cornerstone?branch=master)
-* [PhantomJS](http://phantomjs.org/) is used for running headless tests.
+* [Headless Chrome](https://github.com/GoogleChrome/puppeteer) is used for running headless tests.
 
 #### Documentation
 * [JSDoc](https://usejsdoc.org) formatting is used for documenting the source code.
@@ -100,10 +100,6 @@ Here are some general notes on writing tests which may be useful:
 * Test file names must end in "\_test.js"
 * The 'coverage_test.js' file ensures that all files are considered by Istanbul, so that code coverage reports can be used to explore the whole repository.
 * Do not convert 'function ()' to arrow functions (i.e. '=> {}') within the 'it', 'should', or 'describe' blocks or Mocha will fail to run the tests properly.
-* Some polyfills are currently required to run all of the tests with PhantomJS, since certain features are not supported (e.g. Promises). This issue may be resolved by switching from PhantomJS to headless version of browsers themselves.
-
-
-
 
 ## Releasing a new version
 1. Make sure you have the latest commits from master
