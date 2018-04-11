@@ -7,13 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [2.2.0] - 2018-04-11
 ### Added
 - Added and exported EVENTS constants for all cornerstone events (thanks  @medihack)
-- Added example for integration with React to the docs 
-- Added compute VOI window width/center if not present (thanks @adreyfus )
+- Added example for integration with React to the docs https://docs.cornerstonejs.org/integration.html
+- Added compute VOI window width/center if not present (thanks @adreyfus)
 - Added Displayed Area in Viewport to support IHE Consistent Presentation of Images (thanks @jdnarvaez)
 - Added HTML example "displayedArea" with the IHE test cases for Consistent Presentation of Images
 
 ### Fixed
-- Fixed WebGL Rendering fails for a High BVAL Diffusion image
+- Fixed WebGL Rendering to properly determine the datatype (e.g. color, int8, int16...) of the image pixel data
 - Fixed fitToWindow and default viewport for images with different row/col pixel spacing (thanks @luyixin)
 
 ### Changed
