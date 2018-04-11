@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2018-04-11
+### Added
+- Added and exported EVENTS constants for all cornerstone events (thanks  @medihack)
+- Added example for integration with React to the docs https://docs.cornerstonejs.org/integration.html
+- Added compute VOI window width/center if not present (thanks @adreyfus)
+- Added Displayed Area in Viewport to support IHE Consistent Presentation of Images (thanks @jdnarvaez)
+- Added HTML example "displayedArea" with the IHE test cases for Consistent Presentation of Images
+
+### Fixed
+- Fixed WebGL Rendering to properly determine the datatype (e.g. color, int8, int16...) of the image pixel data
+- Fixed fitToWindow and default viewport for images with different row/col pixel spacing (thanks @luyixin)
+
+### Changed
+- Updated project to Webpack4
+- Updated the HTML example "modalityANDVIOLut" to show 1) Reset VOI LUT (forceAuto) and 2) Select a VOI from defined presets (W/L values or and VOI LUT function)
+- Updated the HTML example "resize" to allow setting irregular image sizes (Row and Column pixel spacing) when applying fitting the image to window and zoom in/out
+
+### Removed
+- Removed "dist" folder from source
+
+
 ## [2.1.0] - 2018-03-02
 ### Added
 - Added Gitbook and documentationjs for API docs
