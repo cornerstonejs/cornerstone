@@ -18,11 +18,11 @@ export default function (element) {
   let horizontalRatio = 1;
 
   if (image.rowPixelSpacing < image.columnPixelSpacing) {
-    //we believe that the row pixel is the same as css pixel 
+    // we believe that the row pixel is the same as css pixel
     horizontalRatio = image.columnPixelSpacing / image.rowPixelSpacing;
   } else {
-   //we believe that the column pixel is the same as css pixel
-   verticalRatio = image.rowPixelSpacing / image.columnPixelSpacing;
+    // we believe that the column pixel is the same as css pixel
+    verticalRatio = image.rowPixelSpacing / image.columnPixelSpacing;
   }
 
   const verticalScale = enabledElement.canvas.height / imageSize.height / verticalRatio;

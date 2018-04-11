@@ -67,11 +67,11 @@ export default function (canvas, image) {
   let horizontalRatio = 1;
 
   if (image.rowPixelSpacing < image.columnPixelSpacing) {
-   //we believe that the row pixel is the same as css pixel 
-   horizontalRatio = image.columnPixelSpacing / image.rowPixelSpacing;
+    // we believe that the row pixel is the same as css pixel
+    horizontalRatio = image.columnPixelSpacing / image.rowPixelSpacing;
   } else {
-   //we believe that the column pixel is the same as css pixel
-   verticalRatio = image.rowPixelSpacing / image.columnPixelSpacing;
+    // we believe that the column pixel is the same as css pixel
+    verticalRatio = image.rowPixelSpacing / image.columnPixelSpacing;
   }
 
   // Fit image to window
