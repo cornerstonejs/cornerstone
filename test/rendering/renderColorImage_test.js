@@ -104,14 +104,14 @@ describe('renderColorImage', function () {
 
     // Act
     renderColorImage(enabledElement, true);
-    const renderCanvas1 = Object.assign({}, enabledElement.renderingTools.renderCanvas);
+    const renderCanvas1 = enabledElement.renderingTools.renderCanvas.cloneNode();
 
     // Changing image measurements shouldn't affect renderCanvas when invalidated !== true
     image.height = 500;
     this.viewport.height = 500;
 
     renderColorImage(enabledElement, false);
-    const renderCanvas2 = Object.assign({}, enabledElement.renderingTools.renderCanvas);
+    const renderCanvas2 = enabledElement.renderingTools.renderCanvas.cloneNode();
 
     // Assert
     assert.deepEqual(renderCanvas1, renderCanvas2);
@@ -125,13 +125,13 @@ describe('renderColorImage', function () {
 
     // Act
     renderColorImage(enabledElement, true);
-    const renderCanvas1 = Object.assign({}, enabledElement.renderingTools.renderCanvas);
+    const renderCanvas1 = enabledElement.renderingTools.renderCanvas.cloneNode();
 
     image.height = 500;
     this.viewport.height = 500;
 
     renderColorImage(enabledElement, true);
-    const renderCanvas2 = Object.assign({}, enabledElement.renderingTools.renderCanvas);
+    const renderCanvas2 = enabledElement.renderingTools.renderCanvas.cloneNode();
 
     // Assert
     assert.notDeepEqual(renderCanvas1, renderCanvas2);
