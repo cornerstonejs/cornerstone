@@ -67,7 +67,7 @@ describe('pageToPixel', function () {
 
     // Act
     const convertedPoint = pageToPixel(element, 10, 10);
-    
+
     assert.deepEqual(convertedPoint, {
       x: 10,
       y: 10 });

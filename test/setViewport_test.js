@@ -189,19 +189,19 @@ describe('Set an enabled element\'s viewport', function () {
       hflip: false,
       vflip: false,
       displayedArea: {
-         //Top Left Hand Corner
-         tlhc: {
-            x: 10,
-            y: 9
-         },
-         //Bottom Right Hand Corner
-         brhc: {
-            x: 3,
-            y: 2
-         },
-         rowPixelSpacing: 5,
-         columnPixelSpacing: 4,
-         presentationSizeMode: ""
+        // Top Left Hand Corner
+        tlhc: {
+          x: 10,
+          y: 9
+        },
+        // Bottom Right Hand Corner
+        brhc: {
+          x: 3,
+          y: 2
+        },
+        rowPixelSpacing: 5,
+        columnPixelSpacing: 4,
+        presentationSizeMode: ''
       }
     };
 

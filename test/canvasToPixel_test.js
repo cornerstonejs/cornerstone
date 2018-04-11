@@ -73,16 +73,17 @@ describe('canvasToPixel', function () {
       y: 30 });
     const convertedPoint2 = canvasToPixel(element, {
       x: 0,
-      y: 0});
+      y: 0 });
     const convertedPoint3 = canvasToPixel(element, {
       x: 0,
-      y: 128});
+      y: 128 });
+
     assert.deepEqual(convertedPoint1, {
       x: 30,
       y: 30 });
     assert.deepEqual(convertedPoint2, {
-       x: 0,
-       y: 0 });
+      x: 0,
+      y: 0 });
     assert.deepEqual(convertedPoint3, {
       x: 0,
       y: 128 });
