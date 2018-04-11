@@ -11,9 +11,7 @@ const devConfig = {
   optimization: {
     minimizer: [
       new UglifyJSPlugin({
-        uglifyOptions: {
-          sourceMap: true
-        }
+        sourceMap: true
       })
     ]
   },
