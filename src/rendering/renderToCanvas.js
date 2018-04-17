@@ -2,9 +2,18 @@ import triggerEvent from '../triggerEvent.js';
 import EVENTS from '../events.js';
 import drawImageSync from '../internal/drawImageSync.js';
 import getDefaultViewport from '../internal/getDefaultViewport.js';
-import webGL from '../webgl/index.js';
+import tryEnableWebgl from '../internal/tryEnableWebgl.js';
 
 
+/**
+ * Render the image to the provided canvas immediately.
+ * @param {any} canvas The HTML canvas where the image will be rendered.
+ * @param {any} image An Image loaded by a Cornerstone Image Loader
+ * @param {any} viewport A set of Cornerstone viewport parameters
+ * @param {any} options Options for rendering the image (e.g. enable webgl by {renderer: 'webgl'})
+ * @returns {void}
+ * @memberof rendering
+ */
 export default function (canvas, image, viewport = null, options = null) {
   if (canvas === undefined) {
     throw new Error('renderToCanvas: parameter canvas cannot be undefined');
@@ -13,17 +22,13 @@ export default function (canvas, image, viewport = null, options = null) {
   // If this enabled element has the option set for WebGL, we should
   // Check if this device actually supports it
   if (options && options.renderer && options.renderer.toLowerCase() === 'webgl') {
-    if (webGL.renderer.isWebGLAvailable()) {
-      // If WebGL is available on the device, initialize the renderer
-      // And return the renderCanvas from the WebGL rendering path
-      webGL.renderer.initRenderer();
-      options.renderer = 'webgl';
-    } else {
-      // If WebGL is not available on this device, we will fall back
-      // To using the Canvas renderer
-      console.error('WebGL not available, falling back to Canvas renderer');
-      delete options.renderer;
-    }
+    tryEnableWebgl(options);
+  }
+
+  const defaultViewport = getDefaultViewport(canvas, image);
+
+  if (viewport) {
+    Object.assign(defaultViewport, viewport);
   }
 
   const enabledElementStub = {
@@ -32,21 +37,13 @@ export default function (canvas, image, viewport = null, options = null) {
     image,
     invalid: true, // True if image needs to be drawn, false if not
     needsRedraw: true,
-    options: null,
+    options,
     layers: [],
     data: {},
     renderingTools: {},
-    viewport: getDefaultViewport(canvas, image)
+    viewport: defaultViewport
   };
 
-  // Merge viewport
-  if (viewport) {
-    for (const attrname in viewport) {
-      if (viewport[attrname] !== null) {
-        enabledElementStub.viewport[attrname] = viewport[attrname];
-      }
-    }
-  }
 
   const eventDetails = {
     enabledElement: enabledElementStub,

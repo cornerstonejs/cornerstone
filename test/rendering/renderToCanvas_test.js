@@ -25,6 +25,7 @@ describe('renderToCanvas', function () {
         pixelData[index++] = 255; // ALPHA
       }
     }
+
     canvasContext.putImageData(imageData, 0, 0);
 
     function getPixelData () {
@@ -52,6 +53,8 @@ describe('renderToCanvas', function () {
   it('should render an image on the existing canvas, then ', function (done) {
     // Arrange
     const renderCanvas1 = document.createElement('canvas');
+    const viewport = { hflip: true };
+    const options = { renderer: 'webgl' };
 
     renderCanvas1.width = this.width;
     renderCanvas1.height = this.height;
@@ -68,7 +71,7 @@ describe('renderToCanvas', function () {
     });
 
     // Act
-    renderToCanvas(renderCanvas1, this.image);
+    renderToCanvas(renderCanvas1, this.image, viewport, options);
 
     const canvasContext1 = this.canvas1.getContext('2d');
     const imageData1 = canvasContext1.createImageData(this.width, this.height);
