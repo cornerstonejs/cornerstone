@@ -106,20 +106,52 @@ Here are some general notes on writing tests which may be useful:
 2. Determine the version change you need to make based on the scope of the changes since the last release.
 3. Update the [changelog](https://github.com/cornerstonejs/cornerstone/blob/master/changelog.md)
   * Make sure to thank any code contributors!
-3. Update the package and dependency versions in "package.json"
-4. Update the build version:
+4. Update the package and dependency versions in "package.json"
+5. Update the build version:
   ``` bash
   npm run version
   ```
-5. Run the build:
+6. Run the build:
   ``` bash
   npm run build
   ```
-5. Tag and push the commit with the version number to master
+7. Commit the changes
+  ``` bash
+  git commit -am "Bump version <version>"
+  ```
+8. Tag the commits with the version number and title
+  ``` bash
+  git tag -a "<version>" -m "Version <version>"
+  ```
+9. Push the commit with the version number to master
   ``` bash
   git push origin master --tags
   ```
-6. Publish the release to NPM:
+10. Publish the release to NPM:
   ``` bash
   npm publish
   ```
+
+## Updating Docs with gitbook
+### If its your first time:
+1. Make sure you have gitbook-cli installed globally, if not, run:
+```bash
+npm install -g gitbook-cli
+```
+2. Go inside the /docs folder and do:
+``` bash
+gitbook install
+```
+
+### Updating files and deploying
+1. On the root folder run:
+```bash
+npm run docs
+# It will serve the documentation on http://localhost:4000/
+# with livereload 
+```
+2. Change the docs needed and make sure everything is correct
+3. In order to deploy, run: 
+```bash
+npm run docs:deploy
+```
