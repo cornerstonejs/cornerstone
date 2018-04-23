@@ -110,13 +110,7 @@ export default function (element, forceFitToWindow) {
     return;
   }
 
-  if (forceFitToWindow === true) {
-    fitToWindow(element);
-
-    return;
-  }
-
-  if (wasFitToWindow(enabledElement, oldCanvasWidth, oldCanvasHeight)) {
+  if (forceFitToWindow || wasFitToWindow(enabledElement, oldCanvasWidth, oldCanvasHeight)) {
     // Fit the image to the window again if it fitted before the resize
     fitToWindow(element);
   } else {

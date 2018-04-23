@@ -8,6 +8,8 @@ import getImageFitScale from './getImageFitScale.js';
  * @memberof Internal
  */
 function createViewport () {
+  const displayedArea = createDefaultDisplayedArea();
+
   return {
     scale: 1,
     translation: {
@@ -27,25 +29,34 @@ function createViewport () {
     voiLUT: undefined,
     colormap: undefined,
     labelmap: false,
+    displayedArea
+  };
+}
 
-    /**
-     * C.10.4 Displayed Area Module: This Module describes Attributes required to define a Specified Displayed Area space.
-     */
-    displayedArea: {
-      // Top Left Hand Corner
-      tlhc: {
-        x: 1,
-        y: 1
-      },
-      // Bottom Right Hand Corner
-      brhc: {
-        x: 1,
-        y: 1
-      },
-      rowPixelSpacing: 1,
-      columnPixelSpacing: 1,
-      presentationSizeMode: 'NONE'
-    }
+
+/**
+ * Creates the default displayed area.
+ * C.10.4 Displayed Area Module: This Module describes Attributes required to define a Specified Displayed Area space.
+ *
+ * @returns {tlhc: {x,y}, brhc: {x, y},rowPixelSpacing: Number, columnPixelSpacing: Number, presentationSizeMode: Number} displayedArea object
+ * @memberof Internal
+ */
+
+function createDefaultDisplayedArea () {
+  return {
+    // Top Left Hand Corner
+    tlhc: {
+      x: 1,
+      y: 1
+    },
+    // Bottom Right Hand Corner
+    brhc: {
+      x: 1,
+      y: 1
+    },
+    rowPixelSpacing: 1,
+    columnPixelSpacing: 1,
+    presentationSizeMode: 'NONE'
   };
 }
 

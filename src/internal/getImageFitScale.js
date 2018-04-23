@@ -1,4 +1,6 @@
+import { validateParameterUndefinedOrNull } from './validator.js';
 import getImageSize from './getImageSize.js';
+
 
 /**
  * Calculates the horizontal, vertical and minimum scale factor for an image
@@ -6,16 +8,12 @@ import getImageSize from './getImageSize.js';
  * @param {any} image The cornerstone image object
  * @param {Number} rotation Optional. The rotation angle of the image.
  * @return {{horizontalScale, verticalScale, scaleFactor}} The calculated horizontal, vertical and minimum scale factor
- * @memberof internal
+ * @memberof Internal
  */
 export default function (windowSize, image, rotation = null) {
-  if (windowSize === undefined) {
-    throw new Error('getImageScale: parameter windowSize must not be undefined');
-  }
 
-  if (image === undefined) {
-    throw new Error('getImageScale: parameter image must not be undefined');
-  }
+  validateParameterUndefinedOrNull(windowSize, 'getImageScale: parameter windowSize must not be undefined');
+  validateParameterUndefinedOrNull(image, 'getImageScale: parameter image must not be undefined');
 
   const imageSize = getImageSize(image, rotation);
   const rowPixelSpacing = image.rowPixelSpacing === undefined ? 1 : image.rowPixelSpacing;
