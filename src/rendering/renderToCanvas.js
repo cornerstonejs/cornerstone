@@ -6,6 +6,31 @@ import tryEnableWebgl from '../internal/tryEnableWebgl.js';
 
 
 /**
+ * creates a dummy enabled element
+ *
+ * @param {any} canvas the canvas that will be assigned to the enabled element.
+ * @param {any} image An Image loaded by a Cornerstone Image Loader
+ * @param { any } options Options for rendering the image (e.g.enable webgl by {renderer: 'webgl' })
+ * @param { any } viewport A set of Cornerstone viewport parameters
+ * @returns { element, canvas,image, invalid: Boolean, needsRedraw: Booleans, options, layers: [], data, renderingTools, viewport} a dummy enabled element
+ * @memberof rendering
+ */
+function createEnabledElementStub (canvas, image, options, viewport) {
+  return {
+    element: canvas,
+    canvas,
+    image,
+    invalid: true, // True if image needs to be drawn, false if not
+    needsRedraw: true,
+    options,
+    layers: [],
+    data: {},
+    renderingTools: {},
+    viewport
+  };
+}
+
+/**
  * Render the image to the provided canvas immediately.
  * @param {any} canvas The HTML canvas where the image will be rendered.
  * @param {any} image An Image loaded by a Cornerstone Image Loader
@@ -31,19 +56,7 @@ export default function (canvas, image, viewport = null, options = null) {
     Object.assign(defaultViewport, viewport);
   }
 
-  const enabledElementStub = {
-    element: canvas,
-    canvas,
-    image,
-    invalid: true, // True if image needs to be drawn, false if not
-    needsRedraw: true,
-    options,
-    layers: [],
-    data: {},
-    renderingTools: {},
-    viewport: defaultViewport
-  };
-
+  const enabledElementStub = createEnabledElementStub(canvas, image, options, defaultViewport);
 
   const eventDetails = {
     enabledElement: enabledElementStub,

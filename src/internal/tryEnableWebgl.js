@@ -13,12 +13,13 @@ export default function (options) {
     options.renderer = 'webgl';
 
     return true;
-  } else {
-    // If WebGL is not available on this device, we will fall back
-    // To using the Canvas renderer
-    console.error('WebGL not available, falling back to Canvas renderer');
-    delete options.renderer;
+  } 
 
-    return false;
-  }
+  // If WebGL is not available on this device, we will fall back
+  // To using the Canvas renderer
+  console.error('WebGL not available, falling back to Canvas renderer');
+
+  delete options.renderer;
+
+  return false;
 }
