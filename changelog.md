@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.2.1] - 2018-04-23
+### Fixed
+- Fixed viewport scale is NaN when row/col pixel spacing is not present (Issue #262).
+
 ## [2.2.0] - 2018-04-11
 ### Added
 - Added and exported EVENTS constants for all cornerstone events (thanks  @medihack)
