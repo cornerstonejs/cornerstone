@@ -1,12 +1,64 @@
+import getImageFitScale from './getImageFitScale.js';
+
+
 /**
- * Enumeration that describes the displayedArea presentation size mode.
+ * Creates a new viewport object containing default values
+ *
+ * @returns {Viewport} viewport object
+ * @memberof Internal
  */
-// const DisplayedAreaSizeMode = Object.freeze({
-//   NONE: Symbol('NONE'),
-//   SCALE_TO_FIT: Symbol('SCALE TO FIT'),
-//   TRUE_SIZE: Symbol('TRUE SIZE'),
-//   MAGNIFY: Symbol('MAGNIFY')
-// });
+function createViewport () {
+  const displayedArea = createDefaultDisplayedArea();
+
+  return {
+    scale: 1,
+    translation: {
+      x: 0,
+      y: 0
+    },
+    voi: {
+      windowWidth: undefined,
+      windowCenter: undefined
+    },
+    invert: false,
+    pixelReplication: false,
+    rotation: 0,
+    hflip: false,
+    vflip: false,
+    modalityLUT: undefined,
+    voiLUT: undefined,
+    colormap: undefined,
+    labelmap: false,
+    displayedArea
+  };
+}
+
+
+/**
+ * Creates the default displayed area.
+ * C.10.4 Displayed Area Module: This Module describes Attributes required to define a Specified Displayed Area space.
+ *
+ * @returns {tlhc: {x,y}, brhc: {x, y},rowPixelSpacing: Number, columnPixelSpacing: Number, presentationSizeMode: Number} displayedArea object
+ * @memberof Internal
+ */
+
+function createDefaultDisplayedArea () {
+  return {
+    // Top Left Hand Corner
+    tlhc: {
+      x: 1,
+      y: 1
+    },
+    // Bottom Right Hand Corner
+    brhc: {
+      x: 1,
+      y: 1
+    },
+    rowPixelSpacing: 1,
+    columnPixelSpacing: 1,
+    presentationSizeMode: 'NONE'
+  };
+}
 
 /**
  * Creates a new viewport object containing default values for the image and canvas
@@ -22,62 +74,11 @@ export default function (canvas, image) {
   }
 
   if (image === undefined) {
-    return {
-      scale: 1,
-      translation: {
-        x: 0,
-        y: 0
-      },
-      voi: {
-        windowWidth: undefined,
-        windowCenter: undefined
-      },
-      invert: false,
-      pixelReplication: false,
-      rotation: 0,
-      hflip: false,
-      vflip: false,
-      modalityLUT: undefined,
-      voiLUT: undefined,
-      colormap: undefined,
-      labelmap: false,
-
-      /**
-       * C.10.4 Displayed Area Module: This Module describes Attributes required to define a Specified Displayed Area space.
-       */
-      displayedArea: {
-        // Top Left Hand Corner
-        tlhc: {
-          x: 1,
-          y: 1
-        },
-        // Bottom Right Hand Corner
-        brhc: {
-          x: 1,
-          y: 1
-        },
-        rowPixelSpacing: 1,
-        columnPixelSpacing: 1,
-        presentationSizeMode: 'NONE'
-      }
-    };
-  }
-
-  let verticalRatio = 1;
-  let horizontalRatio = 1;
-
-  if (image.rowPixelSpacing < image.columnPixelSpacing) {
-    // we believe that the row pixel is the same as css pixel
-    horizontalRatio = image.columnPixelSpacing / image.rowPixelSpacing;
-  } else {
-    // we believe that the column pixel is the same as css pixel
-    verticalRatio = image.rowPixelSpacing / image.columnPixelSpacing;
+    return createViewport();
   }
 
   // Fit image to window
-  const verticalScale = canvas.height / image.rows / verticalRatio;
-  const horizontalScale = canvas.width / image.columns / horizontalRatio;
-  const scale = Math.min(horizontalScale, verticalScale);
+  const scale = getImageFitScale(canvas, image, 0).scaleFactor;
 
   return {
     scale,

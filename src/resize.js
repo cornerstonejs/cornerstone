@@ -57,7 +57,7 @@ function setCanvasSize (element, canvas) {
  */
 function wasFitToWindow (enabledElement, oldCanvasWidth, oldCanvasHeight) {
   const scale = enabledElement.viewport.scale;
-  const imageSize = getImageSize(enabledElement);
+  const imageSize = getImageSize(enabledElement.image, enabledElement.viewport.rotation);
   const imageWidth = Math.round(imageSize.width * scale);
   const imageHeight = Math.round(imageSize.height * scale);
   const x = enabledElement.viewport.translation.x;
@@ -110,13 +110,7 @@ export default function (element, forceFitToWindow) {
     return;
   }
 
-  if (forceFitToWindow === true) {
-    fitToWindow(element);
-
-    return;
-  }
-
-  if (wasFitToWindow(enabledElement, oldCanvasWidth, oldCanvasHeight)) {
+  if (forceFitToWindow || wasFitToWindow(enabledElement, oldCanvasWidth, oldCanvasHeight)) {
     // Fit the image to the window again if it fitted before the resize
     fitToWindow(element);
   } else {
