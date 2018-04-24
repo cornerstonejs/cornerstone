@@ -62,7 +62,8 @@
         }
     }
 
-    var baseUrl = '/example/displayedArea/test-cases/';
+    
+    var baseUrl = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + '/test-cases/';
 
     // register our imageLoader plugin with cornerstone
     cs.registerImageLoader('example', getExampleImage);
