@@ -4,7 +4,7 @@ addons:
   chrome: stable
 
 node_js:
-  - "node"
+  - "lts/*"
 
 cache:
   yarn: true
