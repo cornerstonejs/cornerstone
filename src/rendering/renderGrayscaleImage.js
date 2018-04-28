@@ -37,10 +37,11 @@ function getRenderCanvas (enabledElement, image, invalidated, useAlphaChannel = 
 
   const renderCanvasData = enabledElement.renderingTools.renderCanvasData;
   const renderCanvasContext = enabledElement.renderingTools.renderCanvasContext;
+  const colorSpaceChanged = enabledElement.renderingTools.lastRenderedIsColor !== image.color;
 
   // Gray scale image - apply the lut and put the resulting image onto the render canvas
   if (useAlphaChannel) {
-    storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data);
+    storedPixelDataToCanvasImageData(image, lut, renderCanvasData.data, colorSpaceChanged);
   } else {
     storedPixelDataToCanvasImageDataRGBA(image, lut, renderCanvasData.data);
   }

@@ -17,16 +17,22 @@ import now from './now.js';
  * @returns {void}
  * @memberof Internal
  */
-export default function (image, lut, canvasImageDataData) {
+export default function (image, lut, canvasImageDataData, colorSpaceChanged) {
   let start = now();
   const pixelData = image.getPixelData();
 
   image.stats.lastGetPixelDataTime = now() - start;
 
   const numPixels = pixelData.length;
-  const minPixelValue = image.minPixelValue;
+  let minPixelValue = image.minPixelValue;
   let canvasImageDataIndex = 3;
   let storedPixelDataIndex = 0;
+
+  const clearCanvasRGB = function (canvasImageDataData, canvasImageDataIndex) {
+    canvasImageDataData[canvasImageDataIndex - 3] = 255;
+    canvasImageDataData[canvasImageDataIndex - 2] = 255;
+    canvasImageDataData[canvasImageDataIndex - 1] = 255;
+  };
 
 
   // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
@@ -34,33 +40,16 @@ export default function (image, lut, canvasImageDataData) {
 
   // Added two paths (Int16Array, Uint16Array) to avoid polymorphic deoptimization in chrome.
   start = now();
-  if (pixelData instanceof Int16Array) {
-    if (minPixelValue < 0) {
-      while (storedPixelDataIndex < numPixels) {
-        canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // Alpha
-        canvasImageDataIndex += 4;
-      }
-    } else {
-      while (storedPixelDataIndex < numPixels) {
-        canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex++]]; // Alpha
-        canvasImageDataIndex += 4;
-      }
+  if (minPixelValue >= 0 && ((pixelData instanceof Int16Array) || (pixelData instanceof Uint16Array))) {
+    minPixelValue = 0;
+  }
+
+  while (storedPixelDataIndex < numPixels) {
+    canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // Alpha
+    if (colorSpaceChanged) {
+      clearCanvasRGB(canvasImageDataData, canvasImageDataIndex);
     }
-  } else if (pixelData instanceof Uint16Array) {
-    while (storedPixelDataIndex < numPixels) {
-      canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex++]]; // Alpha
-      canvasImageDataIndex += 4;
-    }
-  } else if (minPixelValue < 0) {
-    while (storedPixelDataIndex < numPixels) {
-      canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // Alpha
-      canvasImageDataIndex += 4;
-    }
-  } else {
-    while (storedPixelDataIndex < numPixels) {
-      canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex++]]; // Alpha
-      canvasImageDataIndex += 4;
-    }
+    canvasImageDataIndex += 4;
   }
 
   image.stats.lastStoredPixelDataToCanvasImageDataTime = now() - start;
