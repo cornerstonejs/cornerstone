@@ -1,5 +1,5 @@
-import { should, assert } from 'chai';
-import getImageFitScale from '../../src/internal/getImageFitScale';
+import { should, assert } from 'chai'; // eslint-disable-line import/extensions
+import getImageFitScale from '../../src/internal/getImageFitScale.js';
 
 should();
 

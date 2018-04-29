@@ -1,4 +1,4 @@
-import { assert } from 'chai';
+import { assert } from 'chai'; // eslint-disable-line import/extensions
 
 import { getColormap, getColormapsList } from '../../src/colors/colormap.js';
 

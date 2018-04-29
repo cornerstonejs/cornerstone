@@ -1,4 +1,4 @@
-import { should } from 'chai';
+import { should } from 'chai'; // eslint-disable-line import/extensions
 import storedPixelDataToCanvasImageDataPseudocolorLUT from '../../src/internal/storedPixelDataToCanvasImageDataPseudocolorLUT.js';
 
 should();

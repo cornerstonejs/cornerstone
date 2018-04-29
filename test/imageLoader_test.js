@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-expressions */
-import { assert } from 'chai';
+import { assert } from 'chai'; // eslint-disable-line import/extensions
 
 import { registerImageLoader,
   registerUnknownImageLoader,
   loadImage,
-  loadAndCacheImage } from '../src/index';
+  loadAndCacheImage
+} from '../src/index'; // eslint-disable-line import/extensions
 
 describe('imageLoader registration module', function () {
   beforeEach(function () {

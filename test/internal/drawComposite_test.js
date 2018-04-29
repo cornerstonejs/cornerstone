@@ -1,4 +1,4 @@
-import { assert } from 'chai';
+import { assert } from 'chai'; // eslint-disable-line import/extensions
 
 import enable from '../../src/enable.js';
 import draw from '../../src/draw.js';

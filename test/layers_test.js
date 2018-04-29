@@ -1,4 +1,4 @@
-import { assert, expect } from 'chai';
+import { assert, expect } from 'chai'; // eslint-disable-line import/extensions
 
 import enable from '../src/enable.js';
 import updateImage from '../src/updateImage.js';

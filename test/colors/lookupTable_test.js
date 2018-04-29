@@ -1,4 +1,4 @@
-import { assert } from 'chai';
+import { assert } from 'chai'; // eslint-disable-line import/extensions
 import LookupTable from '../../src/colors/lookupTable.js';
 
 describe('lookupTable class', function () {
