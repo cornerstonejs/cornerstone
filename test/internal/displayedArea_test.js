@@ -51,7 +51,7 @@ describe('displayedArea', function () {
     this.image = {
       imageId: 'testImageDisplayed',
       minPixelValue: 0,
-      maxPixelValue: 16777216, // Int24.Max
+      maxPixelValue: 255,
       slope: 1.0,
       intercept: 0,
       windowCenter: 127,
@@ -83,13 +83,13 @@ describe('displayedArea', function () {
         },
         rowPixelSpacing: 1,
         columnPixelSpacing: 1,
-        presentationSizeMode: 'TRUE SIZE'
+        presentationSizeMode: 'NONE'
       }
     };
   });
 
   it('displayedArea: should display the area specified in the viewport TRUE SIZE ', function (done) {
-
+      // Arrange
     const canvasWidth = (this.getRect().width).toString();
     const canvasHeight = (this.getRect().height).toString();
 
@@ -97,8 +97,12 @@ describe('displayedArea', function () {
     this.element.style.width = `${canvasWidth}px`;
     this.element.style.height = `${canvasHeight}px`;
 
-    document.body.appendChild(this.element); // Needed for the div to actually have a width.
+    // Needed for the div to actually have a width.
+    document.body.appendChild(this.element); 
+
     enable(this.element);
+
+    this.viewPort.displayedArea.presentationSizeMode = 'TRUE SIZE'
 
     displayImage(this.element, this.image, this.viewPort);
 
@@ -120,7 +124,7 @@ describe('displayedArea', function () {
   });
 
   it('displayedArea: should display the area specified in the viewport FIT to the Canvas Size', function (done) {
-
+    // Arrange
     const canvasWidth = (this.getRect().width * 2).toString();
     const canvasHeight = (this.getRect().height * 2).toString();
 
@@ -128,7 +132,8 @@ describe('displayedArea', function () {
     this.element.style.width = `${canvasWidth}px`;
     this.element.style.height = `${canvasHeight}px`;
 
-    document.body.appendChild(this.element); // Needed for the div to actually have a width.
+    // Needed for the div to actually have a width.
+    document.body.appendChild(this.element); 
 
     enable(this.element);
 
@@ -144,7 +149,7 @@ describe('displayedArea', function () {
 
       // Assert
       assert.isAbove(data[0], 10, 'Top/left Pixel Red component must be greater than 10 due to interpolation');
-      assert.isAbove(data[data.length - 4], 10, 'Bottom/Right Pixel Red component must be 255');
+      assert.isAbove(data[data.length - 4], 10, 'Bottom/Right Pixel Red component must be greater than 10 due to interpolation');
 
       done();
     });
@@ -154,7 +159,7 @@ describe('displayedArea', function () {
   });
 
   it('displayedArea: should display the area specified in the viewport TRUE SIZE with irregular image size', function (done) {
-
+    // Arrange
     const canvasWidth = (this.getRect().width).toString();
     const canvasHeight = (this.getRect().height * 2).toString();
 
@@ -162,7 +167,8 @@ describe('displayedArea', function () {
     this.element.style.width = `${canvasWidth}px`;
     this.element.style.height = `${canvasHeight}px`;
 
-    document.body.appendChild(this.element); // Needed for the div to actually have a width.
+    // Needed for the div to actually have a width.
+    document.body.appendChild(this.element);
 
     enable(this.element);
 
@@ -180,7 +186,7 @@ describe('displayedArea', function () {
 
       // Assert
       assert.isAbove(data[0], 10, 'Top/left Pixel Red component must be greater than 10 due to interpolation');
-      assert.isAbove(data[data.length - 4], 10, 'Bottom/Right Pixel Red component must be 255');
+      assert.isAbove(data[data.length - 4], 10, 'Bottom/Right Pixel Red component must be greater than 10 due to interpolation');
 
       done();
     });
@@ -190,7 +196,7 @@ describe('displayedArea', function () {
   });
 
   it('displayedArea: should display the area specified in the viewport MAGNIFIED', function (done) {
-
+    // Arrange
     const canvasWidth = (this.getRect().width * 2).toString();
     const canvasHeight = (this.getRect().height * 2).toString();
 
@@ -198,7 +204,8 @@ describe('displayedArea', function () {
     this.element.style.width = `${canvasWidth}px`;
     this.element.style.height = `${canvasHeight}px`;
 
-    document.body.appendChild(this.element); // Needed for the div to actually have a width.
+    // Needed for the div to actually have a width.
+    document.body.appendChild(this.element);
 
     enable(this.element);
 
@@ -217,7 +224,7 @@ describe('displayedArea', function () {
 
       // Assert
       assert.isAbove(data[0], 10, 'Top/left Pixel Red component must be greater than 10 due to interpolation');
-      assert.isAbove(data[data.length - 4], 10, 'Bottom/Right Pixel Red component must be 255');
+      assert.isAbove(data[data.length - 4], 10, 'Bottom/Right Pixel Red component must be greater than 10 due to interpolation');
 
       done();
     });
