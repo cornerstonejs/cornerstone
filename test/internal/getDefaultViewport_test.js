@@ -1,5 +1,5 @@
-import { should, assert } from 'chai';
-import getDefaultViewport from '../../src/internal/getDefaultViewport';
+import { should, assert } from 'chai'; // eslint-disable-line import/extensions
+import getDefaultViewport from '../../src/internal/getDefaultViewport.js';
 
 should();
 
@@ -38,7 +38,7 @@ describe('getDefaultViewport', function () {
     it('should return a viewport with defined values and calculated scale value', function () {
       const viewport = getDefaultViewport(this.canvas, this.imageViewport);
 
-      assert.equal(viewport.scale, 0.5); //should take the columnPixelSpacing into consideration and scale down by 1/2
+      assert.equal(viewport.scale, 0.5); // should take the columnPixelSpacing into consideration and scale down by 1/2
       assert.equal(viewport.displayedArea.presentationSizeMode, 'NONE');
       assert.equal(viewport.displayedArea.rowPixelSpacing, this.imageViewport.rowPixelSpacing);
       assert.equal(viewport.displayedArea.columnPixelSpacing, this.imageViewport.columnPixelSpacing);
@@ -61,13 +61,13 @@ describe('getDefaultViewport', function () {
 
       this.imageViewport = {
         width: 100,
-        height: 100,
+        height: 100
       };
     });
 
     it('should be smart to set the default values to 1/1', function () {
       const viewport = getDefaultViewport(this.canvas, this.imageViewport);
-      
+
       assert.equal(viewport.displayedArea.rowPixelSpacing, 1);
       assert.equal(viewport.displayedArea.columnPixelSpacing, 1);
       assert.equal(viewport.scale, 1);

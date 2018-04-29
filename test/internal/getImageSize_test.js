@@ -1,4 +1,4 @@
-import { should, expect } from 'chai';
+import { should, expect } from 'chai'; // eslint-disable-line import/extensions
 
 import getImageSize from '../../src/internal/getImageSize.js';
 
@@ -27,7 +27,7 @@ describe('getImageSize', function () {
     it('should return the image width/height', function () {
       const image = {
         width: 50,
-        height:100
+        height: 100
       };
 
       const imageSizeNoRotationParameter = getImageSize(image);
@@ -42,9 +42,9 @@ describe('getImageSize', function () {
 
   describe('when an image is passed rotated', function () {
     it('should return the image width/height rotated', function () {
-      let image = {
+      const image = {
         width: 50,
-        height:100
+        height: 100
       };
 
       const returnedImageSize = getImageSize(image, 90);

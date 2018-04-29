@@ -1,5 +1,4 @@
-// import { assert } from 'chai';
-import { should } from 'chai';
+import { should } from 'chai'; // eslint-disable-line import/extensions
 import storedPixelDataToCanvasImageData from '../../src/internal/storedPixelDataToCanvasImageData.js';
 
 should();

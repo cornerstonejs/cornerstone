@@ -1,4 +1,4 @@
-import { should } from 'chai';
+import { should } from 'chai'; // eslint-disable-line import/extensions
 import storedColorPixelDataToCanvasImageData from '../../src/internal/storedColorPixelDataToCanvasImageData.js';
 
 should();
