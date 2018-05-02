@@ -36,8 +36,8 @@ Get a packaged source file:
 
 * [cornerstone.js](https://unpkg.com/cornerstone-core)
   * `https://unpkg.com/cornerstone-core`
-* [cornerstone.min.js](https://unpkg.com/cornerstone-core/dist/cornerstone.js)
-  * `https://unpkg.com/cornerstone-core/dist/cornerstone.js`
+* [cornerstone.min.js](https://unpkg.com/cornerstone-core/dist/cornerstone.min.js)
+  * `https://unpkg.com/cornerstone-core/dist/cornerstone.min.js`
 
 Or install via [NPM](https://www.npmjs.com/):
 
