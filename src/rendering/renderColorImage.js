@@ -27,7 +27,9 @@ function getLut (image, viewport) {
 }
 
 function getRenderCanvas (enabledElement, image, invalidated) {
-  if (!enabledElement.renderingTools.renderCanvas) {
+  const canvasWasColor = enabledElement.renderingTools.lastRenderedIsColor === true;
+
+  if (!enabledElement.renderingTools.renderCanvas || !canvasWasColor) {
     enabledElement.renderingTools.renderCanvas = document.createElement('canvas');
   }
 

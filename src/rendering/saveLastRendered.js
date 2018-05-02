@@ -1,8 +1,10 @@
 export default function (enabledElement) {
   const imageId = enabledElement.image.imageId;
   const viewport = enabledElement.viewport;
+  const isColor = enabledElement.image.color;
 
   enabledElement.renderingTools.lastRenderedImageId = imageId;
+  enabledElement.renderingTools.lastRenderedIsColor = isColor;
   enabledElement.renderingTools.lastRenderedViewport = {
     windowCenter: viewport.voi.windowCenter,
     windowWidth: viewport.voi.windowWidth,
