@@ -5,11 +5,25 @@ import { addPseudoColorLayer } from '../rendering/renderPseudoColorImage.js';
 import { addLabelMapLayer } from '../rendering/renderLabelMapImage.js';
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
 
-// This is used to keep each of the layers' viewports in sync with the active layer
-const originalViewportScale = {};
+function getViewportRatio (baseLayer, targetLayer) {
+  if (!baseLayer.syncProps) {
+    updateLayerSyncProps(baseLayer);
+  }
 
-function getViewportRatio (baseLayerId, targetLayerId) {
-  return originalViewportScale[targetLayerId] / originalViewportScale[baseLayerId];
+  if (!targetLayer.syncProps) {
+    updateLayerSyncProps(targetLayer);
+  }
+
+  return targetLayer.syncProps.originalScale / baseLayer.syncProps.originalScale;
+}
+
+function updateLayerSyncProps (layer) {
+  const syncProps = layer.syncProps || {};
+
+  // This is used to keep each of the layers' viewports in sync with the active layer
+  syncProps.originalScale = layer.viewport.scale;
+
+  layer.syncProps = syncProps;
 }
 
 // Sync all viewports based on active layer's viewport
@@ -25,11 +39,11 @@ function syncViewports (layers, activeLayer) {
       return;
     }
 
-    if (!originalViewportScale[layer.layerId]) {
-      originalViewportScale[layer.layerId] = layer.viewport.scale;
+    if (!layer.syncProps) {
+      updateLayerSyncProps(layer);
     }
 
-    const viewportRatio = getViewportRatio(activeLayer.layerId, layer.layerId);
+    const viewportRatio = getViewportRatio(activeLayer, layer);
 
     // Update the layer's translation and scale to keep them in sync with the first image
     // based on the ratios between the images
@@ -103,8 +117,8 @@ function renderLayers (context, layers, invalidated) {
     // Draw from the current layer's canvas onto the enabled element's canvas
     const sx = layer.viewport.displayedArea.tlhc.x - 1;
     const sy = layer.viewport.displayedArea.tlhc.y - 1;
-    const width = layer.viewport.displayedArea.brhc.x - layer.viewport.displayedArea.tlhc.x;
-    const height = layer.viewport.displayedArea.brhc.y - layer.viewport.displayedArea.tlhc.y;
+    const width = layer.viewport.displayedArea.brhc.x - sx;
+    const height = layer.viewport.displayedArea.brhc.y - sy;
 
     context.drawImage(layer.canvas, sx, sy, width, height, 0, 0, width, height);
     context.restore();
@@ -136,7 +150,7 @@ export default function (enabledElement, invalidated) {
   if (resynced) {
     allLayers.forEach(function (layer) {
       if (layer.viewport) {
-        originalViewportScale[layer.layerId] = layer.viewport.scale;
+        updateLayerSyncProps(layer);
       }
     });
   }

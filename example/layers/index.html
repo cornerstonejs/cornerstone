@@ -12,7 +12,23 @@
     </h1>
 
     This example shows you how to add and interact with layers.
-
+    <div class="row">
+        <div class="col-xs-2">
+            <label>Viewport Values:</label>
+            <div><span>Viewport Scale: </span><span id="layerViewportScale"></span></div>
+        </div>
+        <div class="col-xs-4">
+            <label>Layer CT Values:</label>
+            <div><span>Viewport Scale: </span><span id="layer1ViewportScale"></span></div>
+            <div><span>Layer Viewport Scale: </span><span id="layer1LayerViewportScale"></span></div>
+            <div><span>Layer Sync Scale: </span><span id="layer1LayerSyncScale"></span></div>
+        </div>
+        <div class="col-xs-4">
+            <label>Layer PET Values:</label>
+            <div><span>Layer Viewport Scale: </span><span id="layer2LayerViewportScale"></span></div>
+            <div><span>Layer Sync Scale: </span><span id="layer2LayerSyncScale"></span></div>
+        </div>
+    </div>
     <div class="row" style="padding-top: 20px;">
         <div class="col-xs-10">
             <div id="dicomImage"
@@ -256,7 +272,18 @@
             let viewport = cornerstone.getViewport(element);
             viewport.scale += (deltaY / 100);
             cornerstone.setViewport(element, viewport);
+
+            document.getElementById('layerViewportScale').innerText = viewport.scale;
           }
+
+          const layer1 = cornerstone.getLayers(element)[0];
+          const layer2 = cornerstone.getLayers(element)[1];
+
+          document.getElementById('layer1LayerViewportScale').innerText = layer1.viewport.scale;
+          document.getElementById('layer2LayerViewportScale').innerText = layer2.viewport.scale;
+          document.getElementById('layer1LayerSyncScale').innerText = layer1.syncProps.originalScale;
+          document.getElementById('layer2LayerSyncScale').innerText = layer2.syncProps.originalScale;
+          
         }
 
         function mouseUpHandler() {
