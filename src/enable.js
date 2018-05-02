@@ -2,7 +2,7 @@ import { addEnabledElement } from './enabledElements.js';
 import resize from './resize.js';
 import drawImageSync from './internal/drawImageSync.js';
 import requestAnimationFrame from './internal/requestAnimationFrame.js';
-import webGL from './webgl/index.js';
+import tryEnableWebgl from './internal/tryEnableWebgl.js';
 import triggerEvent from './triggerEvent.js';
 import EVENTS from './events.js';
 import getCanvas from './internal/getCanvas.js';
@@ -46,17 +46,7 @@ export default function (element, options) {
   // If this enabled element has the option set for WebGL, we should
   // Check if this device actually supports it
   if (options && options.renderer && options.renderer.toLowerCase() === 'webgl') {
-    if (webGL.renderer.isWebGLAvailable()) {
-      // If WebGL is available on the device, initialize the renderer
-      // And return the renderCanvas from the WebGL rendering path
-      webGL.renderer.initRenderer();
-      options.renderer = 'webgl';
-    } else {
-      // If WebGL is not available on this device, we will fall back
-      // To using the Canvas renderer
-      console.error('WebGL not available, falling back to Canvas renderer');
-      delete options.renderer;
-    }
+    tryEnableWebgl(options);
   }
 
   const canvas = getCanvas(element);

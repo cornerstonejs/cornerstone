@@ -16,6 +16,7 @@ export { renderPseudoColorImage } from './rendering/renderPseudoColorImage.js';
 export { renderColorImage } from './rendering/renderColorImage.js';
 export { renderGrayscaleImage } from './rendering/renderGrayscaleImage.js';
 export { renderWebImage } from './rendering/renderWebImage.js';
+export { default as renderToCanvas } from './rendering/renderToCanvas.js';
 
 /**
  * @module PixelCoordinateSystem
