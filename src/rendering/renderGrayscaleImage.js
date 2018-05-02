@@ -9,7 +9,9 @@ import initializeRenderCanvas from './initializeRenderCanvas.js';
 import saveLastRendered from './saveLastRendered.js';
 
 function getRenderCanvas (enabledElement, image, invalidated, useAlphaChannel = true) {
-  if (!enabledElement.renderingTools.renderCanvas) {
+  const canvasWasColor = enabledElement.renderingTools.lastRenderedIsColor === true;
+
+  if (!enabledElement.renderingTools.renderCanvas || canvasWasColor) {
     enabledElement.renderingTools.renderCanvas = document.createElement('canvas');
   }
 
