@@ -5,8 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [2.2.3] - 2018-05-02
-###Fixed
-- Fixed (issue #151) multiple images with different colorSpaces not being rendered correctly
+### Fixed
+- Fixed multiple images with different colorSpaces not being rendered correctly (issue #151) 
+- Fixed memory leak in drawCompositeImage.syncedViewports (issue #179)
+- Fixed all the build warnings in the test folder
+
+### Added
+- Added unit tests for displayed area feature
+- Added 'renderToCanvas' to allow user to directly draw an image to an existent canvas
 
 ## [2.2.2] - 2018-04-23
 ### Added
