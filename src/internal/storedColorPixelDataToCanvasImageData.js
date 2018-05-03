@@ -12,14 +12,14 @@ import now from './now.js';
  * @returns {void}
  * @memberof Internal
  */
-export default function (image, lut, canvasImageDataData, colorSpaceChanged) {
+export default function (image, lut, canvasImageDataData) {
 
   let start = now();
   const pixelData = image.getPixelData();
 
   image.stats.lastGetPixelDataTime = now() - start;
 
-  let minPixelValue = image.minPixelValue;
+  const minPixelValue = image.minPixelValue;
   let canvasImageDataIndex = 0;
   let storedPixelDataIndex = 0;
   const numPixels = pixelData.length;
@@ -27,21 +27,22 @@ export default function (image, lut, canvasImageDataData, colorSpaceChanged) {
   // NOTE: As of Nov 2014, most javascript engines have lower performance when indexing negative indexes.
   // We have a special code path for this case that improves performance.  Thanks to @jpambrun for this enhancement
   start = now();
-
-  if (minPixelValue >= 0) {
-    minPixelValue = 0;
-  }
-
-  while (storedPixelDataIndex < numPixels) {
-    canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // Red
-    canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // Green
-    canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // Blue
-    if (colorSpaceChanged) {
-      canvasImageDataData[canvasImageDataIndex] = 255;
+  if (minPixelValue < 0) {
+    while (storedPixelDataIndex < numPixels) {
+      canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // Red
+      canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++] + (-minPixelValue)]; // Green
+      canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex] + (-minPixelValue)]; // Blue
+      storedPixelDataIndex += 2;
+      canvasImageDataIndex += 2;
     }
-    storedPixelDataIndex += 1;
-    canvasImageDataIndex += 1;
+  } else {
+    while (storedPixelDataIndex < numPixels) {
+      canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++]]; // Red
+      canvasImageDataData[canvasImageDataIndex++] = lut[pixelData[storedPixelDataIndex++]]; // Green
+      canvasImageDataData[canvasImageDataIndex] = lut[pixelData[storedPixelDataIndex]]; // Blue
+      storedPixelDataIndex += 2;
+      canvasImageDataIndex += 2;
+    }
   }
-
   image.stats.lastStoredPixelDataToCanvasImageDataTime = now() - start;
 }
