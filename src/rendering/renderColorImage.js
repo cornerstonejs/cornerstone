@@ -67,14 +67,13 @@ function getRenderCanvas (enabledElement, image, invalidated) {
 
   const renderCanvasData = enabledElement.renderingTools.renderCanvasData;
   const renderCanvasContext = enabledElement.renderingTools.renderCanvasContext;
-  const colorSpaceChanged = enabledElement.renderingTools.lastRenderedIsColor !== image.color;
 
   // The color image voi/invert has been modified - apply the lut to the underlying
   // Pixel data and put it into the renderCanvas
   if (image.rgba) {
     storedRGBAPixelDataToCanvasImageData(image, colorLut, renderCanvasData.data);
   } else {
-    storedColorPixelDataToCanvasImageData(image, colorLut, renderCanvasData.data, colorSpaceChanged);
+    storedColorPixelDataToCanvasImageData(image, colorLut, renderCanvasData.data);
   }
 
   start = now();
