@@ -67,7 +67,9 @@ Links
 
 [Development Process](docs/developmentProcess.md)
 
-[Build System](docs/building.md)
+[Installation](docs/installation.md)
+
+[Developer Guide](docs/developer-guide.md)
 
 [View the wiki for documentation on the concepts and APIs](https://github.com/cornerstonejs/cornerstone/wiki)
 
