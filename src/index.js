@@ -48,6 +48,7 @@ export {
   getVisibleLayers,
   setActiveLayer,
   getActiveLayer,
+  purgeLayers,
   setLayerImage
 } from './layers.js';
 
