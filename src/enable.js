@@ -1,7 +1,7 @@
 import { addEnabledElement } from './enabledElements.js';
 import resize from './resize.js';
 import drawImageSync from './internal/drawImageSync.js';
-import requestAnimationFrame from './internal/requestAnimationFrame.js';
+import drawImage from './internal/drawImage.js';
 import tryEnableWebgl from './internal/tryEnableWebgl.js';
 import triggerEvent from './triggerEvent.js';
 import EVENTS from './events.js';
@@ -89,9 +89,9 @@ export default function (element, options) {
     if (enabledElement.needsRedraw && hasImageOrLayers(enabledElement)) {
       drawImageSync(enabledElement, enabledElement.invalid);
     }
-
-    requestAnimationFrame(draw);
   }
 
-  draw();
+  enabledElement.draw = draw;
+
+  drawImage(enabledElement);
 }

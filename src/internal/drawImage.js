@@ -1,3 +1,5 @@
+import requestAnimationFrame from "./requestAnimationFrame.js";
+
 /**
  * Internal API function to draw an image to a given enabled element
  *
@@ -11,4 +13,6 @@ export default function (enabledElement, invalidated = false) {
   if (invalidated) {
     enabledElement.invalid = true;
   }
+
+  requestAnimationFrame(enabledElement.draw);
 }
