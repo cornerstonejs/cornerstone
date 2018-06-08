@@ -71,7 +71,7 @@
     "mocha": "^5.0.5",
     "puppeteer": "^1.2.0",
     "opn-cli": "^3.1.0",
-    "shx": "^0.2.2",
+    "shx": "^0.3.0",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "webpack": "^4.4.1",
     "webpack-cli": "^3.0.0"
