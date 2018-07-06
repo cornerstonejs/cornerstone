@@ -68,7 +68,7 @@ function createDefaultDisplayedArea () {
  * @returns {Viewport} viewport object
  * @memberof Internal
  */
-export default function (canvas, image) {
+let defaultViewportFunction = function (canvas, image) {
   if (canvas === undefined) {
     throw new Error('getDefaultViewport: parameter canvas must not be undefined');
   }
@@ -113,4 +113,16 @@ export default function (canvas, image) {
       presentationSizeMode: 'NONE'
     }
   };
+};
+
+export default function (canvas, image) {
+  return defaultViewportFunction(canvas, image);
+}
+
+export function getDefaultViewportFunction () {
+  return defaultViewportFunction;
+}
+
+export function setDefaultViewportFunction (newDefaultViewportFunction) {
+  defaultViewportFunction = newDefaultViewportFunction;
 }
