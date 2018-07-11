@@ -40,7 +40,7 @@ function applyTransform (enabledElement) {
 
   canvas.style.transform = `${translate} ${rotate} ${flipX} ${flipY} ${scale}`;
 
-  /*const detail = {
+  /* const detail = {
     viewport,
     element,
     image,
@@ -48,7 +48,7 @@ function applyTransform (enabledElement) {
     canvasContext
   };*/
 
-  //triggerEvent(element, 'cornerstonetransformupdated', detail);
+  // triggerEvent(element, 'cornerstonetransformupdated', detail);
 
   console.timeEnd('applyTransform');
 }

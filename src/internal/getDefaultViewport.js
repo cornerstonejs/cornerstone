@@ -78,7 +78,7 @@ export default function (enabledElement) {
   }
 
   // Fit image to window
-  //const scale = getImageFitScale(canvas, image, 0).scaleFactor;
+  // const scale = getImageFitScale(canvas, image, 0).scaleFactor;
   const verticalScale = element.offsetHeight / image.rows;
   const horizontalScale = element.offsetWidth / image.columns;
   const scale = Math.min(horizontalScale, verticalScale);

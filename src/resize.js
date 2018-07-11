@@ -55,6 +55,7 @@ function relativeRescale (enabledElement, oldCanvasWidth, oldCanvasHeight) {
  */
 export default function (element, forceFitToWindow) {
   const enabledElement = getEnabledElement(element);
+  const { canvas, image } = enabledElement;
 
   const oldCanvasWidth = enabledElement.canvas.width;
   const oldCanvasHeight = enabledElement.canvas.height;
@@ -70,7 +71,7 @@ export default function (element, forceFitToWindow) {
     canvas.style.height = `${image.rows}px`;
   }
 
-  /*setCanvasSize(element, enabledElement.canvas);
+  /* setCanvasSize(element, enabledElement.canvas);
 
   const eventData = { element };
 

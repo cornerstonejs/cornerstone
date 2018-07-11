@@ -5,7 +5,7 @@ import webGL from '../webgl/index.js';
 import getLut from './getLut.js';
 import saveLastRendered from './saveLastRendered.js';
 
-function getRenderCanvas (enabledElement, image, invalidated, useAlphaChannel = true) {
+/* function getRenderCanvas (enabledElement, image, invalidated, useAlphaChannel = true) {
   const canvasWasColor = enabledElement.renderingTools.lastRenderedIsColor === true;
 
   if (!enabledElement.renderingTools.renderCanvas || canvasWasColor) {
@@ -47,7 +47,7 @@ function getRenderCanvas (enabledElement, image, invalidated, useAlphaChannel = 
   image.stats.lastPutImageDataTime = now() - start;
 
   return renderCanvas;
-}
+}*/
 
 /**
  * API function to draw a grayscale image to a given enabledElement
@@ -100,7 +100,7 @@ export function renderGrayscaleImage (enabledElement, invalidated) {
   }
 
 
-  /*const sx = enabledElement.viewport.displayedArea.tlhc.x - 1;
+  /* const sx = enabledElement.viewport.displayedArea.tlhc.x - 1;
   const sy = enabledElement.viewport.displayedArea.tlhc.y - 1;
   const width = enabledElement.viewport.displayedArea.brhc.x - sx;
   const height = enabledElement.viewport.displayedArea.brhc.y - sy;

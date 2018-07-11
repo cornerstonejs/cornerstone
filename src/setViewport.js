@@ -1,7 +1,7 @@
 import getDefaultViewport from './internal/getDefaultViewport.js';
 import { getEnabledElement } from './enabledElements.js';
 import updateImage from './updateImage.js';
-import applyTransform from "./applyTransform.js";
+import applyTransform from './applyTransform.js';
 
 const MIN_WINDOW_WIDTH = 0.000001;
 const MIN_VIEWPORT_SCALE = 0.0001;
