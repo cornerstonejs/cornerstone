@@ -2,7 +2,7 @@
   "name": "cornerstone-core",
   "version": "2.2.4",
   "description": "HTML5 Medical Image Viewer Component",
-  "main": "./dist/cornerstone.min.js",
+  "main": "./dist/cornerstone.js",
   "keywords": [
     "DICOM",
     "medical",
@@ -11,7 +11,7 @@
   "author": "Chris Hafey",
   "homepage": "https://github.com/cornerstonejs/cornerstone",
   "license": "MIT",
-  "module": "src/index.js",
+  "module": "./dist/cornerstone.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/cornerstonejs/cornerstone.git"
@@ -31,6 +31,7 @@
     "eslint-fix-test": "eslint -c .eslintrc.js --fix test",
     "prepublishOnly": "yarn run build",
     "start": "npm run webpack",
+    "start:dev": "webpack-dev-server --config ./config/webpack/webpack-dev",
     "test": "npm run test:chrome",
     "test:all": "npm run test:chrome && npm run test:firefox",
     "test:watch": "karma start config/karma/karma-watch.js",
@@ -74,7 +75,8 @@
     "shx": "^0.3.0",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "webpack": "^4.4.1",
-    "webpack-cli": "^3.0.0"
+    "webpack-cli": "^2.1.4",
+    "webpack-dev-server": "^3.1.4"
   },
   "files": [
     "dist/cornerstone.js",
