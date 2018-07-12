@@ -13,7 +13,7 @@ export default function (options) {
     options.renderer = 'webgl';
 
     return true;
-  } 
+  }
 
   // If WebGL is not available on this device, we will fall back
   // To using the Canvas renderer
