@@ -51,7 +51,7 @@
     "chai": "^4.1.2",
     "coveralls": "^3.0.0",
     "docdash": "^0.4.0",
-    "documentation": "^7.0.0",
+    "documentation": "^8.0.1",
     "eslint": "^5.0.0",
     "eslint-loader": "^2.0.0",
     "eslint-plugin-import": "^2.10.0",
