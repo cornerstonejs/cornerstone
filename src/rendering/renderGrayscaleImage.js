@@ -13,6 +13,7 @@ function getRenderCanvas (enabledElement, image, invalidated, useAlphaChannel = 
 
   if (!enabledElement.renderingTools.renderCanvas || canvasWasColor) {
     enabledElement.renderingTools.renderCanvas = document.createElement('canvas');
+    initializeRenderCanvas(enabledElement, image);
   }
 
   const renderCanvas = enabledElement.renderingTools.renderCanvas;
