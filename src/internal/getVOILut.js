@@ -50,7 +50,7 @@ function generateNonLinearVOILUT (voiLUT) {
       return maxValue;
     }
 
-    return voiLUT.lut[modalityLutValue - voiLUT.firstValueMapped] >> shift;
+    return voiLUT.lut[Math.round(modalityLutValue) - voiLUT.firstValueMapped] >> shift;
   };
 }
 
