@@ -57,6 +57,27 @@ describe('draw', function () {
     draw(this.element);
   });
 
+  it('should draw 300x150 images too (issue #300)', function (done) {
+    // Arrange
+    const element = this.element;
+    const image = this.image;
+    image.width = 300;
+    image.height = 150;
+    image.getPixelData = () => new Uint8Array(300*150);
+
+    displayImage(this.element, this.image);
+
+    element.addEventListener('cornerstoneimagerendered', function (event) {
+      // Assert
+      assert.equal(event.target, element);
+      assert.equal(event.detail.image, image);
+      done();
+    });
+
+    // Act
+    draw(this.element);
+  });
+
   afterEach(function () {
     disable(this.element);
   });
