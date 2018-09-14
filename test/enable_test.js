@@ -14,6 +14,20 @@ describe('Enable a DOM Element for Canvas Renderer', function () {
     enable(this.element, options);
   });
 
+  it('should fire CornerstoneElementEnabled', function (done) {
+    const element = document.createElement('div');
+
+    // Assert
+    element.addEventListener('cornerstoneelementenabled', function (event) {
+      assert.equal(event.target, element);
+
+      // Cleanup
+      disable(element);
+      done();
+    });
+    enable(element, {});
+  });
+
   it('should fire CornerstonePreRender', function (done) {
     // Arrange
     const element = document.createElement('div');

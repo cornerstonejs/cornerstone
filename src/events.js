@@ -15,7 +15,8 @@ const EVENTS = {
   LAYER_ADDED: 'cornerstonelayeradded',
   LAYER_REMOVED: 'cornerstonelayerremoved',
   ACTIVE_LAYER_CHANGED: 'cornerstoneactivelayerchanged',
-  ELEMENT_DISABLED: 'cornerstoneelementdisabled'
+  ELEMENT_DISABLED: 'cornerstoneelementdisabled',
+  ELEMENT_ENABLED: 'cornerstoneelementenabled'
 };
 
 export default EVENTS;
