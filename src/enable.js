@@ -4,6 +4,7 @@ import drawImageSync from './internal/drawImageSync.js';
 import requestAnimationFrame from './internal/requestAnimationFrame.js';
 import tryEnableWebgl from './internal/tryEnableWebgl.js';
 import triggerEvent from './triggerEvent.js';
+import generateUUID from './generateUUID.js';
 import EVENTS from './events.js';
 import getCanvas from './internal/getCanvas.js';
 
@@ -60,7 +61,8 @@ export default function (element, options) {
     options,
     layers: [],
     data: {},
-    renderingTools: {}
+    renderingTools: {},
+    uuid: generateUUID()
   };
 
   addEnabledElement(enabledElement);
