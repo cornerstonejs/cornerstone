@@ -65,6 +65,8 @@ export default function (element, options) {
 
   addEnabledElement(enabledElement);
 
+  triggerEvent(element, EVENTS.ELEMENT_ENABLED, enabledElement);
+
   resize(element, true);
 
   /**
