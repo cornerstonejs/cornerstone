@@ -1,8 +1,11 @@
 import { assert } from 'chai'; // eslint-disable-line import/extensions
-
+import { events } from '../src/events.js';
 import enable from '../src/enable.js';
 import disable from '../src/disable.js';
-import { getEnabledElement, getEnabledElements } from '../src/enabledElements.js';
+import {
+  getEnabledElement,
+  getEnabledElements
+} from '../src/enabledElements.js';
 
 describe('Enable a DOM Element for Canvas Renderer', function () {
   beforeEach(function () {
@@ -18,7 +21,7 @@ describe('Enable a DOM Element for Canvas Renderer', function () {
     const element = document.createElement('div');
 
     // Assert
-    element.addEventListener('cornerstoneelementenabled', function (event) {
+    events.addEventListener('cornerstoneelementenabled', function (event) {
       assert.equal(event.target, element);
 
       // Cleanup
