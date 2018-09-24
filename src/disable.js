@@ -1,7 +1,6 @@
 import { getEnabledElements } from './enabledElements.js';
 import triggerEvent from './triggerEvent.js';
-import EVENTS from './events.js';
-
+import EVENTS, { events } from './events.js';
 
 /**
  *  Disable an HTML element for further use in Cornerstone
@@ -28,6 +27,7 @@ export default function (element) {
       };
 
       triggerEvent(element, EVENTS.ELEMENT_DISABLED, eventData);
+      triggerEvent(events, EVENTS.ELEMENT_DISABLED, eventData);
 
       // Remove the child DOM elements that we created (e.g.canvas)
       enabledElements[i].element.removeChild(enabledElements[i].canvas);

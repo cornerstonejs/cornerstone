@@ -2,7 +2,11 @@ import { assert } from 'chai'; // eslint-disable-line import/extensions
 
 import enable from '../src/enable.js';
 import disable from '../src/disable.js';
-import { getEnabledElement, getEnabledElements } from '../src/enabledElements.js';
+import { events } from '../src/events.js';
+import {
+  getEnabledElement,
+  getEnabledElements
+} from '../src/enabledElements.js';
 
 describe('Disable an Element', function () {
   beforeEach(function () {
@@ -23,7 +27,7 @@ describe('Disable an Element', function () {
     disable(this.element);
   });
 
-  it('should fire CornerstoneElementDisabled', function (done) {
+  it('should fire CornerstoneElementDisabled on target element', function (done) {
     const element = this.element2;
 
     // Assert
@@ -31,6 +35,22 @@ describe('Disable an Element', function () {
       assert.equal(event.target, element);
       done();
     });
+    disable(element);
+  });
+
+  it('should fire CornerstoneElementDisabled on events', function (done) {
+    const element = this.element2;
+
+    // Assert
+    const handler = function (event) {
+      assert.equal(event.detail.element.getAttribute('id'), element.id);
+
+      // Clean-up
+      events.removeEventListener('cornerstoneelementdisabled', handler);
+      done();
+    };
+
+    events.addEventListener('cornerstoneelementdisabled', handler);
     disable(element);
   });
 
