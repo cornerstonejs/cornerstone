@@ -43,7 +43,7 @@ describe('Disable an Element', function () {
 
     // Assert
     events.addEventListener('cornerstoneelementdisabled', function (event) {
-      assert.equal(event.target, element);
+      assert.equal(event.detail.element, element);
       done();
     });
     disable(element);

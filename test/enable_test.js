@@ -22,7 +22,7 @@ describe('Enable a DOM Element for Canvas Renderer', function () {
 
     // Assert
     events.addEventListener('cornerstoneelementenabled', function (event) {
-      assert.equal(event.target, element);
+      assert.equal(event.detail.element, element);
 
       // Cleanup
       disable(element);
