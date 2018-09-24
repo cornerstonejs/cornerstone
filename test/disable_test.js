@@ -42,10 +42,15 @@ describe('Disable an Element', function () {
     const element = this.element2;
 
     // Assert
-    events.addEventListener('cornerstoneelementdisabled', function (event) {
-      assert.equal(event.detail.element, element);
+    const handler = function (event) {
+      assert.equal(event.detail.element.getAttribute('id'), element.id);
+
+      // Clean-up
+      events.removeEventListener('cornerstoneelementdisabled', handler);
       done();
-    });
+    };
+
+    events.addEventListener('cornerstoneelementdisabled', handler);
     disable(element);
   });
 
