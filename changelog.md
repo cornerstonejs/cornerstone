@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Broadcast `ELEMENT_DISABLED` event when disabling a new element on the `events` object
 
 ### Changed
-- Broadcast `ELEMENT_DISABLED` event off `events` object instead of per element
+- Broadcast `ELEMENT_ENABLED` event off `events` object instead of per element
 
 ## [2.2.5] - 2018-09-24
 ### Added
