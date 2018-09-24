@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.2.6] - 2018-09-24
+### Added
+- Broadcast `ELEMENT_DISABLED` event when disabling a new element on the `events` object
+
+### Changed
+- Broadcast `ELEMENT_DISABLED` event off `events` object instead of per element
+
+## [2.2.5] - 2018-09-24
+### Added
+- Broadcast `ELEMENT_ENABLED` event when enabling a new element
+- enabledElements now have an associated unique id (`enabledElement.uuid`)
+
 ## [2.2.4] - 2018-05-04
 ### Removed
 - Removed old fix for clearing the canvas after swaping between 2 colorSpaces (issue #151)
