@@ -79,6 +79,7 @@ function purgeCacheIfNecessary () {
  *
  * @param {string} imageId ImageId of the image loader
  * @param {Object} imageLoadObject The object that is loading or loaded the image
+ * @returns {void}
  */
 export function putImageLoadObject (imageId, imageLoadObject) {
   if (imageId === undefined) {
@@ -146,7 +147,8 @@ export function putImageLoadObject (imageId, imageLoadObject) {
 /**
  * Retuns the object that is loading a given imageId
  *
- * @param {string} imageId
+ * @param {string} imageId Image ID
+ * @returns {void}
  */
 export function getImageLoadObject (imageId) {
   if (imageId === undefined) {
@@ -167,7 +169,8 @@ export function getImageLoadObject (imageId) {
 /**
  * Removes the image loader associated with a given Id from the cache
  *
- * @param {string} imageId
+ * @param {string} imageId Image ID
+ * @returns {void}
  */
 export function removeImageLoadObject (imageId) {
   if (imageId === undefined) {
@@ -198,10 +201,12 @@ export function removeImageLoadObject (imageId) {
  * @property {number} maximumSizeInBytes  The maximum size of the cache in bytes
  * @property {number} cacheSizeInBytes Currently occupied space in the cache in bytes
  * @property {number} numberOfImagesCached Number of ImageLoaders in the cache
+ * @returns {void}
  */
 
 /**
  * Gets the current state of the cache
+ * @returns {void}
  */
 export function getCacheInfo () {
   return {
@@ -216,7 +221,8 @@ export function getCacheInfo () {
 /**
  * INTERNAL: Removes and ImageLoader from the cache
  *
- * @param {Object} imageLoadObject
+ * @param {Object} imageLoadObject Image Loader Object to remove
+ * @returns {void}
  */
 function decache (imageLoadObject) {
   imageLoadObject.promise.then(
@@ -235,6 +241,7 @@ function decache (imageLoadObject) {
 
 /**
  * Removes all images from cache
+ * @returns {void}
  */
 export function purgeCache () {
   while (cachedImages.length > 0) {
@@ -247,8 +254,9 @@ export function purgeCache () {
 /**
  * Updates the space than an image is using in the cache
  *
- * @param {string} imageId
- * @param {number} newCacheSize
+ * @param {string} imageId Image ID
+ * @param {number} newCacheSize New image size
+ * @returns {void}
  */
 export function changeImageIdCacheSize (imageId, newCacheSize) {
   const cacheEntry = imageCacheDict[imageId];
