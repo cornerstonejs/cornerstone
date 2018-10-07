@@ -11,7 +11,7 @@ import saveLastRendered from './saveLastRendered.js';
 /**
  * Returns an appropriate canvas to render the Image. If the canvas available in the cache is appropriate
  * it is returned, otherwise adjustments are made. It also sets the color transfer functions.
- * 
+ *
  * @param {Object} enabledElement The cornerstone enabled element
  * @param {Object} image The image to be rendered
  * @param {Boolean} invalidated Is pixel data valid
@@ -19,7 +19,7 @@ import saveLastRendered from './saveLastRendered.js';
  * @returns {HTMLCanvasElement} An appropriate canvas for rendering the image
  * @memberof rendering
  */
-function getRenderCanvas(enabledElement, image, invalidated, useAlphaChannel = true) {
+function getRenderCanvas (enabledElement, image, invalidated, useAlphaChannel = true) {
   const canvasWasColor = enabledElement.renderingTools.lastRenderedIsColor === true;
 
   if (!enabledElement.renderingTools.renderCanvas || canvasWasColor) {
@@ -72,7 +72,7 @@ function getRenderCanvas(enabledElement, image, invalidated, useAlphaChannel = t
  * @returns {void}
  * @memberof rendering
  */
-export function renderGrayscaleImage(enabledElement, invalidated) {
+export function renderGrayscaleImage (enabledElement, invalidated) {
   if (enabledElement === undefined) {
     throw new Error('drawImage: enabledElement parameter must not be undefined');
   }
@@ -131,7 +131,7 @@ export function renderGrayscaleImage(enabledElement, invalidated) {
                                         This does not work if this layer is not the first layer in the enabledElement.
  * @returns {void}
  */
-export function addGrayscaleLayer(layer, invalidated, useAlphaChannel = false) {
+export function addGrayscaleLayer (layer, invalidated, useAlphaChannel = false) {
   if (layer === undefined) {
     throw new Error('addGrayscaleLayer: layer parameter must not be undefined');
   }
