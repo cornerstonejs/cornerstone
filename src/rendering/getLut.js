@@ -10,6 +10,7 @@ import generateLut from '../internal/generateLut.js';
  * @param {Boolean} invalidated Whether or not the LUT data has been invalidated
  * (e.g. by a change to the windowWidth, windowCenter, or invert viewport parameters).
  * @return {Uint8ClampedArray} LUT Array
+ * @memberof rendering
  */
 export default function (image, viewport, invalidated) {
   // If we have a cached lut and it has the right values, return it immediately
