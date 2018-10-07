@@ -10,14 +10,14 @@ import colors from '../colors/index.js';
 /**
  * Returns an appropriate canvas to render the Image. If the canvas available in the cache is appropriate
  * it is returned, otherwise adjustments are made. It also sets the color transfer functions.
- *
+ * 
  * @param {Object} enabledElement The cornerstone enabled element
  * @param {Object} image The image to be rendered
  * @param {Boolean} invalidated Is pixel data valid
  * @returns {HTMLCanvasElement} An appropriate canvas for rendering the image
  * @memberof rendering
  */
-function getRenderCanvas (enabledElement, image, invalidated) {
+function getRenderCanvas(enabledElement, image, invalidated) {
   if (!enabledElement.renderingTools.renderCanvas) {
     enabledElement.renderingTools.renderCanvas = document.createElement('canvas');
   }
@@ -85,7 +85,7 @@ function getRenderCanvas (enabledElement, image, invalidated) {
  * @returns {void}
  * @memberof rendering
  */
-export function renderPseudoColorImage (enabledElement, invalidated) {
+export function renderPseudoColorImage(enabledElement, invalidated) {
   if (enabledElement === undefined) {
     throw new Error('drawImage: enabledElement parameter must not be undefined');
   }
@@ -135,7 +135,7 @@ export function renderPseudoColorImage (enabledElement, invalidated) {
  * @param {Boolean} invalidated - true if pixel data has been invalidated and cached rendering should not be used
  * @returns {void}
  */
-export function addPseudoColorLayer (layer, invalidated) {
+export function addPseudoColorLayer(layer, invalidated) {
   if (layer === undefined) {
     throw new Error('addPseudoColorLayer: layer parameter must not be undefined');
   }

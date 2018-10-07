@@ -29,7 +29,7 @@ import tryEnableWebgl from '../internal/tryEnableWebgl.js';
  * @returns {EnabledElementStub} a dummy enabled element
  * @memberof rendering
  */
-function createEnabledElementStub (canvas, image, options, viewport) {
+function createEnabledElementStub(canvas, image, options, viewport) {
   return {
     element: canvas,
     canvas,
