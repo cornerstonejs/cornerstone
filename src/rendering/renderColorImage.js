@@ -8,21 +8,12 @@ import doesImageNeedToBeRendered from './doesImageNeedToBeRendered.js';
 import initializeRenderCanvas from './initializeRenderCanvas.js';
 import saveLastRendered from './saveLastRendered.js';
 
-/**
- * Generates an appropriate Look Up Table to render the given image with the given window width and level (specified in the viewport)
- * Uses an internal cache for performance
- * 
- * @param {Object} image  The image to be rendered
- * @param {Object} viewport The viewport values used for rendering
- * @returns {Uint8ClampedArray} Look Up Table array.
- * @memberof rendering
- */
-function getLut(image, viewport) {
+function getLut (image, viewport) {
   // If we have a cached lut and it has the right values, return it immediately
   if (image.cachedLut !== undefined &&
-    image.cachedLut.windowCenter === viewport.voi.windowCenter &&
-    image.cachedLut.windowWidth === viewport.voi.windowWidth &&
-    image.cachedLut.invert === viewport.invert) {
+        image.cachedLut.windowCenter === viewport.voi.windowCenter &&
+        image.cachedLut.windowWidth === viewport.voi.windowWidth &&
+        image.cachedLut.invert === viewport.invert) {
     return image.cachedLut.lutArray;
   }
 
@@ -34,17 +25,8 @@ function getLut(image, viewport) {
 
   return image.cachedLut.lutArray;
 }
-/**
- * Returns an appropriate canvas to render the Image. If the canvas available in the cache is appropriate
- * it is returned, otherwise adjustments are made. It also sets the color transfer functions.
- * 
- * @param {Object} enabledElement The cornerstone enabled element
- * @param {Object} image The image to be rendered
- * @param {Boolean} invalidated Is pixel data valid
- * @returns {HTMLCanvasElement} An appropriate canvas for rendering the image
- * @memberof rendering
- */
-function getRenderCanvas(enabledElement, image, invalidated) {
+
+function getRenderCanvas (enabledElement, image, invalidated) {
   const canvasWasColor = enabledElement.renderingTools.lastRenderedIsColor === true;
 
   if (!enabledElement.renderingTools.renderCanvas || !canvasWasColor) {
@@ -56,10 +38,10 @@ function getRenderCanvas(enabledElement, image, invalidated) {
   // The ww/wc is identity and not inverted - get a canvas with the image rendered into it for
   // Fast drawing
   if (enabledElement.viewport.voi.windowWidth === 255 &&
-    enabledElement.viewport.voi.windowCenter === 128 &&
-    enabledElement.viewport.invert === false &&
-    image.getCanvas &&
-    image.getCanvas()
+        enabledElement.viewport.voi.windowCenter === 128 &&
+        enabledElement.viewport.invert === false &&
+        image.getCanvas &&
+        image.getCanvas()
   ) {
     return image.getCanvas();
   }
@@ -109,7 +91,7 @@ function getRenderCanvas(enabledElement, image, invalidated) {
  * @returns {void}
  * @memberof rendering
  */
-export function renderColorImage(enabledElement, invalidated) {
+export function renderColorImage (enabledElement, invalidated) {
   if (enabledElement === undefined) {
     throw new Error('renderColorImage: enabledElement parameter must not be undefined');
   }
@@ -159,7 +141,7 @@ export function renderColorImage(enabledElement, invalidated) {
   enabledElement.renderingTools = saveLastRendered(enabledElement);
 }
 
-export function addColorLayer(layer, invalidated) {
+export function addColorLayer (layer, invalidated) {
   if (layer === undefined) {
     throw new Error('addColorLayer: layer parameter must not be undefined');
   }
