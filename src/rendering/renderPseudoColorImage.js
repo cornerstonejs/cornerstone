@@ -7,6 +7,16 @@ import doesImageNeedToBeRendered from './doesImageNeedToBeRendered.js';
 import storedPixelDataToCanvasImageDataPseudocolorLUT from '../internal/storedPixelDataToCanvasImageDataPseudocolorLUT.js';
 import colors from '../colors/index.js';
 
+/**
+ * Returns an appropriate canvas to render the Image. If the canvas available in the cache is appropriate
+ * it is returned, otherwise adjustments are made. It also sets the color transfer functions.
+ *
+ * @param {Object} enabledElement The cornerstone enabled element
+ * @param {Object} image The image to be rendered
+ * @param {Boolean} invalidated Is pixel data valid
+ * @returns {HTMLCanvasElement} An appropriate canvas for rendering the image
+ * @memberof rendering
+ */
 function getRenderCanvas (enabledElement, image, invalidated) {
   if (!enabledElement.renderingTools.renderCanvas) {
     enabledElement.renderingTools.renderCanvas = document.createElement('canvas');
@@ -45,7 +55,7 @@ function getRenderCanvas (enabledElement, image, invalidated) {
   let start = now();
 
   if (!enabledElement.renderingTools.colorLut || invalidated ||
-       enabledElement.renderingTools.colormapId !== colormapId) {
+    enabledElement.renderingTools.colormapId !== colormapId) {
     colormap.setNumberOfColors(256);
     enabledElement.renderingTools.colorLut = colormap.createLookupTable();
     enabledElement.renderingTools.colormapId = colormapId;

@@ -4,15 +4,29 @@ import drawImageSync from '../internal/drawImageSync.js';
 import getDefaultViewport from '../internal/getDefaultViewport.js';
 import tryEnableWebgl from '../internal/tryEnableWebgl.js';
 
+/**
+ * @typedef {Object} EnabledElementStub
+ * @property {HTMLElement} element  The enabled element
+ * @property {HTMLCanvasElement} canvas The current canvas
+ * @property {Object} image Currently displayed image
+ * @property {Boolean} invalid Whether or not the image pixel data has been changed
+ * @property {Boolean} needsRedraw  A flag for triggering a redraw of the canvas without re-retrieving the pixel data, since it remains valid
+ * @property {Object} options Layer drawing options
+ * @property {Object[]} layers Layers added to the EnabledElement
+ * @property {Object} data
+ * @property {Object} renderingTools
+ * @property {Object} viewport The current viewport
+ * @memberof rendering
+ */
 
 /**
  * creates a dummy enabled element
  *
- * @param {any} canvas the canvas that will be assigned to the enabled element.
+ * @param {HTMLCanvasElement} canvas the canvas that will be assigned to the enabled element.
  * @param {any} image An Image loaded by a Cornerstone Image Loader
  * @param { any } options Options for rendering the image (e.g.enable webgl by {renderer: 'webgl' })
  * @param { any } viewport A set of Cornerstone viewport parameters
- * @returns { element, canvas,image, invalid: Boolean, needsRedraw: Booleans, options, layers: [], data, renderingTools, viewport} a dummy enabled element
+ * @returns {EnabledElementStub} a dummy enabled element
  * @memberof rendering
  */
 function createEnabledElementStub (canvas, image, options, viewport) {
@@ -34,8 +48,8 @@ function createEnabledElementStub (canvas, image, options, viewport) {
  * Render the image to the provided canvas immediately.
  * @param {any} canvas The HTML canvas where the image will be rendered.
  * @param {any} image An Image loaded by a Cornerstone Image Loader
- * @param {any} viewport A set of Cornerstone viewport parameters
- * @param {any} options Options for rendering the image (e.g. enable webgl by {renderer: 'webgl'})
+ * @param {any} [viewport = null] A set of Cornerstone viewport parameters
+ * @param {any} [options = null] Options for rendering the image (e.g. enable webgl by {renderer: 'webgl'})
  * @returns {void}
  * @memberof rendering
  */
