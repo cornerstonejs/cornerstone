@@ -108,8 +108,8 @@ export default function (canvas, image) {
         x: image.columns,
         y: image.rows
       },
-      rowPixelSpacing: image.rowPixelSpacing === undefined ? 1 : image.rowPixelSpacing,
-      columnPixelSpacing: image.columnPixelSpacing === undefined ? 1 : image.columnPixelSpacing,
+      rowPixelSpacing: image.rowPixelSpacing === undefined || image.rowPixelSpacing === null ? 1 : image.rowPixelSpacing,
+      columnPixelSpacing: image.columnPixelSpacing === undefined || image.columnPixelSpacing === null ? 1 : image.columnPixelSpacing,
       presentationSizeMode: 'NONE'
     }
   };
