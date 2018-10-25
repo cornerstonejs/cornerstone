@@ -16,8 +16,8 @@ export default function (windowSize, image, rotation = null) {
   validateParameterUndefinedOrNull(image, 'getImageScale: parameter image must not be undefined');
 
   const imageSize = getImageSize(image, rotation);
-  const rowPixelSpacing = image.rowPixelSpacing === undefined ? 1 : image.rowPixelSpacing;
-  const columnPixelSpacing = image.columnPixelSpacing === undefined ? 1 : image.columnPixelSpacing;
+  const rowPixelSpacing = image.rowPixelSpacing || 1;
+  const columnPixelSpacing = image.columnPixelSpacing || 1;
   let verticalRatio = 1;
   let horizontalRatio = 1;
 
