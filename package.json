@@ -71,7 +71,7 @@
     "lodash": "~4.17.10",
     "mocha": "^5.2.0",
     "opn-cli": "^3.1.0",
-    "puppeteer": "^1.8.0",
+    "puppeteer": "1.9.0",
     "shx": "^0.3.2",
     "uglifyjs-webpack-plugin": "^2.0.0",
     "webpack": "^4.17.3",
