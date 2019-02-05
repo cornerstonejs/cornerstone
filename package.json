@@ -53,7 +53,7 @@
     "docdash": "^1.0.0",
     "documentation": "^8.1.2",
     "eslint": "^5.5.0",
-    "eslint-loader": "^2.1.0",
+    "eslint-loader": "^2.1.2",
     "eslint-plugin-import": "^2.14.0",
     "gitbook-plugin-edit-link": "^2.0.2",
     "gitbook-plugin-ga": "^2.0.0",
