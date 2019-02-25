@@ -73,7 +73,7 @@
     "opn-cli": "^3.1.0",
     "puppeteer": "^1.8.0",
     "shx": "^0.3.2",
-    "uglifyjs-webpack-plugin": "^2.0.0",
+    "uglifyjs-webpack-plugin": "^2.1.2",
     "webpack": "^4.17.3",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.8"
