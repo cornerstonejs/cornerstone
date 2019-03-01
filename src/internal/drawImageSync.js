@@ -73,7 +73,6 @@ export default function (enabledElement, invalidated) {
   image.stats.lastRenderTime = renderTimeInMs;
 
   enabledElement.invalid = false;
-  enabledElement.needsRedraw = false;
 
   triggerEvent(element, EVENTS.IMAGE_RENDERED, eventData);
 }
