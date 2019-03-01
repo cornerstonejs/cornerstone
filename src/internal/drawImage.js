@@ -1,4 +1,4 @@
-import drawImageAsync from './drawImageAsync.js'; // VOYAGER
+import drawImageAsync from './drawImageAsync.js';
 
 /**
  * Internal API function to draw an image to a given enabled element
