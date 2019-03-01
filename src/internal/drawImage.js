@@ -1,3 +1,5 @@
+import drawImageAsync from './drawImageAsync.js'; // VOYAGER
+
 /**
  * Internal API function to draw an image to a given enabled element
  *
@@ -7,8 +9,9 @@
  * @memberof Internal
  */
 export default function (enabledElement, invalidated = false) {
-  enabledElement.needsRedraw = true;
   if (invalidated) {
     enabledElement.invalid = true;
   }
+
+  drawImageAsync(enabledElement); 
 }
