@@ -66,7 +66,8 @@ export default function (element, image, viewport) {
     frameRate
   };
 
+  updateImage(element);
+
   triggerEvent(enabledElement.element, EVENTS.NEW_IMAGE, newImageEventData);
 
-  updateImage(element);
 }
