@@ -1,5 +1,10 @@
 // Internal (some of these are from old internal/legacy expose)
-import { default as drawImage } from './internal/drawImage.js';
+import { 
+  drawImage, 
+  addDrawCallback, 
+  deleteDrawCallback 
+} from './internal/drawImage.js';
+
 import { default as generateLut } from './internal/generateLut.js';
 import { default as getDefaultViewport } from './internal/getDefaultViewport.js';
 import { default as requestAnimationFrame } from './internal/requestAnimationFrame.js';
