@@ -3,7 +3,7 @@
  */
 
 import { getEnabledElements } from './enabledElements.js';
-import drawImage from './internal/drawImage.js';
+import { drawImage } from './internal/drawImage.js';
 
 /**
  * Draws all invalidated enabled elements and clears the invalid flag after drawing it
