@@ -95,6 +95,8 @@ import { default as triggerEvent } from './triggerEvent.js';
 
 const cornerstone = {
   drawImage,
+  addDrawCallback, 
+  deleteDrawCallback, 
   generateLut,
   getDefaultViewport,
   requestAnimationFrame,
@@ -165,6 +167,8 @@ const cornerstone = {
 
 export {
   drawImage,
+  addDrawCallback, 
+  deleteDrawCallback, 
   generateLut,
   getDefaultViewport,
   requestAnimationFrame,
