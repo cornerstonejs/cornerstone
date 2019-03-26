@@ -1,7 +1,7 @@
 import { 
   drawImage, 
   addDrawCallback, 
-  deleteDrawCallback 
+  removeDrawCallback 
 } from './drawImage.js';
 
 import generateLut from './generateLut.js';
@@ -22,7 +22,7 @@ import { Transform } from './transform.js';
 export default {
   drawImage,
   addDrawCallback, 
-  deleteDrawCallback,
+  removeDrawCallback,
   generateLut,
   getDefaultViewport,
   requestAnimationFrame,
