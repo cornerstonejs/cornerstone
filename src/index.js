@@ -2,7 +2,7 @@
 import { 
   drawImage, 
   addDrawCallback, 
-  deleteDrawCallback 
+  removeDrawCallback
 } from './internal/drawImage.js';
 
 import { default as generateLut } from './internal/generateLut.js';
@@ -96,7 +96,7 @@ import { default as triggerEvent } from './triggerEvent.js';
 const cornerstone = {
   drawImage,
   addDrawCallback, 
-  deleteDrawCallback, 
+  removeDrawCallback, 
   generateLut,
   getDefaultViewport,
   requestAnimationFrame,
@@ -168,7 +168,7 @@ const cornerstone = {
 export {
   drawImage,
   addDrawCallback, 
-  deleteDrawCallback, 
+  removeDrawCallback, 
   generateLut,
   getDefaultViewport,
   requestAnimationFrame,
