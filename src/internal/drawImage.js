@@ -116,14 +116,14 @@ export function addDrawCallback (element, f) {
 
 
 /**
- * delete a callback that was added with addDrawCallback
+ * remove a callback that was added with addDrawCallback
  *
  * @param {HTMLElement} element The Cornerstone element for this callback
  * @param {Function} f The callback to delete
  * @returns {void}
  * @memberof Internal
  */
-export function deleteDrawCallback (element, f) {
+export function removeDrawCallback (element, f) {
   if (!element) {
     return;
   }
