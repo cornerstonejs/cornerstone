@@ -4,9 +4,10 @@ import drawImageSync from './drawImageSync.js';
 import requestAnimationFrame from './requestAnimationFrame.js';
 import { getEnabledElement } from '../enabledElements.js';
 
+const rafStopMaxTime = 100;
 let rafId = null;
 let rafStopTime = null;
-const map = new Map();
+const elementsDrawMap = new Map();
 
 
 /**
@@ -17,6 +18,8 @@ const map = new Map();
  * @returns {void}
  * @memberof Internal
  */
+
+
 export function drawImage (enabledElement, invalidated = false) {
   registerVisibilityChange();
 
@@ -30,23 +33,23 @@ export function drawImage (enabledElement, invalidated = false) {
     enabledElement.invalid = true;
   }
 
-  if (!map.has(element)) {
-    map.set(element, { 
+  if (!elementsDrawMap.has(element)) {
+    elementsDrawMap.set(element, { 
       needsRedraw: false, 
       callbacks: new Set()
     });
   }
 
-  map.get(element).needsRedraw = true;
+  elementsDrawMap.get(element).needsRedraw = true;
 
-  rafStopTime = performance.now() + 100;
+  rafStopTime = performance.now() + rafStopMaxTime;
   if (!rafId) {
     rafId = requestAnimationFrame(step);
   }
 }
 
 function step () {
-  map.forEach((entry, element) => {
+  elementsDrawMap.forEach((entry, element) => {
     if (!element || !entry || !entry.needsRedraw) {
       return;
     }
@@ -80,7 +83,7 @@ function step () {
           // swallow
         }
       });
-      rafStopTime = performance.now() + 100; 
+      rafStopTime = performance.now() + rafStopMaxTime; 
     }
   });
   
@@ -90,7 +93,6 @@ function step () {
     stopRaf();
   }
 }
-
 
 /**
  * add a callback to be called on every RequestAnimationFrame step
@@ -104,19 +106,19 @@ export function addDrawCallback (element, f) {
   if (!element) {
     return;
   }
-  if (!map.has(element)) {
-    map.set(element, { 
+  if (!elementsDrawMap.has(element)) {
+    elementsDrawMap.set(element, { 
       needsRedraw: false, 
       callbacks: new Set()
     });
   }
 
-  map.get(element).callbacks.add(f);
+  elementsDrawMap.get(element).callbacks.add(f);
 }
 
 
 /**
- * remove a callback that was added with addDrawCallback
+ * delete a callback that was added with addDrawCallback
  *
  * @param {HTMLElement} element The Cornerstone element for this callback
  * @param {Function} f The callback to delete
@@ -127,7 +129,7 @@ export function removeDrawCallback (element, f) {
   if (!element) {
     return;
   }
-  const entry = map.get(element);
+  const entry = elementsDrawMap.get(element);
   
   if (!entry) {
     return;
@@ -164,8 +166,7 @@ function registerVisibilityChange () {
     stopRaf();
   
     if (!document[hidden]) {
-      rafStopTime = performance.now() + 100;
-      console.log('raf started');
+      rafStopTime = performance.now() + rafStopMaxTime;
       rafId = requestAnimationFrame(step);
     }
   }, false);
