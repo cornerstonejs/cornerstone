@@ -4,7 +4,8 @@ import drawImageSync from './internal/drawImageSync.js';
 import requestAnimationFrame from './internal/requestAnimationFrame.js';
 import tryEnableWebgl from './internal/tryEnableWebgl.js';
 import triggerEvent from './triggerEvent.js';
-import EVENTS from './events.js';
+import generateUUID from './generateUUID.js';
+import EVENTS, { events } from './events.js';
 import getCanvas from './internal/getCanvas.js';
 
 /**
@@ -45,7 +46,11 @@ export default function (element, options) {
 
   // If this enabled element has the option set for WebGL, we should
   // Check if this device actually supports it
-  if (options && options.renderer && options.renderer.toLowerCase() === 'webgl') {
+  if (
+    options &&
+    options.renderer &&
+    options.renderer.toLowerCase() === 'webgl'
+  ) {
     tryEnableWebgl(options);
   }
 
@@ -60,10 +65,13 @@ export default function (element, options) {
     options,
     layers: [],
     data: {},
-    renderingTools: {}
+    renderingTools: {},
+    uuid: generateUUID()
   };
 
   addEnabledElement(enabledElement);
+
+  triggerEvent(events, EVENTS.ELEMENT_ENABLED, enabledElement);
 
   resize(element, true);
 

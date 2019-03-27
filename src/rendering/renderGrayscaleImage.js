@@ -8,11 +8,23 @@ import doesImageNeedToBeRendered from './doesImageNeedToBeRendered.js';
 import initializeRenderCanvas from './initializeRenderCanvas.js';
 import saveLastRendered from './saveLastRendered.js';
 
+/**
+ * Returns an appropriate canvas to render the Image. If the canvas available in the cache is appropriate
+ * it is returned, otherwise adjustments are made. It also sets the color transfer functions.
+ *
+ * @param {Object} enabledElement The cornerstone enabled element
+ * @param {Object} image The image to be rendered
+ * @param {Boolean} invalidated Is pixel data valid
+ * @param {Boolean} [useAlphaChannel = true] Will an alpha channel be used
+ * @returns {HTMLCanvasElement} An appropriate canvas for rendering the image
+ * @memberof rendering
+ */
 function getRenderCanvas (enabledElement, image, invalidated, useAlphaChannel = true) {
   const canvasWasColor = enabledElement.renderingTools.lastRenderedIsColor === true;
 
   if (!enabledElement.renderingTools.renderCanvas || canvasWasColor) {
     enabledElement.renderingTools.renderCanvas = document.createElement('canvas');
+    initializeRenderCanvas(enabledElement, image);
   }
 
   const renderCanvas = enabledElement.renderingTools.renderCanvas;

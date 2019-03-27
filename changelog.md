@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.2.8] - 2018-12-05
+### Added
+- Added default export named 'cornerstone' to the module
+
+## [2.2.7] - 2018-10-25
+### Changed
+- Deprecate enabledElement.options.colormap option
+- Fix rowPixelSpacing and columnPixelSpacing not to be null (default to 1)
+- jsdocs changes
+
+## [2.2.6] - 2018-09-24
+### Added
+- Broadcast `ELEMENT_DISABLED` event when disabling a new element on the `events` object
+
+### Changed
+- Broadcast `ELEMENT_ENABLED` event off `events` object instead of per element
+
+## [2.2.5] - 2018-09-24
+### Added
+- Broadcast `ELEMENT_ENABLED` event when enabling a new element
+- enabledElements now have an associated unique id (`enabledElement.uuid`)
+
 ## [2.2.4] - 2018-05-04
 ### Removed
 - Removed old fix for clearing the canvas after swaping between 2 colorSpaces (issue #151)
