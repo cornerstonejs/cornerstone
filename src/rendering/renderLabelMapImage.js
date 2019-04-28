@@ -5,6 +5,7 @@ import saveLastRendered from './saveLastRendered.js';
 import doesImageNeedToBeRendered from './doesImageNeedToBeRendered.js';
 import storedPixelDataToCanvasImageDataColorLUT from '../internal/storedPixelDataToCanvasImageDataColorLUT.js';
 import colors from '../colors/index.js';
+import createRenderCanvas from '../internal/createRenderCanvas.js';
 
 /**
  * Returns an appropriate canvas to render the Image. If the canvas available in the cache is appropriate
@@ -18,7 +19,7 @@ import colors from '../colors/index.js';
  */
 function getRenderCanvas (enabledElement, image, invalidated) {
   if (!enabledElement.renderingTools.renderCanvas) {
-    enabledElement.renderingTools.renderCanvas = document.createElement('canvas');
+    enabledElement.renderingTools.renderCanvas = createRenderCanvas(enabledElement.options);
   }
 
   const renderCanvas = enabledElement.renderingTools.renderCanvas;

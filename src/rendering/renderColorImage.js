@@ -7,6 +7,7 @@ import webGL from '../webgl/index.js';
 import doesImageNeedToBeRendered from './doesImageNeedToBeRendered.js';
 import initializeRenderCanvas from './initializeRenderCanvas.js';
 import saveLastRendered from './saveLastRendered.js';
+import createRenderCanvas from '../internal/createRenderCanvas.js';
 
 /**
  * Generates an appropriate Look Up Table to render the given image with the given window width and level (specified in the viewport)
@@ -49,7 +50,7 @@ function getRenderCanvas (enabledElement, image, invalidated) {
   const canvasWasColor = enabledElement.renderingTools.lastRenderedIsColor === true;
 
   if (!enabledElement.renderingTools.renderCanvas || !canvasWasColor) {
-    enabledElement.renderingTools.renderCanvas = document.createElement('canvas');
+    enabledElement.renderingTools.renderCanvas = createRenderCanvas(enabledElement.options);
   }
 
   const renderCanvas = enabledElement.renderingTools.renderCanvas;

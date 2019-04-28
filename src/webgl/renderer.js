@@ -4,8 +4,9 @@ import { shaders, dataUtilities } from './shaders/index.js';
 import { vertexShader } from './vertexShader.js';
 import textureCache from './textureCache.js';
 import createProgramFromString from './createProgramFromString.js';
+import createRenderCanvas from '../internal/createRenderCanvas.js';
 
-const renderCanvas = document.createElement('canvas');
+let renderCanvas;
 let gl;
 let texCoordBuffer;
 let positionBuffer;
@@ -38,10 +39,14 @@ function initShaders () {
   }
 }
 
-export function initRenderer () {
+export function initRenderer (options) {
   if (isWebGLInitialized === true) {
     // Console.log("WEBGL Renderer already initialized");
     return;
+  }
+
+  if (!renderCanvas) {
+    renderCanvas = createRenderCanvas(options);
   }
 
   if (initWebGL(renderCanvas)) {
@@ -308,20 +313,19 @@ export function render (enabledElement) {
   return renderCanvas;
 }
 
-export function isWebGLAvailable () {
+export function isWebGLAvailable (options) {
   // Adapted from
   // http://stackoverflow.com/questions/9899807/three-js-detect-webgl-support-and-fallback-to-regular-canvas
 
-  const options = {
+  const contextOptions = {
     failIfMajorPerformanceCaveat: true
   };
 
   try {
-    const canvas = document.createElement('canvas');
-
+    const canvas = createRenderCanvas(options);
 
     return Boolean(window.WebGLRenderingContext) &&
-            (canvas.getContext('webgl', options) || canvas.getContext('experimental-webgl', options));
+            (canvas.getContext('webgl', contextOptions) || canvas.getContext('experimental-webgl', contextOptions));
   } catch (e) {
     return false;
   }

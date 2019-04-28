@@ -6,10 +6,10 @@ import webGL from '../webgl/index.js';
  * @returns {Boolean} true if webgl rendering has been successfully initialized. Otherwise, false.
  */
 export default function (options) {
-  if (webGL.renderer.isWebGLAvailable()) {
+  if (webGL.renderer.isWebGLAvailable(options)) {
     // If WebGL is available on the device, initialize the renderer
     // And return the renderCanvas from the WebGL rendering path
-    webGL.renderer.initRenderer();
+    webGL.renderer.initRenderer(options);
     options.renderer = 'webgl';
 
     return true;
