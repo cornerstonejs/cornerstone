@@ -1,5 +1,5 @@
 import { getEnabledElementsByImageId } from './enabledElements.js';
-import drawImage from './internal/drawImage.js';
+import { drawImage } from './internal/drawImage.js';
 
 /**
  * Forces the image to be updated/redrawn for the all enabled elements

@@ -1,5 +1,5 @@
 import { getEnabledElement } from './enabledElements.js';
-import drawImage from './internal/drawImage.js';
+import { drawImage } from './internal/drawImage.js';
 
 /**
  * Immediately draws the enabled element

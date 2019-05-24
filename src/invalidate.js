@@ -1,6 +1,7 @@
 import { getEnabledElement } from './enabledElements.js';
 import triggerEvent from './triggerEvent.js';
 import EVENTS from './events.js';
+import { drawImage } from './internal/drawImage.js';
 
 /**
  * Sets the invalid flag on the enabled element and fire an event
@@ -12,10 +13,11 @@ export default function (element) {
   const enabledElement = getEnabledElement(element);
 
   enabledElement.invalid = true;
-  enabledElement.needsRedraw = true;
   const eventData = {
     element
   };
 
   triggerEvent(element, EVENTS.INVALIDATED, eventData);
+
+  drawImage(element);
 }

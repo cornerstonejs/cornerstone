@@ -1,5 +1,10 @@
 // Internal (some of these are from old internal/legacy expose)
-import { default as drawImage } from './internal/drawImage.js';
+import { 
+  drawImage, 
+  addDrawCallback, 
+  removeDrawCallback
+} from './internal/drawImage.js';
+
 import { default as generateLut } from './internal/generateLut.js';
 import { default as getDefaultViewport } from './internal/getDefaultViewport.js';
 import { default as requestAnimationFrame } from './internal/requestAnimationFrame.js';
@@ -90,6 +95,8 @@ import { default as triggerEvent } from './triggerEvent.js';
 
 const cornerstone = {
   drawImage,
+  addDrawCallback, 
+  removeDrawCallback, 
   generateLut,
   getDefaultViewport,
   requestAnimationFrame,
@@ -160,6 +167,8 @@ const cornerstone = {
 
 export {
   drawImage,
+  addDrawCallback, 
+  removeDrawCallback, 
   generateLut,
   getDefaultViewport,
   requestAnimationFrame,
