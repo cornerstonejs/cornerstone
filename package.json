@@ -45,8 +45,8 @@
     "version": "node -p -e \"'export default \\'' + require('./package.json').version + '\\';'\" > src/version.js"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
     "babel-loader": "^8.0.2",
     "chai": "^4.1.2",
     "coveralls": "^3.0.2",
@@ -68,15 +68,15 @@
     "karma-firefox-launcher": "^1.1.0",
     "karma-mocha": "^1.3.0",
     "karma-webpack": "3.0.0",
-    "lodash": "~4.17.10",
+    "lodash": "^4.17.11",
     "mocha": "^5.2.0",
     "opn-cli": "^3.1.0",
-    "puppeteer": "^1.8.0",
+    "puppeteer": "^1.18.1",
     "shx": "^0.3.2",
     "uglifyjs-webpack-plugin": "^2.0.0",
     "webpack": "^4.17.3",
     "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.8"
+    "webpack-dev-server": "^3.7.2"
   },
   "files": [
     "dist/cornerstone.js",
