@@ -45,9 +45,11 @@ describe('getVOILut', function () {
     const vlutfn = getVOILut(this.windowWidth, this.windowCenter, this.voiLUT);
 
     // Assert
+    const delta = 0.001;
+
     assert.equal(vlutfn(-1), 0);
-    assert.equal(vlutfn(0), 0);
-    assert.equal(vlutfn(1), 128);
+    assert.approximately(vlutfn(0), 0.5, delta);
+    assert.approximately(vlutfn(1), 128.5, delta);
     assert.equal(vlutfn(2), 255);
     assert.equal(vlutfn(3), 255);
     assert.equal(vlutfn(256), 255);
