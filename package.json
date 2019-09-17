@@ -80,6 +80,7 @@
     "webpack-dev-server": "^3.7.2"
   },
   "files": [
+    "cornerstone.d.ts",
     "dist/cornerstone.js",
     "dist/cornerstone.js.map",
     "dist/cornerstone.min.js",
