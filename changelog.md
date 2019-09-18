@@ -246,3 +246,17 @@ e.g. CornerstoneImageRendered has a native CustomEvent name 'cornerstoneimageren
 ## Version 0.10.7
 
 - Revert fix for #101 since it's reducing performance
+
+[2.3.1]: https://github.com/cornerstonejs/cornerstone/compare/2.3.0...2.3.1
+[2.3.0]: https://github.com/cornerstonejs/cornerstone/compare/2.2.8...2.3.0
+[2.2.8]: https://github.com/cornerstonejs/cornerstone/compare/2.2.7...2.2.8
+[2.2.7]: https://github.com/cornerstonejs/cornerstone/compare/2.2.6...2.2.7
+[2.2.6]: https://github.com/cornerstonejs/cornerstone/compare/2.2.5...2.2.6
+[2.2.5]: https://github.com/cornerstonejs/cornerstone/compare/2.2.4...2.2.5
+[2.2.4]: https://github.com/cornerstonejs/cornerstone/compare/2.2.3...2.2.4
+[2.2.3]: https://github.com/cornerstonejs/cornerstone/compare/2.2.2...2.2.3
+[2.2.2]: https://github.com/cornerstonejs/cornerstone/compare/2.2.1...2.2.2
+[2.2.1]: https://github.com/cornerstonejs/cornerstone/compare/2.2.0...2.2.1
+[2.2.0]: https://github.com/cornerstonejs/cornerstone/compare/2.1.0...2.2.0
+[2.1.0]: https://github.com/cornerstonejs/cornerstone/compare/2.0.0...2.1.0
+[2.0.0]: https://github.com/cornerstonejs/cornerstone/tree/2.0.0
