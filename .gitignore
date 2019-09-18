@@ -6,4 +6,3 @@ documentation/
 docs/_book
 docs/api.md
 dist/
-package-lock.json
