@@ -26,7 +26,7 @@ function getRenderCanvas (enabledElement, image, invalidated) {
 
   let colormap = enabledElement.viewport.colormap || enabledElement.options.colormap;
 
-  if (enabledElement.options.colormap) {
+  if (enabledElement.options && enabledElement.options.colormap) {
     console.warn('enabledElement.options.colormap is deprecated. Use enabledElement.viewport.colormap instead');
   }
   if (colormap && (typeof colormap === 'string')) {
