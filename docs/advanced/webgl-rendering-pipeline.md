@@ -4,4 +4,4 @@ description: Cornerstone supports an optional WebGL rendering pipeline for incre
 
 # WebGL Rendering Pipeline
 
-> Cornerstone supports an optional WebGL rendering pipeline for increased performance
+> Cornerstone supports an optional WebGL rendering pipeline for increased performance.

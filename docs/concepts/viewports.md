@@ -4,7 +4,7 @@ description: Each Enabled Element has a Viewport which describes how the Image s
 
 # Viewports
 
-> Each [Enabled Element](enabled-elements.md) has a **Viewport** which describes how the [Image](images.md) should be rendered.
+> Each [Enabled Element](enabled-elements.md) has a **[Viewport](../api.md#viewport)** which describes how the [Image](images.md) should be rendered.
 
 The viewport parameters for an enabled element can be obtained via the [getViewport()](../api.md#getviewport) function and set using the [setViewport()](../api.md#setviewport) function. The available properties for the Viewport can be found in the [Viewport object definition](../api.md#viewport) in the API documentation.
 
