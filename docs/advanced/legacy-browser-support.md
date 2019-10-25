@@ -8,11 +8,9 @@ description: Cornerstone can be made to support legacy browsers by incorporating
 
 You **may** need to include polyfills for these features, depending on which browsers you target.
 
-* [Promises](https://caniuse.com/#feat=promises) represent the eventual result of an asynchronous operation. These are used by [Image Loaders](../concepts/image-loaders.md). You will need to polyfill Promises to use Internet Explorer 11.
+* [Promises](https://caniuse.com/#feat=promises) represent the eventual result of an asynchronous operation. These are used by [Image Loaders](../concepts/image-loaders.md). You will need to polyfill Promises to use Internet Explorer 11. Here is [a lightweight Promise polyfill](https://github.com/taylorhakes/promise-polyfill) which is MIT Licensed.
 
-Here is [a lightweight Promise polyfill](https://github.com/taylorhakes/promise-polyfill) which is MIT Licensed.
-
-* [requestAnimationFrame](https://caniuse.com/#feat=requestanimationframe) is a method for efficiently running animations. We are currently [check for its availability ourselves within Cornerstone](https://github.com/cornerstonejs/cornerstone/blob/master/src/internal/requestAnimationFrame.js), but may remove this in the future. There are many options for a [requestAnimationFrame polyfill in this gist by Paul Irish](https://gist.github.com/paulirish/1579671).
+* [requestAnimationFrame](https://caniuse.com/#feat=requestanimationframe) is a method for efficiently running animations. We currently [check for its availability ourselves within Cornerstone](https://github.com/cornerstonejs/cornerstone/blob/master/src/internal/requestAnimationFrame.js), but may remove this in the future. There are many options for a [requestAnimationFrame polyfill in this gist by Paul Irish](https://gist.github.com/paulirish/1579671).
 
 * [performance.now](https://caniuse.com/#feat=high-resolution-time) is used for high-resolution timing for performance monitoring within Cornerstone. We are currently [avoiding errors ourselves within Cornerstone](https://github.com/cornerstonejs/cornerstone/blob/master/src/internal/now.js#L11), but may remove this in the future. Here is a [performance.now polyfill](https://gist.github.com/paulirish/5438650).
 
