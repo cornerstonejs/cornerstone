@@ -1,5 +1,6 @@
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
 import now from '../internal/now.js';
+import getFillStyle from '../internal/getFillStyle.js';
 import initializeRenderCanvas from './initializeRenderCanvas.js';
 import getLut from './getLut.js';
 import saveLastRendered from './saveLastRendered.js';
@@ -104,7 +105,7 @@ export function renderPseudoColorImage (enabledElement, invalidated) {
   context.setTransform(1, 0, 0, 1, 0, 0);
 
   // Clear the canvas
-  context.fillStyle = 'black';
+  context.fillStyle = getFillStyle(enabledElement);
   context.fillRect(0, 0, enabledElement.canvas.width, enabledElement.canvas.height);
 
   // Turn off image smooth/interpolation if pixelReplication is set in the viewport
