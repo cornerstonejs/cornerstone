@@ -29,7 +29,13 @@ export default function (image, windowWidth, windowCenter, invert, modalityLUT, 
 
   const lut = image.cachedLut.lutArray;
   const mlutfn = getModalityLUT(image.slope, image.intercept, modalityLUT);
-  const vlutfn = getVOILUT(windowWidth, windowCenter, voiLUT);
+  let vlutfn;
+
+  if (image.windowWidth === windowWidth && image.windowCenter === windowCenter) {
+    vlutfn = getVOILUT(windowWidth, windowCenter, voiLUT);
+  } else {
+    vlutfn = getVOILUT(windowWidth, windowCenter);
+  }
 
   if (invert === true) {
     for (let storedValue = minPixelValue; storedValue <= maxPixelValue; storedValue++) {
