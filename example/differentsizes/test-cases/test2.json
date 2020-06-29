@@ -1,0 +1,17 @@
+{
+    "imageId": "example//test2",
+    "minPixelValue": 0,
+    "maxPixelValue": 1695,
+    "slope": 1.0,
+    "intercept": 0,
+    "windowCenter": 844,
+    "windowWidth": 2677,
+    "rows": 256,
+    "columns": 256,
+    "height": 256,
+    "width": 256,
+    "color": false,
+    "columnPixelSpacing": 0.234,
+    "rowPixelSpacing": 0.234,
+    "sizeInBytes": 131072
+  }

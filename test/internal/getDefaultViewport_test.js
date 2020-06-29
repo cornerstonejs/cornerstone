@@ -1,6 +1,7 @@
 import { assert, should } from 'chai'; // eslint-disable-line import/extensions
 
 import getDefaultViewport from '../../src/internal/getDefaultViewport.js';
+import getDisplayedArea from '../../src/internal/getDisplayedArea.js';
 
 should();
 
@@ -40,9 +41,7 @@ describe('getDefaultViewport', function () {
       const viewport = getDefaultViewport(this.canvas, this.imageViewport);
 
       assert.equal(viewport.scale, 0.5); // should take the columnPixelSpacing into consideration and scale down by 1/2
-      assert.equal(viewport.displayedArea.presentationSizeMode, 'NONE');
-      assert.equal(viewport.displayedArea.rowPixelSpacing, this.imageViewport.rowPixelSpacing);
-      assert.equal(viewport.displayedArea.columnPixelSpacing, this.imageViewport.columnPixelSpacing);
+      assert.equal(viewport.displayedArea, this.imageViewport.displayedArea);
       assert.equal(viewport.voi.windowWidth, this.imageViewport.windowWidth);
       assert.equal(viewport.voi.windowCenter, this.imageViewport.windowCenter);
       assert.equal(viewport.invert, this.imageViewport.invert);
@@ -68,9 +67,10 @@ describe('getDefaultViewport', function () {
 
     it('should be smart to set the default values to 1/1', function () {
       const viewport = getDefaultViewport(this.canvas, this.imageViewport);
+      const imageDisplayedArea = getDisplayedArea(this.imageViewport, viewport);
 
-      assert.equal(viewport.displayedArea.rowPixelSpacing, 1);
-      assert.equal(viewport.displayedArea.columnPixelSpacing, 1);
+      assert.equal(imageDisplayedArea.rowPixelSpacing, 1);
+      assert.equal(imageDisplayedArea.columnPixelSpacing, 1);
       assert.equal(viewport.scale, 1);
     });
   });
