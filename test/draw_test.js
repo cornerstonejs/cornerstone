@@ -34,11 +34,6 @@ describe('draw', function () {
     enable(this.element);
   });
 
-  it('should throw an error if no image is displayed in the enabled element', function () {
-    // Act
-    assert.throws(() => draw(this.element));
-  });
-
   it('should draw immediately', function (done) {
     // Arrange
     const element = this.element;
