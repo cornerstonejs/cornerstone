@@ -52,11 +52,6 @@ describe('Update a displayed image', function () {
     });
   });
 
-  it('should throw an Error if the image is not loaded', function () {
-    // Act
-    assert.throws(() => updateImage(this.element));
-  });
-
   afterEach(function () {
     disable(this.element);
   });
