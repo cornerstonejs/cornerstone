@@ -30,12 +30,14 @@ function generateLinearVOILUT (windowWidth, windowCenter) {
 /**
  * Generate a non-linear volume of interest lookup table
  *
- * @param {LUT} voiLUT Volume of Interest Lookup Table Object
- *
+ * @param {Number} windowWidth Window Width
+ * @param {Number} windowCenter Window Center
+ * @param {LUT} [voiLUT] Volume of Interest Lookup Table Object
+ * 
  * @returns {VOILUTFunction} VOI LUT mapping function
  * @memberof VOILUT
  */
-function generateNonLinearVOILUT (voiLUT) {
+function generateNonLinearVOILUT (windowWidth, windowCenter, voiLUT) {
   // We don't trust the voiLUT.numBitsPerEntry, mainly thanks to Agfa!
   const bitsPerEntry = Math.max(...voiLUT.lut).toString(2).length;
   const shift = bitsPerEntry - 8;
@@ -49,8 +51,8 @@ function generateNonLinearVOILUT (voiLUT) {
     } else if (modalityLutValue >= maxValueMapped) {
       return maxValue;
     }
-
-    return voiLUT.lut[modalityLutValue - voiLUT.firstValueMapped] >> shift;
+    const linearVOILUT = generateLinearVOILUT(windowWidth >> shift, windowCenter >> shift);
+    return linearVOILUT(voiLUT.lut[modalityLutValue - voiLUT.firstValueMapped] >> shift);
   };
 }
 
@@ -67,7 +69,7 @@ function generateNonLinearVOILUT (voiLUT) {
  */
 export default function (windowWidth, windowCenter, voiLUT) {
   if (voiLUT) {
-    return generateNonLinearVOILUT(voiLUT);
+    return generateNonLinearVOILUT(windowWidth, windowCenter, voiLUT);
   }
 
   return generateLinearVOILUT(windowWidth, windowCenter);
