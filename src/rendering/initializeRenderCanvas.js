@@ -13,7 +13,9 @@ export default function (enabledElement, image) {
   renderCanvas.width = image.width;
   renderCanvas.height = image.height;
 
-  const canvasContext = renderCanvas.getContext('2d');
+  const canvasContext = renderCanvas.getContext('2d', {
+    desynchronized: true
+  });
 
   // NOTE - we need to fill the render canvas with white pixels since we
   // control the luminance using the alpha channel to improve rendering performance.

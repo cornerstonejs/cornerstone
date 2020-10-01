@@ -122,7 +122,9 @@ export function renderColorImage (enabledElement, invalidated) {
   }
 
   // Get the canvas context and reset the transform
-  const context = enabledElement.canvas.getContext('2d');
+  const context = enabledElement.canvas.getContext('2d', {
+    desynchronized: true
+  });
 
   context.setTransform(1, 0, 0, 1, 0, 0);
 
@@ -175,7 +177,9 @@ export function addColorLayer (layer, invalidated) {
   image.rgba = true;
   layer.canvas = getRenderCanvas(layer, image, invalidated);
 
-  const context = layer.canvas.getContext('2d');
+  const context = layer.canvas.getContext('2d', {
+    desynchronized: true
+  });
 
   // Turn off image smooth/interpolation if pixelReplication is set in the viewport
   context.imageSmoothingEnabled = !layer.viewport.pixelReplication;

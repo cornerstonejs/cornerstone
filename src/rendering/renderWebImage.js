@@ -27,7 +27,9 @@ export function renderWebImage (enabledElement, invalidated) {
         enabledElement.viewport.invert === false) {
 
     // Get the canvas context and reset the transform
-    const context = enabledElement.canvas.getContext('2d');
+    const context = enabledElement.canvas.getContext('2d', {
+      desynchronized: true
+    });
 
     context.setTransform(1, 0, 0, 1, 0, 0);
 

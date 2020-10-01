@@ -66,7 +66,9 @@ export default function (enabledElement, invalidated) {
     element,
     image,
     enabledElement,
-    canvasContext: enabledElement.canvas.getContext('2d'),
+    canvasContext: enabledElement.canvas.getContext('2d', {
+      desynchronized: true
+    }),
     renderTimeInMs
   };
 

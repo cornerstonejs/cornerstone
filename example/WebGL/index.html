@@ -82,7 +82,9 @@
     });
 
     const options = {
-        renderer: 'webgl'
+        renderer: 'webgl',
+        desynchronized: true,
+        preserveDrawingBuffer: true
     };
 
     cornerstone.enable(elementWebGL, options);

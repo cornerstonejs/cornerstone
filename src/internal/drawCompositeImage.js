@@ -161,7 +161,9 @@ export default function (enabledElement, invalidated) {
   }
 
   // Get the enabled element's canvas so we can draw to it
-  const context = enabledElement.canvas.getContext('2d');
+  const context = enabledElement.canvas.getContext('2d', {
+    desynchronized: true
+  });
 
   context.setTransform(1, 0, 0, 1, 0, 0);
 

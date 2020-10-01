@@ -161,7 +161,9 @@
     function updateColorbar(colormap) {
         const lookupTable = colormap.createLookupTable();
         const canvas = document.getElementById('colorbar');
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', {
+            desynchronized: true
+        });
         const height = canvas.height;
         const width = canvas.width;
         const colorbar = ctx.createImageData(512, 20);
