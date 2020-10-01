@@ -62,7 +62,7 @@ export default function (element, options) {
     image: undefined, // Will be set once image is loaded
     invalid: false, // True if image needs to be drawn, false if not
     needsRedraw: true,
-    options,
+    options: Object.assign({}, options),
     layers: [],
     data: {},
     renderingTools: {},

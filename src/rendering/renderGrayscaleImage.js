@@ -1,3 +1,4 @@
+import getFillStyle from '../internal/getFillStyle.js';
 import storedPixelDataToCanvasImageData from '../internal/storedPixelDataToCanvasImageData.js';
 import storedPixelDataToCanvasImageDataRGBA from '../internal/storedPixelDataToCanvasImageDataRGBA.js';
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
@@ -89,7 +90,7 @@ export function renderGrayscaleImage (enabledElement, invalidated) {
   context.setTransform(1, 0, 0, 1, 0, 0);
 
   // Clear the canvas
-  context.fillStyle = 'black';
+  context.fillStyle = getFillStyle(enabledElement);
   context.fillRect(0, 0, enabledElement.canvas.width, enabledElement.canvas.height);
 
   // Turn off image smooth/interpolation if pixelReplication is set in the viewport

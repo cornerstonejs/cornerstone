@@ -1,4 +1,5 @@
 import now from '../internal/now.js';
+import getFillStyle from '../internal/getFillStyle.js';
 import generateColorLut from '../internal/generateColorLut.js';
 import storedColorPixelDataToCanvasImageData from '../internal/storedColorPixelDataToCanvasImageData.js';
 import storedRGBAPixelDataToCanvasImageData from '../internal/storedRGBAPixelDataToCanvasImageData.js';
@@ -127,7 +128,7 @@ export function renderColorImage (enabledElement, invalidated) {
   context.setTransform(1, 0, 0, 1, 0, 0);
 
   // Clear the canvas
-  context.fillStyle = 'black';
+  context.fillStyle = getFillStyle(enabledElement);
   context.fillRect(0, 0, enabledElement.canvas.width, enabledElement.canvas.height);
 
   // Turn off image smooth/interpolation if pixelReplication is set in the viewport
