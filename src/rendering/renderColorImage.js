@@ -7,6 +7,8 @@ import webGL from '../webgl/index.js';
 import doesImageNeedToBeRendered from './doesImageNeedToBeRendered.js';
 import initializeRenderCanvas from './initializeRenderCanvas.js';
 import saveLastRendered from './saveLastRendered.js';
+import getDisplayedArea from "../internal/getDisplayedArea.js";
+
 
 /**
  * Generates an appropriate Look Up Table to render the given image with the given window width and level (specified in the viewport)
@@ -150,10 +152,11 @@ export function renderColorImage (enabledElement, invalidated) {
     renderCanvas = getRenderCanvas(enabledElement, image, invalidated);
   }
 
-  const sx = enabledElement.viewport.displayedArea.tlhc.x - 1;
-  const sy = enabledElement.viewport.displayedArea.tlhc.y - 1;
-  const width = enabledElement.viewport.displayedArea.brhc.x - sx;
-  const height = enabledElement.viewport.displayedArea.brhc.y - sy;
+  const imageDisplayedArea = getDisplayedArea(enabledElement.image, enabledElement.viewport);
+  const sx = imageDisplayedArea.tlhc.x - 1;
+  const sy = imageDisplayedArea.tlhc.y - 1;
+  const width = imageDisplayedArea.brhc.x - sx;
+  const height = imageDisplayedArea.brhc.y - sy;
 
   context.drawImage(renderCanvas, sx, sy, width, height, 0, 0, width, height);
 

@@ -41,7 +41,8 @@ describe('createViewport', function () {
         },
         rowPixelSpacing: 1,
         columnPixelSpacing: 1,
-        presentationSizeMode: 'NONE'
+        presentationSizeMode: 'NONE',
+        apply: false
       }
     };
   });

@@ -1,5 +1,6 @@
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
 import { renderColorImage } from './renderColorImage.js';
+import getDisplayedArea from '../internal/getDisplayedArea.js';
 
 /**
  * API function to draw a standard web image (PNG, JPG) to an enabledImage
@@ -41,11 +42,11 @@ export function renderWebImage (enabledElement, invalidated) {
 
     // Save the canvas context state and apply the viewport properties
     setToPixelCoordinateSystem(enabledElement, context);
-
-    const sx = enabledElement.viewport.displayedArea.tlhc.x - 1;
-    const sy = enabledElement.viewport.displayedArea.tlhc.y - 1;
-    const width = enabledElement.viewport.displayedArea.brhc.x - sx;
-    const height = enabledElement.viewport.displayedArea.brhc.y - sy;
+    const imageDisplayedArea = getDisplayedArea(enabledElement.image, enabledElement.viewport);
+    const sx = imageDisplayedArea.tlhc.x - 1;
+    const sy = imageDisplayedArea.tlhc.y - 1;
+    const width = imageDisplayedArea.brhc.x - sx;
+    const height = imageDisplayedArea.brhc.y - sy;
 
     context.drawImage(image.getImage(), sx, sy, width, height, 0, 0, width, height);
   } else {

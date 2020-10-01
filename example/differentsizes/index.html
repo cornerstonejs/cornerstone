@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- twitter bootstrap CSS stylesheet - included to make things pretty, not needed or used by cornerstone -->
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+
+        <h1>
+            displayDifferentSizes/index.html
+        </h1>
+
+        This is an example of changing the image displayed in an element with different sizes 
+        and the option to set a displayedArea in the viewport. This is used to show how to reset
+         the displayedArea on the viewport when the stack images are of different size. Use the mouse wheel
+        to change between images or press the buttons below.
+        <br>
+        <br>
+        <input type="checkbox" id="ApplyDisplayedArea"/>
+        <label for="ApplyDisplayedArea">Apply Displayed Area</label>
+        <button id="imageButton1" type="button" class="btn btn-default">Image #1</button>
+        <button id="imageButton2" type="button" class="btn btn-default">Image #2</button>
+        <button id="imageButton3" type="button" class="btn btn-default">Image #3</button>
+        <br>
+        <span><b>Image Size:</b></span><span id="imgSize"></span><span> | </span>
+        <span><b>Displayed Area:</b></span><span id="displayedAreaSize"></span>
+        <br>
+        <div id="dicomImage" style="width:512px;height:512px"
+            oncontextmenu="return false"
+            onmousedown="return false">
+        </div>
+    </div>
+</body>
+
+<!-- include the cornerstone library -->
+<script src="../../dist/cornerstone.js"></script>
+<script>window.cornerstone || document.write('<script src="https://unpkg.com/cornerstone-core">\x3C/script>')</script>
+<script src="../exampleImageIdLoaderRaw.js"></script>
+
+<script>
+    const element = document.getElementById('dicomImage');
+    cornerstone.enable(element);
+
+    const imageIds = [
+        'example://test1',
+        'example://test2',
+        'example://test3'
+    ];
+
+    let currentImageIndex = 0;
+    element.addEventListener('cornerstonenewimage', (eventData) => {
+      cornerstone.fitToWindow(eventData.detail.element);
+    });
+
+    // show image #1 initially
+    function updateTheImage(imageIndex) {
+        currentImageIndex = imageIndex;
+        cornerstone.loadImage(imageIds[currentImageIndex]).then(function(image) {
+          const viewport = cornerstone.getViewport(element) || {};
+          const applyDisplayedArea = document.getElementById("ApplyDisplayedArea");
+          const imgSize = document.getElementById("imgSize");
+          const displayedAreaSize = document.getElementById("displayedAreaSize");
+
+          imgSize.textContent = image.width + "x" + image.height;
+
+          viewport.voi = viewport.voi || {};
+          viewport.voi.windowWidth = image.windowWidth;
+          viewport.voi.windowCenter = image.windowCenter;
+
+          if (applyDisplayedArea.checked){
+            if (!viewport.displayedArea) {
+              viewport.displayedArea = {
+                // Top Left Hand Corner
+                tlhc: {
+                  x: 1,
+                  y: 1
+                },
+                // Bottom Right Hand Corner
+                brhc: {
+                  x: 256,
+                  y: 256
+                },
+                rowPixelSpacing: 1,
+                columnPixelSpacing: 1,
+                //presentationSizeMode: 'SCALE TO FIT'
+                presentationSizeMode: 'None'
+              };
+
+              displayedAreaSize.textContent = viewport.displayedArea.brhc.x + "x" + viewport.displayedArea.brhc.y;
+            }
+          } else {
+            viewport.displayedArea = undefined;
+            displayedAreaSize.textContent = "none";
+          }
+          
+          cornerstone.displayImage(element, image, viewport);
+        });
+    }
+
+    updateTheImage(0);
+
+    document.getElementById('ApplyDisplayedArea').addEventListener('change', function (e) {
+        updateTheImage(currentImageIndex);
+    });
+
+    // Add event handlers to change images
+    document.getElementById('imageButton1').addEventListener('click', function (e) {
+        updateTheImage(0);
+    });
+
+    document.getElementById('imageButton2').addEventListener('click', function (e) {
+        updateTheImage(1);
+    });
+
+    document.getElementById('imageButton3').addEventListener('click', function (e) {
+        updateTheImage(2);
+    });
+
+    const wheelEvents = ['mousewheel', 'DOMMouseScroll'];
+
+    wheelEvents.forEach((eventType) => {
+      element.addEventListener(eventType, function (e) {
+        // Firefox e.detail > 0 scroll back, < 0 scroll forward
+        // chrome/safari e.wheelDelta < 0 scroll back, > 0 scroll forward
+        if (e.wheelDelta < 0 || e.detail > 0) {
+          if (currentImageIndex < imageIds.length - 1) {
+            updateTheImage(++currentImageIndex);
+          }
+        } else {
+          if (currentImageIndex > 0) {
+            updateTheImage(--currentImageIndex);
+          }
+        }
+
+        // Prevent page fom scrolling
+        return false;
+      });
+    });
+</script>
+</html>
