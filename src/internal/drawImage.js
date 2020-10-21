@@ -50,7 +50,7 @@ export function drawImage (enabledElement, invalidated = false) {
 
 function step () {
   elementsDrawMap.forEach((entry, element) => {
-    if (!element || !entry || !entry.needsRedraw) {
+    if (!element || !entry) {
       return;
     }
     
@@ -62,16 +62,18 @@ function step () {
       return; 
     }
     
-    const eventDetails = {
-      enabledElement,
-      timestamp: Date.now()
-    };
+    if (entry.needsRedraw) {
+      const eventDetails = {
+        enabledElement,
+        timestamp: Date.now()
+      };
     
-    triggerEvent(element, EVENTS.PRE_RENDER, eventDetails);
+      triggerEvent(element, EVENTS.PRE_RENDER, eventDetails);
     
-    drawImageSync(enabledElement, enabledElement.invalid);
-    entry.needsRedraw = false;
-
+      drawImageSync(enabledElement, enabledElement.invalid);
+      entry.needsRedraw = false;
+    }
+    
     if (entry.callbacks.size > 0) {
       entry.callbacks.forEach((rafcb) => {
         try {
