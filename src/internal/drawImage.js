@@ -54,10 +54,6 @@ function step () {
       return;
     }
     
-    const hasCallbacks = entry.callbacks.size > 0;
-    
-    entry.needsRedraw = hasCallbacks;
-
     let enabledElement;
 
     try { 
@@ -74,8 +70,9 @@ function step () {
     triggerEvent(element, EVENTS.PRE_RENDER, eventDetails);
     
     drawImageSync(enabledElement, enabledElement.invalid);
+    entry.needsRedraw = false;
 
-    if (hasCallbacks) {
+    if (entry.callbacks.size > 0) {
       entry.callbacks.forEach((rafcb) => {
         try {
           rafcb(enabledElement);
