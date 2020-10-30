@@ -93,6 +93,28 @@ describe('Set an enabled element\'s viewport', function () {
     });
   });
 
+  it('all properties should be optional', function () {
+
+    // Act
+    displayImage(this.element, this.image, this.viewport);
+
+    const element = this.element;
+    const initialViewport = getViewport(element);
+
+    const newViewport = {};
+
+    // Act
+    setViewport(element, newViewport);
+
+    // Assert
+    const viewport = getViewport(element);
+
+    // We expect all the properties to be the same but we're really testing that the method did
+    // not throw by unintentionally relying on a property existing on the input.
+    assert.deepEqual(initialViewport, viewport);
+
+  });
+
   it('should prevent windowWidth from getting too small', function () {
 
     // Act
