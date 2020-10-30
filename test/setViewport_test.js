@@ -110,7 +110,7 @@ describe('Set an enabled element\'s viewport', function () {
     const viewport = getViewport(element);
 
     // We expect all the properties to be the same but we're really testing that the method did
-    // not throw by unintentionally relying on a property existing on the viewport being set.
+    // not throw by unintentionally relying on a property existing on the input.
     assert.deepEqual(initialViewport, viewport);
 
   });
