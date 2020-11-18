@@ -1,6 +1,6 @@
 {
-  "name": "cornerstone-core",
-  "version": "2.2.8",
+  "name": "@DedalusDIIT/cornerstone-core",
+  "version": "2.2.9",
   "description": "HTML5 Medical Image Viewer Component",
   "main": "./dist/cornerstone.js",
   "keywords": [
@@ -9,12 +9,15 @@
     "imaging"
   ],
   "author": "Chris Hafey",
-  "homepage": "https://github.com/cornerstonejs/cornerstone",
+  "homepage": "https://github.com/DedalusDIIT/cornerstone",
   "license": "MIT",
   "module": "./dist/cornerstone.js",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cornerstonejs/cornerstone.git"
+    "url": "https://github.com/DedalusDIIT/cornerstone.git"
   },
   "scripts": {
     "apidocs:generate": "npm run clean:docs && documentation build src/index.js -f md -c documentation.yml -o docs/api.md",
@@ -29,7 +32,6 @@
     "eslint-quiet": "eslint -c .eslintrc.js --quiet src",
     "eslint-fix": "eslint -c .eslintrc.js --fix src",
     "eslint-fix-test": "eslint -c .eslintrc.js --fix test",
-    "prepublishOnly": "yarn run build",
     "start": "npm run webpack",
     "start:dev": "webpack-dev-server --config ./config/webpack/webpack-dev",
     "test": "npm run test:chrome",
