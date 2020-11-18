@@ -1,6 +1,6 @@
 {
   "name": "@DedalusDIIT/cornerstone-core",
-  "version": "2.2.8",
+  "version": "2.2.9",
   "description": "HTML5 Medical Image Viewer Component",
   "main": "./dist/cornerstone.js",
   "keywords": [
