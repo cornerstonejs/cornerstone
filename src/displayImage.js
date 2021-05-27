@@ -1,10 +1,10 @@
-import { getEnabledElement } from './enabledElements.js';
-import getDefaultViewport from './internal/getDefaultViewport.js';
-import updateImage from './updateImage.js';
-import now from './internal/now.js';
-import { setLayerImage } from './layers.js';
-import triggerEvent from './triggerEvent.js';
-import EVENTS from './events.js';
+import { getEnabledElement } from "./enabledElements.js";
+import getDefaultViewport from "./internal/getDefaultViewport.js";
+import updateImage from "./updateImage.js";
+import now from "./internal/now.js";
+import { setLayerImage } from "./layers.js";
+import triggerEvent from "./triggerEvent.js";
+import EVENTS from "./events.js";
 
 /**
  * Sets a new image object for a given element.
@@ -19,10 +19,10 @@ import EVENTS from './events.js';
  */
 export default function (element, image, viewport) {
   if (element === undefined) {
-    throw new Error('displayImage: parameter element must not be undefined');
+    throw new Error("displayImage: parameter element must not be undefined");
   }
   if (image === undefined) {
-    throw new Error('displayImage: parameter image must not be undefined');
+    throw new Error("displayImage: parameter image must not be undefined");
   }
 
   const enabledElement = getEnabledElement(element);
@@ -57,13 +57,14 @@ export default function (element, image, viewport) {
 
   enabledElement.lastImageTimeStamp = now();
 
+  console.log("displayImage/newImageEventData: ", newImageEventData);
   const newImageEventData = {
     viewport: enabledElement.viewport,
     element: enabledElement.element,
     image: enabledElement.image,
     oldImage,
     enabledElement,
-    frameRate
+    frameRate,
   };
 
   triggerEvent(enabledElement.element, EVENTS.NEW_IMAGE, newImageEventData);

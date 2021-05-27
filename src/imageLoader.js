@@ -1,12 +1,11 @@
-import { getImageLoadObject, putImageLoadObject } from './imageCache.js';
-import EVENTS, { events } from './events.js';
-import triggerEvent from './triggerEvent.js';
+import { getImageLoadObject, putImageLoadObject } from "./imageCache.js";
+import EVENTS, { events } from "./events.js";
+import triggerEvent from "./triggerEvent.js";
 
 /**
  * This module deals with ImageLoaders, loading images and caching images
  * @module ImageLoader
  */
-
 
 const imageLoaders = {};
 
@@ -24,8 +23,9 @@ let unknownImageLoader;
  * @returns {ImageLoadObject} An Object which can be used to act after an image is loaded or loading fails
  * @memberof ImageLoader
  */
-function loadImageFromImageLoader (imageId, options) {
-  const colonIndex = imageId.indexOf(':');
+function loadImageFromImageLoader(imageId, options) {
+  console.log("loadImageFromImageLoader: ", imageId, options);
+  const colonIndex = imageId.indexOf(":");
   const scheme = imageId.substring(0, colonIndex);
   const loader = imageLoaders[scheme];
 
@@ -34,22 +34,25 @@ function loadImageFromImageLoader (imageId, options) {
       return unknownImageLoader(imageId);
     }
 
-    throw new Error('loadImageFromImageLoader: no image loader for imageId');
+    throw new Error("loadImageFromImageLoader: no image loader for imageId");
   }
 
   const imageLoadObject = loader(imageId, options);
 
   // Broadcast an image loaded event once the image is loaded
-  imageLoadObject.promise.then(function (image) {
-    triggerEvent(events, EVENTS.IMAGE_LOADED, { image });
-  }, function (error) {
-    const errorObject = {
-      imageId,
-      error
-    };
+  imageLoadObject.promise.then(
+    function (image) {
+      triggerEvent(events, EVENTS.IMAGE_LOADED, { image });
+    },
+    function (error) {
+      const errorObject = {
+        imageId,
+        error,
+      };
 
-    triggerEvent(events, EVENTS.IMAGE_LOAD_FAILED, errorObject);
-  });
+      triggerEvent(events, EVENTS.IMAGE_LOAD_FAILED, errorObject);
+    },
+  );
 
   return imageLoadObject;
 }
@@ -64,12 +67,13 @@ function loadImageFromImageLoader (imageId, options) {
  * @returns {ImageLoadObject} An Object which can be used to act after an image is loaded or loading fails
  * @memberof ImageLoader
  */
-export function loadImage (imageId, options) {
+export function loadImage(imageId, options) {
   if (imageId === undefined) {
-    throw new Error('loadImage: parameter imageId must not be undefined');
+    throw new Error("loadImage: parameter imageId must not be undefined");
   }
 
   const imageLoadObject = getImageLoadObject(imageId);
+  console.log("loadImage: ", imageLoadObject);
 
   if (imageLoadObject !== undefined) {
     return imageLoadObject.promise;
@@ -90,9 +94,11 @@ export function loadImage (imageId, options) {
  * @returns {ImageLoadObject} Image Loader Object
  * @memberof ImageLoader
  */
-export function loadAndCacheImage (imageId, options) {
+export function loadAndCacheImage(imageId, options) {
   if (imageId === undefined) {
-    throw new Error('loadAndCacheImage: parameter imageId must not be undefined');
+    throw new Error(
+      "loadAndCacheImage: parameter imageId must not be undefined",
+    );
   }
 
   let imageLoadObject = getImageLoadObject(imageId);
@@ -103,6 +109,7 @@ export function loadAndCacheImage (imageId, options) {
 
   imageLoadObject = loadImageFromImageLoader(imageId, options);
 
+  console.log("loadAndCacheImage: ", imageLoadObject);
   putImageLoadObject(imageId, imageLoadObject);
 
   return imageLoadObject.promise;
@@ -116,8 +123,10 @@ export function loadAndCacheImage (imageId, options) {
  * @returns {void}
  * @memberof ImageLoader
  */
-export function registerImageLoader (scheme, imageLoader) {
+export function registerImageLoader(scheme, imageLoader) {
+  console.log("registerImageLoader: ", scheme);
   imageLoaders[scheme] = imageLoader;
+  console.log("imageLoaders: ", imageLoaders);
 }
 
 /**
@@ -128,7 +137,8 @@ export function registerImageLoader (scheme, imageLoader) {
  * @returns {Function|Undefined} The previous Unknown Image Loader
  * @memberof ImageLoader
  */
-export function registerUnknownImageLoader (imageLoader) {
+export function registerUnknownImageLoader(imageLoader) {
+  console.log("registerUnknownImageLoader: ", imageLoader);
   const oldImageLoader = unknownImageLoader;
 
   unknownImageLoader = imageLoader;

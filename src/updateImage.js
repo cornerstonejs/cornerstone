@@ -1,5 +1,5 @@
-import { getEnabledElement } from './enabledElements.js';
-import drawImage from './internal/drawImage.js';
+import { getEnabledElement } from "./enabledElements.js";
+import drawImage from "./internal/drawImage.js";
 
 /**
  * Forces the image to be updated/redrawn for the specified enabled element
@@ -13,8 +13,9 @@ export default function (element, invalidated = false) {
   const enabledElement = getEnabledElement(element);
 
   if (enabledElement.image === undefined && !enabledElement.layers.length) {
-    throw new Error('updateImage: image has not been loaded yet');
+    throw new Error("updateImage: image has not been loaded yet");
   }
+  console.log("updateImage: ", enabledElement);
 
   drawImage(enabledElement, invalidated);
 }

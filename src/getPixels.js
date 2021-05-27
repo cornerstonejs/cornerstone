@@ -1,6 +1,6 @@
-import { getEnabledElement } from './enabledElements.js';
-import getStoredPixels from './getStoredPixels.js';
-import getModalityLUT from './internal/getModalityLUT.js';
+import { getEnabledElement } from "./enabledElements.js";
+import getStoredPixels from "./getStoredPixels.js";
+import getModalityLUT from "./internal/getModalityLUT.js";
 
 /**
  * Retrieves an array of pixels from a rectangular region with modality LUT transformation applied
@@ -14,8 +14,13 @@ import getModalityLUT from './internal/getModalityLUT.js';
  */
 export default function (element, x, y, width, height) {
   const storedPixels = getStoredPixels(element, x, y, width, height);
+  console.log("getPixels/storedPixels: ", storedPixels);
   const ee = getEnabledElement(element);
-  const mlutfn = getModalityLUT(ee.image.slope, ee.image.intercept, ee.viewport.modalityLUT);
+  const mlutfn = getModalityLUT(
+    ee.image.slope,
+    ee.image.intercept,
+    ee.viewport.modalityLUT,
+  );
 
   return storedPixels.map(mlutfn);
 }

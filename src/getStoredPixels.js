@@ -1,4 +1,4 @@
-import { getEnabledElement } from './enabledElements.js';
+import { getEnabledElement } from "./enabledElements.js";
 
 /**
  * Retrieves an array of stored pixel values from a rectangular region of an image
@@ -12,7 +12,7 @@ import { getEnabledElement } from './enabledElements.js';
  */
 export default function (element, x, y, width, height) {
   if (element === undefined) {
-    throw new Error('getStoredPixels: parameter element must not be undefined');
+    throw new Error("getStoredPixels: parameter element must not be undefined");
   }
 
   x = Math.round(x);
@@ -24,11 +24,12 @@ export default function (element, x, y, width, height) {
 
   for (let row = 0; row < height; row++) {
     for (let column = 0; column < width; column++) {
-      const spIndex = ((row + y) * enabledElement.image.columns) + (column + x);
+      const spIndex = (row + y) * enabledElement.image.columns + (column + x);
 
       storedPixels[index++] = pixelData[spIndex];
     }
   }
+  console.log("getStoredPixels: ", storedPixels);
 
   return storedPixels;
 }

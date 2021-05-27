@@ -1,9 +1,9 @@
-import { getEnabledElement } from './enabledElements.js';
-import fitToWindow from './fitToWindow.js';
-import updateImage from './updateImage.js';
-import triggerEvent from './triggerEvent.js';
-import getImageSize from './internal/getImageSize.js';
-import EVENTS from './events.js';
+import { getEnabledElement } from "./enabledElements.js";
+import fitToWindow from "./fitToWindow.js";
+import updateImage from "./updateImage.js";
+import triggerEvent from "./triggerEvent.js";
+import getImageSize from "./internal/getImageSize.js";
+import EVENTS from "./events.js";
 
 /**
  * This module is responsible for enabling an element to display images with cornerstone
@@ -12,7 +12,7 @@ import EVENTS from './events.js';
  * @param {HTMLElement} canvas The Canvas DOM element within the DOM element enabled for Cornerstone
  * @returns {void}
  */
-function setCanvasSize (element, canvas) {
+function setCanvasSize(element, canvas) {
   // The device pixel ratio is 1.0 for normal displays and > 1.0
   // For high DPI displays like Retina
   /*
@@ -55,17 +55,24 @@ function setCanvasSize (element, canvas) {
  * @param {number} oldCanvasHeight The height of the canvas before the resize
  * @return {Boolean} true if it fitted the windows, false otherwise
  */
-function wasFitToWindow (enabledElement, oldCanvasWidth, oldCanvasHeight) {
+function wasFitToWindow(enabledElement, oldCanvasWidth, oldCanvasHeight) {
   const scale = enabledElement.viewport.scale;
-  const imageSize = getImageSize(enabledElement.image, enabledElement.viewport.rotation);
+  const imageSize = getImageSize(
+    enabledElement.image,
+    enabledElement.viewport.rotation,
+  );
   const imageWidth = Math.round(imageSize.width * scale);
   const imageHeight = Math.round(imageSize.height * scale);
   const x = enabledElement.viewport.translation.x;
   const y = enabledElement.viewport.translation.y;
 
-  return (imageWidth === oldCanvasWidth && imageHeight <= oldCanvasHeight) ||
-    (imageWidth <= oldCanvasWidth && imageHeight === oldCanvasHeight) &&
-    (x === 0 && y === 0);
+  return (
+    (imageWidth === oldCanvasWidth && imageHeight <= oldCanvasHeight) ||
+    (imageWidth <= oldCanvasWidth &&
+      imageHeight === oldCanvasHeight &&
+      x === 0 &&
+      y === 0)
+  );
 }
 
 /**
@@ -76,7 +83,7 @@ function wasFitToWindow (enabledElement, oldCanvasWidth, oldCanvasHeight) {
  * @param {number} oldCanvasHeight The height of the canvas before the resize
  * @return {void}
  */
-function relativeRescale (enabledElement, oldCanvasWidth, oldCanvasHeight) {
+function relativeRescale(enabledElement, oldCanvasWidth, oldCanvasHeight) {
   const scale = enabledElement.viewport.scale;
   const canvasWidth = enabledElement.canvas.width;
   const canvasHeight = enabledElement.canvas.height;
@@ -96,6 +103,7 @@ function relativeRescale (enabledElement, oldCanvasWidth, oldCanvasHeight) {
  */
 export default function (element, forceFitToWindow) {
   const enabledElement = getEnabledElement(element);
+  console.log("resize: ", enabledElement);
 
   const oldCanvasWidth = enabledElement.canvas.width;
   const oldCanvasHeight = enabledElement.canvas.height;
@@ -110,7 +118,10 @@ export default function (element, forceFitToWindow) {
     return;
   }
 
-  if (forceFitToWindow || wasFitToWindow(enabledElement, oldCanvasWidth, oldCanvasHeight)) {
+  if (
+    forceFitToWindow ||
+    wasFitToWindow(enabledElement, oldCanvasWidth, oldCanvasHeight)
+  ) {
     // Fit the image to the window again if it fitted before the resize
     fitToWindow(element);
   } else {

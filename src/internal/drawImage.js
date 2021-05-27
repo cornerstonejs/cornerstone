@@ -11,4 +11,5 @@ export default function (enabledElement, invalidated = false) {
   if (invalidated) {
     enabledElement.invalid = true;
   }
+  console.log("drawImage: ", enabledElement);
 }
