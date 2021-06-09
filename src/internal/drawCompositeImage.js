@@ -120,7 +120,7 @@ function renderLayers (context, layers, invalidated) {
     const width = layer.viewport.displayedArea.brhc.x - sx;
     const height = layer.viewport.displayedArea.brhc.y - sy;
 
-    context.drawImage(layer.canvas, sx, sy, width, height, 0, 0, width, height);
+    context.drawImage(layer.canvas, sx, sy, width, height, sx, sy, width, height);
     context.restore();
 
     layer.invalid = false;

@@ -26,10 +26,14 @@ export default function (enabledElement, scale) {
   let widthScale = enabledElement.viewport.scale;
   let heightScale = enabledElement.viewport.scale;
 
-  const width = enabledElement.viewport.displayedArea.brhc.x - (enabledElement.viewport.displayedArea.tlhc.x - 1);
-  const height = enabledElement.viewport.displayedArea.brhc.y - (enabledElement.viewport.displayedArea.tlhc.y - 1);
+  const { displayedArea } = enabledElement.viewport;
+  const { tlhc, brhc, presentationSizeMode } = displayedArea;
+  const offsetX = tlhc.x - 1;
+  const offsetY = tlhc.y - 1;
+  const width = brhc.x - offsetX;
+  const height = brhc.y - offsetY;
 
-  if (enabledElement.viewport.displayedArea.presentationSizeMode === 'NONE') {
+  if (presentationSizeMode === 'NONE') {
     if (enabledElement.image.rowPixelSpacing < enabledElement.image.columnPixelSpacing) {
       widthScale *= (enabledElement.image.columnPixelSpacing / enabledElement.image.rowPixelSpacing);
     } else if (enabledElement.image.columnPixelSpacing < enabledElement.image.rowPixelSpacing) {
@@ -37,10 +41,10 @@ export default function (enabledElement, scale) {
     }
   } else {
     // These should be good for "TRUE SIZE" and "MAGNIFY"
-    widthScale = enabledElement.viewport.displayedArea.columnPixelSpacing;
-    heightScale = enabledElement.viewport.displayedArea.rowPixelSpacing;
+    widthScale = displayedArea.columnPixelSpacing;
+    heightScale = displayedArea.rowPixelSpacing;
 
-    if (enabledElement.viewport.displayedArea.presentationSizeMode === 'SCALE TO FIT') {
+    if (presentationSizeMode === 'SCALE TO FIT') {
       // Fit TRUE IMAGE image (width/height) to window
       const verticalScale = enabledElement.canvas.height / (height * heightScale);
       const horizontalScale = enabledElement.canvas.width / (width * widthScale);
@@ -48,10 +52,10 @@ export default function (enabledElement, scale) {
       // Apply new scale
       widthScale = heightScale = Math.min(horizontalScale, verticalScale);
 
-      if (enabledElement.viewport.displayedArea.rowPixelSpacing < enabledElement.viewport.displayedArea.columnPixelSpacing) {
-        widthScale *= (enabledElement.viewport.displayedArea.columnPixelSpacing / enabledElement.viewport.displayedArea.rowPixelSpacing);
-      } else if (enabledElement.viewport.displayedArea.columnPixelSpacing < enabledElement.viewport.displayedArea.rowPixelSpacing) {
-        heightScale *= (enabledElement.viewport.displayedArea.rowPixelSpacing / enabledElement.viewport.displayedArea.columnPixelSpacing);
+      if (displayedArea.rowPixelSpacing < displayedArea.columnPixelSpacing) {
+        widthScale *= (displayedArea.columnPixelSpacing / displayedArea.rowPixelSpacing);
+      } else if (displayedArea.columnPixelSpacing < displayedArea.rowPixelSpacing) {
+        heightScale *= (displayedArea.rowPixelSpacing / displayedArea.columnPixelSpacing);
       }
     }
   }
@@ -87,6 +91,9 @@ export default function (enabledElement, scale) {
 
   // Move back from center of image
   transform.translate(-width / 2, -height / 2);
+
+  // Move to displayedArea
+  transform.translate(-offsetX, -offsetY);
 
   return transform;
 }
