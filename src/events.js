@@ -9,6 +9,7 @@ const EVENTS = {
   WEBGL_TEXTURE_REMOVED: 'cornerstonewebgltextureremoved',
   WEBGL_TEXTURE_CACHE_FULL: 'cornerstonewebgltexturecachefull',
   IMAGE_LOADED: 'cornerstoneimageloaded',
+  IMAGE_LOAD_PROGRESS: 'cornerstoneimageloadprogress',
   IMAGE_LOAD_FAILED: 'cornerstoneimageloadfailed',
   ELEMENT_RESIZED: 'cornerstoneelementresized',
   IMAGE_RENDERED: 'cornerstoneimagerendered',
