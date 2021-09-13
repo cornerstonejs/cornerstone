@@ -33,10 +33,10 @@ function storedPixelDataToCanvasImageDataPseudocolorLUT (image, grayscaleLut, co
     clut = colorLut;
   }
 
-  if (minPixelValue < 0) {
-    while (storedPixelDataIndex < numPixels) {
-      //  Find the grayscale of 4 channels image data by calculating relative luminance value
-      if (image.color && ((image.width * image.height * 4) === numPixels)) {
+  //  Find the grayscale of 4 channels image data by calculating relative luminance value
+  if (image.color && ((image.width * image.height * 4) === numPixels)) {
+    if (minPixelValue < 0) {
+      while (storedPixelDataIndex < numPixels) {
         const rValue = pixelData[storedPixelDataIndex++];
         const gValue = pixelData[storedPixelDataIndex++];
         const bValue = pixelData[storedPixelDataIndex++];
@@ -46,19 +46,14 @@ function storedPixelDataToCanvasImageDataPseudocolorLUT (image, grayscaleLut, co
         const luminance = getRelativeLuminance(rValue, gValue, bValue);
 
         grayscale = grayscaleLut[luminance + (-minPixelValue)];
-      } else {
-        grayscale = grayscaleLut[pixelData[storedPixelDataIndex++] + (-minPixelValue)];
+        rgba = clut[grayscale];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[0];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[1];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[2];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[3];
       }
-      rgba = clut[grayscale];
-      canvasImageDataData[canvasImageDataIndex++] = rgba[0];
-      canvasImageDataData[canvasImageDataIndex++] = rgba[1];
-      canvasImageDataData[canvasImageDataIndex++] = rgba[2];
-      canvasImageDataData[canvasImageDataIndex++] = rgba[3];
-    }
-  } else {
-    while (storedPixelDataIndex < numPixels) {
-      //  Find the grayscale of 4 channels image data by calculating relative luminance value
-      if (image.color && ((image.width * image.height * 4) === numPixels)) {
+    } else {
+      while (storedPixelDataIndex < numPixels) {
         const rValue = pixelData[storedPixelDataIndex++];
         const gValue = pixelData[storedPixelDataIndex++];
         const bValue = pixelData[storedPixelDataIndex++];
@@ -68,9 +63,25 @@ function storedPixelDataToCanvasImageDataPseudocolorLUT (image, grayscaleLut, co
         const luminance = getRelativeLuminance(rValue, gValue, bValue);
 
         grayscale = grayscaleLut[luminance];
-      } else {
-        grayscale = grayscaleLut[pixelData[storedPixelDataIndex++]];
+        rgba = clut[grayscale];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[0];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[1];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[2];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[3];
       }
+    }
+  } else if (minPixelValue < 0) {
+    while (storedPixelDataIndex < numPixels) {
+      grayscale = grayscaleLut[pixelData[storedPixelDataIndex++] + (-minPixelValue)];
+      rgba = clut[grayscale];
+      canvasImageDataData[canvasImageDataIndex++] = rgba[0];
+      canvasImageDataData[canvasImageDataIndex++] = rgba[1];
+      canvasImageDataData[canvasImageDataIndex++] = rgba[2];
+      canvasImageDataData[canvasImageDataIndex++] = rgba[3];
+    }
+  } else {
+    while (storedPixelDataIndex < numPixels) {
+      grayscale = grayscaleLut[pixelData[storedPixelDataIndex++]];
       rgba = clut[grayscale];
       canvasImageDataData[canvasImageDataIndex++] = rgba[0];
       canvasImageDataData[canvasImageDataIndex++] = rgba[1];
