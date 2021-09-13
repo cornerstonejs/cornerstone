@@ -40,18 +40,6 @@ export default function (canvas, image) {
     voiLUT: image.voiLUT,
     colormap: image.colormap,
     labelmap: Boolean(image.labelmap),
-    displayedArea: {
-      tlhc: {
-        x: 1,
-        y: 1
-      },
-      brhc: {
-        x: image.columns,
-        y: image.rows
-      },
-      rowPixelSpacing: image.rowPixelSpacing === undefined || image.rowPixelSpacing === null ? 1 : image.rowPixelSpacing,
-      columnPixelSpacing: image.columnPixelSpacing === undefined || image.columnPixelSpacing === null ? 1 : image.columnPixelSpacing,
-      presentationSizeMode: 'NONE'
-    }
+    displayedArea: undefined
   };
 }
