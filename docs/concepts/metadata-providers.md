@@ -13,7 +13,7 @@ To handle these scenarios, Cornerstone provides infrastructure for the definitio
 Here is a simple example of a Metadata Provider which returns an Object containing Image Plane metadata for a single specific image (Image Id: 'ct://1'):
 
 ````javascript
-function metaDataProvider(type, imageId)
+function metaDataProvider(type, imageId) {
   if (type === 'imagePlaneModule') {
     if (imageId === 'ct://1') {
         return {

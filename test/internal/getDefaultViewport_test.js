@@ -1,4 +1,5 @@
-import { should, assert } from 'chai'; // eslint-disable-line import/extensions
+import { assert, should } from 'chai'; // eslint-disable-line import/extensions
+
 import getDefaultViewport from '../../src/internal/getDefaultViewport.js';
 
 should();

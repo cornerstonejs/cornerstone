@@ -1,12 +1,24 @@
-[![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url] [![Build Status][travis-image]][travis-url]
+<div align="center">
+<h1>cornerstone-core</h1>
+
+<p>Cornerstone.js delivers a complete web based medical imaging platform. This repository contains the Cornerstone.js "Core" component which is a lightweight JavaScript library for displaying medical images in modern web browsers that support the HTML5 canvas element.</p>
+
+[**Read The Docs**](https://docs.cornerstonejs.org/) | [Edit the docs](https://github.com/cornerstonejs/cornerstone/tree/master/docs)
+
+</div>
+
+<hr />
+
+<!-- prettier-ignore-start -->
 [![Coverage Status][coverage-image]][coverage-url]
+[![All Contributors](https://img.shields.io/badge/all_contributors-0-orange.svg?style=flat-square)](#contributors)
 
-Cornerstone Core
-================
+[![NPM version][npm-version-image]][npm-url]
+[![NPM downloads][npm-downloads-image]][npm-url]
+[![MIT License][license-image]][license-url]
+<!-- prettier-ignore-end -->
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/cornerstonejs/cornerstone.svg)](https://greenkeeper.io/)
-
-Cornerstone is an open source project with a goal to deliver a complete web based medical imaging platform. This repository contains the Cornerstone Core component which is a lightweight JavaScript library for displaying medical images in modern web browsers that support the HTML5 canvas element. Cornerstone Core is not meant to be a complete application itself, but instead a component that can be used as part of larger more complex applications.  See the
+Cornerstone Core is not meant to be a complete application itself, but instead a component that can be used as part of larger more complex applications.  See the
 [OHIF Viewer](http://viewer.ohif.org/) for an example of using the various Cornerstone
 libraries to build a simple study viewer.
 
@@ -15,7 +27,7 @@ Cornerstone Core is agnostic to the actual container used to store image pixels 
 The goal here is to avoid constraining developers to work within a single container and transport (e.g. DICOM) since images are stored in a variety of formats (including proprietary).  By providing flexibility with respect to the container and transport, the highest performance image display may be obtained as no conversion to an alternate container or transport is required.  It is hoped that developers feel empowered to load images from any type of image container using any kind of transport.  See the [CornerstoneWADOImageLoader](https://github.com/cornerstonejs/cornerstoneWADOImageLoader) project for an example
 of a DICOM WADO based Image Loader.
 
-Cornerstone Core is agnostic to the exact interaction paradigm being used.  It does not include any mouse, touch or keyboard bindings to manipulate the various image properties such as scale, translation or ww/wc.  The goal here is to avoid constraining developers using this library to fit into a given ui paradigm.  It is hoped that developers are empowered to create new paradigms possibly using new input mechanisms to interact with medical images (e.g. [Kinect](http://en.wikipedia.org/wiki/Kinect) or [Accelerometer](http://en.wikipedia.org/wiki/Accelerometer).
+Cornerstone Core is agnostic to the exact interaction paradigm being used.  It does not include any mouse, touch or keyboard bindings to manipulate the various image properties such as scale, translation or ww/wc.  The goal here is to avoid constraining developers using this library to fit into a given ui paradigm.  It is hoped that developers are empowered to create new paradigms possibly using new input mechanisms to interact with medical images (e.g. [Kinect](http://en.wikipedia.org/wiki/Kinect) or [Accelerometer](http://en.wikipedia.org/wiki/Accelerometer)).
 Cornerstone does provide a set of API's allowing manipulation of the image properties via javascript. See the [CornerstoneTools](https://github.com/cornerstonejs/cornerstoneTools) library for an example of common tools built on top of Cornerstone.
 
 Community
@@ -182,6 +194,22 @@ It is highly probably that I will reject a large pull request due to the time it
 _Will you add feature XYZ for me?_
 
 If it is in the roadmap, I intend to implement it some day - probably when I actually need it.  If you really need something now and are willing to pay for it, try posting on the cornerstone platform google group
+
+Research notice
+~~~~~~~~~~~~~~~
+
+Please note that this repository is participating in a study into
+sustainability of open source projects. Data will be gathered about this
+repository for approximately the next 12 months, starting from June
+2021.
+
+Data collected will include number of contributors, number of PRs, time
+taken to close/merge these PRs, and issues closed.
+
+For more information, please visit `the informational
+page <https://sustainable-open-science-and-software.github.io/>`__ or
+download the `participant information
+sheet <https://sustainable-open-science-and-software.github.io/assets/PIS_sustainable_software.pdf>`__.
 
 Copyright
 =========
