@@ -7,7 +7,7 @@ import getLut from './getLut.js';
 import doesImageNeedToBeRendered from './doesImageNeedToBeRendered.js';
 import initializeRenderCanvas from './initializeRenderCanvas.js';
 import saveLastRendered from './saveLastRendered.js';
-import getDisplayedArea from "../internal/getDisplayedArea.js";
+import getDisplayedArea from '../internal/getDisplayedArea.js';
 
 /**
  * Returns an appropriate canvas to render the Image. If the canvas available in the cache is appropriate

@@ -28,7 +28,7 @@ export default function (image, windowWidth, windowCenter, invert, modalityLUT, 
   }
 
   const lut = image.cachedLut.lutArray;
-  var slopeOrInterceptAreFloat = !!(image.slope % 1) || !!(image.intercept % 1);
+  const slopeOrInterceptAreFloat = Boolean(image.slope % 1) || Boolean(image.intercept % 1);
   const mlutfn = getModalityLUT(image.slope, image.intercept, modalityLUT);
   const vlutfn = getVOILUT(windowWidth, windowCenter, voiLUT, slopeOrInterceptAreFloat);
 

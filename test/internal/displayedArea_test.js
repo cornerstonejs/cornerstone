@@ -89,7 +89,7 @@ describe('displayedArea', function () {
   });
 
   it('displayedArea: should display the area specified in the viewport TRUE SIZE ', function (done) {
-      // Arrange
+    // Arrange
     const canvasWidth = (this.getRect().width).toString();
     const canvasHeight = (this.getRect().height).toString();
 
@@ -98,11 +98,11 @@ describe('displayedArea', function () {
     this.element.style.height = `${canvasHeight}px`;
 
     // Needed for the div to actually have a width.
-    document.body.appendChild(this.element); 
+    document.body.appendChild(this.element);
 
     enable(this.element);
 
-    this.viewPort.displayedArea.presentationSizeMode = 'TRUE SIZE'
+    this.viewPort.displayedArea.presentationSizeMode = 'TRUE SIZE';
 
     displayImage(this.element, this.image, this.viewPort);
 
@@ -135,7 +135,7 @@ describe('displayedArea', function () {
     this.element.style.height = `${canvasHeight}px`;
 
     // Needed for the div to actually have a width.
-    document.body.appendChild(this.element); 
+    document.body.appendChild(this.element);
 
     enable(this.element);
 

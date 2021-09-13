@@ -56,7 +56,9 @@ describe('renderToCanvas', function () {
     // Arrange
     const renderCanvas1 = document.createElement('canvas');
     const viewport = { hflip: true };
-    const options = { renderer: 'webgl', desynchronized: true, preserveDrawingBuffer: true };
+    const options = { renderer: 'webgl',
+      desynchronized: true,
+      preserveDrawingBuffer: true };
 
     renderCanvas1.width = this.width;
     renderCanvas1.height = this.height;

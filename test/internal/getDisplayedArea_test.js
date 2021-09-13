@@ -63,7 +63,7 @@ describe('getDisplayedArea', function () {
         rowPixelSpacing: 0.5,
         columnPixelSpacing: 1,
         presentationSizeMode: 'MAGNIFY'
-      }};
+      } };
 
       const displayedArea = getDisplayedArea(this.imageViewport, viewport);
 

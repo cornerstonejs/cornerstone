@@ -56,9 +56,10 @@ describe('draw', function () {
     // Arrange
     const element = this.element;
     const image = this.image;
+
     image.width = 300;
     image.height = 150;
-    image.getPixelData = () => new Uint8Array(300*150);
+    image.getPixelData = () => new Uint8Array(300 * 150);
 
     displayImage(this.element, this.image);
 
