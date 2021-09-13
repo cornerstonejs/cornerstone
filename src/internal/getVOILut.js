@@ -30,9 +30,9 @@ function generateLinearVOILUT (windowWidth, windowCenter) {
 /**
  * Generate a non-linear volume of interest lookup table
  *
- * @param {LUT} voiLUT Volume of Interest Lookup Table Object 
+ * @param {LUT} voiLUT Volume of Interest Lookup Table Object
  * @param {Boolean} roundModalityLUTValues Do a Math.round of modality lut to compute non linear voilut
- 
+
  *
  * @returns {VOILUTFunction} VOI LUT mapping function
  * @memberof VOILUT
@@ -51,10 +51,11 @@ function generateNonLinearVOILUT (voiLUT, roundModalityLUTValues) {
     } else if (modalityLutValue >= maxValueMapped) {
       return maxValue;
     }
-	if( roundModalityLUTValues )
-		return voiLUT.lut[Math.round(modalityLutValue) - voiLUT.firstValueMapped] >> shift;
-	else
-		return voiLUT.lut[modalityLutValue - voiLUT.firstValueMapped] >> shift;
+    if (roundModalityLUTValues) {
+      return voiLUT.lut[Math.round(modalityLutValue) - voiLUT.firstValueMapped] >> shift;
+    }
+
+    return voiLUT.lut[modalityLutValue - voiLUT.firstValueMapped] >> shift;
   };
 }
 

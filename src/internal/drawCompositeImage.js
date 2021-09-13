@@ -4,7 +4,7 @@ import { addColorLayer } from '../rendering/renderColorImage.js';
 import { addPseudoColorLayer } from '../rendering/renderPseudoColorImage.js';
 import { addLabelMapLayer } from '../rendering/renderLabelMapImage.js';
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
-import getDisplayedArea from "./getDisplayedArea.js";
+import getDisplayedArea from './getDisplayedArea.js';
 
 function getViewportRatio (baseLayer, targetLayer) {
   if (!baseLayer.syncProps) {
