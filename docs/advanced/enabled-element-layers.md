@@ -12,7 +12,7 @@ Basics:
 * An Enabled Element can have more than one Layer.
 * Each Layer is similar to an Enabled Element - They each have their own *Image* and *Viewport*, off-screen rendering Canvas, etc...
 * Only a single Layer can be active at a time.
-* Layers have properties for visibility and opacity, and are uniquely referenced by a Layer ID
+* Layers have properties for visibility and opacity, and are uniquely referenced by a Layer ID.
 
 When a Layer is Active:
 * The layer's *Image* is available at enabledElement.image

@@ -21,7 +21,9 @@ describe('renderColorImage', function () {
     enable(this.element);
 
     const enabledElement = getEnabledElement(this.element);
-    const canvasContext = enabledElement.canvas.getContext('2d');
+    const canvasContext = enabledElement.canvas.getContext('2d', {
+      desynchronized: true
+    });
     const imageData = canvasContext.createImageData(width, height);
     const pixelData = imageData.data;
     const rnd = Math.round(Math.random() * 255);
@@ -155,7 +157,9 @@ describe('renderColorImage', function () {
     const width = 256;
     const height = 256;
     const enabledElement = getEnabledElement(this.element);
-    const canvasContext = enabledElement.canvas.getContext('2d');
+    const canvasContext = enabledElement.canvas.getContext('2d', {
+      desynchronized: true
+    });
     const imageData2 = canvasContext.createImageData(width, height);
     const pixelData2 = imageData2.data;
     const rnd = Math.round(Math.random() * 255);

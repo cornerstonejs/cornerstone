@@ -42,7 +42,10 @@
 
         canvas.width = width;
         canvas.height = height;
-        const canvasContext = canvas.getContext('2d');
+        const canvasContext = canvas.getContext('2d', {
+            desynchronized: true
+        });
+
         const imageData = canvasContext.createImageData(width, height);
         const pixelData = imageData.data;
         const rnd = Math.round(Math.random() * 255);

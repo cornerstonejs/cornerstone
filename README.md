@@ -27,7 +27,7 @@ Cornerstone Core is agnostic to the actual container used to store image pixels 
 The goal here is to avoid constraining developers to work within a single container and transport (e.g. DICOM) since images are stored in a variety of formats (including proprietary).  By providing flexibility with respect to the container and transport, the highest performance image display may be obtained as no conversion to an alternate container or transport is required.  It is hoped that developers feel empowered to load images from any type of image container using any kind of transport.  See the [CornerstoneWADOImageLoader](https://github.com/cornerstonejs/cornerstoneWADOImageLoader) project for an example
 of a DICOM WADO based Image Loader.
 
-Cornerstone Core is agnostic to the exact interaction paradigm being used.  It does not include any mouse, touch or keyboard bindings to manipulate the various image properties such as scale, translation or ww/wc.  The goal here is to avoid constraining developers using this library to fit into a given ui paradigm.  It is hoped that developers are empowered to create new paradigms possibly using new input mechanisms to interact with medical images (e.g. [Kinect](http://en.wikipedia.org/wiki/Kinect) or [Accelerometer](http://en.wikipedia.org/wiki/Accelerometer).
+Cornerstone Core is agnostic to the exact interaction paradigm being used.  It does not include any mouse, touch or keyboard bindings to manipulate the various image properties such as scale, translation or ww/wc.  The goal here is to avoid constraining developers using this library to fit into a given ui paradigm.  It is hoped that developers are empowered to create new paradigms possibly using new input mechanisms to interact with medical images (e.g. [Kinect](http://en.wikipedia.org/wiki/Kinect) or [Accelerometer](http://en.wikipedia.org/wiki/Accelerometer)).
 Cornerstone does provide a set of API's allowing manipulation of the image properties via javascript. See the [CornerstoneTools](https://github.com/cornerstonejs/cornerstoneTools) library for an example of common tools built on top of Cornerstone.
 
 Community
@@ -194,6 +194,22 @@ It is highly probably that I will reject a large pull request due to the time it
 _Will you add feature XYZ for me?_
 
 If it is in the roadmap, I intend to implement it some day - probably when I actually need it.  If you really need something now and are willing to pay for it, try posting on the cornerstone platform google group
+
+Research notice
+~~~~~~~~~~~~~~~
+
+Please note that this repository is participating in a study into
+sustainability of open source projects. Data will be gathered about this
+repository for approximately the next 12 months, starting from June
+2021.
+
+Data collected will include number of contributors, number of PRs, time
+taken to close/merge these PRs, and issues closed.
+
+For more information, please visit `the informational
+page <https://sustainable-open-science-and-software.github.io/>`__ or
+download the `participant information
+sheet <https://sustainable-open-science-and-software.github.io/assets/PIS_sustainable_software.pdf>`__.
 
 Copyright
 =========

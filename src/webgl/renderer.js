@@ -79,6 +79,7 @@ function initWebGL (canvas) {
   try {
     // Try to grab the standard context. If it fails, fallback to experimental.
     const options = {
+      desynchronized: true,
       preserveDrawingBuffer: true // Preserve buffer so we can copy to display canvas element
     };
 

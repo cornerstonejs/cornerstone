@@ -1,3 +1,15 @@
+<div class='row'>
+	<div class='column' style='text-align: right; padding: 0 20px'>
+		<strong>Looking for a Deploy Preview?</strong>
+		<a href="https://rawgit.com/cornerstonejs/cornerstone/master/example/index.html">Deploy Preview for Cornerstone</a>
+	</div>
+	<div class='column' style='text-align: left; padding: 0 20px'>
+		<a href="https://www.netlify.com">
+		  <img src="https://www.netlify.com/img/global/badges/netlify-color-bg.svg"/>
+		</a>
+	</div>
+</div>
+
 # Cornerstone
 
 > Cornerstone is an open source project with a goal to deliver a complete web based medical imaging platform.
