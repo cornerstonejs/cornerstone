@@ -94,7 +94,7 @@ class EventTarget {
       return true;
     }
 
-    const stack = this.listeners[event.type];
+    const stack = this.listeners[event.type].slice();
 
     for (let i = 0, l = stack.length; i < l; i++) {
       stack[i].call(this, event);
