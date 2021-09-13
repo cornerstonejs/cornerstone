@@ -108,7 +108,9 @@ describe('displayedArea', function () {
 
     this.element.addEventListener('cornerstoneimagerendered', () => {
       const canvas = getEnabledElement(this.element).canvas;
-      const canvasContext = canvas.getContext('2d');
+      const canvasContext = canvas.getContext('2d', {
+        desynchronized: true
+      });
       const imageData = canvasContext.getImageData(0, 0, canvas.width, canvas.height);
       const data = imageData.data;
 
@@ -143,7 +145,9 @@ describe('displayedArea', function () {
 
     this.element.addEventListener('cornerstoneimagerendered', () => {
       const canvas = getEnabledElement(this.element).canvas;
-      const canvasContext = canvas.getContext('2d');
+      const canvasContext = canvas.getContext('2d', {
+        desynchronized: true
+      });
       const imageData = canvasContext.getImageData(0, 0, canvas.width, canvas.height);
       const data = imageData.data;
 
@@ -180,7 +184,9 @@ describe('displayedArea', function () {
 
     this.element.addEventListener('cornerstoneimagerendered', () => {
       const canvas = getEnabledElement(this.element).canvas;
-      const canvasContext = canvas.getContext('2d');
+      const canvasContext = canvas.getContext('2d', {
+        desynchronized: true
+      });
       const imageData = canvasContext.getImageData(0, 0, canvas.width, canvas.height);
       const data = imageData.data;
 
@@ -218,7 +224,9 @@ describe('displayedArea', function () {
 
     this.element.addEventListener('cornerstoneimagerendered', () => {
       const canvas = getEnabledElement(this.element).canvas;
-      const canvasContext = canvas.getContext('2d');
+      const canvasContext = canvas.getContext('2d', {
+        desynchronized: true
+      });
       const imageData = canvasContext.getImageData(0, 0, canvas.width, canvas.height);
       const data = imageData.data;
 

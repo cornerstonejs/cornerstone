@@ -11,6 +11,8 @@ export default function (options) {
     // And return the renderCanvas from the WebGL rendering path
     webGL.renderer.initRenderer();
     options.renderer = 'webgl';
+    options.desynchronized = true;
+    options.preserveDrawingBuffer = true;
 
     return true;
   }
@@ -20,6 +22,7 @@ export default function (options) {
   console.error('WebGL not available, falling back to Canvas renderer');
 
   delete options.renderer;
+  delete options.preserveDrawingBuffer;
 
   return false;
 }
