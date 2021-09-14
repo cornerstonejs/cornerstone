@@ -3,16 +3,22 @@
 # Set directory to location of this script
 # https://stackoverflow.com/a/3355423/1867984
 cd "$(dirname "$0")"
+pwd
+ls
 
 ## Generate API Docs
 cd ..
+ls
 #npm run docs:api
 
 # Try to patch Gitbook's broken deep dependency on graceful-fs
 npm install --save gitbook-cli
-cd node_modules/gitbook-cli/node_modules/npm
+ls node_modules
+cd ./node_modules/gitbook-cli/node_modules/npm
 npm install graceful-fs@4.2.0 --save
 cd ../../
+ls
+ls ./bin
 ./bin/gitbook.js fetch
 cd ../../
 

@@ -24,7 +24,7 @@
     "clean:docs": "shx rm -f docs/api.md",
     "clean:coverage": "shx rm -rf coverage",
     "docs": "npm run apidocs:generate && cd docs && gitbook serve",
-    "docs:deploy": "npm run apidocs:generate && bash ./build/update-docs.sh",
+    "docs:deploy": "npm run apidocs:generate && bash ./.circleci/update-docs.sh",
     "eslint": "eslint -c .eslintrc.js src",
     "eslint-quiet": "eslint -c .eslintrc.js --quiet src",
     "eslint-fix": "eslint -c .eslintrc.js --fix src",
