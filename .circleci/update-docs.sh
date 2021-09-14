@@ -30,7 +30,7 @@ rm -rf _book
 ../node_modules/gitbook-cli/bin/gitbook.js build
 pwd
 ls
-cp ./assets/CNAME docs/_book/CNAME
+cp ./assets/CNAME ./_book/CNAME
 cd _book
 
 # Set User
