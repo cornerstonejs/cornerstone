@@ -1,10 +1,30 @@
-cd docs
+#!/bin/bash
+
+# Set directory to location of this script
+# https://stackoverflow.com/a/3355423/1867984
+cd "$(dirname "$0")"
+
+## Generate API Docs
+cd ..
+#npm run docs:api
+
+# Try to patch Gitbook's broken deep dependency on graceful-fs
+npm install --save gitbook-cli
+cd node_modules/gitbook-cli/node_modules/npm
+npm install graceful-fs@4.2.0 --save
+cd ../../
+./bin/gitbook.js fetch
+cd ../../
+
+# Generate latest output
+# Clear previous output, generate new
+cd ./docs
 rm -rf _book
-mkdir -p _book
-gitbook install
-gitbook build
-cp assets/CNAME _book/CNAME
-cd _book
+../node_modules/gitbook-cli/bin/gitbook.js install
+../node_modules/gitbook-cli/bin/gitbook.js build
+cd ../
+cp assets/CNAME docs/_book/CNAME
+cd docs/_book
 
 # Set User
 git config --global user.email "erik.sweed@gmail.com"
@@ -13,4 +33,4 @@ git config --global user.name "swederik"
 git init
 git add -A
 git commit -m 'Update compiled GitBook (this commit is automatic)'
-git push -f git@github.com:cornerstonejs/cornerstone.git master:gh-pages
+git push -f https://github.com/cornerstonejs/cornerstone.git master:gh-pages
