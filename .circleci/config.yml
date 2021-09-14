@@ -95,9 +95,9 @@ jobs:
       - run:
           name: Avoid hosts unknown for github
           command: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
-      # Update NPM, might fix gitbook install issues
+      # Log NPM version
       # https://github.com/npm/cli/issues/681
-      - run: npm install -g npm@latest    
+      - run: npm -v
       - run: npm install
       - run: sudo npm install gitbook-cli -g
       - run:
