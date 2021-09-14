@@ -28,11 +28,10 @@ cd ./docs
 rm -rf _book
 ../node_modules/gitbook-cli/bin/gitbook.js install
 ../node_modules/gitbook-cli/bin/gitbook.js build
-cd ../
 pwd
 ls
 cp ./assets/CNAME docs/_book/CNAME
-cd docs/_book
+cd _book
 
 # Set User
 git config --global user.email "erik.sweed@gmail.com"
