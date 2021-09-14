@@ -9,7 +9,7 @@ ls
 ## Generate API Docs
 cd ..
 ls
-#npm run docs:api
+npm run docs:api
 
 # Try to patch Gitbook's broken deep dependency on graceful-fs
 npm install npm@latest --save
@@ -39,4 +39,4 @@ git config --global user.name "swederik"
 git init
 git add -A
 git commit -m 'Update compiled GitBook (this commit is automatic)'
-git push -f https://github.com/cornerstonejs/cornerstone.git master:gh-pages
+git push -f git@github.com:cornerstonejs/cornerstone.git master:gh-pages
