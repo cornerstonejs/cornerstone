@@ -100,6 +100,10 @@ jobs:
       - run: npm -v
       - run: npm install
       - run: sudo npm install gitbook-cli -g
+      # https://stackoverflow.com/questions/64211386/gitbook-cli-install-error-typeerror-cb-apply-is-not-a-function-inside-graceful
+      - run: |
+          cd /usr/local/lib/node_modules/gitbook-cli/node_modules/npm/node_modules/
+          sudo npm install graceful-fs@latest --save
       - run:
           name: Do Magic
           command: sh ~/repo/build/update-docs.sh
