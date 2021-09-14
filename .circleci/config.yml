@@ -78,7 +78,7 @@ jobs:
           command: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
       - run:
           name: Publish using Semantic Release
-          command: npx semantic-release --tag-format ${version}
+          command: npx semantic-release
       - persist_to_workspace:
           root: ~/repo
           paths: .
