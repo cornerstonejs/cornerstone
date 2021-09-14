@@ -86,7 +86,7 @@ jobs:
   publish_docs:
     working_directory: ~/repo
     docker:
-      - image: circleci/ruby:2.6.0-node
+      - image: circleci/ruby:3.0.2-node
     environment:
       BUNDLE_PATH: ~/repo/vendor/bundle
     steps:
@@ -95,6 +95,9 @@ jobs:
       - run:
           name: Avoid hosts unknown for github
           command: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+      # Update NPM, might fix gitbook install issues
+      # https://github.com/npm/cli/issues/681
+      - run: npm install -g npm@latest    
       - run: npm install
       - run: sudo npm install gitbook-cli -g
       - run:
