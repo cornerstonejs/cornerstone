@@ -12,15 +12,15 @@ ls
 #npm run docs:api
 
 # Try to patch Gitbook's broken deep dependency on graceful-fs
+npm install npm@latest --save
 npm install --save gitbook-cli
-ls node_modules
-cd ./node_modules/gitbook-cli/node_modules/npm
+cd ./node_modules/npm
 npm install graceful-fs@4.2.0 --save
 cd ../../
-ls
-ls ./bin
-./bin/gitbook.js fetch
-cd ../../
+cd ./node_modules/gitbook-cli/node_modules/npm
+npm install graceful-fs@4.2.0 --save
+cd ../../../../
+./node_modules/gitbook-cli/bin/gitbook.js fetch
 
 # Generate latest output
 # Clear previous output, generate new

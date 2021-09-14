@@ -86,7 +86,7 @@ jobs:
   publish_docs:
     working_directory: ~/repo
     docker:
-      - image: circleci/ruby:3.0.2-node
+      - image: cimg/ruby:3.0.2-node
     environment:
       BUNDLE_PATH: ~/repo/vendor/bundle
     steps:
