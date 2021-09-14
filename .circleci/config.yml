@@ -99,7 +99,7 @@ jobs:
       - run: sudo npm install gitbook-cli -g
       - run:
           name: Do Magic
-          command: sh ~/repo/build/update-docs.sh
+          command: sh ~/repo/.circleci/update-docs.sh
 
 workflows:
   version: 2
