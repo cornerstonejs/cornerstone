@@ -29,7 +29,9 @@ rm -rf _book
 ../node_modules/gitbook-cli/bin/gitbook.js install
 ../node_modules/gitbook-cli/bin/gitbook.js build
 cd ../
-cp assets/CNAME docs/_book/CNAME
+pwd
+ls
+cp ./assets/CNAME docs/_book/CNAME
 cd docs/_book
 
 # Set User
