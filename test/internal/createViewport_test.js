@@ -28,21 +28,7 @@ describe('createViewport', function () {
       voiLUT: undefined,
       colormap: undefined,
       labelmap: false,
-      displayedArea: {
-        // Top Left Hand Corner
-        tlhc: {
-          x: 1,
-          y: 1
-        },
-        // Bottom Right Hand Corner
-        brhc: {
-          x: 1,
-          y: 1
-        },
-        rowPixelSpacing: 1,
-        columnPixelSpacing: 1,
-        presentationSizeMode: 'NONE'
-      }
+      displayedArea: undefined
     };
   });
 

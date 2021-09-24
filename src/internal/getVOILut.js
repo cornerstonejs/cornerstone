@@ -31,11 +31,13 @@ function generateLinearVOILUT (windowWidth, windowCenter) {
  * Generate a non-linear volume of interest lookup table
  *
  * @param {LUT} voiLUT Volume of Interest Lookup Table Object
+ * @param {Boolean} roundModalityLUTValues Do a Math.round of modality lut to compute non linear voilut
+
  *
  * @returns {VOILUTFunction} VOI LUT mapping function
  * @memberof VOILUT
  */
-function generateNonLinearVOILUT (voiLUT) {
+function generateNonLinearVOILUT (voiLUT, roundModalityLUTValues) {
   // We don't trust the voiLUT.numBitsPerEntry, mainly thanks to Agfa!
   const bitsPerEntry = Math.max(...voiLUT.lut).toString(2).length;
   const shift = bitsPerEntry - 8;
@@ -49,6 +51,9 @@ function generateNonLinearVOILUT (voiLUT) {
     } else if (modalityLutValue >= maxValueMapped) {
       return maxValue;
     }
+    if (roundModalityLUTValues) {
+      return voiLUT.lut[Math.round(modalityLutValue) - voiLUT.firstValueMapped] >> shift;
+    }
 
     return voiLUT.lut[modalityLutValue - voiLUT.firstValueMapped] >> shift;
   };
@@ -61,13 +66,14 @@ function generateNonLinearVOILUT (voiLUT) {
  * @param {Number} windowWidth Window Width
  * @param {Number} windowCenter Window Center
  * @param {LUT} [voiLUT] Volume of Interest Lookup Table Object
+ * @param {Boolean} roundModalityLUTValues Do a Math.round of modality lut to compute non linear voilut
  *
  * @return {VOILUTFunction} VOI LUT mapping function
  * @memberof VOILUT
  */
-export default function (windowWidth, windowCenter, voiLUT) {
+export default function (windowWidth, windowCenter, voiLUT, roundModalityLUTValues) {
   if (voiLUT) {
-    return generateNonLinearVOILUT(voiLUT);
+    return generateNonLinearVOILUT(voiLUT, roundModalityLUTValues);
   }
 
   return generateLinearVOILUT(windowWidth, windowCenter);
