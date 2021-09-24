@@ -33,7 +33,7 @@ function storedPixelDataToCanvasImageDataPseudocolorLUT (image, grayscaleLut, co
     clut = colorLut;
   }
 
-  //  Find the grayscale of 4 channels image data by calculating relative luminance value
+  //  Finds the grayscale of 4 channels color image data by calculating the relative luminance value
   if (image.color && ((image.width * image.height * 4) === numPixels)) {
     if (minPixelValue < 0) {
       while (storedPixelDataIndex < numPixels) {
