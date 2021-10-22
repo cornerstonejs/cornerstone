@@ -27,8 +27,12 @@ export default function (enabledElement, scale) {
   let widthScale = enabledElement.viewport.scale;
   let heightScale = enabledElement.viewport.scale;
   const imageDisplayedArea = getDisplayedArea(enabledElement.image, enabledElement.viewport);
-  const width = imageDisplayedArea.brhc.x - (imageDisplayedArea.tlhc.x - 1);
-  const height = imageDisplayedArea.brhc.y - (imageDisplayedArea.tlhc.y - 1);
+
+  const offsetX = imageDisplayedArea.tlhc.x - 1;
+  const offsetY = imageDisplayedArea.tlhc.y - 1;
+
+  const width = imageDisplayedArea.brhc.x - offsetX;
+  const height = imageDisplayedArea.brhc.y - offsetY;
 
   if (imageDisplayedArea.presentationSizeMode === 'NONE') {
     if (enabledElement.image.rowPixelSpacing < enabledElement.image.columnPixelSpacing) {
