@@ -31,6 +31,10 @@ import {
   registerUnknownImageLoader
 } from './imageLoader.js';
 
+import imageLoadPoolManager from './requestPool/imageLoadPoolManager.ts';
+import imageRetrievalPoolManager from './requestPool/imageRetrievalPoolManager.ts';
+import { RequestPoolManager } from './requestPool/RequestPoolManager.ts';
+
 import { default as canvasToPixel } from './canvasToPixel.js';
 import { default as colors } from './colors/index.js';
 import { default as disable } from './disable.js';
@@ -154,7 +158,10 @@ const cornerstone = {
   restoreImage,
   EVENTS,
   events,
-  triggerEvent
+  triggerEvent,
+  imageLoadPoolManager,
+  imageRetrievalPoolManager,
+  RequestPoolManager
 };
 
 export {
@@ -225,7 +232,10 @@ export {
   restoreImage,
   EVENTS,
   events,
-  triggerEvent
+  triggerEvent,
+  imageLoadPoolManager,
+  imageRetrievalPoolManager,
+  RequestPoolManager
 };
 
 export default cornerstone;
