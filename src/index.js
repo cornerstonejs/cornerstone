@@ -47,7 +47,7 @@ import { default as fitToWindow } from './fitToWindow.js';
 import { default as generateLut } from './internal/generateLut.js';
 import { default as getDefaultViewport } from './internal/getDefaultViewport.js';
 import { default as getDefaultViewportForImage } from './getDefaultViewportForImage.js';
-import { default as getDisplayedArea } from './getDisplayedArea.js';
+import { default as getDisplayedArea } from './internal/getDisplayedArea.js';
 import { default as getImage } from './getImage.js';
 import { default as getPixels } from './getPixels.js';
 import { default as getStoredPixels } from './getStoredPixels.js';
