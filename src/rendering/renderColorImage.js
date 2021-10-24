@@ -161,7 +161,7 @@ export function renderColorImage (enabledElement, invalidated) {
   const width = imageDisplayedArea.brhc.x - sx;
   const height = imageDisplayedArea.brhc.y - sy;
 
-  context.drawImage(renderCanvas, sx, sy, width, height, 0, 0, width, height);
+  context.drawImage(renderCanvas, sx, sy, width, height, sx, sy, width, height);
 
   enabledElement.renderingTools = saveLastRendered(enabledElement);
 }

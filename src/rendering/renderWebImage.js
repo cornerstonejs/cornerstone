@@ -50,7 +50,7 @@ export function renderWebImage (enabledElement, invalidated) {
     const width = imageDisplayedArea.brhc.x - sx;
     const height = imageDisplayedArea.brhc.y - sy;
 
-    context.drawImage(image.getImage(), sx, sy, width, height, 0, 0, width, height);
+    context.drawImage(image.getImage(), sx, sy, width, height, sx, sy, width, height);
   } else {
     renderColorImage(enabledElement, invalidated);
   }
