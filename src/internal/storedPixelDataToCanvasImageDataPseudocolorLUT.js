@@ -35,7 +35,10 @@ function storedPixelDataToCanvasImageDataPseudocolorLUT (image, grayscaleLut, co
 
   if (minPixelValue < 0) {
     while (storedPixelDataIndex < numPixels) {
-      grayscale = grayscaleLut[pixelData[storedPixelDataIndex++] + (-minPixelValue)];
+      grayscale = grayscaleLut[pixelData[storedPixelDataIndex] - minPixelValue];
+      //Incrementing by 1 pixel only works with original black and white images. RGBA comes in groups of 4 pixels
+      //(same for the else condition below)
+      storedPixelDataIndex += (image.color ? 4 : 1);
       rgba = clut[grayscale];
       canvasImageDataData[canvasImageDataIndex++] = rgba[0];
       canvasImageDataData[canvasImageDataIndex++] = rgba[1];
@@ -44,7 +47,8 @@ function storedPixelDataToCanvasImageDataPseudocolorLUT (image, grayscaleLut, co
     }
   } else {
     while (storedPixelDataIndex < numPixels) {
-      grayscale = grayscaleLut[pixelData[storedPixelDataIndex++]];
+      grayscale = grayscaleLut[pixelData[storedPixelDataIndex]];
+      storedPixelDataIndex += (image.color ? 4 : 1);
       rgba = clut[grayscale];
       canvasImageDataData[canvasImageDataIndex++] = rgba[0];
       canvasImageDataData[canvasImageDataIndex++] = rgba[1];
