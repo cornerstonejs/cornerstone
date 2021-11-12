@@ -33,12 +33,23 @@ function storedPixelDataToCanvasImageDataPseudocolorLUT (image, grayscaleLut, co
     clut = colorLut;
   }
 
+  const grayscalePixelByDefault = () => {
+    return pixelData[storedPixelDataIndex++];
+  };
+  var grayscalePixelByLuminosityMethod = () => {
+    var r = pixelData[storedPixelDataIndex++];
+    var g = pixelData[storedPixelDataIndex++];
+    var b = pixelData[storedPixelDataIndex++];
+    storedPixelDataIndex++;//skip alpha channel
+    return Math.round(0.299 * r + 0.587 * g + 0.114 * b);
+  };
+  var grayscalePixel = image.color
+    ? grayscalePixelByLuminosityMethod
+    : grayscalePixelByDefault;
+
   if (minPixelValue < 0) {
     while (storedPixelDataIndex < numPixels) {
-      grayscale = grayscaleLut[pixelData[storedPixelDataIndex] - minPixelValue];
-      //Incrementing by 1 pixel only works with original black and white images. RGBA comes in groups of 4 pixels
-      //(same for the else condition below)
-      storedPixelDataIndex += (image.color ? 4 : 1);
+      grayscale = grayscaleLut[grayscalePixel() - minPixelValue];
       rgba = clut[grayscale];
       canvasImageDataData[canvasImageDataIndex++] = rgba[0];
       canvasImageDataData[canvasImageDataIndex++] = rgba[1];
@@ -47,8 +58,7 @@ function storedPixelDataToCanvasImageDataPseudocolorLUT (image, grayscaleLut, co
     }
   } else {
     while (storedPixelDataIndex < numPixels) {
-      grayscale = grayscaleLut[pixelData[storedPixelDataIndex]];
-      storedPixelDataIndex += (image.color ? 4 : 1);
+      grayscale = grayscaleLut[grayscalePixel()];
       rgba = clut[grayscale];
       canvasImageDataData[canvasImageDataIndex++] = rgba[0];
       canvasImageDataData[canvasImageDataIndex++] = rgba[1];
