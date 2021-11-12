@@ -36,14 +36,14 @@ function storedPixelDataToCanvasImageDataPseudocolorLUT (image, grayscaleLut, co
   const grayscalePixelByDefault = () => {
     return pixelData[storedPixelDataIndex++];
   };
-  var grayscalePixelByLuminosityMethod = () => {
-    var r = pixelData[storedPixelDataIndex++];
-    var g = pixelData[storedPixelDataIndex++];
-    var b = pixelData[storedPixelDataIndex++];
+  const grayscalePixelByLuminosityMethod = () => {
+    const r = pixelData[storedPixelDataIndex++];
+    const g = pixelData[storedPixelDataIndex++];
+    const b = pixelData[storedPixelDataIndex++];
     storedPixelDataIndex++;//skip alpha channel
     return Math.round(0.299 * r + 0.587 * g + 0.114 * b);
   };
-  var grayscalePixel = image.color
+  const grayscalePixel = image.color
     ? grayscalePixelByLuminosityMethod
     : grayscalePixelByDefault;
 
