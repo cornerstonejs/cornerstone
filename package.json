@@ -33,6 +33,7 @@
     "start": "npm run webpack",
     "start:dev": "webpack-dev-server --config ./config/webpack/webpack-dev",
     "test": "npm run test:chrome",
+    "commit": "git-cz",
     "test:all": "npm run test:chrome && npm run test:firefox",
     "test:watch": "karma start config/karma/karma-watch.js",
     "test:chrome": "karma start config/karma/karma-chrome.js",
@@ -50,7 +51,9 @@
     "@babel/preset-typescript": "^7.15.0",
     "babel-loader": "^8.2.2",
     "chai": "^4.1.2",
+    "commitizen": "^4.2.4",
     "coveralls": "^3.0.2",
+    "cz-conventional-changelog": "^3.3.0",
     "docdash": "^1.0.0",
     "documentation": "^13.2.5",
     "eslint": "^5.5.0",
@@ -85,5 +88,10 @@
     "dist/cornerstone.js.map",
     "dist/cornerstone.min.js",
     "dist/cornerstone.min.js.map"
-  ]
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
