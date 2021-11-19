@@ -20,7 +20,7 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
-      - run: apt-get -f install 
+      - run: sudo apt-get -f install 
       - puppeteer/install
       - run: npm install
       - save_cache:
