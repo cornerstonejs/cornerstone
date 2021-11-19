@@ -1,0 +1,665 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Image Loaders · cornerstone</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="Cornerstone allows developers to define their own Image Loaders to create Images for display and manipulation.">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-anchors/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-theme-cornerstone/cornerstone.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="viewports.html" />
+    
+    
+    <link rel="prev" href="image-ids.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../installation.html">
+            
+                <a href="../installation.html">
+            
+                    
+                    Installation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    Concepts
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="enabled-elements.html">
+            
+                <a href="enabled-elements.html">
+            
+                    
+                    Enabled Elements
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="image-ids.html">
+            
+                <a href="image-ids.html">
+            
+                    
+                    Image Ids
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3.3" data-path="image-loaders.html">
+            
+                <a href="image-loaders.html">
+            
+                    
+                    Image Loaders
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="viewports.html">
+            
+                <a href="viewports.html">
+            
+                    
+                    Viewports
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="images.html">
+            
+                <a href="images.html">
+            
+                    
+                    Images
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.6" data-path="pixel-coordinate-system.html">
+            
+                <a href="pixel-coordinate-system.html">
+            
+                    
+                    Pixel Coordinate System
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.7" data-path="rendering-loop.html">
+            
+                <a href="rendering-loop.html">
+            
+                    
+                    Rendering Loop
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.8" data-path="libraries.html">
+            
+                <a href="libraries.html">
+            
+                    
+                    Libraries
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.9" data-path="rendering-pipeline.html">
+            
+                <a href="rendering-pipeline.html">
+            
+                    
+                    Rendering Pipeline
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.10" data-path="metadata-providers.html">
+            
+                <a href="metadata-providers.html">
+            
+                    
+                    Metadata Providers
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    Advanced
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../advanced/image-cache.html">
+            
+                <a href="../advanced/image-cache.html">
+            
+                    
+                    Image Cache
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../advanced/enabled-element-layers.html">
+            
+                <a href="../advanced/enabled-element-layers.html">
+            
+                    
+                    Enabled Element Layers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../advanced/modality-lut-and-voi-lut.html">
+            
+                <a href="../advanced/modality-lut-and-voi-lut.html">
+            
+                    
+                    Modality LUT and VOI LUT
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../advanced/color-lookup-tables.html">
+            
+                <a href="../advanced/color-lookup-tables.html">
+            
+                    
+                    Color Lookup Tables
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../advanced/webgl-rendering-pipeline.html">
+            
+                <a href="../advanced/webgl-rendering-pipeline.html">
+            
+                    
+                    WebGL Rendering Pipeline
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="../advanced/retrieving-pixel-data.html">
+            
+                <a href="../advanced/retrieving-pixel-data.html">
+            
+                    
+                    Retrieving Pixel Data
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="../advanced/legacy-browser-support.html">
+            
+                <a href="../advanced/legacy-browser-support.html">
+            
+                    
+                    Legacy Browser Support
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../integration.html">
+            
+                <a href="../integration.html">
+            
+                    
+                    Integration With React
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <a target="_blank" href="https://rawgit.com/cornerstonejs/cornerstone/master/example/index.html">
+            
+                    
+                    Live Examples
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../api.html">
+            
+                <a href="../api.html">
+            
+                    
+                    API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../contributing.html">
+            
+                <a href="../contributing.html">
+            
+                    
+                    Contributing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../developer-guide.html">
+            
+                <a href="../developer-guide.html">
+            
+                    
+                    Developer Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+  
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Image Loaders</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="image-loaders"><a name="image-loaders" class="plugin-anchor" href="#image-loaders"><i class="fa fa-link" aria-hidden="true"></i></a>Image Loaders</h1>
+<blockquote>
+<p>An <strong>Image Loader</strong> is a JavaScript function that is responsible for taking an <a href="image-ids.html">Image Id</a> for an Image and returning the corresponding <strong>Image Load Object</strong> for that Image to Cornerstone. The <strong>Image Load Object</strong> contains a Promise which resolves to produce an <strong>Image</strong>.</p>
+</blockquote>
+<p>Since loading images usually requires a call to a server, the API for image loading needs to be asynchronous. Cornerstone requires that Image Loaders return an Object containing a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a> which Cornerstone will use to receive the Image Object asynchronously, or an <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error" target="_blank">Error</a> if one has occurred.</p>
+<h2 id="image-loader-workflow"><a name="image-loader-workflow" class="plugin-anchor" href="#image-loader-workflow"><i class="fa fa-link" aria-hidden="true"></i></a>Image Loader Workflow</h2>
+<p><img src="../assets/img/image-loader-workflow.png" alt="Image Loader workflow"></p>
+<ol>
+<li>ImageLoaders register themselves with cornerstone to load specific <a href="../image-ids.md">ImageId</a> URL schemes</li>
+<li>The application requests to load an image using the loadImage() api.</li>
+<li>Cornerstone delegates the request to load the image to the ImageLoader registered with the URL scheme of the imageId passed to loadImage().</li>
+<li>The ImageLoader will return an Image Load Object containing a Promise which it will resolve with the corresponding <a href="images.html">Image Object</a> once it has obtained the pixel data. Obtaining the pixel data may require a call to a remote server using XMLHttpRequest, decompression of the pixel data (e.g. from JPEG 2000), and conversion of the pixel data into the format that Cornerstone understands (e.g. RGB vs YBR color).</li>
+<li>The <a href="images.html">Image Object</a> passed back by the resolved Promise is then displayed using the <code>displayImage()</code> API.</li>
+</ol>
+<p>While pixel data is usually obtained from a server, this doesn&apos;t always have to be the case. The live examples actually use an ImageLoader plugin to serve up images without requiring a server at all.  In this case, the images are base64 encoded and stored in the ImageLoader plugin itself. The plugin simply converts the base64 pixel data into an array of pixels. Alternatively, one could write an image loader that generates derived images on the client side. For example, you could implement MPR functionality this way.</p>
+<h2 id="available-image-loaders"><a name="available-image-loaders" class="plugin-anchor" href="#available-image-loaders"><i class="fa fa-link" aria-hidden="true"></i></a>Available Image Loaders</h2>
+<table>
+<thead>
+<tr>
+<th>Image Loader</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/cornerstonejs/cornerstoneWADOImageLoader" target="_blank">Cornerstone WADO Image Loader</a></td>
+<td>DICOM Part 10 images<br> Supports WADO-URI and WADO-RS<br> Supports multi-frame DICOM instances<br> Supports reading DICOM files from the File objects</td>
+</tr>
+<tr>
+<td><a href="https://github.com/cornerstonejs/cornerstoneWebImageLoader" target="_blank">Cornerstone Web Image Loader</a></td>
+<td>PNG and JPEG images</td>
+</tr>
+</tbody>
+</table>
+<p><em>Feel free to send a Pull Request if you have an Image Loader you want to add to this list.</em></p>
+<h2 id="image-load-object"><a name="image-load-object" class="plugin-anchor" href="#image-load-object"><i class="fa fa-link" aria-hidden="true"></i></a>Image Load Object</h2>
+<p>Cornerstone Image Loaders return <strong>Image Load Objects</strong> which contain a Promise. The reason we have chosen to use an Object instead of solely returning a Promise is because now Image Loaders can also return other properties in their Image Load Objects. As an example, we intend to implement support for cancelling pending or ongoing requests using a <strong>cancelFn</strong> passed back by an Image Loader within an Image Load Object. This is still in development, however.</p>
+<h2 id="writing-an-image-loader"><a name="writing-an-image-loader" class="plugin-anchor" href="#writing-an-image-loader"><i class="fa fa-link" aria-hidden="true"></i></a>Writing an Image Loader</h2>
+<p>Here is an example of an Image Loader that fetches pixel data using XMLHttpRequest and return an <strong>Image Load Object</strong> containing a Promise to Cornerstone:</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadImage</span>(<span class="hljs-params">imageId</span>) </span>{
+    <span class="hljs-comment">// Parse the imageId and return a usable URL (logic omitted)</span>
+    <span class="hljs-keyword">const</span> url = parseImageId(imageId);
+
+    <span class="hljs-comment">// Create a new Promise</span>
+    <span class="hljs-keyword">const</span> promise = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>((resolve, reject) =&gt; {
+      <span class="hljs-comment">// Inside the Promise Constructor, make</span>
+      <span class="hljs-comment">// the request for the DICOM data</span>
+      <span class="hljs-keyword">const</span> oReq = <span class="hljs-keyword">new</span> XMLHttpRequest();
+      oReq.open(<span class="hljs-string">&quot;get&quot;</span>, url, <span class="hljs-literal">true</span>);
+      oReq.responseType = <span class="hljs-string">&quot;arraybuffer&quot;</span>;
+      oReq.onreadystatechange = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">oEvent</span>) </span>{
+          <span class="hljs-keyword">if</span> (oReq.readyState === <span class="hljs-number">4</span>) {
+              <span class="hljs-keyword">if</span> (oReq.status == <span class="hljs-number">200</span>) {
+                  <span class="hljs-comment">// Request succeeded, Create an image object (logic omitted)</span>
+                  <span class="hljs-keyword">const</span> image = createImageObject(oReq.response);
+
+                  <span class="hljs-comment">// Return the image object by resolving the Promise</span>
+                  resolve(image);
+              } <span class="hljs-keyword">else</span> {
+                  <span class="hljs-comment">// An error occurred, return an object containing the error by</span>
+                  <span class="hljs-comment">// rejecting the Promise</span>
+                  reject(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(oReq.statusText));
+              }
+          }
+      };
+
+      oReq.send();
+    });
+
+    <span class="hljs-comment">// Return an object containing the Promise to cornerstone so it can setup callbacks to be</span>
+    <span class="hljs-comment">// invoked asynchronously for the success/resolve and failure/reject scenarios.</span>
+    <span class="hljs-keyword">return</span> {
+      promise
+    };
+}
+</code></pre>
+<p>An Image Loader is responsible for returning an <strong>Image Load Object</strong> corresponding to the <a href="image-ids.html">Image Id</a> Cornerstone passed to its loadImage function. When the Promise in the Image Load Object is resolved, it should be resolved with an <a href="images.html">Image</a>. Image Loaders register themselves for a given URL scheme using the <code>registerImageLoader()</code> API:</p>
+<pre><code class="lang-javascript"><span class="hljs-comment">// Register the url scheme &apos;myCustomLoader&apos; to correspond to our loadImage function</span>
+cornerstone.registerImageLoader(<span class="hljs-string">&apos;myCustomLoader&apos;</span>, loadImage);
+
+<span class="hljs-comment">// Images loaded as follows will be passed to our loadImage function:</span>
+cornerstone.loadImage(<span class="hljs-string">&apos;myCustomLoader://example.com/image.dcm&apos;</span>)
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+
+            </div>
+
+            
+                
+                <a href="image-ids.html" class="navigation navigation-prev " aria-label="Previous page: Image Ids">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="viewports.html" class="navigation navigation-next " aria-label="Next page: Viewports">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"description":"Cornerstone allows developers to define their own Image Loaders to create Images for display and manipulation.","title":"Image Loaders","level":"1.3.3","depth":2,"next":{"title":"Viewports","level":"1.3.4","depth":2,"path":"concepts/viewports.md","ref":"concepts/viewports.md","articles":[]},"previous":{"title":"Image Ids","level":"1.3.2","depth":2,"path":"concepts/image-ids.md","ref":"concepts/image-ids.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","theme-cornerstone","-fontsettings","github","ga","anchors"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/cornerstonejs/cornerstone"},"search":{},"theme-cornerstone":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"sitemap":{"hostname":"https://docs.cornerstonejs.org"},"ga":{"configuration":"auto","token":"UA-110573590-1"},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/cornerstonejs/cornerstone/edit/master/docs"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchors":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"cornerstone","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":">3.0.0","description":"Documentation for Cornerstone Core"},"file":{"path":"concepts/image-loaders.md","mtime":"2021-11-19T21:46:55.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-11-19T21:54:10.443Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-ga/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+
+    </body>
+</html>
+

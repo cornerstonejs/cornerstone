@@ -1,0 +1,712 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Developer Guide · cornerstone</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="Cornerstone developer guide - dependencies, creating releases">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-anchors/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-theme-cornerstone/cornerstone.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="contributing.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="installation.html">
+            
+                <a href="installation.html">
+            
+                    
+                    Installation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    Concepts
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="concepts/enabled-elements.html">
+            
+                <a href="concepts/enabled-elements.html">
+            
+                    
+                    Enabled Elements
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="concepts/image-ids.html">
+            
+                <a href="concepts/image-ids.html">
+            
+                    
+                    Image Ids
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="concepts/image-loaders.html">
+            
+                <a href="concepts/image-loaders.html">
+            
+                    
+                    Image Loaders
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="concepts/viewports.html">
+            
+                <a href="concepts/viewports.html">
+            
+                    
+                    Viewports
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="concepts/images.html">
+            
+                <a href="concepts/images.html">
+            
+                    
+                    Images
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.6" data-path="concepts/pixel-coordinate-system.html">
+            
+                <a href="concepts/pixel-coordinate-system.html">
+            
+                    
+                    Pixel Coordinate System
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.7" data-path="concepts/rendering-loop.html">
+            
+                <a href="concepts/rendering-loop.html">
+            
+                    
+                    Rendering Loop
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.8" data-path="concepts/libraries.html">
+            
+                <a href="concepts/libraries.html">
+            
+                    
+                    Libraries
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.9" data-path="concepts/rendering-pipeline.html">
+            
+                <a href="concepts/rendering-pipeline.html">
+            
+                    
+                    Rendering Pipeline
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.10" data-path="concepts/metadata-providers.html">
+            
+                <a href="concepts/metadata-providers.html">
+            
+                    
+                    Metadata Providers
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    Advanced
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="advanced/image-cache.html">
+            
+                <a href="advanced/image-cache.html">
+            
+                    
+                    Image Cache
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="advanced/enabled-element-layers.html">
+            
+                <a href="advanced/enabled-element-layers.html">
+            
+                    
+                    Enabled Element Layers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="advanced/modality-lut-and-voi-lut.html">
+            
+                <a href="advanced/modality-lut-and-voi-lut.html">
+            
+                    
+                    Modality LUT and VOI LUT
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="advanced/color-lookup-tables.html">
+            
+                <a href="advanced/color-lookup-tables.html">
+            
+                    
+                    Color Lookup Tables
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="advanced/webgl-rendering-pipeline.html">
+            
+                <a href="advanced/webgl-rendering-pipeline.html">
+            
+                    
+                    WebGL Rendering Pipeline
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="advanced/retrieving-pixel-data.html">
+            
+                <a href="advanced/retrieving-pixel-data.html">
+            
+                    
+                    Retrieving Pixel Data
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="advanced/legacy-browser-support.html">
+            
+                <a href="advanced/legacy-browser-support.html">
+            
+                    
+                    Legacy Browser Support
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="integration.html">
+            
+                <a href="integration.html">
+            
+                    
+                    Integration With React
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <a target="_blank" href="https://rawgit.com/cornerstonejs/cornerstone/master/example/index.html">
+            
+                    
+                    Live Examples
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="api.html">
+            
+                <a href="api.html">
+            
+                    
+                    API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="contributing.html">
+            
+                <a href="contributing.html">
+            
+                    
+                    Contributing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.9" data-path="developer-guide.html">
+            
+                <a href="developer-guide.html">
+            
+                    
+                    Developer Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+  
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Developer Guide</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="developer-guide"><a name="developer-guide" class="plugin-anchor" href="#developer-guide"><i class="fa fa-link" aria-hidden="true"></i></a>Developer Guide</h1>
+<p>In order to edit and rebuild Cornerstone, you will need to install <a href="http://nodejs.org" target="_blank">Node.js</a>. Once you have Node.js and the npm package manager installed, you can use them to install the dependencies for the project and run common development tasks.</p>
+<h2 id="common-tasks"><a name="common-tasks" class="plugin-anchor" href="#common-tasks"><i class="fa fa-link" aria-hidden="true"></i></a>Common Tasks</h2>
+<h4 id="installing-dependencies"><a name="installing-dependencies" class="plugin-anchor" href="#installing-dependencies"><i class="fa fa-link" aria-hidden="true"></i></a>Installing dependencies</h4>
+<pre><code class="lang-bash">  npm install
+</code></pre>
+<p><strong>Note</strong>: Installing/updating dependencies should be performed after every update from the git repository. If this is not performed, you may run into issues during development.</p>
+<h4 id="running-the-build"><a name="running-the-build" class="plugin-anchor" href="#running-the-build"><i class="fa fa-link" aria-hidden="true"></i></a>Running the build</h4>
+<pre><code class="lang-bash">  npm start
+</code></pre>
+<p>Running the build will create both the minified and un-minified versions of the library, as well as their associated source maps.</p>
+<h4 id="automatically-running-the-build-after-each-source-change"><a name="automatically-running-the-build-after-each-source-change" class="plugin-anchor" href="#automatically-running-the-build-after-each-source-change"><i class="fa fa-link" aria-hidden="true"></i></a>Automatically running the build after each source change</h4>
+<pre><code class="lang-bash">  npm run watch
+</code></pre>
+<p>This command can be used if you want to debug issues or add new features to the source code.</p>
+<h4 id="serving-files-for-development"><a name="serving-files-for-development" class="plugin-anchor" href="#serving-files-for-development"><i class="fa fa-link" aria-hidden="true"></i></a>Serving files for development</h4>
+<p>There are many ways of running simple HTTP servers. This is just one method, you can also use e.g. &apos;python -m simplehttpserver 8080&apos;.</p>
+<ol>
+<li><p>Install the &apos;http-server&apos; package:</p>
+<pre><code class="lang-bash">npm install http-server -g
+</code></pre>
+<p><strong>Note</strong>: you may need to use sudo to install globally</p>
+</li>
+<li><p>Run the server</p>
+<pre><code class="lang-bash">http-server
+</code></pre>
+</li>
+<li>Navigate to <a href="http://127.0.0.1:8080/example/index.html" target="_blank">http://127.0.0.1:8080/example/index.html</a> to load the examples in a browser.</li>
+</ol>
+<p><strong>Note:</strong> If you want to use them on a mobile device, start the HTTP server and navigate to the IP of your computer (e.g. <a href="http://192.168.1.11:8080/example/index.html" target="_blank">http://192.168.1.11:8080/example/index.html</a>)</p>
+<h4 id="running-and-debugging-the-tests"><a name="running-and-debugging-the-tests" class="plugin-anchor" href="#running-and-debugging-the-tests"><i class="fa fa-link" aria-hidden="true"></i></a>Running and debugging the tests</h4>
+<pre><code class="lang-bash">npm <span class="hljs-built_in">test</span>
+</code></pre>
+<p>When you run the tests a &apos;coverage&apos; directory will be created. Note that this directory does not exist in the main repository, since it is solely a build artifact. If you open the HTML file under  &apos;coverage/html/index.html&apos; with a web browser (no HTTP server is required), you will be able to view and examine the test coverage report.</p>
+<p><img src="../assets/img/istanbul-code-coverage.png" alt="Istanbul Code Coverage Report"></p>
+<p>Once you have started the tests, you can also navigate to <a href="http://0.0.0.0:9876/debug" target="_blank">http://0.0.0.0:9876/debug</a> within a web browser to debug the tests through the Karma test runner. Note that this URL does not work immediately, since the first step in <code>npm test</code> is to rebuild the library.</p>
+<h4 id="running-code-linting"><a name="running-code-linting" class="plugin-anchor" href="#running-code-linting"><i class="fa fa-link" aria-hidden="true"></i></a>Running code linting</h4>
+<pre><code class="lang-bash">npm run eslint
+
+<span class="hljs-comment"># Or include automatic fixing with:</span>
+npm run eslint-fix
+
+<span class="hljs-comment"># Or automatically fix &apos;test&apos; directory with:</span>
+npm run eslint-fix-test
+</code></pre>
+<p>Running the commands above will check the source code for linting issues.</p>
+<h4 id="submitting-changes-through-pull-requests"><a name="submitting-changes-through-pull-requests" class="plugin-anchor" href="#submitting-changes-through-pull-requests"><i class="fa fa-link" aria-hidden="true"></i></a>Submitting changes through Pull Requests</h4>
+<p>If you have made a source code change that you think should be included in the main repository, you can contribute it back to the community by creating a <a href="https://github.com/cornerstonejs/cornerstone/pulls" target="_blank">Pull Request</a>. Please create an associated <a href="https://github.com/cornerstonejs/cornerstone/issues" target="_blank">Issue</a> to describe the problem you are solving / feature you are adding so the library maintainers can give you feedback on whether or not these changes are appropriate for the repository. It&apos;s possible that your bug fix / new feature would be better implemented in another library (e.g. <a href="https://github.com/chafey/cornerstoneTools/" target="_blank">Cornerstone Tools</a>). Please ensure that all tests pass and you have run ESLint and fixed any issues before submitting a pull request.</p>
+<h2 id="development-toolchain-and-specifications"><a name="development-toolchain-and-specifications" class="plugin-anchor" href="#development-toolchain-and-specifications"><i class="fa fa-link" aria-hidden="true"></i></a>Development Toolchain and Specifications</h2>
+<p>Cornerstone relies on a number of open source tools, components, and free services to ensure quality and stability. We want to ensure developers can work in modern JavaScript and that end users can use the tools in both current and legacy environments.</p>
+<h4 id="general"><a name="general" class="plugin-anchor" href="#general"><i class="fa fa-link" aria-hidden="true"></i></a>General</h4>
+<ul>
+<li><a href="https://babeljs.io/" target="_blank">Babel</a> for transpilation from next generation JavaScript to more widely supported previous JavaScript versions.</li>
+<li><a href="https://webpack.js.org/" target="_blank">WebPack</a> to bundle the project</li>
+<li><a href="https://eslint.org/" target="_blank">ESLint</a> is used to enforce code styling and maintain quality</li>
+<li><a href="https://www.npmjs.com/" target="_blank">NPM</a> is used to host the installable package. See <a href="https://www.npmjs.com/package/cornerstone-core" target="_blank">Cornerstone Core on NPM</a></li>
+<li><a href="https://semver.org/" target="_blank">Semantic Versioning</a> is used for versioning of the library.</li>
+<li><a href="https://keepachangelog.com" target="_blank">keep a changelog</a> is used for the formatting of the changelog.</li>
+</ul>
+<h4 id="testing"><a name="testing" class="plugin-anchor" href="#testing"><i class="fa fa-link" aria-hidden="true"></i></a>Testing</h4>
+<ul>
+<li><a href="https://karma-runner.github.io/" target="_blank">Karma</a> is used as a test runner</li>
+<li><a href="https://mochajs.org/" target="_blank">Mocha</a> is used as a test framework</li>
+<li><a href="https://chaijs.com" target="_blank">Chai</a> is used for test assertions</li>
+<li><a href="https://istanbul.js.org/" target="_blank">Istanbul</a> is used to report code coverage</li>
+<li><a href="https://travis-ci.org/" target="_blank">Travis CI</a> is used to automatically run tests. See <a href="https://travis-ci.org/cornerstonejs/cornerstone" target="_blank">Cornerstone Core on Travis CI</a></li>
+<li><a href="https://coveralls.io/" target="_blank">Coveralls</a> is used to display code coverage following automatic tests. See <a href="https://coveralls.io/github/cornerstonejs/cornerstone?branch=master" target="_blank">Cornerstone Core Coveralls Test Coverage</a></li>
+<li><a href="https://github.com/GoogleChrome/puppeteer" target="_blank">Headless Chrome</a> is used for running headless tests.</li>
+</ul>
+<h4 id="documentation"><a name="documentation" class="plugin-anchor" href="#documentation"><i class="fa fa-link" aria-hidden="true"></i></a>Documentation</h4>
+<ul>
+<li><a href="https://usejsdoc.org" target="_blank">JSDoc</a> formatting is used for documenting the source code.</li>
+<li><a href="https://documentation.js.org/" target="_blank">documentation.js</a> generates API documentation in Markdown from JSDoc annotations</li>
+<li><a href="https://www.gitbook.com" target="_blank">GitBook</a> transforms the Markdown documentation into HTML</li>
+<li><a href="https://pages.github.com/" target="_blank">Github Pages</a> hosts the documentation</li>
+<li><a href="https://www.cloudflare.com/" target="_blank">Cloudflare</a> is placed in front of Github Pages to serve the documentation over HTTPS.</li>
+<li><a href="https://rawgit.com/" target="_blank">Rawgit</a> is used to serve <a href="https://rawgit.com/cornerstonejs/cornerstone/master/example/index.html" target="_blank">Live Examples</a> from the repository. We should transition this to be hosted with Github Pages as well.</li>
+</ul>
+<h2 id="writing-tests"><a name="writing-tests" class="plugin-anchor" href="#writing-tests"><i class="fa fa-link" aria-hidden="true"></i></a>Writing tests</h2>
+<p>Here are some general notes on writing tests which may be useful:</p>
+<ul>
+<li>Tests must be in the &apos;test&apos; directory. Please try to ensure they follow the &apos;src&apos; directory layout for simplicity.</li>
+<li>Test file names must end in &quot;_test.js&quot;</li>
+<li>The &apos;coverage_test.js&apos; file ensures that all files are considered by Istanbul, so that code coverage reports can be used to explore the whole repository.</li>
+<li>Do not convert &apos;function ()&apos; to arrow functions (i.e. &apos;=&gt; {}&apos;) within the &apos;it&apos;, &apos;should&apos;, or &apos;describe&apos; blocks or Mocha will fail to run the tests properly.</li>
+</ul>
+<h2 id="releasing-a-new-version"><a name="releasing-a-new-version" class="plugin-anchor" href="#releasing-a-new-version"><i class="fa fa-link" aria-hidden="true"></i></a>Releasing a new version</h2>
+<ol>
+<li>Make sure you have the latest commits from master</li>
+<li>Determine the version change you need to make based on the scope of the changes since the last release.</li>
+<li>Update the <a href="https://github.com/cornerstonejs/cornerstone/blob/master/changelog.md" target="_blank">changelog</a><ul>
+<li>Make sure to thank any code contributors!</li>
+</ul>
+</li>
+<li>Update the package and dependency versions in &quot;package.json&quot;</li>
+<li>Update the build version:<pre><code class="lang-bash">npm run version
+</code></pre>
+</li>
+<li>Run the build:<pre><code class="lang-bash">npm run build
+</code></pre>
+</li>
+<li>Commit the changes<pre><code class="lang-bash">git commit -am <span class="hljs-string">&quot;Bump version &lt;version&gt;&quot;</span>
+</code></pre>
+</li>
+<li>Tag the commits with the version number and title<pre><code class="lang-bash">git tag <span class="hljs-_">-a</span> <span class="hljs-string">&quot;&lt;version&gt;&quot;</span> -m <span class="hljs-string">&quot;Version &lt;version&gt;&quot;</span>
+</code></pre>
+</li>
+<li>Push the commit with the version number to master<pre><code class="lang-bash">git push origin master --tags
+</code></pre>
+</li>
+<li>Publish the release to NPM:<pre><code class="lang-bash">npm publish
+</code></pre>
+</li>
+</ol>
+<h2 id="updating-docs-with-gitbook"><a name="updating-docs-with-gitbook" class="plugin-anchor" href="#updating-docs-with-gitbook"><i class="fa fa-link" aria-hidden="true"></i></a>Updating Docs with gitbook</h2>
+<h3 id="if-its-your-first-time"><a name="if-its-your-first-time" class="plugin-anchor" href="#if-its-your-first-time"><i class="fa fa-link" aria-hidden="true"></i></a>If its your first time:</h3>
+<ol>
+<li>Make sure you have gitbook-cli installed globally, if not, run:<pre><code class="lang-bash">npm install -g gitbook-cli
+</code></pre>
+</li>
+<li>Go inside the /docs folder and do:<pre><code class="lang-bash">gitbook install
+</code></pre>
+</li>
+</ol>
+<h3 id="updating-files-and-deploying"><a name="updating-files-and-deploying" class="plugin-anchor" href="#updating-files-and-deploying"><i class="fa fa-link" aria-hidden="true"></i></a>Updating files and deploying</h3>
+<ol>
+<li>On the root folder run:<pre><code class="lang-bash">npm run docs
+<span class="hljs-comment"># It will serve the documentation on http://localhost:4000/</span>
+<span class="hljs-comment"># with livereload</span>
+</code></pre>
+</li>
+<li>Change the docs needed and make sure everything is correct</li>
+<li>In order to deploy, run: <pre><code class="lang-bash">npm run docs:deploy
+</code></pre>
+</li>
+</ol>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+
+            </div>
+
+            
+                
+                <a href="contributing.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Contributing">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"description":"Cornerstone developer guide - dependencies, creating releases","title":"Developer Guide","level":"1.9","depth":1,"previous":{"title":"Contributing","level":"1.8","depth":1,"path":"contributing.md","ref":"contributing.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","theme-cornerstone","-fontsettings","github","ga","anchors"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/cornerstonejs/cornerstone"},"search":{},"theme-cornerstone":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"sitemap":{"hostname":"https://docs.cornerstonejs.org"},"ga":{"configuration":"auto","token":"UA-110573590-1"},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/cornerstonejs/cornerstone/edit/master/docs"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchors":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"cornerstone","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":">3.0.0","description":"Documentation for Cornerstone Core"},"file":{"path":"developer-guide.md","mtime":"2021-11-19T21:46:55.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-11-19T21:54:10.443Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-ga/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+
+    </body>
+</html>
+

@@ -1,0 +1,612 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Enabled Element Layers · cornerstone</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="Adding Layers to an Enabled Element allows Cornerstone to display labels maps and perform image fusion.">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-anchors/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-theme-cornerstone/cornerstone.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="modality-lut-and-voi-lut.html" />
+    
+    
+    <link rel="prev" href="image-cache.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../installation.html">
+            
+                <a href="../installation.html">
+            
+                    
+                    Installation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    Concepts
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../concepts/enabled-elements.html">
+            
+                <a href="../concepts/enabled-elements.html">
+            
+                    
+                    Enabled Elements
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../concepts/image-ids.html">
+            
+                <a href="../concepts/image-ids.html">
+            
+                    
+                    Image Ids
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../concepts/image-loaders.html">
+            
+                <a href="../concepts/image-loaders.html">
+            
+                    
+                    Image Loaders
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../concepts/viewports.html">
+            
+                <a href="../concepts/viewports.html">
+            
+                    
+                    Viewports
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="../concepts/images.html">
+            
+                <a href="../concepts/images.html">
+            
+                    
+                    Images
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.6" data-path="../concepts/pixel-coordinate-system.html">
+            
+                <a href="../concepts/pixel-coordinate-system.html">
+            
+                    
+                    Pixel Coordinate System
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.7" data-path="../concepts/rendering-loop.html">
+            
+                <a href="../concepts/rendering-loop.html">
+            
+                    
+                    Rendering Loop
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.8" data-path="../concepts/libraries.html">
+            
+                <a href="../concepts/libraries.html">
+            
+                    
+                    Libraries
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.9" data-path="../concepts/rendering-pipeline.html">
+            
+                <a href="../concepts/rendering-pipeline.html">
+            
+                    
+                    Rendering Pipeline
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.10" data-path="../concepts/metadata-providers.html">
+            
+                <a href="../concepts/metadata-providers.html">
+            
+                    
+                    Metadata Providers
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    Advanced
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="image-cache.html">
+            
+                <a href="image-cache.html">
+            
+                    
+                    Image Cache
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4.2" data-path="enabled-element-layers.html">
+            
+                <a href="enabled-element-layers.html">
+            
+                    
+                    Enabled Element Layers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="modality-lut-and-voi-lut.html">
+            
+                <a href="modality-lut-and-voi-lut.html">
+            
+                    
+                    Modality LUT and VOI LUT
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="color-lookup-tables.html">
+            
+                <a href="color-lookup-tables.html">
+            
+                    
+                    Color Lookup Tables
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="webgl-rendering-pipeline.html">
+            
+                <a href="webgl-rendering-pipeline.html">
+            
+                    
+                    WebGL Rendering Pipeline
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="retrieving-pixel-data.html">
+            
+                <a href="retrieving-pixel-data.html">
+            
+                    
+                    Retrieving Pixel Data
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="legacy-browser-support.html">
+            
+                <a href="legacy-browser-support.html">
+            
+                    
+                    Legacy Browser Support
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../integration.html">
+            
+                <a href="../integration.html">
+            
+                    
+                    Integration With React
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <a target="_blank" href="https://rawgit.com/cornerstonejs/cornerstone/master/example/index.html">
+            
+                    
+                    Live Examples
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../api.html">
+            
+                <a href="../api.html">
+            
+                    
+                    API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../contributing.html">
+            
+                <a href="../contributing.html">
+            
+                    
+                    Contributing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../developer-guide.html">
+            
+                <a href="../developer-guide.html">
+            
+                    
+                    Developer Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+  
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Enabled Element Layers</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="enabled-element-layers"><a name="enabled-element-layers" class="plugin-anchor" href="#enabled-element-layers"><i class="fa fa-link" aria-hidden="true"></i></a>Enabled Element Layers</h1>
+<blockquote>
+<p>Adding <strong>Layers</strong> to an <strong>Enabled Element</strong> allows Cornerstone to display labels maps and perform image fusion.</p>
+</blockquote>
+<p>The <a href="../api.html#enabledelementlayers">Enabled Element Layers API</a> allows developers to add build a composite set of images with Cornerstone.</p>
+<p>Basics:</p>
+<ul>
+<li>An Enabled Element can have more than one Layer.</li>
+<li>Each Layer is similar to an Enabled Element - They each have their own <em>Image</em> and <em>Viewport</em>, off-screen rendering Canvas, etc...</li>
+<li>Only a single Layer can be active at a time.</li>
+<li>Layers have properties for visibility and opacity, and are uniquely referenced by a Layer ID.</li>
+</ul>
+<p>When a Layer is Active:</p>
+<ul>
+<li>The layer&apos;s <em>Image</em> is available at enabledElement.image</li>
+<li>The layer&apos;s <em>Viewport</em> is available at enabledElement.viewport</li>
+</ul>
+<p>This means that typical functions such as setViewport and getViewport apply to the <em>active layer</em>.</p>
+<p>Layers can be:</p>
+<ul>
+<li>Added (<a href="../api.html#addlayer">addLayer</a>)</li>
+<li>Retrieved individually by Layer ID: <a href="../api.html#getLayer">getLayer</a></li>
+<li>Removed individually by Layer ID: <a href="../api.html#removeLayer">removeLayer</a></li>
+</ul>
+<p>Additional functions:</p>
+<ul>
+<li>The current active layer can be retrieved <a href="../api.html#getActiveLayer">getActiveLayer</a></li>
+<li>The Array of all layers can be retrieved: <a href="../api.html#getLayers">getLayers</a></li>
+<li>The Array of all visible layers can be retrieved: <a href="../api.html#getVisibleLayers">getVisibleLayers</a></li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+
+            </div>
+
+            
+                
+                <a href="image-cache.html" class="navigation navigation-prev " aria-label="Previous page: Image Cache">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="modality-lut-and-voi-lut.html" class="navigation navigation-next " aria-label="Next page: Modality LUT and VOI LUT">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"description":"Adding Layers to an Enabled Element allows Cornerstone to display labels maps and perform image fusion.","title":"Enabled Element Layers","level":"1.4.2","depth":2,"next":{"title":"Modality LUT and VOI LUT","level":"1.4.3","depth":2,"path":"advanced/modality-lut-and-voi-lut.md","ref":"advanced/modality-lut-and-voi-lut.md","articles":[]},"previous":{"title":"Image Cache","level":"1.4.1","depth":2,"path":"advanced/image-cache.md","ref":"advanced/image-cache.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","theme-cornerstone","-fontsettings","github","ga","anchors"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/cornerstonejs/cornerstone"},"search":{},"theme-cornerstone":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"sitemap":{"hostname":"https://docs.cornerstonejs.org"},"ga":{"configuration":"auto","token":"UA-110573590-1"},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/cornerstonejs/cornerstone/edit/master/docs"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchors":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"cornerstone","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":">3.0.0","description":"Documentation for Cornerstone Core"},"file":{"path":"advanced/enabled-element-layers.md","mtime":"2021-11-19T21:46:55.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-11-19T21:54:10.443Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-ga/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+
+    </body>
+</html>
+

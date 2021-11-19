@@ -1,0 +1,609 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Pixel Coordinate System · cornerstone</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="The Pixel Coordinate System is used when referring to individual pixels in the image and supports sub-pixel precision.">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-anchors/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-theme-cornerstone/cornerstone.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="rendering-loop.html" />
+    
+    
+    <link rel="prev" href="images.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../installation.html">
+            
+                <a href="../installation.html">
+            
+                    
+                    Installation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    Concepts
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="enabled-elements.html">
+            
+                <a href="enabled-elements.html">
+            
+                    
+                    Enabled Elements
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="image-ids.html">
+            
+                <a href="image-ids.html">
+            
+                    
+                    Image Ids
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="image-loaders.html">
+            
+                <a href="image-loaders.html">
+            
+                    
+                    Image Loaders
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="viewports.html">
+            
+                <a href="viewports.html">
+            
+                    
+                    Viewports
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="images.html">
+            
+                <a href="images.html">
+            
+                    
+                    Images
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3.6" data-path="pixel-coordinate-system.html">
+            
+                <a href="pixel-coordinate-system.html">
+            
+                    
+                    Pixel Coordinate System
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.7" data-path="rendering-loop.html">
+            
+                <a href="rendering-loop.html">
+            
+                    
+                    Rendering Loop
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.8" data-path="libraries.html">
+            
+                <a href="libraries.html">
+            
+                    
+                    Libraries
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.9" data-path="rendering-pipeline.html">
+            
+                <a href="rendering-pipeline.html">
+            
+                    
+                    Rendering Pipeline
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.10" data-path="metadata-providers.html">
+            
+                <a href="metadata-providers.html">
+            
+                    
+                    Metadata Providers
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    Advanced
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../advanced/image-cache.html">
+            
+                <a href="../advanced/image-cache.html">
+            
+                    
+                    Image Cache
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../advanced/enabled-element-layers.html">
+            
+                <a href="../advanced/enabled-element-layers.html">
+            
+                    
+                    Enabled Element Layers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../advanced/modality-lut-and-voi-lut.html">
+            
+                <a href="../advanced/modality-lut-and-voi-lut.html">
+            
+                    
+                    Modality LUT and VOI LUT
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../advanced/color-lookup-tables.html">
+            
+                <a href="../advanced/color-lookup-tables.html">
+            
+                    
+                    Color Lookup Tables
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../advanced/webgl-rendering-pipeline.html">
+            
+                <a href="../advanced/webgl-rendering-pipeline.html">
+            
+                    
+                    WebGL Rendering Pipeline
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="../advanced/retrieving-pixel-data.html">
+            
+                <a href="../advanced/retrieving-pixel-data.html">
+            
+                    
+                    Retrieving Pixel Data
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="../advanced/legacy-browser-support.html">
+            
+                <a href="../advanced/legacy-browser-support.html">
+            
+                    
+                    Legacy Browser Support
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../integration.html">
+            
+                <a href="../integration.html">
+            
+                    
+                    Integration With React
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <a target="_blank" href="https://rawgit.com/cornerstonejs/cornerstone/master/example/index.html">
+            
+                    
+                    Live Examples
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../api.html">
+            
+                <a href="../api.html">
+            
+                    
+                    API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../contributing.html">
+            
+                <a href="../contributing.html">
+            
+                    
+                    Contributing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../developer-guide.html">
+            
+                <a href="../developer-guide.html">
+            
+                    
+                    Developer Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+  
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Pixel Coordinate System</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="pixel-coordinate-system"><a name="pixel-coordinate-system" class="plugin-anchor" href="#pixel-coordinate-system"><i class="fa fa-link" aria-hidden="true"></i></a>Pixel Coordinate System</h1>
+<p>The Pixel Coordinate System is used when referring to individual pixels in the image and supports sub-pixel precision. The origin of the coordinate system is such that 0.0,0.0 is the top left corner of the top left pixel in the image and columns, rows would be the bottom right corner of the bottom right pixel in the image. A coordinate of .5,.5 is therefore the center of the top left pixel.</p>
+<ol>
+<li>The function <a href="../api.html#pagetopixel">pageToPixel()</a> can be used to convert coordinates obtained from browser events to coordinates
+in the pixel coordinate system.</li>
+<li>The function <a href="../api.html#settopixelcoordinatesystem">setToPixelCoordinateSystem()</a> can be used to set the canvas context to the pixel coordinate system.  This is useful when handling the CornerstoneImageRendered event to draw geometry on top of the image.</li>
+<li>This coordinate system matches that specified in the DICOM Grayscale Softcopy Presentation State Graphic Annotation module for graphics drawn using the PIXEL annotation units.</li>
+<li>Use Math.ceil() to convert from the pixel coordinate system to the integer pixel number (for looking up the pixel value in the pixel data).</li>
+</ol>
+<h2 id="example"><a name="example" class="plugin-anchor" href="#example"><i class="fa fa-link" aria-hidden="true"></i></a>Example</h2>
+<pre><code class="lang-javascript">element = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&apos;.cornerstone-element&apos;</span>)
+$(element).on(<span class="hljs-string">&apos;cornerstoneimagerendered&apos;</span>, (e) =&gt; {
+  <span class="hljs-keyword">this</span>.cornerstone.setToPixelCoordinateSystem(e.detail.enabledElement, e.detail.canvasContext);
+    <span class="hljs-keyword">let</span> context = e.detail.canvasContext
+
+    <span class="hljs-comment">//save canvas settings</span>
+    context.save()
+
+    context.strokeStyle = <span class="hljs-string">&apos;green&apos;</span>
+    context.beginPath()
+    context.lineWidth = <span class="hljs-number">1</span> / e.detail.viewport.scale
+    context.strokeRect(<span class="hljs-number">100</span>,<span class="hljs-number">100</span>,<span class="hljs-number">100</span>,<span class="hljs-number">100</span>)
+
+    <span class="hljs-comment">//restore canvas settings to previous state</span>
+    context.restore()
+})
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+
+            </div>
+
+            
+                
+                <a href="images.html" class="navigation navigation-prev " aria-label="Previous page: Images">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="rendering-loop.html" class="navigation navigation-next " aria-label="Next page: Rendering Loop">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"description":"The Pixel Coordinate System is used when referring to individual pixels in the image and supports sub-pixel precision.","title":"Pixel Coordinate System","level":"1.3.6","depth":2,"next":{"title":"Rendering Loop","level":"1.3.7","depth":2,"path":"concepts/rendering-loop.md","ref":"concepts/rendering-loop.md","articles":[]},"previous":{"title":"Images","level":"1.3.5","depth":2,"path":"concepts/images.md","ref":"concepts/images.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","theme-cornerstone","-fontsettings","github","ga","anchors"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/cornerstonejs/cornerstone"},"search":{},"theme-cornerstone":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"sitemap":{"hostname":"https://docs.cornerstonejs.org"},"ga":{"configuration":"auto","token":"UA-110573590-1"},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/cornerstonejs/cornerstone/edit/master/docs"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchors":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"cornerstone","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":">3.0.0","description":"Documentation for Cornerstone Core"},"file":{"path":"concepts/pixel-coordinate-system.md","mtime":"2021-11-19T21:46:55.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-11-19T21:54:10.443Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-ga/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+
+    </body>
+</html>
+
