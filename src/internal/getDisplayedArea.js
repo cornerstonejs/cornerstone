@@ -1,8 +1,9 @@
 /**
  * Returns the displayedArea from the viewport if exists or
  * creates a new displayedArea object containing default values for the image
+ *
  * @param {Image} image A Cornerstone Image Object
-* @param {Viewport} viewport An optional viewport Object
+ * @param {Viewport} viewport An optional viewport Object
  * @returns {DisplayedArea} displayedArea object
  * @memberof Internal
  */

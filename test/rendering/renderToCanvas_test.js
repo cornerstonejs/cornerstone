@@ -1,4 +1,4 @@
-import { assert, expect } from 'chai';
+import { assert, expect } from 'chai'; // eslint-disable-line import/extensions
 
 import renderToCanvas from '../../src/rendering/renderToCanvas.js';
 import { getEnabledElement } from '../../src/enabledElements.js';
