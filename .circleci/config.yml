@@ -7,7 +7,7 @@ orbs:
 defaults: &defaults
   working_directory: ~/repo
   docker:
-    - image: circleci/node:latest-browsers
+    - image: circleci/node@sha256:a80b0f7d12ed539c1c40dcdc454433a0a690f1972a038b0d4dc85eaa34fb48d8
 
 jobs:
   checkout_code:
