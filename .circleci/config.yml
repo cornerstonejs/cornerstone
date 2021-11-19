@@ -16,10 +16,10 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/repo
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
+      # - restore_cache:
+      #     keys:
+      #       - v1-dependencies-{{ checksum "package.json" }}
+      #       - v1-dependencies-
       - puppeteer/install
       - run: npm install
       - save_cache:
