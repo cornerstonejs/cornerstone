@@ -34,11 +34,11 @@ export default function (image, windowWidth, windowCenter, invert, modalityLUT, 
 
   if (invert === true) {
     for (let storedValue = minPixelValue; storedValue <= maxPixelValue; storedValue++) {
-      lut[storedValue + (-offset)] = 255 - vlutfn(mlutfn(storedValue));
+      lut[storedValue + (-offset)] = 255 - Math.round(vlutfn(mlutfn(storedValue)));
     }
   } else {
     for (let storedValue = minPixelValue; storedValue <= maxPixelValue; storedValue++) {
-      lut[storedValue + (-offset)] = vlutfn(mlutfn(storedValue));
+      lut[storedValue + (-offset)] = Math.round(vlutfn(mlutfn(storedValue)));
     }
   }
 
