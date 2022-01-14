@@ -1,5 +1,6 @@
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
 import { renderColorImage } from './renderColorImage.js';
+import getDisplayedArea from '../internal/getDisplayedArea.js';
 
 /**
  * API function to draw a standard web image (PNG, JPG) to an enabledImage
@@ -27,7 +28,9 @@ export function renderWebImage (enabledElement, invalidated) {
         enabledElement.viewport.invert === false) {
 
     // Get the canvas context and reset the transform
-    const context = enabledElement.canvas.getContext('2d');
+    const context = enabledElement.canvas.getContext('2d', {
+      desynchronized: true
+    });
 
     context.setTransform(1, 0, 0, 1, 0, 0);
 
@@ -41,13 +44,13 @@ export function renderWebImage (enabledElement, invalidated) {
 
     // Save the canvas context state and apply the viewport properties
     setToPixelCoordinateSystem(enabledElement, context);
+    const imageDisplayedArea = getDisplayedArea(enabledElement.image, enabledElement.viewport);
+    const sx = imageDisplayedArea.tlhc.x - 1;
+    const sy = imageDisplayedArea.tlhc.y - 1;
+    const width = imageDisplayedArea.brhc.x - sx;
+    const height = imageDisplayedArea.brhc.y - sy;
 
-    const sx = enabledElement.viewport.displayedArea.tlhc.x - 1;
-    const sy = enabledElement.viewport.displayedArea.tlhc.y - 1;
-    const width = enabledElement.viewport.displayedArea.brhc.x - sx;
-    const height = enabledElement.viewport.displayedArea.brhc.y - sy;
-
-    context.drawImage(image.getImage(), sx, sy, width, height, 0, 0, width, height);
+    context.drawImage(image.getImage(), sx, sy, width, height, sx, sy, width, height);
   } else {
     renderColorImage(enabledElement, invalidated);
   }

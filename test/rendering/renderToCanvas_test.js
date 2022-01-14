@@ -1,4 +1,4 @@
-import { assert, expect } from 'chai';
+import { assert, expect } from 'chai'; // eslint-disable-line import/extensions
 
 import renderToCanvas from '../../src/rendering/renderToCanvas.js';
 import { getEnabledElement } from '../../src/enabledElements.js';
@@ -11,7 +11,9 @@ describe('renderToCanvas', function () {
     this.height = 256;
     this.width = 256;
 
-    const canvasContext = this.canvas1.getContext('2d');
+    const canvasContext = this.canvas1.getContext('2d', {
+      desynchronized: true
+    });
     const imageData = canvasContext.createImageData(this.width, this.height);
     const rnd = Math.round(Math.random() * 255);
     const pixelData = imageData.data;
@@ -54,7 +56,9 @@ describe('renderToCanvas', function () {
     // Arrange
     const renderCanvas1 = document.createElement('canvas');
     const viewport = { hflip: true };
-    const options = { renderer: 'webgl' };
+    const options = { renderer: 'webgl',
+      desynchronized: true,
+      preserveDrawingBuffer: true };
 
     renderCanvas1.width = this.width;
     renderCanvas1.height = this.height;
@@ -73,11 +77,15 @@ describe('renderToCanvas', function () {
     // Act
     renderToCanvas(renderCanvas1, this.image, viewport, options);
 
-    const canvasContext1 = this.canvas1.getContext('2d');
+    const canvasContext1 = this.canvas1.getContext('2d', {
+      desynchronized: true
+    });
     const imageData1 = canvasContext1.createImageData(this.width, this.height);
     const pixelData1 = imageData1.data;
 
-    const canvasContext2 = renderCanvas1.getContext('2d');
+    const canvasContext2 = renderCanvas1.getContext('2d', {
+      desynchronized: true
+    });
     const imageData2 = canvasContext2.createImageData(this.width, this.height);
     const pixelData2 = imageData2.data;
 

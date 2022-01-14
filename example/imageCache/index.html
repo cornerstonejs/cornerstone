@@ -88,7 +88,9 @@
 
         canvas.width = width;
         canvas.height = height;
-        var canvasContext = canvas.getContext('2d');
+        var canvasContext = canvas.getContext('2d', {
+            desynchronized: true
+        });
         var imageData = canvasContext.createImageData(width, height);
         var pixelData = imageData.data;
         var index = 0;

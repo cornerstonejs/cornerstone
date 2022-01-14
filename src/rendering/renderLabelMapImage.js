@@ -1,10 +1,12 @@
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
 import now from '../internal/now.js';
+import getFillStyle from '../internal/getFillStyle.js';
 import initializeRenderCanvas from './initializeRenderCanvas.js';
 import saveLastRendered from './saveLastRendered.js';
 import doesImageNeedToBeRendered from './doesImageNeedToBeRendered.js';
 import storedPixelDataToCanvasImageDataColorLUT from '../internal/storedPixelDataToCanvasImageDataColorLUT.js';
 import colors from '../colors/index.js';
+import getDisplayedArea from '../internal/getDisplayedArea.js';
 
 /**
  * Returns an appropriate canvas to render the Image. If the canvas available in the cache is appropriate
@@ -96,12 +98,14 @@ export function renderLabelMapImage (enabledElement, invalidated) {
   }
 
   // Get the canvas context and reset the transform
-  const context = enabledElement.canvas.getContext('2d');
+  const context = enabledElement.canvas.getContext('2d', {
+    desynchronized: true
+  });
 
   context.setTransform(1, 0, 0, 1, 0, 0);
 
   // Clear the canvas
-  context.fillStyle = 'black';
+  context.fillStyle = getFillStyle(enabledElement);
   context.fillRect(0, 0, enabledElement.canvas.width, enabledElement.canvas.height);
 
   // Turn off image smooth/interpolation if pixelReplication is set in the viewport
@@ -115,13 +119,13 @@ export function renderLabelMapImage (enabledElement, invalidated) {
   // Normal Canvas rendering path
   // TODO: Add WebGL support for label map pipeline
   const renderCanvas = getRenderCanvas(enabledElement, image, invalidated);
+  const imageDisplayedArea = getDisplayedArea(enabledElement.image, enabledElement.viewport);
+  const sx = imageDisplayedArea.tlhc.x - 1;
+  const sy = imageDisplayedArea.tlhc.y - 1;
+  const width = imageDisplayedArea.brhc.x - sx;
+  const height = imageDisplayedArea.brhc.y - sy;
 
-  const sx = enabledElement.viewport.displayedArea.tlhc.x - 1;
-  const sy = enabledElement.viewport.displayedArea.tlhc.y - 1;
-  const width = enabledElement.viewport.displayedArea.brhc.x - sx;
-  const height = enabledElement.viewport.displayedArea.brhc.y - sy;
-
-  context.drawImage(renderCanvas, sx, sy, width, height, 0, 0, width, height);
+  context.drawImage(renderCanvas, sx, sy, width, height, sx, sy, width, height);
 
   enabledElement.renderingTools = saveLastRendered(enabledElement);
 }
@@ -146,7 +150,9 @@ export function addLabelMapLayer (layer, invalidated) {
 
   layer.canvas = getRenderCanvas(layer, image, invalidated);
 
-  const context = layer.canvas.getContext('2d');
+  const context = layer.canvas.getContext('2d', {
+    desynchronized: true
+  });
 
   // Turn off image smooth/interpolation if pixelReplication is set in the viewport
   context.imageSmoothingEnabled = !layer.viewport.pixelReplication;

@@ -1,3 +1,4 @@
+import getFillStyle from '../internal/getFillStyle.js';
 import storedPixelDataToCanvasImageData from '../internal/storedPixelDataToCanvasImageData.js';
 import storedPixelDataToCanvasImageDataRGBA from '../internal/storedPixelDataToCanvasImageDataRGBA.js';
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
@@ -7,6 +8,7 @@ import getLut from './getLut.js';
 import doesImageNeedToBeRendered from './doesImageNeedToBeRendered.js';
 import initializeRenderCanvas from './initializeRenderCanvas.js';
 import saveLastRendered from './saveLastRendered.js';
+import getDisplayedArea from '../internal/getDisplayedArea.js';
 
 /**
  * Returns an appropriate canvas to render the Image. If the canvas available in the cache is appropriate
@@ -84,12 +86,14 @@ export function renderGrayscaleImage (enabledElement, invalidated) {
   }
 
   // Get the canvas context and reset the transform
-  const context = enabledElement.canvas.getContext('2d');
+  const context = enabledElement.canvas.getContext('2d', {
+    desynchronized: true
+  });
 
   context.setTransform(1, 0, 0, 1, 0, 0);
 
   // Clear the canvas
-  context.fillStyle = 'black';
+  context.fillStyle = getFillStyle(enabledElement);
   context.fillRect(0, 0, enabledElement.canvas.width, enabledElement.canvas.height);
 
   // Turn off image smooth/interpolation if pixelReplication is set in the viewport
@@ -112,12 +116,13 @@ export function renderGrayscaleImage (enabledElement, invalidated) {
     renderCanvas = getRenderCanvas(enabledElement, image, invalidated);
   }
 
-  const sx = enabledElement.viewport.displayedArea.tlhc.x - 1;
-  const sy = enabledElement.viewport.displayedArea.tlhc.y - 1;
-  const width = enabledElement.viewport.displayedArea.brhc.x - sx;
-  const height = enabledElement.viewport.displayedArea.brhc.y - sy;
+  const imageDisplayedArea = getDisplayedArea(enabledElement.image, enabledElement.viewport);
+  const sx = imageDisplayedArea.tlhc.x - 1;
+  const sy = imageDisplayedArea.tlhc.y - 1;
+  const width = imageDisplayedArea.brhc.x - sx;
+  const height = imageDisplayedArea.brhc.y - sy;
 
-  context.drawImage(renderCanvas, sx, sy, width, height, 0, 0, width, height);
+  context.drawImage(renderCanvas, sx, sy, width, height, sx, sy, width, height);
 
   enabledElement.renderingTools = saveLastRendered(enabledElement);
 }
@@ -144,7 +149,9 @@ export function addGrayscaleLayer (layer, invalidated, useAlphaChannel = false) 
 
   layer.canvas = getRenderCanvas(layer, image, invalidated, useAlphaChannel);
 
-  const context = layer.canvas.getContext('2d');
+  const context = layer.canvas.getContext('2d', {
+    desynchronized: true
+  });
 
   // Turn off image smooth/interpolation if pixelReplication is set in the viewport
   context.imageSmoothingEnabled = !layer.viewport.pixelReplication;

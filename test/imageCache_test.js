@@ -245,7 +245,7 @@ describe('Store, retrieve, and remove imagePromises from the cache', function ()
         cancelFn: undefined
       };
 
-        // Add it to the cache
+      // Add it to the cache
       putImageLoadObject(image.imageId, imageLoadObject);
       promises.push(imageLoadObject.promise);
     }

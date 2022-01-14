@@ -195,6 +195,22 @@ _Will you add feature XYZ for me?_
 
 If it is in the roadmap, I intend to implement it some day - probably when I actually need it.  If you really need something now and are willing to pay for it, try posting on the cornerstone platform google group
 
+Research notice
+~~~~~~~~~~~~~~~
+
+Please note that this repository is participating in a study into
+sustainability of open source projects. Data will be gathered about this
+repository for approximately the next 12 months, starting from June
+2021.
+
+Data collected will include number of contributors, number of PRs, time
+taken to close/merge these PRs, and issues closed.
+
+For more information, please visit `the informational
+page <https://sustainable-open-science-and-software.github.io/>`__ or
+download the `participant information
+sheet <https://sustainable-open-science-and-software.github.io/assets/PIS_sustainable_software.pdf>`__.
+
 Copyright
 =========
 

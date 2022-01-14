@@ -9,6 +9,7 @@ const EVENTS = {
   WEBGL_TEXTURE_REMOVED: 'cornerstonewebgltextureremoved',
   WEBGL_TEXTURE_CACHE_FULL: 'cornerstonewebgltexturecachefull',
   IMAGE_LOADED: 'cornerstoneimageloaded',
+  IMAGE_LOAD_PROGRESS: 'cornerstoneimageloadprogress',
   IMAGE_LOAD_FAILED: 'cornerstoneimageloadfailed',
   ELEMENT_RESIZED: 'cornerstoneelementresized',
   IMAGE_RENDERED: 'cornerstoneimagerendered',
@@ -94,7 +95,7 @@ class EventTarget {
       return true;
     }
 
-    const stack = this.listeners[event.type];
+    const stack = this.listeners[event.type].slice();
 
     for (let i = 0, l = stack.length; i < l; i++) {
       stack[i].call(this, event);
