@@ -1,0 +1,151 @@
+version: 2.1
+
+orbs:
+  coveralls: coveralls/coveralls@1.0.6
+  puppeteer: threetreeslight/puppeteer@0.1.2
+
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: circleci/node@sha256:a80b0f7d12ed539c1c40dcdc454433a0a690f1972a038b0d4dc85eaa34fb48d8
+
+jobs:
+  checkout_code:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/repo
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - puppeteer/install
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - persist_to_workspace:
+          root: ~/repo
+          paths: .
+
+  test_and_report:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run: npm install
+      - run: npm rebuild
+      - run:
+          name: Install codecov
+          command: npm install --save-dev codecov
+      - run:
+          name: Tests && Codecov Report
+          command: npm run test
+      - coveralls/upload
+      - store_artifacts:
+          path: ./coverage/
+          prefix: tests
+      - store_artifacts:
+          path: coverage
+          prefix: coverage
+      - store_test_results:
+          path: ./coverage/
+
+  build:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run: npm install
+      - run: npm rebuild
+      - run:
+          name: Build our app
+          command: npm run build
+      - persist_to_workspace:
+          root: ~/repo
+          paths: .
+
+  publish_npm:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run: npm install
+      - run:
+          name: Avoid hosts unknown for github
+          command: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+      - run:
+          name: Publish using Semantic Release
+          command: npx semantic-release
+      - persist_to_workspace:
+          root: ~/repo
+          paths: .
+
+  publish_docs:
+    working_directory: ~/repo
+    docker:
+      - image: cimg/ruby:3.0.2-node
+    environment:
+      BUNDLE_PATH: ~/repo/vendor/bundle
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Avoid hosts unknown for github
+          command: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+      - run: npm install
+      - run: sudo npm install gitbook-cli -g
+      - run:
+          name: Do Magic
+          command: sh ~/repo/.circleci/update-docs.sh
+
+workflows:
+  version: 2
+
+  ###
+  # PULL REQUESTS
+  ###
+  test_build:
+    jobs:
+      - checkout_code:
+          filters:
+            branches:
+              ignore:
+                - master
+                - feature/*
+                - hotfix/*
+      - test_and_report:
+          requires:
+            - checkout_code
+      - build:
+          requires:
+            - checkout_code
+
+  ###
+  # MERGE: MASTER
+  ###
+  test_build_publish:
+    jobs:
+      - checkout_code:
+          filters:
+            branches:
+              only: master
+      - test_and_report:
+          requires:
+            - checkout_code
+      - build:
+          requires:
+            - checkout_code
+      - publish_npm:
+          requires:
+            - checkout_code
+            - test_and_report
+            - build
+      #   - build_examples:
+      #       requires:
+      #         - publish_npm
+      - publish_docs:
+          requires:
+            - publish_npm

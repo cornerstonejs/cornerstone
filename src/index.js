@@ -31,6 +31,10 @@ import {
   registerUnknownImageLoader
 } from './imageLoader.js';
 
+import imageLoadPoolManager from './requestPool/imageLoadPoolManager.ts';
+import imageRetrievalPoolManager from './requestPool/imageRetrievalPoolManager.ts';
+import { RequestPoolManager } from './requestPool/RequestPoolManager.ts';
+
 import { default as canvasToPixel } from './canvasToPixel.js';
 import { default as colors } from './colors/index.js';
 import { default as disable } from './disable.js';
@@ -43,6 +47,7 @@ import { default as fitToWindow } from './fitToWindow.js';
 import { default as generateLut } from './internal/generateLut.js';
 import { default as getDefaultViewport } from './internal/getDefaultViewport.js';
 import { default as getDefaultViewportForImage } from './getDefaultViewportForImage.js';
+import { default as getDisplayedArea } from './internal/getDisplayedArea.js';
 import { default as getImage } from './getImage.js';
 import { default as getPixels } from './getPixels.js';
 import { default as getStoredPixels } from './getStoredPixels.js';
@@ -125,6 +130,7 @@ const cornerstone = {
   setLayerImage,
   fitToWindow,
   getDefaultViewportForImage,
+  getDisplayedArea,
   setDefaultViewport,
   getImage,
   getPixels,
@@ -154,7 +160,10 @@ const cornerstone = {
   restoreImage,
   EVENTS,
   events,
-  triggerEvent
+  triggerEvent,
+  imageLoadPoolManager,
+  imageRetrievalPoolManager,
+  RequestPoolManager
 };
 
 export {
@@ -197,6 +206,7 @@ export {
   setLayerImage,
   fitToWindow,
   getDefaultViewportForImage,
+  getDisplayedArea,
   getImage,
   getPixels,
   getStoredPixels,
@@ -225,7 +235,10 @@ export {
   restoreImage,
   EVENTS,
   events,
-  triggerEvent
+  triggerEvent,
+  imageLoadPoolManager,
+  imageRetrievalPoolManager,
+  RequestPoolManager
 };
 
 export default cornerstone;

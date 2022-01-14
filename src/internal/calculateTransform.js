@@ -1,4 +1,5 @@
 import { Transform } from './transform.js';
+import getDisplayedArea from './getDisplayedArea.js';
 
 /**
  * Calculate the transform for a Cornerstone enabled element
@@ -25,11 +26,15 @@ export default function (enabledElement, scale) {
   // Apply the scale
   let widthScale = enabledElement.viewport.scale;
   let heightScale = enabledElement.viewport.scale;
+  const imageDisplayedArea = getDisplayedArea(enabledElement.image, enabledElement.viewport);
 
-  const width = enabledElement.viewport.displayedArea.brhc.x - (enabledElement.viewport.displayedArea.tlhc.x - 1);
-  const height = enabledElement.viewport.displayedArea.brhc.y - (enabledElement.viewport.displayedArea.tlhc.y - 1);
+  const offsetX = imageDisplayedArea.tlhc.x - 1;
+  const offsetY = imageDisplayedArea.tlhc.y - 1;
 
-  if (enabledElement.viewport.displayedArea.presentationSizeMode === 'NONE') {
+  const width = imageDisplayedArea.brhc.x - offsetX;
+  const height = imageDisplayedArea.brhc.y - offsetY;
+
+  if (imageDisplayedArea.presentationSizeMode === 'NONE') {
     if (enabledElement.image.rowPixelSpacing < enabledElement.image.columnPixelSpacing) {
       widthScale *= (enabledElement.image.columnPixelSpacing / enabledElement.image.rowPixelSpacing);
     } else if (enabledElement.image.columnPixelSpacing < enabledElement.image.rowPixelSpacing) {
@@ -37,10 +42,10 @@ export default function (enabledElement, scale) {
     }
   } else {
     // These should be good for "TRUE SIZE" and "MAGNIFY"
-    widthScale = enabledElement.viewport.displayedArea.columnPixelSpacing;
-    heightScale = enabledElement.viewport.displayedArea.rowPixelSpacing;
+    widthScale = imageDisplayedArea.columnPixelSpacing;
+    heightScale = imageDisplayedArea.rowPixelSpacing;
 
-    if (enabledElement.viewport.displayedArea.presentationSizeMode === 'SCALE TO FIT') {
+    if (imageDisplayedArea.presentationSizeMode === 'SCALE TO FIT') {
       // Fit TRUE IMAGE image (width/height) to window
       const verticalScale = enabledElement.canvas.height / (height * heightScale);
       const horizontalScale = enabledElement.canvas.width / (width * widthScale);
@@ -48,10 +53,10 @@ export default function (enabledElement, scale) {
       // Apply new scale
       widthScale = heightScale = Math.min(horizontalScale, verticalScale);
 
-      if (enabledElement.viewport.displayedArea.rowPixelSpacing < enabledElement.viewport.displayedArea.columnPixelSpacing) {
-        widthScale *= (enabledElement.viewport.displayedArea.columnPixelSpacing / enabledElement.viewport.displayedArea.rowPixelSpacing);
-      } else if (enabledElement.viewport.displayedArea.columnPixelSpacing < enabledElement.viewport.displayedArea.rowPixelSpacing) {
-        heightScale *= (enabledElement.viewport.displayedArea.rowPixelSpacing / enabledElement.viewport.displayedArea.columnPixelSpacing);
+      if (imageDisplayedArea.rowPixelSpacing < imageDisplayedArea.columnPixelSpacing) {
+        widthScale *= (imageDisplayedArea.columnPixelSpacing / imageDisplayedArea.rowPixelSpacing);
+      } else if (imageDisplayedArea.columnPixelSpacing < imageDisplayedArea.rowPixelSpacing) {
+        heightScale *= (imageDisplayedArea.rowPixelSpacing / imageDisplayedArea.columnPixelSpacing);
       }
     }
   }
@@ -87,6 +92,9 @@ export default function (enabledElement, scale) {
 
   // Move back from center of image
   transform.translate(-width / 2, -height / 2);
+
+  // Move to displayedArea
+  transform.translate(-offsetX, -offsetY);
 
   return transform;
 }

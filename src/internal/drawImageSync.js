@@ -21,7 +21,7 @@ export default function (enabledElement, invalidated) {
   const layers = enabledElement.layers || [];
 
   // Check if enabledElement can be redrawn
-  if (!enabledElement.canvas || !(enabledElement.image || layers.length)) {
+  if (!enabledElement.canvas || !enabledElement.image) {
     return;
   }
 
@@ -66,7 +66,9 @@ export default function (enabledElement, invalidated) {
     element,
     image,
     enabledElement,
-    canvasContext: enabledElement.canvas.getContext('2d'),
+    canvasContext: enabledElement.canvas.getContext('2d', {
+      desynchronized: true
+    }),
     renderTimeInMs
   };
 

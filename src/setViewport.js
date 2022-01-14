@@ -35,12 +35,12 @@ export default function (element, viewport) {
   // Prevent window width from being too small (note that values close to zero are valid and can occur with
   // PET images in particular)
   if (enabledElement.viewport.voi.windowWidth) {
-    enabledElement.viewport.voi.windowWidth = Math.max(viewport.voi.windowWidth, MIN_WINDOW_WIDTH);
+    enabledElement.viewport.voi.windowWidth = Math.max(enabledElement.viewport.voi.windowWidth, MIN_WINDOW_WIDTH);
   }
 
   // Prevent scale from getting too small
   if (enabledElement.viewport.scale) {
-    enabledElement.viewport.scale = Math.max(viewport.scale, MIN_VIEWPORT_SCALE);
+    enabledElement.viewport.scale = Math.max(enabledElement.viewport.scale, MIN_VIEWPORT_SCALE);
   }
 
   // Normalize the rotation value to a positive rotation in degrees

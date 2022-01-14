@@ -4,6 +4,7 @@ import { addColorLayer } from '../rendering/renderColorImage.js';
 import { addPseudoColorLayer } from '../rendering/renderPseudoColorImage.js';
 import { addLabelMapLayer } from '../rendering/renderLabelMapImage.js';
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
+import getDisplayedArea from './getDisplayedArea.js';
 
 function getViewportRatio (baseLayer, targetLayer) {
   if (!baseLayer.syncProps) {
@@ -115,12 +116,13 @@ function renderLayers (context, layers, invalidated) {
     context.mozImageSmoothingEnabled = context.imageSmoothingEnabled;
 
     // Draw from the current layer's canvas onto the enabled element's canvas
-    const sx = layer.viewport.displayedArea.tlhc.x - 1;
-    const sy = layer.viewport.displayedArea.tlhc.y - 1;
-    const width = layer.viewport.displayedArea.brhc.x - sx;
-    const height = layer.viewport.displayedArea.brhc.y - sy;
+    const layerDisplayedArea = getDisplayedArea(layer.image, layer.viewport);
+    const sx = layerDisplayedArea.tlhc.x - 1;
+    const sy = layerDisplayedArea.tlhc.y - 1;
+    const width = layerDisplayedArea.brhc.x - sx;
+    const height = layerDisplayedArea.brhc.y - sy;
 
-    context.drawImage(layer.canvas, sx, sy, width, height, 0, 0, width, height);
+    context.drawImage(layer.canvas, sx, sy, width, height, sx, sy, width, height);
     context.restore();
 
     layer.invalid = false;
@@ -161,7 +163,9 @@ export default function (enabledElement, invalidated) {
   }
 
   // Get the enabled element's canvas so we can draw to it
-  const context = enabledElement.canvas.getContext('2d');
+  const context = enabledElement.canvas.getContext('2d', {
+    desynchronized: true
+  });
 
   context.setTransform(1, 0, 0, 1, 0, 0);
 
