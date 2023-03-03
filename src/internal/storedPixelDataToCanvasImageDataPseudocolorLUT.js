@@ -33,23 +33,47 @@ function storedPixelDataToCanvasImageDataPseudocolorLUT (image, grayscaleLut, co
     clut = colorLut;
   }
 
-  if (minPixelValue < 0) {
-    while (storedPixelDataIndex < numPixels) {
-      grayscale = grayscaleLut[pixelData[storedPixelDataIndex++] + (-minPixelValue)];
-      rgba = clut[grayscale];
-      canvasImageDataData[canvasImageDataIndex++] = rgba[0];
-      canvasImageDataData[canvasImageDataIndex++] = rgba[1];
-      canvasImageDataData[canvasImageDataIndex++] = rgba[2];
-      canvasImageDataData[canvasImageDataIndex++] = rgba[3];
+  if (image.color === true || image.rgba === true) {/* Updated the CLUT lookup: rgba  */
+    if (minPixelValue < 0) {
+      while (storedPixelDataIndex < numPixels) {
+        grayscale = grayscaleLut[pixelData[storedPixelDataIndex] + -minPixelValue];
+        storedPixelDataIndex = storedPixelDataIndex + 4;
+        rgba = clut[grayscale];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[0];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[1];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[2];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[3];
+      }
+    } else {
+      while (storedPixelDataIndex < numPixels) {
+        grayscale = grayscaleLut[pixelData[storedPixelDataIndex]];
+        storedPixelDataIndex = storedPixelDataIndex + 4;
+        rgba = clut[grayscale];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[0];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[1];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[2];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[3];
+      }
     }
   } else {
-    while (storedPixelDataIndex < numPixels) {
-      grayscale = grayscaleLut[pixelData[storedPixelDataIndex++]];
-      rgba = clut[grayscale];
-      canvasImageDataData[canvasImageDataIndex++] = rgba[0];
-      canvasImageDataData[canvasImageDataIndex++] = rgba[1];
-      canvasImageDataData[canvasImageDataIndex++] = rgba[2];
-      canvasImageDataData[canvasImageDataIndex++] = rgba[3];
+    if (minPixelValue < 0) {
+      while (storedPixelDataIndex < numPixels) {
+        grayscale = grayscaleLut[pixelData[storedPixelDataIndex++] + -minPixelValue];
+        rgba = clut[grayscale];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[0];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[1];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[2];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[3];
+      }
+    } else {
+      while (storedPixelDataIndex < numPixels) {
+        grayscale = grayscaleLut[pixelData[storedPixelDataIndex++]];
+        rgba = clut[grayscale];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[0];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[1];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[2];
+        canvasImageDataData[canvasImageDataIndex++] = rgba[3];
+      }
     }
   }
 
