@@ -75,7 +75,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "a1aedd7a1903d585fd72";
+/******/ 	var hotCurrentHash = "b6b7ecf69804461a0c70";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -3341,6 +3341,7 @@ var unknownImageLoader;
  */
 
 function loadImageFromImageLoader(imageId, options) {
+  console.log("loadImageFromImageLoader");
   var colonIndex = imageId.indexOf(':');
   var scheme = imageId.substring(0, colonIndex);
   var loader = imageLoaders[scheme];
