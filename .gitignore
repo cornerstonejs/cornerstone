@@ -5,5 +5,5 @@ coverage/
 documentation/
 docs/_book
 docs/api.md
-dist/
+#dist/
 .DS_Store
