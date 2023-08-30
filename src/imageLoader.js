@@ -24,37 +24,40 @@ let unknownImageLoader;
  * @returns {ImageLoadObject} An Object which can be used to act after an image is loaded or loading fails
  * @memberof ImageLoader
  */
-function loadImageFromImageLoader(imageId, options) {
+function loadImageFromImageLoader (imageId, options) {
 
-    console.log("loadImageFromImageLoader");
+  console.log('loadImageFromImageLoader');
 
-    const colonIndex = imageId.indexOf(':');
-    const scheme = imageId.substring(0, colonIndex);
-    const loader = imageLoaders[scheme];
 
-    if (loader === undefined || loader === null) {
-        if (unknownImageLoader !== undefined) {
-            return unknownImageLoader(imageId);
-        }
+  console.log('loadImageFromImageLoader123');
 
-        throw new Error('loadImageFromImageLoader: no image loader for imageId');
+  const colonIndex = imageId.indexOf(':');
+  const scheme = imageId.substring(0, colonIndex);
+  const loader = imageLoaders[scheme];
+
+  if (loader === undefined || loader === null) {
+    if (unknownImageLoader !== undefined) {
+      return unknownImageLoader(imageId);
     }
 
-    const imageLoadObject = loader(imageId, options);
+    throw new Error('loadImageFromImageLoader: no image loader for imageId');
+  }
 
-    // Broadcast an image loaded event once the image is loaded
-    imageLoadObject.promise.then(function (image) {
-        triggerEvent(events, EVENTS.IMAGE_LOADED, { image });
-    }, function (error) {
-        const errorObject = {
-            imageId,
-            error
-        };
+  const imageLoadObject = loader(imageId, options);
 
-        triggerEvent(events, EVENTS.IMAGE_LOAD_FAILED, errorObject);
-    });
+  // Broadcast an image loaded event once the image is loaded
+  imageLoadObject.promise.then(function (image) {
+    triggerEvent(events, EVENTS.IMAGE_LOADED, { image });
+  }, function (error) {
+    const errorObject = {
+      imageId,
+      error
+    };
 
-    return imageLoadObject;
+    triggerEvent(events, EVENTS.IMAGE_LOAD_FAILED, errorObject);
+  });
+
+  return imageLoadObject;
 }
 
 /**
@@ -67,18 +70,18 @@ function loadImageFromImageLoader(imageId, options) {
  * @returns {ImageLoadObject} An Object which can be used to act after an image is loaded or loading fails
  * @memberof ImageLoader
  */
-export function loadImage(imageId, options) {
-    if (imageId === undefined) {
-        throw new Error('loadImage: parameter imageId must not be undefined');
-    }
+export function loadImage (imageId, options) {
+  if (imageId === undefined) {
+    throw new Error('loadImage: parameter imageId must not be undefined');
+  }
 
-    const imageLoadObject = getImageLoadObject(imageId);
+  const imageLoadObject = getImageLoadObject(imageId);
 
-    if (imageLoadObject !== undefined) {
-        return imageLoadObject.promise;
-    }
+  if (imageLoadObject !== undefined) {
+    return imageLoadObject.promise;
+  }
 
-    return loadImageFromImageLoader(imageId, options).promise;
+  return loadImageFromImageLoader(imageId, options).promise;
 }
 
 //
@@ -93,22 +96,22 @@ export function loadImage(imageId, options) {
  * @returns {ImageLoadObject} Image Loader Object
  * @memberof ImageLoader
  */
-export function loadAndCacheImage(imageId, options) {
-    if (imageId === undefined) {
-        throw new Error('loadAndCacheImage: parameter imageId must not be undefined');
-    }
+export function loadAndCacheImage (imageId, options) {
+  if (imageId === undefined) {
+    throw new Error('loadAndCacheImage: parameter imageId must not be undefined');
+  }
 
-    let imageLoadObject = getImageLoadObject(imageId);
+  let imageLoadObject = getImageLoadObject(imageId);
 
-    if (imageLoadObject !== undefined) {
-        return imageLoadObject.promise;
-    }
-
-    imageLoadObject = loadImageFromImageLoader(imageId, options);
-
-    putImageLoadObject(imageId, imageLoadObject);
-
+  if (imageLoadObject !== undefined) {
     return imageLoadObject.promise;
+  }
+
+  imageLoadObject = loadImageFromImageLoader(imageId, options);
+
+  putImageLoadObject(imageId, imageLoadObject);
+
+  return imageLoadObject.promise;
 }
 
 /**
@@ -119,8 +122,8 @@ export function loadAndCacheImage(imageId, options) {
  * @returns {void}
  * @memberof ImageLoader
  */
-export function registerImageLoader(scheme, imageLoader) {
-    imageLoaders[scheme] = imageLoader;
+export function registerImageLoader (scheme, imageLoader) {
+  imageLoaders[scheme] = imageLoader;
 }
 
 /**
@@ -131,10 +134,10 @@ export function registerImageLoader(scheme, imageLoader) {
  * @returns {Function|Undefined} The previous Unknown Image Loader
  * @memberof ImageLoader
  */
-export function registerUnknownImageLoader(imageLoader) {
-    const oldImageLoader = unknownImageLoader;
+export function registerUnknownImageLoader (imageLoader) {
+  const oldImageLoader = unknownImageLoader;
 
-    unknownImageLoader = imageLoader;
+  unknownImageLoader = imageLoader;
 
-    return oldImageLoader;
+  return oldImageLoader;
 }

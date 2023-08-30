@@ -1,4 +1,4 @@
-/*! cornerstone-core - 0.0.0-semantically-released - 2023-08-29 | (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */
+/*! cornerstone-core - 0.0.0-semantically-released - 2023-08-30 | (c) 2016 Chris Hafey | https://github.com/cornerstonejs/cornerstone */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -75,7 +75,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "b6b7ecf69804461a0c70";
+/******/ 	var hotCurrentHash = "57744189eedb0ce1a265";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -3341,7 +3341,8 @@ var unknownImageLoader;
  */
 
 function loadImageFromImageLoader(imageId, options) {
-  console.log("loadImageFromImageLoader");
+  console.log('loadImageFromImageLoader');
+  console.log('loadImageFromImageLoader123');
   var colonIndex = imageId.indexOf(':');
   var scheme = imageId.substring(0, colonIndex);
   var loader = imageLoaders[scheme];
