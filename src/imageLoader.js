@@ -25,6 +25,12 @@ let unknownImageLoader;
  * @memberof ImageLoader
  */
 function loadImageFromImageLoader (imageId, options) {
+
+  console.log('loadImageFromImageLoader');
+
+
+  console.log('loadImageFromImageLoader123');
+
   const colonIndex = imageId.indexOf(':');
   const scheme = imageId.substring(0, colonIndex);
   const loader = imageLoaders[scheme];
