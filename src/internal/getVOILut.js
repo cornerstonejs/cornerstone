@@ -60,6 +60,22 @@ function generateNonLinearVOILUT (voiLUT, roundModalityLUTValues) {
 }
 
 /**
+ *
+ * @param {Number} windowWidth Window Width
+ * @param {Number} windowCenter Window Center
+ * @returns {VOILUTFunction} VOI LUT mapping function
+ * @memberof VOILUT
+ */
+function generateSigmoidVOILUT (windowWidth, windowCenter) {
+  const minOutputValue = 0; 
+  const maxOutputValue = 255;
+  return function (modalityLutValue) {
+    return ((maxOutputValue - minOutputValue) / (1 + Math.exp((-4 * (modalityLutValue - windowCenter)) / windowWidth))) + minOutputValue;
+  };
+}
+
+
+/**
  * Retrieve a VOI LUT mapping function given the current windowing settings
  * and the VOI LUT for the image
  *
@@ -67,11 +83,17 @@ function generateNonLinearVOILUT (voiLUT, roundModalityLUTValues) {
  * @param {Number} windowCenter Window Center
  * @param {LUT} [voiLUT] Volume of Interest Lookup Table Object
  * @param {Boolean} roundModalityLUTValues Do a Math.round of modality lut to compute non linear voilut
+ * @param {String} voiLUTFunction VOI Lut function
  *
  * @return {VOILUTFunction} VOI LUT mapping function
  * @memberof VOILUT
  */
-export default function (windowWidth, windowCenter, voiLUT, roundModalityLUTValues) {
+export default function (windowWidth, windowCenter, voiLUT, roundModalityLUTValues, voiLUTFunction) {
+
+  if (voiLUTFunction === 'SIGMOID') {
+    return generateSigmoidVOILUT(windowWidth, windowCenter);
+  }
+
   if (voiLUT) {
     return generateNonLinearVOILUT(voiLUT, roundModalityLUTValues);
   }
