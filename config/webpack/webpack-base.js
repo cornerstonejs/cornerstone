@@ -26,7 +26,7 @@ module.exports = {
   devtool: 'source-map',
   externals: {},
   module: {
-    rules: [{
+    rules: [/* {
       enforce: 'pre',
       test: /\.js$/,
       exclude: /(node_modules)/,
@@ -34,7 +34,7 @@ module.exports = {
       options: {
         failOnError: false
       }
-    }, {
+    },*/{
       test: /\.js|ts$/,
       exclude: /(node_modules)/,
       use: [{

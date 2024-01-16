@@ -15,7 +15,7 @@ import EVENTS from '../events.js';
  * @returns {void}
  * @memberof Internal
  */
-export default function (enabledElement, invalidated) {
+export default async function (enabledElement, invalidated) {
   const image = enabledElement.image;
   const element = enabledElement.element;
   const layers = enabledElement.layers || [];
@@ -53,6 +53,7 @@ export default function (enabledElement, invalidated) {
       } else {
         render = renderGrayscaleImage;
       }
+      image._render = render
     }
 
     render(enabledElement, invalidated);
@@ -76,6 +77,8 @@ export default function (enabledElement, invalidated) {
 
   enabledElement.invalid = false;
   enabledElement.needsRedraw = false;
+
+  await globalThis.drawImageSyncHandler?.(eventData)
 
   triggerEvent(element, EVENTS.IMAGE_RENDERED, eventData);
 }
